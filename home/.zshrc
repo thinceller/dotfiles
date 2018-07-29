@@ -36,7 +36,6 @@ if [ -f '/Users/kohei/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/kohe
 if [ -f '/Users/kohei/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/kohei/google-cloud-sdk/completion.zsh.inc'; fi
 
 # tab title set for hyper setting
-
 precmd() {
     pwd=$(pwd)
     cwd=${pwd##*/}
