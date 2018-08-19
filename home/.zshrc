@@ -50,3 +50,4 @@ source ~/.Software/smart-change-directory/shellrcfiles/zshrc_scd
 
 # Baseconnect setting
 alias jsb='webpack --progress --colors --watch'
+export PATH="/usr/local/bin:$PATH"
