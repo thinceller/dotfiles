@@ -1,4 +1,47 @@
 " ---------------------------------
+"  Vim Plugin
+" ---------------------------------
+call plug#begin('~/vim/plugged')
+
+" ファイルオープン
+Plug 'Shougo/unite.vim'
+
+" unite.vim 強化
+Plug 'Shougo/neomru.vim'
+
+" コメントアウト
+Plug 'tpope/vim-commentary'
+
+" 括弧のオートクローズ
+Plug 'tpope/vim-ragtag'
+
+" end系のオートクローズ
+Plug 'cohama/vim-smartinput-endwise'
+
+" vim-fugitive (git コマンド利用)
+Plug 'tpope/vim-fugitive'
+
+" git log view (tig相当 fugitive依存) 
+Plug 'gregsexton/gitv'
+
+" インデント見やすく
+Plug 'nathanaelkane/vim-indent-guides'
+
+" ag (silver seacher による grep)
+Plug 'rking/ag.vim'
+
+" 検索
+Plug 'dyng/ctrlsf.vim'
+
+"-------------------
+" airline
+"-------------------
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+call plug#end()
+
+" ---------------------------------
 "  基本設定
 " ---------------------------------
 "エンコーディング
@@ -12,6 +55,10 @@ set nocompatible
 set ruler
 "行番号表示
 set number
+" タイトル表示
+set title
+"ステータス業を常に表示
+set laststatus=2
 
 "色
 set background=dark
@@ -27,15 +74,15 @@ set cursorline
 highlight clear CursorLine
 
 "シンタックスハイライト
-syntax enable
+syntax on
 
 "オートインデント
 set autoindent
 
 "インデント幅
-set shiftwidth=4
-set softtabstop=4
-set tabstop=4
+set shiftwidth=2
+set softtabstop=2
+set tabstop=2
 
 "タブをスペースに変換
 set expandtab
@@ -66,10 +113,14 @@ set wrapscan
 "置換の時gオプションをデフォルトで有効にする
 set gdefault
 
+" ウィンドウ分割時に右に展開
+set splitright
+"set splitbelow
+
 
 "不可視文字の設定
 set list
-set listchars=tab:>-,eol:↲,extends:»,precedes:«,nbsp:%
+set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%
 
 "コマンドラインモードのファイル補完設定
 set wildmode=list:longest,full
@@ -112,22 +163,9 @@ set undodir=$HOME/.vim/backup
 set noswapfile
 
 
-
 """"""""""""""""""""""""""""""
-
-
-
-"カーソル移動
-"nnoremap j gj
-"nnoremap k gk
-"nnoremap gj j
-"nnoremap gk k
-"nnoremap <down> gj
-"nnoremap <up> gk
-"noremap <S-h> ^
-"noremap <S-j> }
-"noremap <S-k> {
-"noremap <S-l> $
+" キーマッピング
+""""""""""""""""""""""""""""""
 
 ";;でノーマルモード
 "inoremap ;; <esc>
@@ -138,29 +176,114 @@ set noswapfile
 "nnoremap <space> i<space><esc>
 
 "rだけでリドゥ
-"nnoremap r <C-r>
+nnoremap r <C-r>
 
 "Yで行末までヤンク
-"nnoremap Y y$
+nnoremap Y y$
 
 "ESCキー2度押しでハイライトの切り替え
-"nnoremap <silent><Esc><Esc> :<C-u>set nohlsearch!<CR>
+nnoremap <silent><Esc><Esc> :<C-u>set nohlsearch!<CR>
+
+augroup MyXML
+  autocmd!
+  autocmd Filetype xml inoremap <buffer> </ </<C-x><C-o>
+  autocmd Filetype html inoremap <buffer> </ </<C-x><C-o>
+augroup END
 
 
 "ペースト時に自動インデントで崩れるのを防ぐ
 if &term =~ "xterm"
-    let &t_SI .= "\e[?2004h"
-    let &t_EI .= "\e[?2004l"
-    let &pastetoggle = "\e[201~"
+  let &t_SI .= "\e[?2004h"
+  let &t_EI .= "\e[?2004l"
+  let &pastetoggle = "\e[201~"
 
-    function XTermPasteBegin(ret)
-        set paste
-        return a:ret
-    endfunction
+  function XTermPasteBegin(ret)
+    set paste
+    return a:ret
+  endfunction
 
-    inoremap <special> <expr> <Esc>[200~ XTermPasteBegin("")
+  inoremap <special> <expr> <Esc>[200~ XTermPasteBegin("")
 endif
+" ---------------------------------
+" Plugin indent plugin
+" ---------------------------------
+"let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_auto_colors=0
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd   ctermbg=241
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven  ctermbg=233
+let g:indent_guides_start_level=2
+let g:indent_guides_guide_size=1
 
+" ---------------------------------
+" Plugin airline
+" 参考: https://original-game.com/vim-airline/
+" ---------------------------------
+let g:airline#extensions#tabline#enabled = 1
 
-filetype plugin indent on
+nmap <C-p> <Plug>AirlineSelectPrevTab
+nmap <C-n> <Plug>AirlineSelectNextTab
 
+set ttimeoutlen=50
+
+let g:airline_theme = 'powerlineish'
+
+" ---------------------------------
+"  Unite Setting
+" 参考:  https://www.karakaram.com/unite
+" ---------------------------------
+
+"unite prefix key.
+nnoremap [unite] <Nop>
+nmap <Space>f [unite]
+
+"unite general settings
+"インサートモードで開始
+let g:unite_enable_start_insert = 1
+"最近開いたファイル履歴の保存数
+let g:unite_source_file_mru_limit = 50
+
+"file_mruの表示フォーマットを指定。空にすると表示スピードが高速化される
+let g:unite_source_file_mru_filename_format = ''
+
+"現在開いているファイルのディレクトリ下のファイル一覧。
+"開いていない場合はカレントディレクトリ
+nnoremap <silent> [unite]f :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
+"バッファ一覧
+nnoremap <silent> [unite]b :<C-u>Unite buffer<CR>
+"レジスタ一覧
+nnoremap <silent> [unite]r :<C-u>Unite -buffer-name=register register<CR>
+"最近使用したファイル一覧
+nnoremap <silent> [unite]m :<C-u>Unite file_mru<CR>
+"ブックマーク一覧
+nnoremap <silent> [unite]c :<C-u>Unite bookmark<CR>
+"ブックマークに追加
+nnoremap <silent> [unite]a :<C-u>UniteBookmarkAdd<CR>
+"uniteを開いている間のキーマッピング
+autocmd FileType unite call s:unite_my_settings()
+function! s:unite_my_settings()"{{{
+  "ESCでuniteを終了
+  nmap <buffer> <ESC> <Plug>(unite_exit)
+  "入力モードのときjjでノーマルモードに移動
+  imap <buffer> jj <Plug>(unite_insert_leave)
+  "入力モードのときctrl+wでバックスラッシュも削除
+  imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
+  "ctrl+jで縦に分割して開く
+  nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
+  inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
+  "ctrl+jで横に分割して開く
+  nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
+  inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
+  "ctrl+oでその場所に開く
+  nnoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
+  inoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
+endfunction"}}}
+
+" 現在のプロジェクト内のファイルを一望する
+" 参考 : http://d.hatena.ne.jp/h1mesuke/20110918/p1
+noremap <silent> [unite]p :<C-u>call <SID>unite_project('-start-insert')<CR>
+
+function! s:unite_project(...)
+  let opts = (a:0 ? join(a:000, ' ') : '')
+  let dir = unite#util#path2project_directory(expand('%'))
+  execute 'Unite' opts 'file_rec:' . dir
+endfunction

@@ -15,6 +15,10 @@ fi
 # LANG setting
 export LANG=ja_JP.UTF-8
 
+# zsh setting
+autoload -Uz compinit
+compinit
+
 # pyenv setting
 PYENV_ROOT=~/.pyenv
 export PYENV_ROOT="$HOME/.pyenv"
@@ -49,5 +53,4 @@ preexec() {
 source ~/.Software/smart-change-directory/shellrcfiles/zshrc_scd
 
 # Baseconnect setting
-alias jsb='webpack --progress --colors --watch'
 export PATH="/usr/local/bin:$PATH"

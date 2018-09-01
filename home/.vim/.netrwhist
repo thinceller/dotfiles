@@ -1,5 +1,8 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =3
+let g:netrw_dirhist_cnt =6
 let g:netrw_dirhist_1='/Users/kohei/.zprezto'
 let g:netrw_dirhist_2='/Users/kohei/github/test/lib/test'
 let g:netrw_dirhist_3='/Users/kohei/rails-tutorial/sample_app/app/assets/stylesheets'
+let g:netrw_dirhist_4='/Users/kohei/projects/Baseconnect/app'
+let g:netrw_dirhist_5='/Users/kohei/projects/Baseconnect/bcdoc'
+let g:netrw_dirhist_6='/Users/kohei/.vim'
