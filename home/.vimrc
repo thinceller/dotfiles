@@ -16,12 +16,12 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-ragtag'
 
 " end系のオートクローズ
-Plug 'cohama/vim-smartinput-endwise'
+Plug 'tpope/vim-endwise'
 
 " vim-fugitive (git コマンド利用)
 Plug 'tpope/vim-fugitive'
 
-" git log view (tig相当 fugitive依存) 
+" git log view (tig相当 fugitive依存)
 Plug 'gregsexton/gitv'
 
 " インデント見やすく
@@ -32,6 +32,9 @@ Plug 'rking/ag.vim'
 
 " 検索
 Plug 'dyng/ctrlsf.vim'
+
+" 行末の半角スペースを可視化
+Plug 'bronson/vim-trailing-whitespace'
 
 "-------------------
 " airline
@@ -98,8 +101,8 @@ set wrap
 "set fileformats=unix,doc,mac
 
 "検索設定
-"インクリメンタルサーチしない
-set noincsearch
+"インクリメンタルサーチ
+set incsearch
 "ハイライト
 set hlsearch
 " Esc2回押しで検索ハイライト消去
@@ -166,6 +169,8 @@ set noswapfile
 """"""""""""""""""""""""""""""
 " キーマッピング
 """"""""""""""""""""""""""""""
+"jjでノーマルモード
+inoremap <silent> jj <ESC>
 
 ";;でノーマルモード
 "inoremap ;; <esc>
@@ -176,7 +181,7 @@ set noswapfile
 "nnoremap <space> i<space><esc>
 
 "rだけでリドゥ
-nnoremap r <C-r>
+"nnoremap r <C-r>
 
 "Yで行末までヤンク
 nnoremap Y y$
@@ -204,6 +209,36 @@ if &term =~ "xterm"
 
   inoremap <special> <expr> <Esc>[200~ XTermPasteBegin("")
 endif
+
+" 画面分割
+" 参考: https://qiita.com/tekkoc/items/98adcadfa4bdc8b5a6ca#s%E3%82%AD%E3%83%BC%E3%81%AE%E5%85%83%E3%80%85%E3%81%AE%E6%A9%9F%E8%83%BD%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6
+nnoremap s <Nop>
+nnoremap sj <C-w>j
+nnoremap sk <C-w>k
+nnoremap sl <C-w>l
+nnoremap sh <C-w>h
+nnoremap sJ <C-w>J
+nnoremap sK <C-w>K
+nnoremap sL <C-w>L
+nnoremap sH <C-w>H
+nnoremap sn gt
+nnoremap sp gT
+nnoremap sr <C-w>r
+nnoremap s= <C-w>=
+nnoremap sw <C-w>w
+nnoremap so <C-w>_<C-w>|
+nnoremap sO <C-w>=
+nnoremap sN :<C-u>bn<CR>
+nnoremap sP :<C-u>bp<CR>
+nnoremap st :<C-u>tabnew<CR>
+nnoremap sT :<C-u>Unite tab<CR>
+nnoremap ss :<C-u>sp<CR>
+nnoremap sv :<C-u>vs<CR>
+nnoremap sq :<C-u>q<CR>
+nnoremap sQ :<C-u>bd<CR>
+nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
+nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
+
 " ---------------------------------
 " Plugin indent plugin
 " ---------------------------------
@@ -225,7 +260,7 @@ nmap <C-n> <Plug>AirlineSelectNextTab
 
 set ttimeoutlen=50
 
-let g:airline_theme = 'powerlineish'
+let g:airline_theme = 'dark'
 
 " ---------------------------------
 "  Unite Setting
