@@ -54,3 +54,10 @@ source ~/.Software/smart-change-directory/shellrcfiles/zshrc_scd
 
 # Baseconnect setting
 export PATH="/usr/local/bin:$PATH"
+
+# tabtab source for serverless package
+# uninstall by removing these lines or running `tabtab uninstall serverless`
+[[ -f /Users/kohei/projects/Baseconnect/crawler/node_modules/tabtab/.completions/serverless.zsh ]] && . /Users/kohei/projects/Baseconnect/crawler/node_modules/tabtab/.completions/serverless.zsh
+# tabtab source for sls package
+# uninstall by removing these lines or running `tabtab uninstall sls`
+[[ -f /Users/kohei/projects/Baseconnect/crawler/node_modules/tabtab/.completions/sls.zsh ]] && . /Users/kohei/projects/Baseconnect/crawler/node_modules/tabtab/.completions/sls.zsh
