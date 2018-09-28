@@ -40,13 +40,21 @@ if [ -f '/Users/kohei/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/kohe
 if [ -f '/Users/kohei/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/kohei/google-cloud-sdk/completion.zsh.inc'; fi
 
 # tab title set for hyper setting
+title() { export TITLE_OVERRIDDEN=1; echo -en "\e]0;$*\a" }
+autotitle() { export TITLE_OVERRIDDEN=0 }; autotitle
+overridden() { [[ $TITLE_OVERRIDDEN == 1 ]]; }
+gitDirty() { [[ $(git status 2> /dev/null | grep -o '\w\+' | tail -n1) != ("clean"|"") ]] && echo "*" }
+# Show cwd when shell prompts for input.
 precmd() {
-    pwd=$(pwd)
-    cwd=${pwd##*/}
-    print -Pn "\e]0;$cwd\a"
+   if overridden; then return; fi
+   cwd=${$(pwd)##*/} # Extract current working dir only
+   print -Pn "\e]0;$cwd$(gitDirty)\a" # Replace with $pwd to show full path
 }
+
+# Prepend command (w/o arguments) to cwd while waiting for command to complete.
 preexec() {
-    printf "\033]0;%s\a" "${1%% *} | $cwd"
+   if overridden; then return; fi
+   printf "\033]0;%s\a" "${1%% *} | $cwd$(gitDirty)" # Omit construct from $1 to show args
 }
 
 # zsh plugin: smart-change-directory
