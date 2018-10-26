@@ -15,9 +15,11 @@ fi
 # LANG setting
 export LANG=ja_JP.UTF-8
 
+
 # zsh setting
 autoload -Uz compinit
 compinit
+
 
 # pyenv setting
 PYENV_ROOT=~/.pyenv
@@ -26,11 +28,23 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
+export PIPENV_VENV_IN_PROJECT=true
+
+
 # rbenv setting
 eval "$(rbenv init -)"
 
-# Node.js setting
-export PATH=$PATH:/Users/kohei/.nodebrew/current/bin
+# nodenv setting
+eval "$(nodenv init -)"
+
+# goenv setting
+eval "$(goenv init -)"
+
+
+# direnv setting
+export EDITOR=/usr/bin/vim
+eval "$(direnv hook zsh)"
+
 
 # google-cloud-sdk setting
 # The next line updates PATH for the Google Cloud SDK.
@@ -38,6 +52,7 @@ if [ -f '/Users/kohei/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/kohe
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/kohei/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/kohei/google-cloud-sdk/completion.zsh.inc'; fi
+
 
 # tab title set for hyper setting
 title() { export TITLE_OVERRIDDEN=1; echo -en "\e]0;$*\a" }
@@ -57,11 +72,14 @@ preexec() {
    printf "\033]0;%s\a" "${1%% *} | $cwd$(gitDirty)" # Omit construct from $1 to show args
 }
 
+
 # zsh plugin: smart-change-directory
 source ~/.Software/smart-change-directory/shellrcfiles/zshrc_scd
 
+
 # Baseconnect setting
 export PATH="/usr/local/bin:$PATH"
+
 
 # tabtab source for serverless package
 # uninstall by removing these lines or running `tabtab uninstall serverless`

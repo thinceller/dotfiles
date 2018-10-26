@@ -36,6 +36,12 @@ Plug 'dyng/ctrlsf.vim'
 " 行末の半角スペースを可視化
 Plug 'bronson/vim-trailing-whitespace'
 
+" editorconfig プラグイン
+Plug 'editorconfig/editorconfig-vim'
+
+" surround.vim カッコや引用符で囲ったり削除したり
+Plug 'tpope/vim-surround'
+
 "-------------------
 " airline
 "-------------------
