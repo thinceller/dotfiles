@@ -179,7 +179,10 @@ set noswapfile
 inoremap <silent> jj <ESC>
 
 ";;でノーマルモード
-"inoremap ;; <esc>
+inoremap ;; <esc>
+
+"; でコマンド
+nnoremap ; :
 
 "ノーマルモードのまま改行
 "nnoremap <CR> A<CR><ESC>
