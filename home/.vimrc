@@ -6,8 +6,14 @@ call plug#begin('~/vim/plugged')
 " ファイルオープン
 Plug 'Shougo/unite.vim'
 
+" 非同期処理
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }
+
 " unite.vim 強化
 Plug 'Shougo/neomru.vim'
+
+" NERDTree
+Plug 'scrooloose/nerdtree'
 
 " コメントアウト
 Plug 'tpope/vim-commentary'
@@ -17,6 +23,9 @@ Plug 'tpope/vim-ragtag'
 
 " end系のオートクローズ
 Plug 'tpope/vim-endwise'
+
+" タグ作成
+Plug 'szw/vim-tags'
 
 " vim-fugitive (git コマンド利用)
 Plug 'tpope/vim-fugitive'
@@ -41,6 +50,9 @@ Plug 'editorconfig/editorconfig-vim'
 
 " surround.vim カッコや引用符で囲ったり削除したり
 Plug 'tpope/vim-surround'
+
+" vim-go
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 "-------------------
 " airline
@@ -171,6 +183,8 @@ set undodir=$HOME/.vim/backup
 "スワップファイルを作成しない
 set noswapfile
 
+" filetypeによるプラグインon
+filetype plugin indent on
 
 """"""""""""""""""""""""""""""
 " キーマッピング
@@ -194,6 +208,13 @@ nnoremap ; :
 
 "Yで行末までヤンク
 nnoremap Y y$
+
+"tagsジャンプの時に複数ある時は一覧表示
+nnoremap <C-]> g<C-]>
+
+"垂直ジャンプ
+nnoremap <C-h> :vsp<CR> :exe("tjump ".expand('<cword>'))<CR>
+nnoremap <C-k> :split<CR> :exe("tjump ".expand('<cword>'))<CR>
 
 "ESCキー2度押しでハイライトの切り替え
 nnoremap <silent><Esc><Esc> :<C-u>set nohlsearch!<CR>
@@ -239,13 +260,19 @@ nnoremap so <C-w>_<C-w>|
 nnoremap sO <C-w>=
 nnoremap sN :<C-u>bn<CR>
 nnoremap sP :<C-u>bp<CR>
+" 新規タブ作成
 nnoremap st :<C-u>tabnew<CR>
+" タブ一覧
 nnoremap sT :<C-u>Unite tab<CR>
+" ウィンドウ分割
 nnoremap ss :<C-u>sp<CR>
 nnoremap sv :<C-u>vs<CR>
+" ウィンドウを閉じる
 nnoremap sq :<C-u>q<CR>
 nnoremap sQ :<C-u>bd<CR>
+" カレントタブのバッファ一覧
 nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
+" バッファ一覧
 nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
 
 " ---------------------------------
@@ -272,26 +299,44 @@ set ttimeoutlen=50
 let g:airline_theme = 'dark'
 
 " ---------------------------------
+" Plugin indent plugin
+" ---------------------------------
+let g:vim_tags_project_tags_command ='ctags -R  --fields=+aimS {OPTIONS} {DIRECTORY} 2>/dev/null &'
+let g:vim_tags_auto_generate = 0
+
+" ---------------------------------
+" Plugin NERDTree
+" ---------------------------------
+autocmd vimenter * NERDTree
+nnoremap <C-n> :NERDTreeToggle<CR>
+
+" ---------------------------------
 "  Unite Setting
 " 参考:  https://www.karakaram.com/unite
 " ---------------------------------
 
 "unite prefix key.
 nnoremap [unite] <Nop>
-nmap <Space>f [unite]
+nmap <C-u> [unite]
 
 "unite general settings
 "インサートモードで開始
-let g:unite_enable_start_insert = 1
+" let g:unite_enable_start_insert = 1
 "最近開いたファイル履歴の保存数
 let g:unite_source_file_mru_limit = 50
+
+"Unite grep
+let g:unite_source_grep_command = 'ag'
+let g:unite_source_grep_default_opts = '--nocolor --nogroup --ignore=''*.tags'' --ignore=''tags'' --ignore=''.svn'' --ignore=''.git'''
+let g:unite_source_grep_recursive_opt = ''
+let g:unite_source_grep_max_candidates  = 200
 
 "file_mruの表示フォーマットを指定。空にすると表示スピードが高速化される
 let g:unite_source_file_mru_filename_format = ''
 
 "現在開いているファイルのディレクトリ下のファイル一覧。
 "開いていない場合はカレントディレクトリ
-nnoremap <silent> [unite]f :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
+nnoremap <silent> [unite]<C-f> :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
 "バッファ一覧
 nnoremap <silent> [unite]b :<C-u>Unite buffer<CR>
 "レジスタ一覧
@@ -302,6 +347,9 @@ nnoremap <silent> [unite]m :<C-u>Unite file_mru<CR>
 nnoremap <silent> [unite]c :<C-u>Unite bookmark<CR>
 "ブックマークに追加
 nnoremap <silent> [unite]a :<C-u>UniteBookmarkAdd<CR>
+"grep
+nnoremap <silent> [unite]g :<C-u>Unite grep -no-quit<CR>
+
 "uniteを開いている間のキーマッピング
 autocmd FileType unite call s:unite_my_settings()
 function! s:unite_my_settings()"{{{
@@ -324,7 +372,7 @@ endfunction"}}}
 
 " 現在のプロジェクト内のファイルを一望する
 " 参考 : http://d.hatena.ne.jp/h1mesuke/20110918/p1
-noremap <silent> [unite]p :<C-u>call <SID>unite_project('-start-insert')<CR>
+noremap <silent> [unite]<C-p> :<C-u>call <SID>unite_project('-start-insert')<CR>
 
 function! s:unite_project(...)
   let opts = (a:0 ? join(a:000, ' ') : '')

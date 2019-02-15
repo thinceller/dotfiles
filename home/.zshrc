@@ -21,6 +21,9 @@ autoload -Uz compinit
 compinit
 
 
+# ctags setting
+alias ctags="`brew --prefix`/bin/ctags"
+
 # pyenv setting
 PYENV_ROOT=~/.pyenv
 export PYENV_ROOT="$HOME/.pyenv"
