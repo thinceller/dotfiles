@@ -51,6 +51,16 @@ Plug 'editorconfig/editorconfig-vim'
 " surround.vim カッコや引用符で囲ったり削除したり
 Plug 'tpope/vim-surround'
 
+" 自動補完
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+let g:deoplete#enable_at_startup = 1
+
 " vim-go
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
@@ -309,6 +319,11 @@ let g:vim_tags_auto_generate = 0
 " ---------------------------------
 autocmd vimenter * NERDTree
 nnoremap <C-n> :NERDTreeToggle<CR>
+
+" ---------------------------------
+" Plugin NERDTree
+" ---------------------------------
+let g:deoplete#enable_at_startup = 1
 
 " ---------------------------------
 "  Unite Setting
