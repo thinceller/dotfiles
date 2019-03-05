@@ -64,7 +64,11 @@ endif
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 
-" vim-go
+" javascript plugin
+Plug 'pangloss/vim-javascript'
+Plug 'maxmellon/vim-jsx-pretty'
+
+" golang plugin
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 "-------------------
@@ -325,6 +329,7 @@ nnoremap <C-n> :NERDTreeToggle<CR>
 
 " ---------------------------------
 " Plugin deoplete
+" https://muunyblue.github.io/520bae6649b42ff5a3c8c58b7fcfc5a9.html
 " ---------------------------------
 " deoplete.vim
 let g:deoplete#enable_at_startup = 1
