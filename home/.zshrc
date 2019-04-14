@@ -90,3 +90,7 @@ export PATH="/usr/local/bin:$PATH"
 # tabtab source for sls package
 # uninstall by removing these lines or running `tabtab uninstall sls`
 [[ -f /Users/kohei/projects/Baseconnect/crawler/node_modules/tabtab/.completions/sls.zsh ]] && . /Users/kohei/projects/Baseconnect/crawler/node_modules/tabtab/.completions/sls.zsh
+
+# alias
+alias gfc='git commit --allow-empty -m "first commit"'
+

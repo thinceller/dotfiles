@@ -68,6 +68,12 @@ Plug 'Shougo/neosnippet-snippets'
 Plug 'pangloss/vim-javascript'
 Plug 'maxmellon/vim-jsx-pretty'
 
+Plug 'leafgarland/typescript-vim'
+
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'ryanolsonx/vim-lsp-typescript'
+
 " golang plugin
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
@@ -432,3 +438,15 @@ function! s:unite_project(...)
   let dir = unite#util#path2project_directory(expand('%'))
   execute 'Unite' opts 'file_rec:' . dir
 endfunction
+
+" ---------------------------------
+" Plugin vim-lsp-typescript
+" ---------------------------------
+if executable('typescript-language-server')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'typescript-language-server',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
+        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'tsconfig.json'))},
+        \ 'whitelist': ['typescript', 'typescript.tsx'],
+        \ })
+endif
