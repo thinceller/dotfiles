@@ -77,11 +77,22 @@ Plug 'ryanolsonx/vim-lsp-typescript'
 " golang plugin
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
+" resize window
+Plug 'simeji/winresizer'
+
+" lint
+Plug 'w0rp/ale'
+
+" Git Plugin
+Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
+
 "-------------------
 " airline
 "-------------------
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'ryanoasis/vim-devicons'
 
 call plug#end()
 
@@ -320,6 +331,9 @@ nmap <C-n> <Plug>AirlineSelectNextTab
 set ttimeoutlen=50
 
 let g:airline_theme = 'dark'
+let g:airline#extensions#ale#error_symbol = ' '
+let g:airline#extensions#ale#warning_symbol = ' '
+let g:airline_section_z = '%3l:%2v %{airline#extensions#ale#get_warning()} %{airline#extensions#ale#get_error()}'
 
 " ---------------------------------
 " Plugin indent plugin
@@ -330,8 +344,8 @@ let g:vim_tags_auto_generate = 0
 " ---------------------------------
 " Plugin NERDTree
 " ---------------------------------
-autocmd vimenter * NERDTree
-nnoremap <C-n> :NERDTreeToggle<CR>
+" autocmd vimenter * NERDTree
+nnoremap <C-e> :NERDTreeToggle<CR>
 
 " ---------------------------------
 " Plugin deoplete
@@ -388,7 +402,7 @@ let g:unite_source_file_mru_limit = 50
 let g:unite_source_grep_command = 'ag'
 let g:unite_source_grep_default_opts = '--nocolor --nogroup --ignore=''*.tags'' --ignore=''tags'' --ignore=''.svn'' --ignore=''.git'''
 let g:unite_source_grep_recursive_opt = ''
-let g:unite_source_grep_max_candidates  = 200
+let g:unite_source_grep_max_candidates = 200
 
 "file_mruの表示フォーマットを指定。空にすると表示スピードが高速化される
 let g:unite_source_file_mru_filename_format = ''
@@ -408,20 +422,21 @@ nnoremap <silent> [unite]c :<C-u>Unite bookmark<CR>
 nnoremap <silent> [unite]a :<C-u>UniteBookmarkAdd<CR>
 "grep
 nnoremap <silent> [unite]g :<C-u>Unite grep -no-quit<CR>
+nnoremap <silent> <C-g> :<C-u>UniteWithCursorWord grep:./<CR>
 
 "uniteを開いている間のキーマッピング
 autocmd FileType unite call s:unite_my_settings()
 function! s:unite_my_settings()"{{{
-  "ESCでuniteを終了
-  nmap <buffer> <ESC> <Plug>(unite_exit)
-  "入力モードのときjjでノーマルモードに移動
-  imap <buffer> jj <Plug>(unite_insert_leave)
-  "入力モードのときctrl+wでバックスラッシュも削除
+"ESCでuniteを終了
+nmap <buffer> <ESC> <Plug>(unite_exit)
+"入力モードのときjjでノーマルモードに移動
+imap <buffer> jj <Plug>(unite_insert_leave)
+"入力モードのときctrl+wでバックスラッシュも削除
   imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
   "ctrl+jで縦に分割して開く
   nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
   inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
-  "ctrl+jで横に分割して開く
+  "ctrl+lで横に分割して開く
   nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
   inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
   "ctrl+oでその場所に開く

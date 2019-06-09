@@ -32,6 +32,7 @@ eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
 export PIPENV_VENV_IN_PROJECT=true
+eval "$(pipenv --completion)"
 
 
 # rbenv setting
@@ -82,6 +83,7 @@ source ~/.Software/smart-change-directory/shellrcfiles/zshrc_scd
 
 # Baseconnect setting
 export PATH="/usr/local/bin:$PATH"
+export PKG_CONFIG_PATH=/opt/ImageMagick/lib/pkgconfig
 
 
 # tabtab source for serverless package
