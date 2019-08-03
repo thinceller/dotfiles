@@ -87,6 +87,13 @@ Plug 'w0rp/ale'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 
+" fzf
+Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf.vim'
+
+" colorscheme
+Plug 'haishanh/night-owl.vim'
+
 "-------------------
 " airline
 "-------------------
@@ -117,19 +124,17 @@ set laststatus=2
 
 "色
 set background=dark
-"カラーテーマを入れる場合は以下を有効化する
-let g:hybrid_use_iTerm_colors = 1
+syntax enable
+colorscheme night-owl
+let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
 set termguicolors
-colorscheme hybrid
 
 "行番号の色や現在行の設定
 autocmd ColorScheme * highlight LineNr ctermfg=12
 highlight CursorLineNr ctermbg=4 ctermfg=0
 set cursorline
-highlight clear CursorLine
-
-"シンタックスハイライト
-syntax on
+hi clear CursorLine
 
 "オートインデント
 set autoindent
