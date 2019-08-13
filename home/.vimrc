@@ -279,41 +279,6 @@ if &term =~ "xterm"
   inoremap <special> <expr> <Esc>[200~ XTermPasteBegin("")
 endif
 
-" 画面分割
-" 参考: https://qiita.com/tekkoc/items/98adcadfa4bdc8b5a6ca#s%E3%82%AD%E3%83%BC%E3%81%AE%E5%85%83%E3%80%85%E3%81%AE%E6%A9%9F%E8%83%BD%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6
-nnoremap s <Nop>
-nnoremap sj <C-w>j
-nnoremap sk <C-w>k
-nnoremap sl <C-w>l
-nnoremap sh <C-w>h
-nnoremap sJ <C-w>J
-nnoremap sK <C-w>K
-nnoremap sL <C-w>L
-nnoremap sH <C-w>H
-nnoremap sn gt
-nnoremap sp gT
-nnoremap sr <C-w>r
-nnoremap s= <C-w>=
-nnoremap sw <C-w>w
-nnoremap so <C-w>_<C-w>|
-nnoremap sO <C-w>=
-nnoremap sN :<C-u>bn<CR>
-nnoremap sP :<C-u>bp<CR>
-" 新規タブ作成
-nnoremap st :<C-u>tabnew<CR>
-" タブ一覧
-nnoremap sT :<C-u>Unite tab<CR>
-" ウィンドウ分割
-nnoremap ss :<C-u>sp<CR>
-nnoremap sv :<C-u>vs<CR>
-" ウィンドウを閉じる
-nnoremap sq :<C-u>q<CR>
-nnoremap sQ :<C-u>bd<CR>
-" カレントタブのバッファ一覧
-nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
-" バッファ一覧
-nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
-
 " ---------------------------------
 " Plugin indent plugin
 " ---------------------------------

@@ -94,12 +94,23 @@ export PKG_CONFIG_PATH=/opt/ImageMagick/lib/pkgconfig
 # uninstall by removing these lines or running `tabtab uninstall sls`
 [[ -f /Users/kohei/projects/Baseconnect/crawler/node_modules/tabtab/.completions/sls.zsh ]] && . /Users/kohei/projects/Baseconnect/crawler/node_modules/tabtab/.completions/sls.zsh
 
+
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git"'
 export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
 export FZF_TMUX=1
 export FZF_TMUX_HEIGHT=40%
+
+# fzf function
+# fbr - checkout git branch
+fbr() {
+  local branches branch
+  branches=$(git branch -vv) &&
+  branch=$(echo "$branches" | fzf +m) &&
+  git checkout $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
+}
+
 
 # alias
 alias gfc='git commit --allow-empty -m "first commit [ci skip]"'
