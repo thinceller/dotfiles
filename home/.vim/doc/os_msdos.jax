@@ -1,0 +1,15 @@
+*os_msdos.txt*  For Vim バージョン 8.1.  Last change: 2016 Feb 26
+
+
+		  VIMリファレンスマニュアル    by Bram Moolenaar
+
+
+					*msdos* *ms-dos* *MSDOS* *MS-DOS*
+このファイルはVimのMS-DOSバージョンに関する特記事項を記述していた。MS-DOSサ
+ポートはパッチ7.4.1399で削除された。もしもMS-DOSでVimを使いたいのならば、それ
+よりも古いバージョンを取得する必要があるだろう。しかしながらMS-DOSバージョン
+は、メモリが不十分なために動作しないことに留意して欲しい。(DJGPPを使った)
+DOS32バージョンならば、古いシステムでも動くかもしれない。
+
+
+ vim:tw=78:ts=8:noet:ft=help:norl:

@@ -3,82 +3,36 @@
 " ---------------------------------
 call plug#begin('~/vim/plugged')
 
-" ファイルオープン
-Plug 'Shougo/unite.vim'
-
-" 非同期処理
-Plug 'Shougo/vimproc.vim', { 'do': 'make' }
-
-" unite.vim 強化
-Plug 'Shougo/neomru.vim'
-
 " NERDTree
 Plug 'scrooloose/nerdtree'
-
-" コメントアウト
+" comment out
 Plug 'tpope/vim-commentary'
-
-" 括弧のオートクローズ
+" auto close
 Plug 'tpope/vim-ragtag'
 Plug 'cohama/lexima.vim'
-
-" end系のオートクローズ
 Plug 'tpope/vim-endwise'
-
-" タグ作成
-Plug 'szw/vim-tags'
-
-" vim-fugitive (git コマンド利用)
-Plug 'tpope/vim-fugitive'
-
-" git log view (tig相当 fugitive依存)
-Plug 'gregsexton/gitv'
-
-" インデント見やすく
-Plug 'nathanaelkane/vim-indent-guides'
-
-" ag (silver seacher による grep)
-Plug 'rking/ag.vim'
-
-" 検索
-Plug 'dyng/ctrlsf.vim'
-
-" 行末の半角スペースを可視化
+" visualize trailing space
 Plug 'bronson/vim-trailing-whitespace'
-
-" editorconfig プラグイン
+" editorconfig
 Plug 'editorconfig/editorconfig-vim'
-
-" surround.vim カッコや引用符で囲ったり削除したり
+" surround.vim
 Plug 'tpope/vim-surround'
-
-" 自動補完 deoplete
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
-" snippet
-Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
-
-" javascript plugin
-Plug 'pangloss/vim-javascript'
-Plug 'maxmellon/vim-jsx-pretty'
-
-Plug 'leafgarland/typescript-vim'
-
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/vim-lsp'
-Plug 'ryanolsonx/vim-lsp-typescript'
-
-" golang plugin
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-
 " resize window
 Plug 'simeji/winresizer'
+
+" ----- 補完 -----
+" Tabnine
+Plug 'zxqfl/tabnine-vim'
+" coc.nvim
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" typescript plugin
+Plug 'leafgarland/typescript-vim'
+" golang plugin
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+" markdown
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
 
 " lint
 Plug 'w0rp/ale'
@@ -86,6 +40,7 @@ Plug 'w0rp/ale'
 " Git Plugin
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
+Plug 'gregsexton/gitv'
 
 " fzf
 Plug '/usr/local/opt/fzf'
@@ -104,156 +59,135 @@ Plug 'ryanoasis/vim-devicons'
 call plug#end()
 
 " ---------------------------------
-"  基本設定
+"  Basic settings
 " ---------------------------------
-"エンコーディング
+" endoding
 set encoding=utf-8
 scriptencoding utf-8
-
-"vi互換をオフ
+" off vi
 set nocompatible
-
-"カーソル位置表示
+" show cursor
 set ruler
-"行番号表示
+" line number
 set number
-" タイトル表示
+" show title
 set title
-"ステータス業を常に表示
+" show status
 set laststatus=2
 
-"色
+" color
 set background=dark
 syntax enable
+if (has("termguicolors"))
+   set termguicolors
+ endif
 colorscheme night-owl
 let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
-set termguicolors
 
-"行番号の色や現在行の設定
 autocmd ColorScheme * highlight LineNr ctermfg=12
 highlight CursorLineNr ctermbg=4 ctermfg=0
 set cursorline
 hi clear CursorLine
 
-"オートインデント
+" autoindent
 set autoindent
-
-"インデント幅
+" indent space
 set shiftwidth=2
 set softtabstop=2
 set tabstop=2
-
-"タブをスペースに変換
+" tab to space
 set expandtab
 set smarttab
 
-"ピープ音をすべて無効にする
+" invalidate bell
 set visualbell t_vb=
 
-"長い行の折り返し表示
+" line wrap
 set wrap
+" move through line wrap
+set whichwrap=b,s,h,l,<,>,~,[,]
+" show last line
+set display=lastline
 
-"想定される改行コードの指定をする
+" file formats
 "set fileformats=unix,doc,mac
 
-"検索設定
-"インクリメンタルサーチ
+" search
 set incsearch
-"ハイライト
 set hlsearch
-" Esc2回押しで検索ハイライト消去
 nnoremap <Esc><Esc> :nohlsearch<CR><CR>
-"大文字と小文字を区別しない
 set ignorecase
-"大文字と小文字が混在した検索のみ大文字と小文字を区別する
 set smartcase
-"最後尾になったら先頭に戻る
 set wrapscan
-"置換の時gオプションをデフォルトで有効にする
 set gdefault
 
-" ウィンドウ分割時に右に展開
+" default split
 set splitright
 "set splitbelow
 
-
-"不可視文字の設定
+" list characters
 set list
 set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%
 
-"コマンドラインモードのファイル補完設定
+" complement in command mode
 set wildmode=list:longest,full
 
-"入力中のコマンドを表示
+" show typing commands
 set showcmd
 
-"クリップボードの共有
+" share clipboard
 set clipboard=unnamed,autoselect
 
-"カーソル移動で行をまたげるようにする
-set whichwrap=b,s,h,l,<,>,~,[,]
-
-"バックスペースを使いやすく
+" set backspace to move
 set backspace=indent,eol,start
 set nrformats-=octal
 
+" complement size
 set pumheight=10
 
-"対応する括弧に一瞬移動
+" brackets
 set showmatch
 set matchtime=1
 source $VIMRUNTIME/macros/matchit.vim " Vimの「%」を拡張する
 
-"ウィンドウの最後の行もできるだけ表示
-set display=lastline
-
-"変更中のファイルでも保存しないで他のファイルを表示する
+" no save when change buffer
 set hidden
 
-"バックアップファイルを作成しない
+" backup
 set nobackup
-"バックアップファイルのディレクトリ指定
+set nowritebackup
 set backupdir=$HOME/.vim/backup
-"アンドゥファイルを作成しない
 set noundofile
-"アンドゥファイルのディレクトリ指定
 set undodir=$HOME/.vim/backup
-"スワップファイルを作成しない
 set noswapfile
 
-" filetypeによるプラグインon
+" for coc.nvim settings
+set cmdheight=2
+set updatetime=300
+set shortmess+=c
+set signcolumn=yes
+
+" filetype plugin
 filetype plugin indent on
 
-""""""""""""""""""""""""""""""
-" キーマッピング
-""""""""""""""""""""""""""""""
+
+" ---------------------------------
+" Key mappings
+" ---------------------------------
 "jjでノーマルモード
 inoremap <silent> jj <ESC>
-
-";;でノーマルモード
-inoremap ;; <esc>
-
 "; でコマンド
 nnoremap ; :
-
-"ノーマルモードのまま改行
-"nnoremap <CR> A<CR><ESC>
-"ノーマルモードのままスペース
-"nnoremap <space> i<space><esc>
-
-"rだけでリドゥ
-"nnoremap r <C-r>
 
 "Yで行末までヤンク
 nnoremap Y y$
 
 "tagsジャンプの時に複数ある時は一覧表示
-nnoremap <C-]> g<C-]>
-
+"nnoremap <C-]> g<C-]>
 "垂直ジャンプ
-nnoremap <C-h> :vsp<CR> :exe("tjump ".expand('<cword>'))<CR>
-nnoremap <C-k> :split<CR> :exe("tjump ".expand('<cword>'))<CR>
+"nnoremap <C-h> :vsp<CR> :exe("tjump ".expand('<cword>'))<CR>
+"nnoremap <C-k> :split<CR> :exe("tjump ".expand('<cword>'))<CR>
 
 "ESCキー2度押しでハイライトの切り替え
 nnoremap <silent><Esc><Esc> :<C-u>set nohlsearch!<CR>
@@ -295,7 +229,7 @@ let g:indent_guides_guide_size=1
 " ---------------------------------
 let g:airline#extensions#tabline#enabled = 1
 
-nmap <C-p> <Plug>AirlineSelectPrevTab
+" nmap <C-p> <Plug>AirlineSelectPrevTab
 nmap <C-n> <Plug>AirlineSelectNextTab
 
 set ttimeoutlen=50
@@ -306,132 +240,138 @@ let g:airline#extensions#ale#warning_symbol = ' '
 let g:airline_section_z = '%3l:%2v %{airline#extensions#ale#get_warning()} %{airline#extensions#ale#get_error()}'
 
 " ---------------------------------
-" Plugin indent plugin
-" ---------------------------------
-let g:vim_tags_project_tags_command ='ctags -R  --fields=+aimS {OPTIONS} {DIRECTORY} 2>/dev/null &'
-let g:vim_tags_auto_generate = 0
-
-" ---------------------------------
-" Plugin NERDTree
+" NERDTree
 " ---------------------------------
 " autocmd vimenter * NERDTree
-nnoremap <C-e> :NERDTreeToggle<CR>
+nnoremap <leader>e :NERDTreeToggle<CR>
 
 " ---------------------------------
-" Plugin deoplete
-" https://muunyblue.github.io/520bae6649b42ff5a3c8c58b7fcfc5a9.html
+" Git
 " ---------------------------------
-" deoplete.vim
-let g:deoplete#enable_at_startup = 1
-" <TAB>: completion.
+nnoremap tig :tab :term tig<CR>
+
+" ---------------------------------
+" coc.nvim
+" ---------------------------------
+" Use tab for trigger completion with characters ahead and navigate.
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
-      \ deoplete#manual_complete()
-function! s:check_back_space() abort "{{{
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
   let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~ '\s'
-endfunction"}}}
-
-" <S-TAB>: completion back.
-inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<C-h>"
-
-" <BS>: close popup and delete backword char.
-inoremap <expr><BS> deoplete#smart_close_popup()."\<C-h>"
-
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function() abort
-  return deoplete#cancel_popup() . "\<CR>"
+  return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-" neosnippet.vim
-imap <C-k> <Plug>(neosnippet_expand_or_jump)
-smap <C-k> <Plug>(neosnippet_expand_or_jump)
-xmap <C-k> <Plug>(neosnippet_expand_target)
-let g:neosnippet#enable_snipmate_compatibility = 1
-let g:neosnippet#enable_completed_snippet = 1
-let g:neosnippet#expand_word_boundary = 1
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
-" ---------------------------------
-"  Unite Setting
-" 参考:  https://www.karakaram.com/unite
-" ---------------------------------
+" Use `[c` and `]c` to navigate diagnostics
+nmap <silent> [c <Plug>(coc-diagnostic-prev)
+nmap <silent> ]c <Plug>(coc-diagnostic-next)
 
-"unite prefix key.
-nnoremap [unite] <Nop>
-nmap <C-u> [unite]
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 
-"unite general settings
-"インサートモードで開始
-" let g:unite_enable_start_insert = 1
-"最近開いたファイル履歴の保存数
-let g:unite_source_file_mru_limit = 50
+nnoremap <silent> K :call <SID>show_documentation()<CR>
 
-"Unite grep
-let g:unite_source_grep_command = 'ag'
-let g:unite_source_grep_default_opts = '--nocolor --nogroup --ignore=''*.tags'' --ignore=''tags'' --ignore=''.svn'' --ignore=''.git'''
-let g:unite_source_grep_recursive_opt = ''
-let g:unite_source_grep_max_candidates = 200
-
-"file_mruの表示フォーマットを指定。空にすると表示スピードが高速化される
-let g:unite_source_file_mru_filename_format = ''
-
-"現在開いているファイルのディレクトリ下のファイル一覧。
-"開いていない場合はカレントディレクトリ
-nnoremap <silent> [unite]<C-f> :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
-"バッファ一覧
-nnoremap <silent> [unite]b :<C-u>Unite buffer<CR>
-"レジスタ一覧
-nnoremap <silent> [unite]r :<C-u>Unite -buffer-name=register register<CR>
-"最近使用したファイル一覧
-nnoremap <silent> [unite]m :<C-u>Unite file_mru<CR>
-"ブックマーク一覧
-nnoremap <silent> [unite]c :<C-u>Unite bookmark<CR>
-"ブックマークに追加
-nnoremap <silent> [unite]a :<C-u>UniteBookmarkAdd<CR>
-"grep
-nnoremap <silent> [unite]g :<C-u>Unite grep -no-quit<CR>
-nnoremap <silent> <C-g> :<C-u>UniteWithCursorWord grep:./<CR>
-
-"uniteを開いている間のキーマッピング
-autocmd FileType unite call s:unite_my_settings()
-function! s:unite_my_settings()"{{{
-"ESCでuniteを終了
-nmap <buffer> <ESC> <Plug>(unite_exit)
-"入力モードのときjjでノーマルモードに移動
-imap <buffer> jj <Plug>(unite_insert_leave)
-"入力モードのときctrl+wでバックスラッシュも削除
-  imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
-  "ctrl+jで縦に分割して開く
-  nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
-  inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
-  "ctrl+lで横に分割して開く
-  nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
-  inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
-  "ctrl+oでその場所に開く
-  nnoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
-  inoremap <silent> <buffer> <expr> <C-o> unite#do_action('open')
-endfunction"}}}
-
-" 現在のプロジェクト内のファイルを一望する
-" 参考 : http://d.hatena.ne.jp/h1mesuke/20110918/p1
-noremap <silent> [unite]<C-p> :<C-u>call <SID>unite_project('-start-insert')<CR>
-
-function! s:unite_project(...)
-  let opts = (a:0 ? join(a:000, ' ') : '')
-  let dir = unite#util#path2project_directory(expand('%'))
-  execute 'Unite' opts 'file_rec:' . dir
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
 endfunction
 
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
+" Remap for format selected region
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Use <tab> for select selections ranges, needs server support, like: coc-tsserver, coc-python
+nmap <silent> <TAB> <Plug>(coc-range-select)
+xmap <silent> <TAB> <Plug>(coc-range-select)
+xmap <silent> <S-TAB> <Plug>(coc-range-select-backword)
+
+" Use `:Format` to format current buffer
+command! -nargs=0 Format :call CocAction('format')
+" Use `:Fold` to fold current buffer
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+" use `:OR` for organize import of current buffer
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" Add status line support, for integration with other plugin, checkout `:h coc-status`
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Using CocList
+" Show all diagnostics
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
 " ---------------------------------
-" Plugin vim-lsp-typescript
+"  fzf.vim
 " ---------------------------------
-if executable('typescript-language-server')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'typescript-language-server',
-        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
-        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'tsconfig.json'))},
-        \ 'whitelist': ['typescript', 'typescript.tsx'],
-        \ })
-endif
+fun! FzfOmniFiles()
+  let is_git = system('git status')
+  if v:shell_error
+    :Files
+  else
+    :GitFiles
+  endif
+endfun
+
+" preview
+command! -bang -nargs=? -complete=dir Files
+  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
+command! -bang -nargs=? -complete=dir GitFiles
+  \ call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(), <bang>0)
+
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \   <bang>0)
+
+nnoremap <C-p> :call FzfOmniFiles()<CR>
+nnoremap <C-g> :Rg<Space>
+nnoremap <silent> ,f :GFiles?<CR>
+nnoremap <silent> ,b :Buffers<CR>
+nnoremap <silent> ,l :BLines<CR>
+nnoremap <silent> ,h :History<CR>
+

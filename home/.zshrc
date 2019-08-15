@@ -44,6 +44,7 @@ eval "$(nodenv init -)"
 
 # goenv setting
 eval "$(goenv init -)"
+export PATH="$HOME/go/bin:$PATH"
 
 
 # direnv setting
@@ -109,6 +110,33 @@ fbr() {
   branches=$(git branch -vv) &&
   branch=$(echo "$branches" | fzf +m) &&
   git checkout $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
+}
+
+# fd - cd to selected directory
+fd() {
+  local dir
+  dir=$(find ${1:-.} -path '*/\.*' -prune \
+                  -o -type d -print 2> /dev/null | fzf +m) &&
+  cd "$dir"
+}
+
+# fv - fuzzy open with vim from anywhere
+# 参考: https://qiita.com/Sa2Knight/items/6635af9fc648a5431685
+fv() {
+  files=$(git ls-files) &&
+  selected_files=$(echo "$files" | fzf -m --preview 'head -100 {}') &&
+  vim $selected_files
+}
+
+# fkill - kill process
+fkill() {
+  local pid
+  pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+
+  if [ "x$pid" != "x"  ]
+  then
+    echo $pid | xargs kill -${1:-9}
+  fi
 }
 
 
