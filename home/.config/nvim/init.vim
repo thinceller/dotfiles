@@ -137,7 +137,7 @@ set wildmode=list:longest,full
 set showcmd
 
 " share clipboard
-set clipboard=unnamed
+set clipboard=unnamed,autoselect
 
 " set backspace to move
 set backspace=indent,eol,start
@@ -369,4 +369,5 @@ nnoremap <silent> [fzf]F :GFiles?<CR>
 nnoremap <silent> [fzf]b :Buffers<CR>
 nnoremap <silent> [fzf]l :BLines<CR>
 nnoremap <silent> [fzf]h :History<CR>
+
 
