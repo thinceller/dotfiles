@@ -345,6 +345,10 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 " ---------------------------------
 "  fzf.vim
 " ---------------------------------
+" prefix
+nnoremap [fzf] <Nop>
+nmap <space>f [fzf]
+
 fun! FzfOmniFiles()
   let is_git = system('git status')
   if v:shell_error
@@ -368,10 +372,11 @@ command! -bang -nargs=* Rg
   \           : fzf#vim#with_preview('right:50%:hidden', '?'),
   \   <bang>0)
 
-nnoremap <C-p> :call FzfOmniFiles()<CR>
+nnoremap <silent> [fzf]p :call FzfOmniFiles()<CR>
 nnoremap <C-g> :Rg<Space>
-nnoremap <silent> ,f :GFiles?<CR>
-nnoremap <silent> ,b :Buffers<CR>
-nnoremap <silent> ,l :BLines<CR>
-nnoremap <silent> ,h :History<CR>
+nnoremap <silent> [fzf]f :Files<CR>
+nnoremap <silent> [fzf]F :GFiles?<CR>
+nnoremap <silent> [fzf]b :Buffers<CR>
+nnoremap <silent> [fzf]l :BLines<CR>
+nnoremap <silent> [fzf]h :History<CR>
 
