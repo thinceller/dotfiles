@@ -1,0 +1,34 @@
+{
+  "commands": {
+    "%2FUsers%2Fkohei%2Fprojects%2FBaseconnect": [
+      "extensi",
+      "solar sear"
+    ]
+  },
+  "marketplace": {
+    "%2FUsers%2Fkohei%2Fprojects%2FBaseconnect": [
+      "emoji",
+      "fsharp",
+      "fsharp compiler",
+      "tabnine"
+    ],
+    "%2FUsers%2Fkohei": [
+      "efm"
+    ]
+  },
+  "diagnostics": {
+    "%2FUsers%2Fkohei%2Fprojects%2FBaseconnect": [
+      "notificati"
+    ]
+  },
+  "outline": {
+    "%2FUsers%2Fkohei%2Fprojects%2FBaseconnect": [
+      "fetch"
+    ]
+  },
+  "extensions": {
+    "%2FUsers%2Fkohei%2Fprojects%2FBaseconnect": [
+      "solar"
+    ]
+  }
+}
