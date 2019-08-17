@@ -238,7 +238,11 @@ nnoremap <leader>e :NERDTreeToggle<CR>
 " ---------------------------------
 " Git
 " ---------------------------------
-nnoremap tig :tab :term tig<CR>
+if has('nvim')
+  nnoremap tig :tab :term tig<CR>
+else
+  nnoremap tig :tab :term ++close tig<CR>
+endif
 
 " ---------------------------------
 " coc.nvim

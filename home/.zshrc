@@ -14,6 +14,8 @@ fi
 # ====================================================================================================
 # LANG setting
 export LANG=ja_JP.UTF-8
+fpath+=${ZDOTDIR:-~}/.zsh_functions
+export PATH="$HOME/.cargo/bin:$PATH"
 
 # グロブ展開対策
 setopt nonomatch
