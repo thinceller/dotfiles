@@ -89,6 +89,25 @@ autocmd ColorScheme * highlight LineNr ctermfg=12
 highlight CursorLineNr ctermbg=4 ctermfg=0
 set cursorline
 hi clear CursorLine
+" terminal color - like night-owl
+let g:terminal_ansi_colors = [
+\ '#000000',
+\ '#ef5350',
+\ '#22da6e',
+\ '#addb67',
+\ '#82aaff',
+\ '#c792ea',
+\ '#21c7a8',
+\ '#ffffff',
+\ '#575656',
+\ '#ef5350',
+\ '#22da6e',
+\ '#ffeb95',
+\ '#82aaff',
+\ '#c792ea',
+\ '#7fdbca',
+\ '#ffffff'
+\ ]
 
 " autoindent
 set autoindent
@@ -182,6 +201,15 @@ nnoremap ; :
 
 "Yで行末までヤンク
 nnoremap Y y$
+
+" terminal
+" terminal modeでESC
+tnoremap <silent> <ESC> <C-\><C-n>
+if has('nvim')
+  nnoremap <leader>t :vs<CR>:term<CR>
+else
+  nnoremap <leader>t :vert term<CR>
+endif
 
 "tagsジャンプの時に複数ある時は一覧表示
 "nnoremap <C-]> g<C-]>
