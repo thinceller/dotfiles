@@ -3,6 +3,7 @@
 " ---------------------------------
 call plug#begin('~/.vim/plugged')
 
+Plug 'vim-jp/vimdoc-ja'
 " NERDTree
 Plug 'scrooloose/nerdtree'
 " comment out
@@ -19,15 +20,26 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-surround'
 " resize window
 Plug 'simeji/winresizer'
+" indent guide
+Plug 'nathanaelkane/vim-indent-guides'
+" delete buffer and keep window/split
+Plug 'qpkorr/vim-bufkill'
 
 " ----- 補完 -----
 " Tabnine
 Plug 'zxqfl/tabnine-vim'
 " coc.nvim
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 
+" languages plugin
+" javascript plugin
+Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
+Plug 'othree/es.next.syntax.vim'
 " typescript plugin
 Plug 'leafgarland/typescript-vim'
+Plug 'styled-components/vim-styled-components', { 'branch': 'develop' }
+Plug 'othree/javascript-libraries-syntax.vim'
 " golang plugin
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 " markdown
@@ -35,12 +47,12 @@ Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 
 " lint
-Plug 'w0rp/ale'
+" Plug 'w0rp/ale'
 
 " Git Plugin
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
-Plug 'gregsexton/gitv'
+" Plug 'gregsexton/gitv'
 
 " fzf
 Plug '/usr/local/opt/fzf'
@@ -64,6 +76,7 @@ call plug#end()
 " endoding
 set encoding=utf-8
 scriptencoding utf-8
+set helplang=ja,en
 " off vi
 set nocompatible
 " show cursor
@@ -80,7 +93,7 @@ set background=dark
 syntax enable
 if (has("termguicolors"))
    set termguicolors
- endif
+endif
 colorscheme night-owl
 let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
@@ -108,9 +121,12 @@ let g:terminal_ansi_colors = [
 \ '#7fdbca',
 \ '#ffffff'
 \ ]
+" autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
+" autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
 
 " autoindent
-set autoindent
+" set autoindent
+set smartindent
 " indent space
 set shiftwidth=2
 set softtabstop=2
@@ -173,6 +189,10 @@ source $VIMRUNTIME/macros/matchit.vim " Vimの「%」を拡張する
 " no save when change buffer
 set hidden
 
+" rendering performance
+set ttyfast
+set lazyredraw
+
 " backup
 set nobackup
 set nowritebackup
@@ -188,7 +208,7 @@ set shortmess+=c
 set signcolumn=yes
 
 " filetype plugin
-filetype plugin indent on
+" filetype plugin indent on
 
 
 " ---------------------------------
@@ -204,11 +224,15 @@ nnoremap Y y$
 
 " terminal
 " terminal modeでESC
-tnoremap <silent> <ESC> <C-\><C-n>
 if has('nvim')
   nnoremap <leader>t :vs<CR>:term<CR>
 else
   nnoremap <leader>t :vert term<CR>
+endif
+
+if has('nvim')
+  au TermOpen * tnoremap <Esc> <c-\><c-n>
+  au FileType fzf tunmap <Esc>
 endif
 
 "tagsジャンプの時に複数ある時は一覧表示
@@ -228,18 +252,18 @@ augroup END
 
 
 "ペースト時に自動インデントで崩れるのを防ぐ
-if &term =~ "xterm"
-  let &t_SI .= "\e[?2004h"
-  let &t_EI .= "\e[?2004l"
-  let &pastetoggle = "\e[201~"
+" if &term =~ "xterm"
+"   let &t_SI .= "\e[?2004h"
+"   let &t_EI .= "\e[?2004l"
+"   let &pastetoggle = "\e[201~"
 
-  function XTermPasteBegin(ret)
-    set paste
-    return a:ret
-  endfunction
+"   function XTermPasteBegin(ret)
+"     set paste
+"     return a:ret
+"   endfunction
 
-  inoremap <special> <expr> <Esc>[200~ XTermPasteBegin("")
-endif
+"   inoremap <special> <expr> <Esc>[200~ XTermPasteBegin("")
+" endif
 
 " ---------------------------------
 " Plugin airline
@@ -247,7 +271,7 @@ endif
 " ---------------------------------
 let g:airline#extensions#tabline#enabled = 1
 
-" nmap <C-p> <Plug>AirlineSelectPrevTab
+nmap <C-p> <Plug>AirlineSelectPrevTab
 nmap <C-n> <Plug>AirlineSelectNextTab
 
 set ttimeoutlen=50
@@ -264,6 +288,14 @@ let g:airline_section_z = '%3l:%2v %{airline#extensions#ale#get_warning()} %{air
 nnoremap <leader>e :NERDTreeToggle<CR>
 
 " ---------------------------------
+" indent guide
+" ---------------------------------
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_guide_size = 1
+let g:indent_guides_start_level = 2
+let g:indent_guides_exclude_filetypes = ['help', 'nerdtree']
+
+" ---------------------------------
 " Git
 " ---------------------------------
 if has('nvim')
@@ -275,23 +307,23 @@ endif
 " ---------------------------------
 " coc.nvim
 " ---------------------------------
-" Use tab for trigger completion with characters ahead and navigate.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" " Use tab for trigger completion with characters ahead and navigate.
+" inoremap <silent><expr> <TAB>
+"       \ pumvisible() ? "\<C-n>" :
+"       \ <SID>check_back_space() ? "\<TAB>" :
+"       \ coc#refresh()
+" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+" function! s:check_back_space() abort
+"   let col = col('.') - 1
+"   return !col || getline('.')[col - 1]  =~# '\s'
+" endfunction
 
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
-" Coc only does snippet and additional edit on confirm.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" " Use <c-space> to trigger completion.
+" inoremap <silent><expr> <c-space> coc#refresh()
+" " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" " Coc only does snippet and additional edit on confirm.
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 " Use `[c` and `]c` to navigate diagnostics
 nmap <silent> [c <Plug>(coc-diagnostic-prev)
@@ -323,18 +355,18 @@ nmap <leader>rn <Plug>(coc-rename)
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
+" augroup mygroup
+"   autocmd!
+"   " Setup formatexpr specified filetype(s).
+"   autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+"   " Update signature help on jump placeholder
+"   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+" augroup end
 
 " Use <tab> for select selections ranges, needs server support, like: coc-tsserver, coc-python
-nmap <silent> <TAB> <Plug>(coc-range-select)
-xmap <silent> <TAB> <Plug>(coc-range-select)
-xmap <silent> <S-TAB> <Plug>(coc-range-select-backword)
+" nmap <silent> <TAB> <Plug>(coc-range-select)
+" xmap <silent> <TAB> <Plug>(coc-range-select)
+" xmap <silent> <S-TAB> <Plug>(coc-range-select-backword)
 
 " Use `:Format` to format current buffer
 command! -nargs=0 Format :call CocAction('format')
@@ -344,25 +376,7 @@ command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
 " Add status line support, for integration with other plugin, checkout `:h coc-status`
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
-" Using CocList
-" Show all diagnostics
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions
-nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-" Show commands
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " ---------------------------------
 "  fzf.vim

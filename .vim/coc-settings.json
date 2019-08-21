@@ -1,4 +1,10 @@
 {
+  "diagnostic.displayByAle": false,
+  "tsserver.implicitProjectConfig.checkJs": true,
+  "typescript.suggest.autoImports": true,
+  "typescript.validate.enable": false,
+  "javascript.validate.enable": false,
+  "javascript.preferences.noSemicolons": true,
   "languageserver": {
     "efm": {
       "command": "efm-langserver",
