@@ -4,6 +4,7 @@
 call plug#begin('~/.vim/plugged')
 
 Plug 'vim-jp/vimdoc-ja'
+Plug 'mhinz/vim-startify'
 " NERDTree
 Plug 'scrooloose/nerdtree'
 " comment out
@@ -101,7 +102,7 @@ let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
 autocmd ColorScheme * highlight LineNr ctermfg=12
 highlight CursorLineNr ctermbg=4 ctermfg=0
 set cursorline
-hi clear CursorLine
+" hi clear CursorLine
 " terminal color - like night-owl
 let g:terminal_ansi_colors = [
 \ '#000000',
@@ -121,8 +122,8 @@ let g:terminal_ansi_colors = [
 \ '#7fdbca',
 \ '#ffffff'
 \ ]
-" autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
-" autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
+autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
+autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
 
 " autoindent
 " set autoindent
@@ -158,8 +159,8 @@ set wrapscan
 set gdefault
 
 " default split
-set splitright
-"set splitbelow
+" set splitright
+set splitbelow
 
 " list characters
 set list
@@ -225,9 +226,9 @@ nnoremap Y y$
 " terminal
 " terminal modeでESC
 if has('nvim')
-  nnoremap <leader>t :vs<CR>:term<CR>
+  nnoremap <leader>t :sp<CR>:term<CR>
 else
-  nnoremap <leader>t :vert term<CR>
+  nnoremap <leader>t :bo term<CR>
 endif
 
 if has('nvim')
@@ -288,12 +289,49 @@ let g:airline_section_z = '%3l:%2v %{airline#extensions#ale#get_warning()} %{air
 nnoremap <leader>e :NERDTreeToggle<CR>
 
 " ---------------------------------
+" vim-startify
+" 参考: http://mjhd.hatenablog.com/entry/recommendation-of-vim-startify
+" ---------------------------------
+let g:startify_files_number = 5
+let g:startify_lists = [
+  \ { 'type': 'files', 'header': ['♻  最近使ったファイル'] },
+  \ { 'type': 'dir', 'header': ['♲  最近使ったファイル（カレントディレクトリ）'] },
+  \ { 'type': 'sessions', 'header': ['⚑  セッション'] },
+  \ { 'type': 'bookmarks', 'header': ['📕  ブックマーク'] }
+  \ ]
+let g:startify_bookmarks = ['~/.vimrc']
+
+function! s:center(lines) abort
+  let longest_line   = max(map(copy(a:lines), 'strwidth(v:val)'))
+  let centered_lines = map(copy(a:lines),
+        \ 'repeat(" ", (&columns / 2) - (longest_line / 2)) . v:val')
+  return centered_lines
+endfunction
+
+let g:startify_custom_header = s:center([
+  \'   __  __    _                 ____',
+  \'  / /_/ /_  (_)___  ________  / / /__  _____',
+  \' / __/ __ \/ / __ \/ ___/ _ \/ / / _ \/ ___/',
+  \'/ /_/ / / / / / / / /__/  __/ / /  __/ /',
+  \'\__/_/ /_/_/_/ /_/\___/\___/_/_/\___/_/',
+  \'',
+  \'             _    ___',
+  \'            | |  / (_)___ ___',
+  \'            | | / / / __ `__ \',
+  \'            | |/ / / / / / / /',
+  \'            |___/_/_/ /_/ /_/',
+  \'',
+  \])
+
+" ---------------------------------
 " indent guide
 " ---------------------------------
-let g:indent_guides_enable_on_vim_startup = 1
+" let g:indent_guides_enable_on_vim_startup = 1
 let g:indent_guides_guide_size = 1
 let g:indent_guides_start_level = 2
 let g:indent_guides_exclude_filetypes = ['help', 'nerdtree']
+
+nnoremap <space>in :IndentGuidesToggle<CR>
 
 " ---------------------------------
 " Git
