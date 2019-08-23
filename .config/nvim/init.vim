@@ -31,6 +31,8 @@ Plug 'qpkorr/vim-bufkill'
 Plug 'zxqfl/tabnine-vim'
 " coc.nvim
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+" ctags
+Plug 'szw/vim-tags'
 
 " languages plugin
 " javascript plugin
@@ -41,6 +43,11 @@ Plug 'othree/es.next.syntax.vim'
 Plug 'leafgarland/typescript-vim'
 Plug 'styled-components/vim-styled-components', { 'branch': 'develop' }
 Plug 'othree/javascript-libraries-syntax.vim'
+" ruby plugin
+Plug 'vim-ruby/vim-ruby'
+Plug 'tpope/vim-rails'
+Plug 'tpope/vim-rbenv'
+Plug 'tpope/vim-bundler'
 " golang plugin
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 " markdown
@@ -205,7 +212,6 @@ set noswapfile
 " for coc.nvim settings
 set cmdheight=2
 set updatetime=300
-set shortmess+=c
 set signcolumn=yes
 
 " filetype plugin
