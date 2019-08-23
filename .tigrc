@@ -1,0 +1,23 @@
+# basic settings
+set ignore-case = true
+set mouse = true
+set line-graphics = utf-8
+
+set main-view = id date author:email-user commit-title:graph=yes,refs=yes
+set blame-view  = date:default author:email-user id:yes,color line-number:yes,interval=1 text
+
+
+# key mappings
+bind generic G none
+bind main G none
+
+bind generic g move-first-line
+bind generic G move-last-line
+bind main G move-last-line
+
+bind generic <Ctrl-B> move-page-up
+bind generic <Ctrl-F> move-page-down
+
+bind main <Ctrl-R> !git rebase -i %(commit)
+bind diff <Ctrl-R> !git rebase -i %(commit)
+
