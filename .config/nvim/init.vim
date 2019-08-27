@@ -7,6 +7,7 @@ Plug 'vim-jp/vimdoc-ja'
 Plug 'mhinz/vim-startify'
 " NERDTree
 Plug 'scrooloose/nerdtree'
+Plug 'vwxyutarooo/nerdtree-devicons-syntax'
 " comment out
 Plug 'tpope/vim-commentary'
 " auto close
@@ -25,10 +26,12 @@ Plug 'simeji/winresizer'
 Plug 'nathanaelkane/vim-indent-guides'
 " delete buffer and keep window/split
 Plug 'qpkorr/vim-bufkill'
+" language pack
+Plug 'sheerun/vim-polyglot'
 
 " ----- 補完 -----
 " Tabnine
-Plug 'zxqfl/tabnine-vim'
+Plug 'zxqfl/tabnine-vim', { 'branch': 'master' }
 " coc.nvim
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 " ctags
@@ -36,13 +39,13 @@ Plug 'szw/vim-tags'
 
 " languages plugin
 " javascript plugin
-Plug 'pangloss/vim-javascript'
-Plug 'mxw/vim-jsx'
+" Plug 'pangloss/vim-javascript'
+" Plug 'mxw/vim-jsx'
 Plug 'othree/es.next.syntax.vim'
 " typescript plugin
-Plug 'leafgarland/typescript-vim'
-Plug 'styled-components/vim-styled-components', { 'branch': 'develop' }
-Plug 'othree/javascript-libraries-syntax.vim'
+" Plug 'leafgarland/typescript-vim'
+" Plug 'styled-components/vim-styled-components', { 'branch': 'develop' }
+" Plug 'othree/javascript-libraries-syntax.vim'
 " ruby plugin
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-rails'
@@ -81,6 +84,9 @@ call plug#end()
 " ---------------------------------
 "  Basic settings
 " ---------------------------------
+let g:python_host_prog = $PYENV_ROOT.'/versions/neovim2/bin/python'
+let g:python3_host_prog = $PYENV_ROOT.'/versions/neovim3/bin/python'
+
 " endoding
 set encoding=utf-8
 scriptencoding utf-8
@@ -95,6 +101,7 @@ set number
 set title
 " show status
 set laststatus=2
+set mouse=a
 
 " color
 set background=dark
@@ -142,6 +149,8 @@ set tabstop=2
 " tab to space
 set expandtab
 set smarttab
+
+set wildmenu
 
 " invalidate bell
 set visualbell t_vb=
@@ -229,6 +238,8 @@ nnoremap ; :
 "Yで行末までヤンク
 nnoremap Y y$
 
+let mapleader = "\<Space>"
+
 " terminal
 " terminal modeでESC
 if has('nvim')
@@ -277,6 +288,11 @@ augroup END
 " 参考: https://original-game.com/vim-airline/
 " ---------------------------------
 let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+let g:webdevicons_enable_airline_tabline = 1
+let g:webdevicons_enable_airline_statusline = 1
+" let g:airline#extensions#ale#error_symbol = ' '
+" let g:airline#extensions#ale#warning_symbol = ' '
 
 nmap <C-p> <Plug>AirlineSelectPrevTab
 nmap <C-n> <Plug>AirlineSelectNextTab
@@ -284,15 +300,21 @@ nmap <C-n> <Plug>AirlineSelectNextTab
 set ttimeoutlen=50
 
 let g:airline_theme = 'dark'
-let g:airline#extensions#ale#error_symbol = ' '
-let g:airline#extensions#ale#warning_symbol = ' '
-let g:airline_section_z = '%3l:%2v %{airline#extensions#ale#get_warning()} %{airline#extensions#ale#get_error()}'
+
+let g:airline#extensions#coc#enabled = 1
+let airline#extensions#coc#error_symbol = ' '
+let airline#extensions#coc#warning_symbol = ' '
+let airline#extensions#coc#stl_format_err = '%E{[%e(#%fe)]}'
+let airline#extensions#coc#stl_format_warn = '%W{[%w(#%fw)]}'
+
+let g:airline_section_z = '%3l:%2v %{airline#extensions#coc#get_warning()} %{airline#extensions#coc#get_error()}'
 
 " ---------------------------------
 " NERDTree
 " ---------------------------------
 " autocmd vimenter * NERDTree
 nnoremap <leader>e :NERDTreeToggle<CR>
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " ---------------------------------
 " vim-startify
@@ -332,12 +354,19 @@ let g:startify_custom_header = s:center([
 " ---------------------------------
 " indent guide
 " ---------------------------------
-" let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_enable_on_vim_startup = 1
 let g:indent_guides_guide_size = 1
 let g:indent_guides_start_level = 2
-let g:indent_guides_exclude_filetypes = ['help', 'nerdtree']
+let g:indent_guides_exclude_filetypes = ['help', 'nerdtree', 'startify', 'terminal', 'fzf']
 
 nnoremap <space>in :IndentGuidesToggle<CR>
+
+
+" ---------------------------------
+" polyglot
+" ---------------------------------
+
+let g:polyglot_disabled = ['css']
 
 " ---------------------------------
 " Git
@@ -351,23 +380,23 @@ endif
 " ---------------------------------
 " coc.nvim
 " ---------------------------------
-" " Use tab for trigger completion with characters ahead and navigate.
-" inoremap <silent><expr> <TAB>
-"       \ pumvisible() ? "\<C-n>" :
-"       \ <SID>check_back_space() ? "\<TAB>" :
-"       \ coc#refresh()
-" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" Use tab for trigger completion with characters ahead and navigate.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-" function! s:check_back_space() abort
-"   let col = col('.') - 1
-"   return !col || getline('.')[col - 1]  =~# '\s'
-" endfunction
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
 
-" " Use <c-space> to trigger completion.
-" inoremap <silent><expr> <c-space> coc#refresh()
-" " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
-" " Coc only does snippet and additional edit on confirm.
-" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 " Use `[c` and `]c` to navigate diagnostics
 nmap <silent> [c <Plug>(coc-diagnostic-prev)
@@ -396,8 +425,8 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 nmap <leader>rn <Plug>(coc-rename)
 
 " Remap for format selected region
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+" xmap <leader>f  <Plug>(coc-format-selected)
+" nmap <leader>f  <Plug>(coc-format-selected)
 
 " augroup mygroup
 "   autocmd!
@@ -425,18 +454,9 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " ---------------------------------
 "  fzf.vim
 " ---------------------------------
-" prefix
-nnoremap [fzf] <Nop>
-nmap <space>f [fzf]
-
-fun! FzfOmniFiles()
-  let is_git = system('git status')
-  if v:shell_error
-    :Files
-  else
-    :GitFiles
-  endif
-endfun
+function! FzfWordRg()
+  :Rg ' .expand('<cword>')'<CR>
+endfunction
 
 " preview
 command! -bang -nargs=? -complete=dir Files
@@ -452,11 +472,12 @@ command! -bang -nargs=* Rg
   \           : fzf#vim#with_preview('right:50%:hidden', '?'),
   \   <bang>0)
 
-nnoremap <silent> [fzf]p :call FzfOmniFiles()<CR>
 nnoremap <C-g> :Rg<Space>
-nnoremap <silent> [fzf]f :Files<CR>
-nnoremap <silent> [fzf]F :GFiles?<CR>
-nnoremap <silent> [fzf]b :Buffers<CR>
-nnoremap <silent> [fzf]l :BLines<CR>
-nnoremap <silent> [fzf]h :History<CR>
+nnoremap <leader>g :exec 'Rg' expand('<cword>')<CR>
+nnoremap <leader>f :Files<CR>
+nnoremap <leader>p :GFiles<CR>
+nnoremap <leader>F :GFiles?<CR>
+nnoremap <leader>b :Buffers<CR>
+nnoremap <leader>l :BLines<CR>
+nnoremap <leader>h :History<CR>
 
