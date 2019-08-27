@@ -24,6 +24,10 @@ setopt nonomatch
 autoload -Uz compinit
 compinit
 
+# spaceship settings
+export SPACESHIP_DOCKER_SHOW=false
+export SPACESHIP_KUBECONTEXT_SHOW=false
+
 # ctags setting
 alias ctags="`brew --prefix`/bin/ctags"
 
