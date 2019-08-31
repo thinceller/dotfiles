@@ -31,7 +31,7 @@ Plug 'sheerun/vim-polyglot'
 
 " ----- 補完 -----
 " Tabnine
-Plug 'zxqfl/tabnine-vim', { 'branch': 'master' }
+Plug 'zxqfl/tabnine-vim', { 'branch': 'master', 'for': 'ruby' }
 " coc.nvim
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 " ctags
@@ -251,6 +251,8 @@ endif
 if has('nvim')
   au TermOpen * tnoremap <Esc> <c-\><c-n>
   au FileType fzf tunmap <Esc>
+  autocmd TermOpen * setlocal norelativenumber
+  autocmd TermOpen * setlocal nonumber
 endif
 
 "tagsジャンプの時に複数ある時は一覧表示
@@ -307,7 +309,7 @@ let airline#extensions#coc#warning_symbol = ' '
 let airline#extensions#coc#stl_format_err = '%E{[%e(#%fe)]}'
 let airline#extensions#coc#stl_format_warn = '%W{[%w(#%fw)]}'
 
-let g:airline_section_z = '%3l:%2v %{airline#extensions#coc#get_warning()} %{airline#extensions#coc#get_error()}'
+" let g:airline_section_z = '%3l:%2v %{airline#extensions#coc#get_warning()} %{airline#extensions#coc#get_error()}'
 
 " ---------------------------------
 " NERDTree
