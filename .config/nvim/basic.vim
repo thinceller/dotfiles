@@ -1,6 +1,6 @@
-" ---------------------------------
+" ==================================================================
 "  Basic settings
-" ---------------------------------
+" ==================================================================
 let g:python_host_prog = $PYENV_ROOT.'/versions/neovim2/bin/python'
 let g:python3_host_prog = $PYENV_ROOT.'/versions/neovim3/bin/python'
 
@@ -54,11 +54,9 @@ autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
 " set autoindent
 set smartindent
 
-" default indent space
 set shiftwidth=2
 set softtabstop=2
 set tabstop=2
-" tab to space
 set expandtab
 set smarttab
 
@@ -90,14 +88,12 @@ set showcmd
 
 set clipboard=unnamed
 
-" set backspace to move
 set backspace=indent,eol,start
 set nrformats-=octal
 
 " complement size
 set pumheight=10
 
-" brackets
 set showmatch
 set matchtime=1
 source $VIMRUNTIME/macros/matchit.vim " Vimの「%」を拡張する
@@ -115,9 +111,9 @@ set noundofile
 set undodir=$HOME/.vim/backup
 set noswapfile
 
-" ---------------------------------
-" Key mappings
-" ---------------------------------
+" ==================================================================
+"   Key mappings
+" ==================================================================
 inoremap <silent> jj <ESC>
 nnoremap ; :
 
@@ -138,9 +134,7 @@ else
   nnoremap tig :tab :term ++close tig<CR>
 endif
 
-" tagsジャンプの時に複数ある時は一覧表示
 nnoremap <C-]> g<C-]>
-"垂直ジャンプ
 " nnoremap <C-h> :vsp<CR> :exe("tjump ".expand('<cword>'))<CR>
 " nnoremap <C-k> :split<CR> :exe("tjump ".expand('<cword>'))<CR>
 

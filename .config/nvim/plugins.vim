@@ -86,7 +86,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 let g:startify_files_number = 5
 let g:startify_bookmarks = [
   \ '~/.config/nvim/basic.vim',
-  \ '~/.config/nvim/plugged'
+  \ '~/.config/nvim/plugins.vim'
   \ ]
 
 function! s:center(lines) abort
