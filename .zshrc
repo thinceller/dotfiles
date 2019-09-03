@@ -16,6 +16,7 @@ fi
 export LANG=ja_JP.UTF-8
 fpath+=${ZDOTDIR:-~}/.zsh_functions
 export PATH="$HOME/.cargo/bin:$PATH"
+# export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#6D6D6D'
 
 # グロブ展開対策
 setopt nonomatch
@@ -149,6 +150,14 @@ fkill() {
     echo $pid | xargs kill -${1:-9}
   fi
 }
+
+ghq-fzf() {
+  local dir
+  dir=$(ghq list -p > /dev/null | fzf-tmux --reverse +m) &&
+    cd $dir
+}
+zle -N ghq-fzf
+bindkey "^g" ghq-fzf
 
 
 # alias

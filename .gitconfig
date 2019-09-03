@@ -18,4 +18,5 @@
 	process = git-lfs filter-process
 	required = true
 [ghq]
+	root = /Users/kohei/src
 	root = /Users/kohei/go/src
