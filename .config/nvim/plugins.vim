@@ -1,6 +1,5 @@
 call plug#begin('~/.config/nvim/plugged')
 
-" Plug 'vim-jp/vimdoc-ja'
 Plug 'mhinz/vim-startify'
 
 Plug 'scrooloose/nerdtree'
@@ -14,8 +13,7 @@ Plug 'cohama/lexima.vim'
 Plug 'tpope/vim-endwise'
 
 Plug 'tpope/vim-commentary'
-" Plug 'tpope/vim-surround'
-Plug 'machakann/vim-sandwich'
+Plug 'tpope/vim-surround'
 Plug 'simeji/winresizer'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'qpkorr/vim-bufkill'
@@ -39,8 +37,7 @@ Plug 'tpope/vim-fugitive'
 
 Plug 'haishanh/night-owl.vim'
 
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'itchyny/lightline.vim'
 Plug 'ryanoasis/vim-devicons'
 
 call plug#end()
@@ -52,26 +49,55 @@ call plug#end()
 colorscheme night-owl
 
 " ==================================================================
-"   vim-airline
-"   参考: https://original-game.com/vim-airline/
+"   lightline.vim
 " ==================================================================
-set ttimeoutlen=50
+let g:lightline = {
+    \ 'colorscheme': 'nord',
+    \ 'active': {
+    \   'left': [ [ 'mode', 'paste' ], [ 'bufnum', 'fugitive', 'filename' ] ],
+    \   'right': [ [ 'lineinfo' ], [ 'percent' ], [ 'charvaluehex', 'fileformat', 'fileencoding', 'filetype' ] ]
+    \ },
+    \ 'component': {
+    \   'charvaluehex': '0x%B'
+    \ },
+    \ 'component_function': {
+    \   'fugitive': 'LightlineFugitive',
+    \   'filename': 'LightlineFilename',
+    \   'fileformat': 'MyFileformat',
+    \   'filetype': 'MyFiletype'
+    \ },
+    \ 'separator': { 'left': '', 'right': '' },
+    \ 'subseparator': { 'left': ' ', 'right': ' ' }
+    \ }
 
-nmap <C-p> <Plug>AirlineSelectPrevTab
-nmap <C-n> <Plug>AirlineSelectNextTab
+function! LightlineModified()
+  return &ft =~ 'help\|vimfiler' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+endfunction
+function! LightlineReadonly()
+  return &ft !~? 'help\|vimfiler' && &readonly ? '⭤' : ''
+endfunction
+function! LightlineFilename()
+  return ('' != LightlineReadonly() ? LightlineReadonly() . ' ' : '') .
+  \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
+  \  &ft == 'unite' ? unite#get_status_string() :
+  \  &ft == 'vimshell' ? vimshell#get_status_string() :
+  \ '' != expand('%:F') ? expand('%:F') : '[No Name]') .
+  \ ('' != LightlineModified() ? ' ' . LightlineModified() : '')
+endfunction
+function! LightlineFugitive()
+  if &ft !~? 'vimfiler' && exists('*fugitive#head')
+    let branch = fugitive#head()
+    return branch !=# '' ? '⭠ '.branch : ''
+  endif
+  return ''
+endfunction
 
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:webdevicons_enable_airline_tabline = 1
-let g:webdevicons_enable_airline_statusline = 1
-
-let g:airline_theme = 'dark'
-
-let g:airline#extensions#coc#enabled = 1
-let airline#extensions#coc#error_symbol = ' '
-let airline#extensions#coc#warning_symbol = ' '
-let airline#extensions#coc#stl_format_err = '%E{[%e(#%fe)]}'
-let airline#extensions#coc#stl_format_warn = '%W{[%w(#%fw)]}'
+function! MyFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
+endfunction
+function! MyFileformat()
+  return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
+endfunction
 
 " ==================================================================
 "   nerdtree
