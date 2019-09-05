@@ -38,6 +38,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'haishanh/night-owl.vim'
 
 Plug 'itchyny/lightline.vim'
+Plug 'mengelbrecht/lightline-bufferline'
 Plug 'ryanoasis/vim-devicons'
 
 call plug#end()
@@ -51,11 +52,18 @@ colorscheme night-owl
 " ==================================================================
 "   lightline.vim
 " ==================================================================
+set showtabline=2
+
+nnoremap <C-n> :bnext<CR>
+nnoremap <C-p> :bprev<CR>
+
 let g:lightline = {
-    \ 'colorscheme': 'nord',
+    \ 'colorscheme': 'material',
     \ 'active': {
-    \   'left': [ [ 'mode', 'paste' ], [ 'bufnum', 'fugitive', 'filename' ] ],
+    \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ] ],
     \   'right': [ [ 'lineinfo' ], [ 'percent' ], [ 'charvaluehex', 'fileformat', 'fileencoding', 'filetype' ] ]
+    \ },
+    \ 'tabline': { 'left': [ [ 'buffers' ] ], 'right': [ [ 'tabs' ] ]
     \ },
     \ 'component': {
     \   'charvaluehex': '0x%B'
@@ -66,9 +74,17 @@ let g:lightline = {
     \   'fileformat': 'MyFileformat',
     \   'filetype': 'MyFiletype'
     \ },
+    \ 'component_expand': {
+    \   'buffers': 'lightline#bufferline#buffers',
+    \ },
+    \ 'component_type': {
+    \   'buffers': 'tabsel',
+    \ },
     \ 'separator': { 'left': '', 'right': '' },
     \ 'subseparator': { 'left': ' ', 'right': ' ' }
     \ }
+
+let g:lightline#bufferline#show_number  = 1
 
 function! LightlineModified()
   return &ft =~ 'help\|vimfiler' ? '' : &modified ? '+' : &modifiable ? '' : '-'
@@ -140,7 +156,7 @@ let g:startify_custom_header = s:center([
 " ==================================================================
 "   vim-indent-guides
 " ==================================================================
-let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_enable_on_vim_startup = 0
 let g:indent_guides_guide_size = 1
 let g:indent_guides_start_level = 2
 let g:indent_guides_exclude_filetypes = ['help', 'nerdtree', 'startify', 'terminal', 'fzf']
