@@ -50,6 +50,7 @@ let g:terminal_ansi_colors = [
 \ ]
 autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
 autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
+au BufRead,BufNewFile *.jsx set filetype=javascript.jsx
 
 " set autoindent
 set smartindent

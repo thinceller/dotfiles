@@ -8,9 +8,7 @@ Plug 'vwxyutarooo/nerdtree-devicons-syntax'
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
 
-Plug 'tpope/vim-ragtag'
 Plug 'cohama/lexima.vim'
-Plug 'tpope/vim-endwise'
 
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
@@ -25,11 +23,15 @@ Plug 'szw/vim-tags'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'sheerun/vim-polyglot'
+
 Plug 'othree/es.next.syntax.vim', { 'for': ['javascript', 'javascript.jsx', 'typescript', 'typescript.jsx'] }
+
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
 Plug 'tpope/vim-rails', { 'for': 'ruby' }
 Plug 'tpope/vim-rbenv', { 'for': 'ruby' }
 Plug 'tpope/vim-bundler', { 'for': 'ruby' }
+Plug 'tpope/vim-endwise', { 'for': 'ruby' }
+
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go' }
 
 Plug 'airblade/vim-gitgutter'
@@ -84,7 +86,8 @@ let g:lightline = {
     \ 'subseparator': { 'left': ' ', 'right': ' ' }
     \ }
 
-let g:lightline#bufferline#show_number  = 1
+let g:lightline#bufferline#show_number = 1
+let g:lightline#bufferline#enable_devicons = 1
 
 function! LightlineModified()
   return &ft =~ 'help\|vimfiler' ? '' : &modified ? '+' : &modifiable ? '' : '-'
@@ -97,7 +100,7 @@ function! LightlineFilename()
   \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
   \  &ft == 'unite' ? unite#get_status_string() :
   \  &ft == 'vimshell' ? vimshell#get_status_string() :
-  \ '' != expand('%:F') ? expand('%:F') : '[No Name]') .
+  \ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
   \ ('' != LightlineModified() ? ' ' . LightlineModified() : '')
 endfunction
 function! LightlineFugitive()
@@ -196,9 +199,6 @@ function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
-
-inoremap <silent><expr> <c-space> coc#refresh()
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 nmap <silent> [c <Plug>(coc-diagnostic-prev)
 nmap <silent> ]c <Plug>(coc-diagnostic-next)
