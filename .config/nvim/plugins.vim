@@ -16,7 +16,7 @@ Plug 'simeji/winresizer'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'qpkorr/vim-bufkill'
 
-Plug 'zxqfl/tabnine-vim', { 'branch': 'master', 'for': ['ruby', 'go'] }
+" Plug 'zxqfl/tabnine-vim', { 'branch': 'master', 'for': ['ruby', 'go'] }
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 Plug 'szw/vim-tags'
 
@@ -34,6 +34,8 @@ Plug 'tpope/vim-endwise', { 'for': 'ruby' }
 
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go' }
 
+Plug 'thinca/vim-quickrun'
+
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 
@@ -48,7 +50,6 @@ call plug#end()
 " ==================================================================
 "   night-owl.vim
 " ==================================================================
-" night-owl pluginを読み込んでからcolorschemeの設定を行う
 colorscheme night-owl
 
 " ==================================================================
@@ -131,7 +132,8 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 let g:startify_files_number = 5
 let g:startify_bookmarks = [
   \ '~/.config/nvim/basic.vim',
-  \ '~/.config/nvim/plugins.vim'
+  \ '~/.config/nvim/plugins.vim',
+  \ '~/.zshrc'
   \ ]
 
 function! s:center(lines) abort
@@ -165,6 +167,11 @@ let g:indent_guides_start_level = 2
 let g:indent_guides_exclude_filetypes = ['help', 'nerdtree', 'startify', 'terminal', 'fzf']
 
 nnoremap <space>in :IndentGuidesToggle<CR>
+
+" ==================================================================
+"   vim-bufkill
+" ==================================================================
+nnoremap <leader>q :exec 'BW'<CR>
 
 " ==================================================================
 "   vim-polyglot
@@ -220,8 +227,6 @@ endfunction
 
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
-nmap <leader>rn <Plug>(coc-rename)
-
 " Add status line support, for integration with other plugin, checkout `:h coc-status`
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
@@ -245,7 +250,7 @@ command! -bang -nargs=* Rg
 nnoremap <C-g> :Rg<Space>
 nnoremap <leader>g :exec 'Rg' expand('<cword>')<CR>
 nnoremap <leader>f :Files<CR>
-nnoremap <leader>p :GFiles<CR>
+nnoremap <leader>p :GitFiles<CR>
 nnoremap <leader>F :GFiles?<CR>
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>l :BLines<CR>

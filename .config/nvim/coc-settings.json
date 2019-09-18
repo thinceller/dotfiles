@@ -9,7 +9,20 @@
   "diagnostic.infoSign": "\uf7fc",
   "tsserver.implicitProjectConfig.checkJs": true,
   "typescript.suggest.autoImports": true,
-  "typescript.preferences.noSemicolons": true,
   "typescript.validate.enable": true,
-  "javascript.validate.enable": true
+  "javascript.validate.enable": true,
+  "python.linting.pylintEnabled": false,
+  "python.linting.flake8Enabled": true,
+  "python.linting.enabled": true,
+  "languageserver": {
+    "cquery": {
+      "command": "cquery",
+      "args": ["--log-file=/tmp/cq.log"],
+      "filetypes": ["c", "cpp"],
+      "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
+      "initializationOptions": {
+        "cacheDirectory": "/tmp/cquery"
+      }
+    }
+  }
 }
