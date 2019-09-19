@@ -166,8 +166,6 @@ let g:indent_guides_guide_size = 1
 let g:indent_guides_start_level = 2
 let g:indent_guides_exclude_filetypes = ['help', 'nerdtree', 'startify', 'terminal', 'fzf']
 
-nnoremap <space>in :IndentGuidesToggle<CR>
-
 " ==================================================================
 "   vim-bufkill
 " ==================================================================
@@ -187,6 +185,19 @@ let g:BufKillCreateMappings = 0
 "   vim-gitgutter
 " ==================================================================
 let g:gitgutter_map_keys = 0
+
+" ==================================================================
+"   vim-fugitive
+" ==================================================================
+nnoremap [fugitive]
+nmap <space>g [fugitive]
+
+nnoremap <silent> [fugitive]s :Gstatus<CR><C-w>T
+nnoremap <silent> [fugitive]a :Gwrite<CR>
+nnoremap <silent> [fugitive]c :Gcommit-v<CR>
+nnoremap <silent> [fugitive]b :Gblame<CR>
+nnoremap <silent> [fugitive]d :Gdiff<CR>
+nnoremap <silent> [fugitive]m :Gmerge<CR>
 
 " ==================================================================
 "   coc.nvim
@@ -247,8 +258,8 @@ command! -bang -nargs=* Rg
   \           : fzf#vim#with_preview('right:50%:hidden', '?'),
   \   <bang>0)
 
-nnoremap <C-g> :Rg<Space>
-nnoremap <leader>g :exec 'Rg' expand('<cword>')<CR>
+nnoremap <leader>/ :Rg<Space>
+nnoremap <C-g> :exec 'Rg' expand('<cword>')<CR>
 nnoremap <leader>f :Files<CR>
 nnoremap <leader>p :GitFiles<CR>
 nnoremap <leader>F :GFiles?<CR>
