@@ -189,7 +189,7 @@ let g:gitgutter_map_keys = 0
 " ==================================================================
 "   vim-fugitive
 " ==================================================================
-nnoremap [fugitive]
+nnoremap [fugitive] <Nop>
 nmap <space>g [fugitive]
 
 nnoremap <silent> [fugitive]s :Gstatus<CR><C-w>T
