@@ -143,5 +143,6 @@ bindkey "^g" ghq-fzf
 
 # alias
 alias gfc='git commit --allow-empty -m "first commit [ci skip]"'
+alias cat='nyan'
 
 export PATH="/usr/local/opt/llvm/bin:$PATH"
