@@ -144,5 +144,11 @@ bindkey "^g" ghq-fzf
 # alias
 alias gfc='git commit --allow-empty -m "first commit [ci skip]"'
 alias cat='nyan'
+alias ll='exa -lh'
+alias la='ll -a'
 
 export PATH="/usr/local/opt/llvm/bin:$PATH"
+
+# tabtab source for slss package
+# uninstall by removing these lines or running `tabtab uninstall slss`
+[[ -f /Users/kohei/src/github.com/Baseconnect/Baseconnect/crawler/node_modules/tabtab/.completions/slss.zsh ]] && . /Users/kohei/src/github.com/Baseconnect/Baseconnect/crawler/node_modules/tabtab/.completions/slss.zsh
