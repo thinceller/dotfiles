@@ -2,9 +2,6 @@ call plug#begin('~/.config/nvim/plugged')
 
 Plug 'mhinz/vim-startify'
 
-Plug 'scrooloose/nerdtree'
-Plug 'vwxyutarooo/nerdtree-devicons-syntax'
-
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
 
@@ -33,6 +30,9 @@ Plug 'tpope/vim-bundler', { 'for': 'ruby' }
 Plug 'tpope/vim-endwise', { 'for': 'ruby' }
 
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go' }
+
+Plug 'tyru/open-browser.vim', { 'for': 'markdown' }
+Plug 'previm/previm', { 'for': 'markdown' }
 
 Plug 'thinca/vim-quickrun'
 
@@ -122,12 +122,6 @@ function! MyFileformat()
 endfunction
 
 " ==================================================================
-"   nerdtree
-" ==================================================================
-nnoremap <leader>e :NERDTreeToggle<CR>
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-" ==================================================================
 "   vim-startify
 "   参考: http://mjhd.hatenablog.com/entry/recommendation-of-vim-startify
 " ==================================================================
@@ -166,7 +160,7 @@ let g:startify_custom_header = s:center([
 let g:indent_guides_enable_on_vim_startup = 1
 let g:indent_guides_guide_size = 1
 let g:indent_guides_start_level = 2
-let g:indent_guides_exclude_filetypes = ['help', 'nerdtree', 'startify', 'terminal', 'fzf']
+let g:indent_guides_exclude_filetypes = ['help', 'startify', 'terminal', 'fzf']
 
 " ==================================================================
 "   vim-bufkill

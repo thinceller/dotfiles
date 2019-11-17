@@ -10,6 +10,7 @@ env:
   # each instance of Alacritty. If it is not present, alacritty will
   # check the local terminfo database and use `alacritty` if it is
   # available, otherwise `xterm-256color` is used.
+  # TERM: xterm-256color
   TERM: xterm-256color
 
 window:
@@ -77,15 +78,6 @@ scrolling:
   # scrollback is enabled (history > 0).
   multiplier: 3
 
-  # Faux Scrolling
-  #
-  # The `faux_multiplier` setting controls the number of lines the terminal
-  # should scroll when the alternate screen buffer is active. This is used
-  # to allow mouse scrolling for applications like `man`.
-  #
-  # Specifying `0` will disable faux scrolling.
-  faux_multiplier: 3
-
   # Scroll to the bottom when new text is written to the terminal.
   auto_scroll: false
 
@@ -108,7 +100,7 @@ font:
     #   - (macOS) Menlo
     #   - (Linux) monospace
     #   - (Windows) Consolas
-    family: "HackGen Nerd Font"
+    family: "HackGenConsole Nerd Font"
 
     # The `style` can be specified to pick a specific face.
     style: Regular
@@ -119,7 +111,7 @@ font:
     #
     # If the bold family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: "HackGen Nerd Font"
+    family: "HackGenConsole Nerd Font"
 
     # The `style` can be specified to pick a specific face.
     style: Bold
@@ -130,7 +122,7 @@ font:
     #
     # If the italic family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: "HackGen Nerd Font"
+    family: "HackGenConsole Nerd Font"
 
     # The `style` can be specified to pick a specific face.
     style: Italic
@@ -313,7 +305,7 @@ visual_bell:
 #
 # Window opacity as a floating point number from `0.0` to `1.0`.
 # The value `0.0` is completely transparent and `1.0` is opaque.
-background_opacity: 0.90
+background_opacity: 1.0
 
 # Mouse bindings
 #

@@ -72,10 +72,6 @@ if [ -f '/Users/kohei/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/kohe
 if [ -f '/Users/kohei/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/kohei/google-cloud-sdk/completion.zsh.inc'; fi
 
 
-# zsh plugin: smart-change-directory
-source ~/.Software/smart-change-directory/shellrcfiles/zshrc_scd
-
-
 # Baseconnect setting
 export PATH="/usr/local/bin:$PATH"
 export PKG_CONFIG_PATH=/opt/ImageMagick/lib/pkgconfig
@@ -106,12 +102,12 @@ fbr() {
 }
 
 # fd - cd to selected directory
-fd() {
-  local dir
-  dir=$(find ${1:-.} -path '*/\.*' -prune \
-                  -o -type d -print 2> /dev/null | fzf +m) &&
-  cd "$dir"
-}
+# fd() {
+#   local dir
+#   dir=$(find ${1:-.} -path '*/\.*' -prune \
+#                   -o -type d -print 2> /dev/null | fzf +m) &&
+#   cd "$dir"
+# }
 
 # fv - fuzzy open with vim from anywhere
 # 参考: https://qiita.com/Sa2Knight/items/6635af9fc648a5431685
@@ -137,6 +133,7 @@ ghq-fzf() {
   dir=$(ghq list -p > /dev/null | fzf-tmux --reverse +m) &&
     cd $dir
 }
+alias fd='ghq-fzf'
 zle -N ghq-fzf
 bindkey "^g" ghq-fzf
 
@@ -152,3 +149,5 @@ export PATH="/usr/local/opt/llvm/bin:$PATH"
 # tabtab source for slss package
 # uninstall by removing these lines or running `tabtab uninstall slss`
 [[ -f /Users/kohei/src/github.com/Baseconnect/Baseconnect/crawler/node_modules/tabtab/.completions/slss.zsh ]] && . /Users/kohei/src/github.com/Baseconnect/Baseconnect/crawler/node_modules/tabtab/.completions/slss.zsh
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh

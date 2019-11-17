@@ -7,16 +7,10 @@
   "diagnostic.warningSign": "\uf071",
   "diagnostic.errorSign": "\uf05e",
   "diagnostic.infoSign": "\uf7fc",
+  "solargraph.diagnostics": true,
+  "solargraph.hover": true,
   "tsserver.implicitProjectConfig.checkJs": true,
   "typescript.suggest.autoImports": true,
-  "typescript.preferences.noSemicolons": true,
   "typescript.validate.enable": true,
-  "javascript.validate.enable": true,
-  "languageserver": {
-    "golang": {
-      "command": "gopls",
-      "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
-      "filetypes": ["go"]
-    }
-  }
+  "javascript.validate.enable": true
 }

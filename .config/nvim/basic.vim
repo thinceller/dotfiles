@@ -147,3 +147,9 @@ augroup MyXML
   autocmd Filetype html inoremap <buffer> </ </<C-x><C-o>
 augroup END
 
+" ==================================================================
+"   Key mappings
+" ==================================================================
+let g:netrw_liststyle=3
+let g:netrw_banner=1
+
