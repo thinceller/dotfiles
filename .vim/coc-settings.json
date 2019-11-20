@@ -12,5 +12,6 @@
   "tsserver.implicitProjectConfig.checkJs": true,
   "typescript.suggest.autoImports": true,
   "typescript.validate.enable": true,
-  "javascript.validate.enable": true
+  "javascript.validate.enable": true,
+  "eslint.autoFixOnSave": true
 }
