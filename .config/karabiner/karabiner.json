@@ -226,32 +226,6 @@
                         ]
                     },
                     {
-                        "description": "Post escape if left_control is pressed alone.",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "left_control",
-                                    "modifiers": {
-                                        "optional": [
-                                            "any"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "left_control"
-                                    }
-                                ],
-                                "to_if_alone": [
-                                    {
-                                        "key_code": "escape"
-                                    }
-                                ],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "description": "escキーを押したときに、英数キーも送信する（vim用）",
                         "manipulators": [
                             {
@@ -291,14 +265,6 @@
                             },
                             "to": {
                                 "key_code": "left_control"
-                            }
-                        },
-                        {
-                            "from": {
-                                "key_code": "escape"
-                            },
-                            "to": {
-                                "key_code": "grave_accent_and_tilde"
                             }
                         },
                         {

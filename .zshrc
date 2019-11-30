@@ -60,7 +60,7 @@ export PATH="$GOPATH/bin:$PATH"
 
 
 # direnv setting
-export EDITOR=/usr/bin/vim
+export EDITOR=/usr/local/bin/vim
 eval "$(direnv hook zsh)"
 
 

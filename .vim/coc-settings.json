@@ -13,5 +13,6 @@
   "typescript.suggest.autoImports": true,
   "typescript.validate.enable": true,
   "javascript.validate.enable": true,
-  "eslint.autoFixOnSave": true
+  "eslint.autoFixOnSave": true,
+  "python.linting.flake8Enabled": true
 }

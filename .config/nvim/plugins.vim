@@ -13,7 +13,6 @@ Plug 'simeji/winresizer'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'qpkorr/vim-bufkill'
 
-" Plug 'zxqfl/tabnine-vim', { 'branch': 'master', 'for': ['ruby', 'go'] }
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 Plug 'szw/vim-tags'
 
@@ -21,7 +20,8 @@ Plug 'bronson/vim-trailing-whitespace'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'sheerun/vim-polyglot'
 
-Plug 'othree/es.next.syntax.vim', { 'for': ['javascript', 'javascript.jsx', 'typescript', 'typescript.jsx'] }
+" Plug 'othree/yajs.vim', { 'for': ['javascript', 'javascriptreact'] }
+" Plug 'othree/es.next.syntax.vim', { 'for': ['javascript', 'javascriptreact'] }
 
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
 Plug 'tpope/vim-rails', { 'for': 'ruby' }
@@ -33,8 +33,6 @@ Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go' }
 
 Plug 'tyru/open-browser.vim', { 'for': 'markdown' }
 Plug 'previm/previm', { 'for': 'markdown' }
-
-Plug 'thinca/vim-quickrun'
 
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
@@ -85,8 +83,8 @@ let g:lightline = {
     \ 'component_type': {
     \   'buffers': 'tabsel',
     \ },
-    \ 'separator': { 'left': '', 'right': '' },
-    \ 'subseparator': { 'left': ' ', 'right': ' ' }
+    \ 'separator': { 'left': ' ', 'right': ' ' },
+    \ 'subseparator': { 'left': '  ', 'right': '  ' }
     \ }
 
 let g:lightline#bufferline#show_number = 1
