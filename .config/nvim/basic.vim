@@ -112,6 +112,8 @@ set noundofile
 set undodir=$HOME/.vim/backup
 set noswapfile
 
+set updatetime=100
+
 " ==================================================================
 "   Key mappings
 " ==================================================================

@@ -10,7 +10,7 @@ Plug 'cohama/lexima.vim'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'simeji/winresizer'
-Plug 'nathanaelkane/vim-indent-guides'
+Plug 'Yggdroot/indentLine'
 Plug 'qpkorr/vim-bufkill'
 
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
@@ -19,9 +19,6 @@ Plug 'szw/vim-tags'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'sheerun/vim-polyglot'
-
-" Plug 'othree/yajs.vim', { 'for': ['javascript', 'javascriptreact'] }
-" Plug 'othree/es.next.syntax.vim', { 'for': ['javascript', 'javascriptreact'] }
 
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
 Plug 'tpope/vim-rails', { 'for': 'ruby' }
@@ -43,7 +40,7 @@ Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'ryanoasis/vim-devicons'
 
-Plug 'skanehira/translate.vim'
+Plug 'junegunn/goyo.vim'
 
 call plug#end()
 
@@ -61,31 +58,30 @@ nnoremap <C-n> :bnext<CR>
 nnoremap <C-p> :bprev<CR>
 
 let g:lightline = {
-    \ 'colorscheme': 'material',
-    \ 'active': {
-    \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ] ],
-    \   'right': [ [ 'lineinfo' ], [ 'percent' ], [ 'charvaluehex', 'fileformat', 'fileencoding', 'filetype' ] ]
-    \ },
-    \ 'tabline': { 'left': [ [ 'buffers' ] ], 'right': [ [ 'tabs' ] ]
-    \ },
-    \ 'component': {
-    \   'charvaluehex': '0x%B'
-    \ },
-    \ 'component_function': {
-    \   'fugitive': 'LightlineFugitive',
-    \   'filename': 'LightlineFilename',
-    \   'fileformat': 'MyFileformat',
-    \   'filetype': 'MyFiletype'
-    \ },
-    \ 'component_expand': {
-    \   'buffers': 'lightline#bufferline#buffers',
-    \ },
-    \ 'component_type': {
-    \   'buffers': 'tabsel',
-    \ },
-    \ 'separator': { 'left': ' ', 'right': ' ' },
-    \ 'subseparator': { 'left': '  ', 'right': '  ' }
-    \ }
+  \ 'colorscheme': 'material',
+  \ 'active': {
+  \   'left': [ [ 'mode', 'paste' ], [ 'filename' ] ],
+  \   'right': [ [ 'lineinfo' ], [ 'percent' ], [ 'charvaluehex', 'fileformat', 'fileencoding', 'filetype' ] ]
+  \ },
+  \ 'tabline': { 'left': [ [ 'buffers' ] ], 'right': [ [ 'tabs' ] ]
+  \ },
+  \ 'component': {
+  \   'charvaluehex': '0x%B'
+  \ },
+  \ 'component_function': {
+  \   'filename': 'LightlineFilename',
+  \   'fileformat': 'MyFileformat',
+  \   'filetype': 'MyFiletype'
+  \ },
+  \ 'component_expand': {
+  \   'buffers': 'lightline#bufferline#buffers',
+  \ },
+  \ 'component_type': {
+  \   'buffers': 'tabsel',
+  \ },
+  \ 'separator': { 'left': ' ', 'right': ' ' },
+  \ 'subseparator': { 'left': '  ', 'right': '  ' }
+  \ }
 
 let g:lightline#bufferline#show_number = 1
 let g:lightline#bufferline#enable_devicons = 1
@@ -103,13 +99,6 @@ function! LightlineFilename()
   \  &ft == 'vimshell' ? vimshell#get_status_string() :
   \ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
   \ ('' != LightlineModified() ? ' ' . LightlineModified() : '')
-endfunction
-function! LightlineFugitive()
-  if &ft !~? 'vimfiler' && exists('*fugitive#head')
-    let branch = fugitive#head()
-    return branch !=# '' ? '⭠ '.branch : ''
-  endif
-  return ''
 endfunction
 
 function! MyFiletype()
@@ -153,22 +142,16 @@ let g:startify_custom_header = s:center([
   \])
 
 " ==================================================================
-"   vim-indent-guides
+"   indentLine
 " ==================================================================
-let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_guide_size = 1
-let g:indent_guides_start_level = 2
-let g:indent_guides_exclude_filetypes = ['help', 'startify', 'terminal', 'fzf']
+let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+let g:indentLine_fileTypeExclude = ['startify', 'fzf']
+let g:indentLine_bufTypeExclude = ['help', 'terminal']
 
 " ==================================================================
 "   vim-bufkill
 " ==================================================================
 nnoremap <leader>q :exec 'BW'<CR>
-
-" ==================================================================
-"   vim-polyglot
-" ==================================================================
-let g:polyglot_disabled = ['css']
 
 " ==================================================================
 "   vim-bufkill
@@ -179,6 +162,12 @@ let g:BufKillCreateMappings = 0
 "   vim-gitgutter
 " ==================================================================
 let g:gitgutter_map_keys = 0
+let g:gitgutter_sign_added = '▌'
+let g:gitgutter_sign_modified = '▌'
+let g:gitgutter_sign_removed = '▌'
+let g:gitgutter_sign_modified_removed = '▌'
+nmap ]g :GitGutterNextHunk<CR>
+nmap [g :GitGutterPrevHunk<CR>]
 
 " ==================================================================
 "   vim-fugitive
@@ -267,10 +256,4 @@ nnoremap <leader>h :History<CR>
 let g:go_fmt_command = "goimports"
 let g:go_metalinter_autosave = 1
 let g:go_metalinter_autosave_enabled = ['vet']
-
-" ==================================================================
-"   translate.vim
-" ==================================================================
-nnoremap <C-t> :Translate<CR>
-xnoremap <C-t> :Translate<CR>
 
