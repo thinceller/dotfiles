@@ -1,5 +1,19 @@
-.DS_Store
+# all ignore
+/*
+/.**
 
-.vim/.netrwhist
-.vim/doc
-plugged
+!/.bashrc
+!/.bash_profile
+!/.config/
+!/.gitconfig
+!/.gitignore_global
+!/.irbrc
+!/.skhdrc
+!/.tigrc
+!/.tmux.conf
+!/.zshrc
+
+!/.gitignore
+!/bin/
+!/bin/**
+!/README.md
