@@ -9,14 +9,9 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: update pacakges
-        run: apt update -y && apt upgrade -y
+        run: apt update -y && apt upgrade -y && apt install git make vim
       - name: check home dir
         run: echo $HOME
-      - name: check bin
-        run: |
-          which git
-          which make
-          which vim
       - name: check deploy
         run: |
           make list
