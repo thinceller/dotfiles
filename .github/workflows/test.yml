@@ -10,3 +10,8 @@ jobs:
       - uses: actions/checkout@v1
       - name: check home dir
         run: echo $HOME
+      - name: check bin
+        run: |
+          which git
+          which make
+          which vim
