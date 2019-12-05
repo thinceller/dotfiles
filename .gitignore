@@ -26,6 +26,11 @@
 !/.skhdrc
 !/.tigrc
 !/.tmux.conf
+!/.vim/
+!/.vim/*/
+!/.vim/rc/
+!/.vim/rc/**
+!/.vim/init.vim
 !/.zshrc
 
 !/.gitignore
