@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: update pacakges
-        run: apt update -y && apt upgrade -y && apt install git make vim
+        run: apt update -y && apt install git make vim
       - name: check home dir
         run: echo $HOME
       - name: check deploy
