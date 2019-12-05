@@ -5,9 +5,11 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    container: ubuntu:latest
     steps:
       - uses: actions/checkout@v1
+      - name: update pacakges
+        run: apt update -y && apt upgrade -y
       - name: check home dir
         run: echo $HOME
       - name: check bin
@@ -15,3 +17,9 @@ jobs:
           which git
           which make
           which vim
+      - name: check deploy
+        run: |
+          make list
+          make deploy
+      - name: check dotfiles
+        run: ls -al $HOME
