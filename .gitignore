@@ -23,6 +23,7 @@
 !/.gitconfig
 !/.gitignore_global
 !/.irbrc
+!/.p10k.zsh
 !/.skhdrc
 !/.tigrc
 !/.tmux.conf

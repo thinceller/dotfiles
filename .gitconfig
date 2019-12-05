@@ -2,7 +2,7 @@
 	name = thinceller
 	email = kohei.ct@icloud.com
 [core]
-	excludesfile = /Users/kohei/.gitignore_global
+	excludesfile = ~/.gitignore_global
 	editor = vim -c \"set fenc=utf-8\"
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
@@ -11,12 +11,12 @@
 	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
 [commit]
-	template = /Users/kohei/.stCommitMsg
+	template = ~/.stCommitMsg
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
 [ghq]
-	root = /Users/kohei/src
-	root = /Users/kohei/go/src
+	root = ~/src
+	root = ~/go/src
