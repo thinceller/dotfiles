@@ -40,3 +40,4 @@
 !/bin/
 !/bin/**
 !/README.md
+!/Makefile
