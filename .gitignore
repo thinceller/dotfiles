@@ -35,6 +35,8 @@
 !/.zshrc
 
 !/.gitignore
+!/.github/
+!/.github/**
 !/bin/
 !/bin/**
 !/README.md
