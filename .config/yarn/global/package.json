@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "create-react-app": "^3.2.0",
+    "fixpack": "^2.3.1"
+  }
+}
