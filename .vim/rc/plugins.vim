@@ -40,6 +40,7 @@ Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'ryanoasis/vim-devicons'
 
+Plug 'glidenote/memolist.vim'
 Plug 'junegunn/goyo.vim'
 
 call plug#end()
@@ -257,3 +258,11 @@ let g:go_fmt_command = "goimports"
 let g:go_metalinter_autosave = 1
 let g:go_metalinter_autosave_enabled = ['vet']
 
+" ==================================================================
+"   memolist.vim
+" ==================================================================
+let g:memolist_path = "~/.config/memo/_posts"
+
+nnoremap <Leader>mn  :MemoNew<CR>
+nnoremap <Leader>ml  :MemoList<CR>
+nnoremap <Leader>mg  :MemoGrep<CR>

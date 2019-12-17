@@ -1,11 +1,11 @@
-memodir = "/Users/kohei/.config/memo/_posts"
+memodir = "~/.config/memo/_posts"
 editor = "/usr/local/bin/vim"
 column = 20
 width = 0
 selectcmd = "fzf"
 grepcmd = "grep -nH ${PATTERN} ${FILES}"
-memotemplate = "/Users/kohei/.config/memo/template.txt"
+memotemplate = "~/.config/memo/template.txt"
 assetsdir = "."
-pluginsdir = "/Users/kohei/.config/memo/plugins"
+pluginsdir = "~/.config/memo/plugins"
 templatedirfile = ""
 templatebodyfile = ""
