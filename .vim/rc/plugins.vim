@@ -28,11 +28,14 @@ Plug 'tpope/vim-endwise', { 'for': 'ruby' }
 
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go' }
 
-Plug 'tyru/open-browser.vim', { 'for': 'markdown' }
+Plug 'tyru/open-browser.vim', { 'for': ['markdown', 'plantuml'] }
 Plug 'previm/previm', { 'for': 'markdown' }
+Plug 'junegunn/goyo.vim', { 'for': 'markdown' }
+Plug 'weirongxu/plantuml-previewer.vim', { 'for': 'plantuml' }
 
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
+Plug 'rhysd/git-messenger.vim'
 
 Plug 'haishanh/night-owl.vim'
 
@@ -41,7 +44,7 @@ Plug 'mengelbrecht/lightline-bufferline'
 Plug 'ryanoasis/vim-devicons'
 
 Plug 'glidenote/memolist.vim'
-Plug 'junegunn/goyo.vim'
+Plug 'vim-jp/vimdoc-ja'
 
 call plug#end()
 
@@ -250,6 +253,9 @@ nnoremap <leader>F :GFiles?<CR>
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>l :BLines<CR>
 nnoremap <leader>h :History<CR>
+nnoremap <leader>c :Commands<CR>
+
+nmap ge :CocCommand explorer --file-columns=git,diagnosticError,indent,icon,filename<CR>
 
 " ==================================================================
 "   vim-go

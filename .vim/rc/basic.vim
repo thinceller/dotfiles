@@ -10,7 +10,7 @@ endif
 
 set encoding=utf-8
 scriptencoding utf-8
-" set helplang=ja,en
+set helplang=ja,en
 set ruler
 set number
 set title
@@ -51,6 +51,8 @@ let g:terminal_ansi_colors = [
 autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
 autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
 au BufRead,BufNewFile *.jsx set filetype=javascript.jsx
+
+autocmd FileType json syntax match Comment +\/\/.\+$+
 
 " set autoindent
 set smartindent
@@ -150,7 +152,7 @@ augroup MyXML
 augroup END
 
 " ==================================================================
-"   Key mappings
+"   netrw
 " ==================================================================
 let g:netrw_liststyle=3
 let g:netrw_banner=1

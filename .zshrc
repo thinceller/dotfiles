@@ -49,13 +49,9 @@ eval "$(rbenv init -)"
 # nodenv setting
 eval "$(nodenv init -)"
 
-# goenv setting
-export GOENV_ROOT="$HOME/.goenv"
-export PATH="$GOENV_ROOT/bin:$PATH"
-eval "$(goenv init -)"
-export GOENV_DISABLE_GOPATH=1
-export GOPATH="$HOME/go"
-export PATH="$GOROOT/bin:$PATH"
+# go settings
+export GOROOT="/usr/local/go"
+export GOPATH=$(go env GOPATH)
 export PATH="$GOPATH/bin:$PATH"
 
 

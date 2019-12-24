@@ -14,5 +14,6 @@
   "typescript.validate.enable": true,
   "javascript.validate.enable": true,
   "eslint.autoFixOnSave": true,
-  "python.linting.flake8Enabled": true
+  "python.linting.flake8Enabled": true,
+  "explorer.icon.enableNerdfont": true
 }
