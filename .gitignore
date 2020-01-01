@@ -6,6 +6,8 @@
 !/.bash_profile
 !/.config/
 !/.config/alacritty/alacritty.yml
+!/.config/coc/
+!/.config/coc/extensions/
 !/.config/coc/extensions/package.json
 !/.config/efm-langserver/
 !/.config/karabiner/

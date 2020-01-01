@@ -23,10 +23,9 @@ Plug 'sheerun/vim-polyglot'
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
 Plug 'tpope/vim-rails', { 'for': 'ruby' }
 Plug 'tpope/vim-rbenv', { 'for': 'ruby' }
-Plug 'tpope/vim-bundler', { 'for': 'ruby' }
 Plug 'tpope/vim-endwise', { 'for': 'ruby' }
 
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go' }
+Plug 'mattn/vim-goimports', { 'for': 'go' }
 
 Plug 'tyru/open-browser.vim', { 'for': ['markdown', 'plantuml'] }
 Plug 'previm/previm', { 'for': 'markdown' }
@@ -37,21 +36,26 @@ Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 Plug 'rhysd/git-messenger.vim'
 
-Plug 'haishanh/night-owl.vim'
+" Plug 'haishanh/night-owl.vim'
+Plug 'cocopon/iceberg.vim'
 
 Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'ryanoasis/vim-devicons'
 
 Plug 'glidenote/memolist.vim'
-Plug 'vim-jp/vimdoc-ja'
 
 call plug#end()
 
 " ==================================================================
-"   night-owl.vim
+"   Settings after loading plugins
 " ==================================================================
-colorscheme night-owl
+" colorscheme night-owl
+" 不可視文字の設定がnight-owlでカラースキームで上書きされるため再設定
+" hi SpecialKey ctermbg=NONE ctermfg=238 guibg=NONE guifg=NONE
+
+colorscheme iceberg
+autocmd BufRead,BufNewFile *.jsx,*.tsx set filetype=typescript.tsx
 
 " ==================================================================
 "   lightline.vim
@@ -254,15 +258,6 @@ nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>l :BLines<CR>
 nnoremap <leader>h :History<CR>
 nnoremap <leader>c :Commands<CR>
-
-nmap ge :CocCommand explorer --file-columns=git,diagnosticError,indent,icon,filename<CR>
-
-" ==================================================================
-"   vim-go
-" ==================================================================
-let g:go_fmt_command = "goimports"
-let g:go_metalinter_autosave = 1
-let g:go_metalinter_autosave_enabled = ['vet']
 
 " ==================================================================
 "   memolist.vim

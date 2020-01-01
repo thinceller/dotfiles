@@ -10,7 +10,6 @@ endif
 
 set encoding=utf-8
 scriptencoding utf-8
-set helplang=ja,en
 set ruler
 set number
 set title
@@ -29,28 +28,30 @@ let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
 autocmd ColorScheme * highlight LineNr ctermfg=12
 highlight CursorLineNr ctermbg=4 ctermfg=0
 set cursorline
+
 " terminal color - like night-owl
-let g:terminal_ansi_colors = [
-\ '#000000',
-\ '#ef5350',
-\ '#22da6e',
-\ '#addb67',
-\ '#82aaff',
-\ '#c792ea',
-\ '#21c7a8',
-\ '#ffffff',
-\ '#575656',
-\ '#ef5350',
-\ '#22da6e',
-\ '#ffeb95',
-\ '#82aaff',
-\ '#c792ea',
-\ '#7fdbca',
-\ '#ffffff'
-\ ]
-autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
-autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
-au BufRead,BufNewFile *.jsx set filetype=javascript.jsx
+" let g:terminal_ansi_colors = [
+" \ '#000000',
+" \ '#ef5350',
+" \ '#22da6e',
+" \ '#addb67',
+" \ '#82aaff',
+" \ '#c792ea',
+" \ '#21c7a8',
+" \ '#ffffff',
+" \ '#575656',
+" \ '#ef5350',
+" \ '#22da6e',
+" \ '#ffeb95',
+" \ '#82aaff',
+" \ '#c792ea',
+" \ '#7fdbca',
+" \ '#ffffff'
+" \ ]
+" autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
+" autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
+autocmd BufRead,BufNewFile *.jsx set filetype=javascript.jsx
+autocmd BufRead,BufNewFile *.tsx set filetype=typescript.tsx
 
 autocmd FileType json syntax match Comment +\/\/.\+$+
 
@@ -59,7 +60,7 @@ set smartindent
 
 set shiftwidth=2
 set softtabstop=2
-set tabstop=2
+set tabstop=4
 set expandtab
 set smarttab
 
@@ -84,6 +85,7 @@ set splitbelow
 
 set list
 set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%
+" set list lcs=tab:\|\ 
 
 set wildmode=list:longest,full
 
