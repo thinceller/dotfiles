@@ -34,7 +34,10 @@
 !/.vim/rc/
 !/.vim/rc/**
 !/.vim/init.vim
+!/.zshenv
 !/.zshrc
+!/.zsh/
+!/.zsh/**
 
 !/.gitignore
 !/.github/
