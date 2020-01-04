@@ -14,7 +14,6 @@ Plug 'Yggdroot/indentLine'
 Plug 'qpkorr/vim-bufkill'
 
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
-Plug 'szw/vim-tags'
 
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'editorconfig/editorconfig-vim'
@@ -232,6 +231,8 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 " Add status line support, for integration with other plugin, checkout `:h coc-status`
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
+nmap ge :CocCommand explorer --file-columns=git,diagnosticError,indent,icon,filename<CR>
+
 " ==================================================================
 "   fzf.vim
 " ==================================================================
@@ -267,3 +268,4 @@ let g:memolist_path = "~/.config/memo/_posts"
 nnoremap <Leader>mn  :MemoNew<CR>
 nnoremap <Leader>ml  :MemoList<CR>
 nnoremap <Leader>mg  :MemoGrep<CR>
+

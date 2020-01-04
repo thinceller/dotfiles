@@ -123,6 +123,7 @@ set updatetime=100
 " ==================================================================
 inoremap <silent> jj <ESC>
 nnoremap ; :
+nnoremap : ;
 
 nnoremap Y y$
 
