@@ -13,8 +13,6 @@ zplugin light romkatv/powerlevel10k
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
 ### 各種設定の読み込み
-export ZDOTDIR=$HOME/.zsh
-
 for f in $ZDOTDIR/*.zsh
 do
   source "$f"
