@@ -37,7 +37,10 @@
 !/.zshenv
 !/.zshrc
 !/.zsh/
+!/.zsh/.zshrc
 !/.zsh/**
+.zsh_history
+.zcompdump
 
 !/.gitignore
 !/.github/

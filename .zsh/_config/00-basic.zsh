@@ -4,3 +4,5 @@ setopt nonomatch
 # zsh setting
 autoload -Uz compinit
 compinit
+
+bindkey -e
