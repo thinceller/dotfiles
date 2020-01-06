@@ -34,6 +34,7 @@
 !/.vim/*/
 !/.vim/rc/
 !/.vim/rc/**
+!/.vim/vimrc
 !/.vim/init.vim
 !/.zshenv
 !/.zshrc
