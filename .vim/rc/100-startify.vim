@@ -5,9 +5,10 @@ endif
 " 参考: http://mjhd.hatenablog.com/entry/recommendation-of-vim-startify
 let g:startify_files_number = 5
 let g:startify_bookmarks = [
-  \ '~/.vim/rc/basic.vim',
-  \ '~/.vim/rc/plugins.vim',
-  \ '~/.zshrc'
+  \ '~/.vim/vimrc',
+  \ '~/.zsh/.zshenv',
+  \ '~/.zsh/.zshrc',
+  \ '~/.tmux.conf'
   \ ]
 
 function! s:center(lines) abort
