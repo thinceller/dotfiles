@@ -5,7 +5,7 @@
     "coc-emoji": ">=1.2.3",
     "coc-eslint": ">=1.2.3",
     "coc-fsharp": ">=0.1.61",
-    "coc-go": ">=0.6.0",
+    "coc-go": ">=0.6.2",
     "coc-highlight": ">=1.2.5",
     "coc-html": ">=1.2.1",
     "coc-json": ">=1.2.4",

@@ -6,9 +6,11 @@ endif
 colorscheme iceberg
 autocmd BufRead,BufNewFile *.jsx,*.tsx set filetype=typescript.tsx
 
+hi SpecialKey ctermbg=NONE ctermfg=238 guibg=NONE guifg=NONE
+
 hi Normal guibg=NONE ctermbg=NONE
 hi NonText guibg=NONE ctermbg=NONE
 hi EndOfBuffer guibg=NONE ctermbg=NONE
-" hi LineNr guibg=NONE ctermbg=NONE
-" hi CursorLineNr guibg=NONE ctermbg=NONE
+hi LineNr guibg=NONE ctermbg=NONE
+hi CursorLineNr guibg=NONE ctermbg=NONE
 
