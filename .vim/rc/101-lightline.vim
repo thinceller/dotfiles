@@ -5,18 +5,22 @@ endif
 let g:lightline = {
   \ 'colorscheme': 'material',
   \ 'active': {
-  \   'left': [ [ 'mode', 'paste' ], [ 'filename' ] ],
-  \   'right': [ [ 'lineinfo' ], [ 'percent' ], [ 'charvaluehex', 'fileformat', 'fileencoding', 'filetype' ] ]
+  \   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'filename', 'modified' ] ],
+  \   'right': [
+  \     [ 'lineinfo' ],
+  \     [ 'percent' ],
+  \     [ 'errorstatus', 'warnstatus', 'infostatus', 'fileformat', 'fileencoding', 'filetype' ]
+  \   ]
   \ },
   \ 'tabline': { 'left': [ [ 'buffers' ] ], 'right': [ [ 'tabs' ] ]
   \ },
-  \ 'component': {
-  \   'charvaluehex': '0x%B'
-  \ },
   \ 'component_function': {
-  \   'filename': 'LightlineFilename',
+  \   'filename': 'FilePath',
   \   'fileformat': 'MyFileformat',
-  \   'filetype': 'MyFiletype'
+  \   'filetype': 'MyFiletype',
+  \   'infostatus': 'InfoStatusDiagnostic',
+  \   'warnstatus': 'WarningStatusDiagnostic',
+  \   'errorstatus': 'ErrorStatusDiagnostic'
   \ },
   \ 'component_expand': {
   \   'buffers': 'lightline#bufferline#buffers',
@@ -24,26 +28,22 @@ let g:lightline = {
   \ 'component_type': {
   \   'buffers': 'tabsel',
   \ },
-  \ 'separator': { 'left': ' ', 'right': ' ' },
-  \ 'subseparator': { 'left': '  ', 'right': '  ' }
+  \ 'separator': { 'left': "\ue0b0 ", 'right': " \ue0b2" },
+  \ 'subseparator': { 'left': "\ue0b1 ", 'right': " \ue0b3" }
   \ }
 
 let g:lightline#bufferline#show_number = 1
 let g:lightline#bufferline#enable_devicons = 1
 
-function! LightlineModified()
-  return &ft =~ 'help\|vimfiler' ? '' : &modified ? '+' : &modifiable ? '' : '-'
-endfunction
-function! LightlineReadonly()
-  return &ft !~? 'help\|vimfiler' && &readonly ? '⭤' : ''
-endfunction
-function! LightlineFilename()
-  return ('' != LightlineReadonly() ? LightlineReadonly() . ' ' : '') .
-  \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
-  \  &ft == 'unite' ? unite#get_status_string() :
-  \  &ft == 'vimshell' ? vimshell#get_status_string() :
-  \ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
-  \ ('' != LightlineModified() ? ' ' . LightlineModified() : '')
+function! FilePath()
+  if '' == expand('%:t')
+    return '[No Name]'
+  endif
+  if winwidth(0) > 90
+    return expand("%:s")
+  else
+    return expand("%:t")
+  endif
 endfunction
 
 function! MyFiletype()
@@ -53,3 +53,25 @@ function! MyFileformat()
   return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
 endfunction
 
+" coc custom component
+function! ErrorStatusDiagnostic() abort
+  let info = get(b:, 'coc_diagnostic_info', {})
+  if (empty(info) || info['error'] == 0)
+    return ''
+  endif
+  return "\uf05e" . ' ' . info['error']
+endfunction
+function! WarningStatusDiagnostic() abort
+  let info = get(b:, 'coc_diagnostic_info', {})
+  if (empty(info) || info['warning'] == 0)
+    return ''
+  endif
+  return "\uf071" . ' ' . info['warning']
+endfunction
+function! InfoStatusDiagnostic() abort
+  let info = get(b:, 'coc_diagnostic_info', {})
+  if (empty(info) || info['information'] == 0)
+    return ''
+  endif
+  return "\uf7fc" . ' ' . info['information']
+endfunction

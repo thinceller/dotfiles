@@ -2,6 +2,25 @@ if empty(globpath(&rtp, 'plugged/coc.nvim'))
   finish
 endif
 
+let g:coc_global_extensions = [
+\ 'coc-css',
+\ 'coc-docker',
+\ 'coc-emoji',
+\ 'coc-eslint',
+\ 'coc-go',
+\ 'coc-html',
+\ 'coc-json',
+\ 'coc-marketplace',
+\ 'coc-python',
+\ 'coc-sh',
+\ 'coc-snippets',
+\ 'coc-solargraph',
+\ 'coc-stylelint',
+\ 'coc-tslint-plugin',
+\ 'coc-tsserver',
+\ 'coc-yaml'
+\ ]
+
 " Use tab for trigger completion with characters ahead and navigate.
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :

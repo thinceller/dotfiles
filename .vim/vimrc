@@ -56,6 +56,7 @@ set wildmode=list:longest,full
 
 set showcmd
 set showtabline=2
+set nostartofline
 
 set clipboard=unnamed
 
@@ -132,6 +133,7 @@ Plug 'previm/previm', { 'for': 'markdown' }
 Plug 'junegunn/goyo.vim', { 'for': 'markdown' }
 Plug 'weirongxu/plantuml-previewer.vim', { 'for': 'plantuml' }
 Plug 'glidenote/memolist.vim'
+Plug 'skanehira/preview-markdown.vim'
 
 call plug#end()
 
