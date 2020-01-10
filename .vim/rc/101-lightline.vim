@@ -3,7 +3,7 @@ if empty(globpath(&rtp, 'plugged/lightline.vim'))
 endif
 
 let g:lightline = {
-  \ 'colorscheme': 'material',
+  \ 'colorscheme': 'powerline',
   \ 'active': {
   \   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'filename', 'modified' ] ],
   \   'right': [

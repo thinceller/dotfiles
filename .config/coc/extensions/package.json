@@ -9,7 +9,7 @@
     "coc-highlight": ">=1.2.5",
     "coc-html": ">=1.2.1",
     "coc-json": ">=1.2.4",
-    "coc-marketplace": ">=1.5.0",
+    "coc-marketplace": ">=1.6.0",
     "coc-omnisharp": ">=0.0.23",
     "coc-python": ">=1.2.6",
     "coc-sh": ">=0.4.0",
