@@ -1,6 +1,6 @@
 alias ctags="`brew --prefix`/bin/ctags"
 
-alias gfc='git commit --allow-empty -m "first commit [ci skip]"'
+alias gfc='git commit --allow-empty -m "first commit'
 
 if type nyan > /dev/null 2>&1; then
   alias cat='nyan'
