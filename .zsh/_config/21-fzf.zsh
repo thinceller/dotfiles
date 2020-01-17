@@ -11,3 +11,9 @@ hbr() {
     pr_num=$(echo $pr | sed -e 's/^[ \t]*#\([0-9]*\)[ \t ]*.*/\1/') &&
     hub pr checkout $pr_num
 }
+
+hse() {
+  local repo
+  repo=$(ghq list | fzf-tmux +m | cut -d '/' -f 2,3) &&
+    hub browse $repo
+}
