@@ -44,13 +44,12 @@ set hlsearch
 set ignorecase
 set smartcase
 set wrapscan
-set gdefault
 
 set splitbelow
 
 set list
 set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%
-" set list lcs=tab:\|\ 
+set list lcs=tab:\|\ 
 
 set wildmode=list:longest,full
 

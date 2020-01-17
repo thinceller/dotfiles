@@ -16,8 +16,12 @@ fi
 # rbenv setting
 eval "$(rbenv init -)"
 
-# nodenv setting
-eval "$(nodenv init -)"
+# anyenv setting
+export PATH=$HOME/.anyenv/bin:$PATH
+if type anyenv > /dev/null 2>&1
+then
+  eval "$(anyenv init -)"
+fi
 
 # direnv setting
 eval "$(direnv hook zsh)"
