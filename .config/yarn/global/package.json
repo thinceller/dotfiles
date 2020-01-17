@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "create-react-app": "^3.2.0",
-    "fixpack": "^2.3.1"
+    "fixpack": "^2.3.1",
+    "ts-node": "8.6.2",
+    "typescript": "3.7.4"
   }
 }
