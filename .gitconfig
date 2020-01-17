@@ -20,3 +20,5 @@
 [ghq]
 	root = ~/go/src
 	root = ~/src
+[alias]
+	see = browse

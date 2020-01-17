@@ -17,3 +17,6 @@ for f in $ZDOTDIR/_config/*.zsh
 do
   source "$f"
 done
+
+fpath=(~/.zsh/completions $fpath)
+autoload -U compinit && compinit
