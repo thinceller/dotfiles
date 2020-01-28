@@ -3,5 +3,5 @@ if empty(globpath(&rtp, 'plugged/indentline'))
 endif
 
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
-let g:indentLine_fileTypeExclude = ['startify', 'fzf']
+let g:indentLine_fileTypeExclude = ['startify', 'fzf', 'coc-explorer']
 let g:indentLine_bufTypeExclude = ['help', 'terminal']
