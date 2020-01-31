@@ -1,6 +1,4 @@
 # 汎用的な環境変数の設定
-export LANG=ja_JP.UTF-8
-export LC_ALL=ja_JP.UTF-8
 export EDITOR=vim
 
 export PATH=/usr/local/go/bin:$PATH
