@@ -66,3 +66,9 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 command! -nargs=0 Format :call CocAction('format')
 command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" coc-bookmark
+nmap <leader>bn <Plug>(coc-bookmark-next)
+nmap <leader>bp <Plug>(coc-bookmark-prev)
+nmap <leader>ba <Plug>(coc-bookmark-annotate)
+nmap <leader>bt <Plug>(coc-bookmark-toggle)
