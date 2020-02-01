@@ -1,9 +1,9 @@
 " colorschemeを変更するたびに変更する
-if empty(globpath(&rtp, 'plugged/iceberg.vim'))
+if empty(globpath(&rtp, 'plugged/night-owl.vim'))
   finish
 endif
 
-colorscheme iceberg
+colorscheme night-owl
 autocmd BufRead,BufNewFile *.jsx,*.tsx set filetype=typescript.tsx
 
 hi SpecialKey ctermbg=NONE ctermfg=238 guibg=NONE guifg=NONE

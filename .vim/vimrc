@@ -94,7 +94,7 @@ Plug 'mengelbrecht/lightline-bufferline'
 Plug 'ryanoasis/vim-devicons'
 
 " 1XX: Vimのstyleの拡張
-Plug 'cocopon/iceberg.vim'
+Plug 'haishanh/night-owl.vim'
 Plug 'Yggdroot/indentLine'
 Plug 'bronson/vim-trailing-whitespace'
 
