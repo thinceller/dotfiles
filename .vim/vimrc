@@ -101,7 +101,7 @@ Plug 'bronson/vim-trailing-whitespace'
 " 2XX: グローバルなプラグイン
 "   lspやコマンドの拡張など
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
-Plug '/usr/local/opt/fzf'
+Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 
 Plug 'qpkorr/vim-bufkill'
@@ -115,9 +115,6 @@ Plug 'sheerun/vim-polyglot'
 Plug 'cohama/lexima.vim'
 
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
-Plug 'tpope/vim-rails', { 'for': 'ruby' }
-Plug 'tpope/vim-rbenv', { 'for': 'ruby' }
-Plug 'tpope/vim-endwise', { 'for': 'ruby' }
 
 Plug 'mattn/vim-goimports', { 'for': 'go' }
 
@@ -130,9 +127,9 @@ Plug 'lambdalisue/gina.vim'
 Plug 'tyru/open-browser.vim', { 'for': ['markdown', 'plantuml'] }
 Plug 'previm/previm', { 'for': 'markdown' }
 Plug 'junegunn/goyo.vim', { 'for': 'markdown' }
+Plug 'skanehira/preview-markdown.vim', { 'for': 'markdown' }
 Plug 'weirongxu/plantuml-previewer.vim', { 'for': 'plantuml' }
 Plug 'glidenote/memolist.vim'
-Plug 'skanehira/preview-markdown.vim'
 
 call plug#end()
 
