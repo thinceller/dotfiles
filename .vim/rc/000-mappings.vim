@@ -18,6 +18,8 @@ if has('nvim')
   autocmd TermOpen * setlocal norelativenumber
   autocmd TermOpen * setlocal nonumber
 else
+  command! Terminal call popup_create(term_start([&shell], #{ hidden: 1, term_finish: 'close'}), #{ border: [], minwidth: winwidth(0)/2, minheight: &lines/2 })
+
   nnoremap <leader>t :bo term ++close<CR>
   nnoremap tig :tab :term ++close tig<CR>
 endif
