@@ -4,12 +4,12 @@
     "coc-css": ">=1.2.2",
     "coc-docker": ">=0.2.1",
     "coc-emoji": ">=1.2.3",
-    "coc-eslint": ">=1.2.5",
-    "coc-explorer": ">=0.2.17",
+    "coc-eslint": ">=1.2.6",
+    "coc-explorer": ">=0.2.18",
     "coc-fsharp": ">=0.1.61",
     "coc-go": ">=0.6.2",
     "coc-highlight": ">=1.2.5",
-    "coc-html": ">=1.2.1",
+    "coc-html": ">=1.2.3",
     "coc-json": ">=1.2.4",
     "coc-marketplace": ">=1.7.0",
     "coc-omnisharp": ">=0.0.23",
@@ -21,6 +21,6 @@
     "coc-stylelint": ">=1.1.0",
     "coc-tslint-plugin": ">=1.1.1",
     "coc-tsserver": ">=1.4.9",
-    "coc-yaml": ">=1.0.2"
+    "coc-yaml": ">=1.0.3"
   }
 }

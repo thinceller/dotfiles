@@ -103,6 +103,8 @@ Plug 'bronson/vim-trailing-whitespace'
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
+Plug 'lambdalisue/fern.vim'
+Plug 'lambdalisue/fern-renderer-devicons.vim'
 
 Plug 'qpkorr/vim-bufkill'
 Plug 'tpope/vim-commentary'
