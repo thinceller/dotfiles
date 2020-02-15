@@ -10,7 +10,7 @@ zinit light zdharma/fast-syntax-highlighting
 zinit light mollifier/anyframe
 
 zinit light romkatv/powerlevel10k
-[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+[[ -f ~/.zsh/.p10k.zsh ]] && source ~/.zsh/.p10k.zsh
 
 ### 各種設定の読み込み
 for f in $ZDOTDIR/_config/*.zsh
