@@ -5,15 +5,26 @@ export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
 export FZF_TMUX=1
 export FZF_TMUX_HEIGHT=40%
 
+# hub pull-request checkout
 hbr() {
-  local pr pr_num
-  pr=$(hub pr list 2> /dev/null | fzf-tmux +m) &&
-    pr_num=$(echo $pr | sed -e 's/^[ \t]*#\([0-9]*\)[ \t ]*.*/\1/') &&
-    hub pr checkout $pr_num
+  local pr
+  pr=$(
+    gh pr list --limit 100 \
+      | fzf-tmux --preview 'gh pr view -p {1}' \
+      | cut -f1
+  )
+  if [ -z $pr ]; then
+    return
+  fi
+  gh pr checkout $pr
 }
 
-hse() {
+# hub browse any repository
+hshow() {
   local repo
-  repo=$(ghq list | fzf-tmux +m | cut -d '/' -f 2,3) &&
-    hub browse $repo
+  repo=$(ghq list | fzf-tmux +m | cut -d '/' -f 2,3)
+  if [ -z $repo ]; then
+    return
+  fi
+  hub browse $repo
 }
