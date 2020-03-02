@@ -105,6 +105,7 @@ Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'lambdalisue/fern.vim'
 Plug 'lambdalisue/fern-renderer-devicons.vim'
+Plug 'thinca/vim-quickrun'
 
 Plug 'qpkorr/vim-bufkill'
 Plug 'tpope/vim-commentary'
