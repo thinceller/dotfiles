@@ -22,3 +22,5 @@
 	root = ~/src
 [alias]
 	see = browse
+[rebase]
+	autostash = true
