@@ -100,7 +100,7 @@ Plug 'bronson/vim-trailing-whitespace'
 
 " 2XX: グローバルなプラグイン
 "   lspやコマンドの拡張など
-Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile', 'branch': 'master'}
 Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'lambdalisue/fern.vim'
