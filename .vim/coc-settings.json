@@ -18,5 +18,14 @@
   "explorer.icon.enableNerdfont": true,
   "go.goplsOptions": {
     "completeUnimported": true
+  },
+  "languageserver": {
+    "golangci-lint-languageserver": {
+      "command": "golangci-lint-langserver",
+      "filetypes": ["go"],
+      "initializationOptions": {
+        "command": ["golangci-lint", "run", "--enable-all", "--disable", "lll", "--out-format", "json"]
+      }
+    }
   }
 }

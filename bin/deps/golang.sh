@@ -14,3 +14,4 @@ go get -u github.com/motemen/gore/cmd/gore
 go get -u github.com/github/hub
 go get -u github.com/mattn/memo
 go get -u github.com/toshimaru/nyan
+go get -u github.com/nametake/golangci-lint-langserver
