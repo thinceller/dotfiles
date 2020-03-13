@@ -5,11 +5,11 @@ endif
 let g:lightline = {
   \ 'colorscheme': 'nightowl',
   \ 'active': {
-  \   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'filename', 'modified' ] ],
+  \   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'filename', 'modified', 'cocstatus', 'currentfunction' ] ],
   \   'right': [
   \     [ 'lineinfo' ],
   \     [ 'percent' ],
-  \     [ 'errorstatus', 'warnstatus', 'infostatus', 'fileformat', 'fileencoding', 'filetype' ]
+  \     [ 'fileformat', 'fileencoding', 'filetype' ]
   \   ]
   \ },
   \ 'tabline': { 'left': [ [ 'buffers' ] ], 'right': [ [ 'tabs' ] ]
@@ -18,9 +18,8 @@ let g:lightline = {
   \   'filename': 'FilePath',
   \   'fileformat': 'MyFileformat',
   \   'filetype': 'MyFiletype',
-  \   'infostatus': 'InfoStatusDiagnostic',
-  \   'warnstatus': 'WarningStatusDiagnostic',
-  \   'errorstatus': 'ErrorStatusDiagnostic'
+  \   'cocstatus': 'coc#status',
+  \   'currentfunction': 'CocCurrentFunction'
   \ },
   \ 'component_expand': {
   \   'buffers': 'lightline#bufferline#buffers',
@@ -53,25 +52,3 @@ function! MyFileformat()
   return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
 endfunction
 
-" coc custom component
-function! ErrorStatusDiagnostic() abort
-  let info = get(b:, 'coc_diagnostic_info', {})
-  if (empty(info) || info['error'] == 0)
-    return ''
-  endif
-  return "\uf05e" . ' ' . info['error']
-endfunction
-function! WarningStatusDiagnostic() abort
-  let info = get(b:, 'coc_diagnostic_info', {})
-  if (empty(info) || info['warning'] == 0)
-    return ''
-  endif
-  return "\uf071" . ' ' . info['warning']
-endfunction
-function! InfoStatusDiagnostic() abort
-  let info = get(b:, 'coc_diagnostic_info', {})
-  if (empty(info) || info['information'] == 0)
-    return ''
-  endif
-  return "\uf7fc" . ' ' . info['information']
-endfunction
