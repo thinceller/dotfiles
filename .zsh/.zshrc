@@ -6,8 +6,11 @@ export GOROOT=$(go env GOROOT)
 export GOPATH=$(go env GOPATH)
 export PATH=$GOPATH/bin:$PATH
 
-export PATH="/usr/local/opt/llvm/bin:$PATH"
+export PATH=/usr/local/opt/llvm/bin:$PATH
 export PATH=$HOME/.cargo/bin:$PATH
+
+# brew tools
+export PATH=/usr/local/opt/mysql@5.7/bin:$PATH
 
 ### Added by Zinit's installer
 source "$HOME/.zinit/bin/zinit.zsh"
