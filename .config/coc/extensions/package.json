@@ -4,7 +4,7 @@
     "coc-docker": ">=0.2.1",
     "coc-emoji": ">=1.2.3",
     "coc-eslint": ">=1.2.6",
-    "coc-explorer": ">=0.3.9",
+    "coc-explorer": ">=0.3.13",
     "coc-fsharp": ">=0.1.61",
     "coc-go": ">=0.7.0",
     "coc-highlight": ">=1.2.5",
