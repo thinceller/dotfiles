@@ -14,14 +14,25 @@ then
 fi
 
 # rbenv setting
-eval "$(rbenv init -)"
+if [[ -d $HOME/.rbenv ]]
+then
+  eval "$(rbenv init -)"
+fi
 
 # anyenv setting
+export GOENV_DISABLE_GOPATH=1
 export PATH=$HOME/.anyenv/bin:$PATH
 if type anyenv > /dev/null 2>&1
 then
   eval "$(anyenv init -)"
 fi
+# anyenv の設定後に GOPATH 等を設定する
+export GOROOT=$(go env GOROOT)
+export GOPATH=$(go env GOPATH)
+export PATH=$GOPATH/bin:$PATH
 
 # direnv setting
-eval "$(direnv hook zsh)"
+if [[ -d $HOME/.direnv ]]
+then
+  eval "$(direnv hook zsh)"
+fi
