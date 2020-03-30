@@ -1,6 +1,6 @@
 [user]
 	name = thinceller
-	email = kohei.ct@icloud.com
+	email = thinceller@gmail.com
 [core]
 	excludesfile = ~/.gitignore_global
 	editor = vim -c \"set fenc=utf-8\"
