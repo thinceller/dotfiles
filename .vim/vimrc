@@ -6,7 +6,7 @@ set helplang=ja,en
 set encoding=utf-8
 scriptencoding utf-8
 set ruler
-set number
+set number relativenumber
 set title
 set laststatus=2
 set mouse=a
@@ -92,6 +92,7 @@ Plug 'vim-jp/vimdoc-ja'
 Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'ryanoasis/vim-devicons'
+Plug 'jeffkreeftmeijer/vim-numbertoggle'
 
 " 1XX: Vimのstyleの拡張
 Plug 'haishanh/night-owl.vim'
