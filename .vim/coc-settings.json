@@ -17,7 +17,7 @@
   "python.linting.flake8Enabled": true,
   "explorer.icon.enableNerdfont": true,
   "go.goplsOptions": {
-    "completeUnimported": true
+    "completeUnimported": false
   },
   "languageserver": {
     "golangci-lint-languageserver": {

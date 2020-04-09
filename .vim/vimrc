@@ -120,7 +120,7 @@ Plug 'cohama/lexima.vim'
 
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
 
-" Plug 'mattn/vim-goimports', { 'for': 'go' }
+Plug 'mattn/vim-goimports', { 'for': 'go' }
 
 " 4XX: アプリケーション拡張
 Plug 'airblade/vim-gitgutter'
