@@ -2,6 +2,7 @@ if empty(globpath(&rtp, 'plugged/memolist.vim'))
   finish
 endif
 
+let g:memolist_memo_suffix = "md"
 let g:memolist_path = "~/.config/memo/_posts"
 
 nnoremap <Leader>mn :MemoNew<CR>
