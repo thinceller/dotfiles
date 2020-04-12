@@ -4,7 +4,7 @@
     "coc-docker": ">=0.2.1",
     "coc-emoji": ">=1.2.3",
     "coc-eslint": ">=1.2.6",
-    "coc-explorer": ">=0.3.16",
+    "coc-explorer": ">=0.3.17",
     "coc-fsharp": ">=0.1.63",
     "coc-go": ">=0.7.0",
     "coc-highlight": ">=1.2.5",
@@ -19,7 +19,7 @@
     "coc-solargraph": ">=1.1.6",
     "coc-stylelint": ">=1.1.0",
     "coc-tslint-plugin": ">=1.1.1",
-    "coc-tsserver": ">=1.4.12",
+    "coc-tsserver": ">=1.4.13",
     "coc-yaml": ">=1.0.4"
   }
 }
