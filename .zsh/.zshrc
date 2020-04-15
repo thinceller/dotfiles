@@ -16,18 +16,23 @@ autoload -Uz _zinit
 ### End of Zinit installer's chunk
 
 ### plugins
-zinit light zsh-users/zsh-autosuggestions
-zinit light zdharma/fast-syntax-highlighting
-zinit light mollifier/anyframe
+zinit load mollifier/anyframe
+zinit load zsh-users/zsh-completions
+zinit load g-plane/zsh-yarn-autocompletions
+
+zinit ice wait'!0'; zinit load zsh-users/zsh-autosuggestions
+zinit ice wait'!0'; zinit load zdharma/fast-syntax-highlighting
 
 zinit light romkatv/powerlevel10k
 [[ -f ~/.zsh/.p10k.zsh ]] && source ~/.zsh/.p10k.zsh
+
+# load completions
+fpath=(~/.zsh/completions $fpath)
+autoload -Uz compinit && compinit
+zinit cdreplay -q
 
 ### 各種設定の読み込み
 for f in $ZDOTDIR/_config/*.zsh
 do
   source "$f"
 done
-
-fpath=(~/.zsh/completions $fpath)
-autoload -U compinit && compinit
