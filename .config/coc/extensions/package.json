@@ -1,25 +1,26 @@
 {
   "dependencies": {
-    "coc-css": ">=1.2.2",
+    "coc-css": ">=1.2.3",
     "coc-docker": ">=0.2.1",
     "coc-emoji": ">=1.2.3",
     "coc-eslint": ">=1.2.6",
-    "coc-explorer": ">=0.3.17",
-    "coc-fsharp": ">=0.1.63",
+    "coc-explorer": ">=0.4.1",
+    "coc-fsharp": ">=0.1.65",
     "coc-go": ">=0.7.0",
     "coc-highlight": ">=1.2.5",
     "coc-html": ">=1.2.4",
     "coc-json": ">=1.2.5",
     "coc-marketplace": ">=1.7.0",
-    "coc-omnisharp": ">=0.0.25",
+    "coc-omnisharp": ">=0.0.26",
     "coc-prettier": ">=1.1.12",
     "coc-python": ">=1.2.9",
     "coc-sh": ">=0.4.0",
-    "coc-snippets": ">=2.1.24",
+    "coc-snippets": ">=2.1.25",
     "coc-solargraph": ">=1.1.6",
+    "coc-sql": ">=0.2.8",
     "coc-stylelint": ">=1.1.0",
     "coc-tslint-plugin": ">=1.1.1",
-    "coc-tsserver": ">=1.4.13",
+    "coc-tsserver": ">=1.5.1",
     "coc-yaml": ">=1.0.4"
   }
 }
