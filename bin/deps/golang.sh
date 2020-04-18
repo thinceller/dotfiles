@@ -15,3 +15,5 @@ go get -u github.com/github/hub
 go get -u github.com/mattn/memo
 go get -u github.com/toshimaru/nyan
 go get -u github.com/nametake/golangci-lint-langserver
+go get -u github.com/fatih/gomodifytags
+go get -u github.com/pressly/goose/cmd/goose
