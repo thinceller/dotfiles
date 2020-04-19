@@ -65,4 +65,8 @@ command! -nargs=0 Format :call CocAction('format')
 command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
-autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
+" autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
+autocmd FileType go nnoremap gtj :CocCommand go.tags.add json<CR>
+autocmd FileType go nnoremap gty :CocCommand go.tags.add yaml<CR>
+autocmd FileType go nnoremap gtd :CocCommand go.tags.add db<CR>
+autocmd FileType go nnoremap gtx :CocCommand go.tags.clear<CR>
