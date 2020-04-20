@@ -23,6 +23,9 @@ zinit load g-plane/zsh-yarn-autocompletions
 zinit ice wait'!0'; zinit load zsh-users/zsh-autosuggestions
 zinit ice wait'!0'; zinit load zdharma/fast-syntax-highlighting
 
+zinit ice lucid wait"0" depth"1" blockf
+zinit light yuki-ycino/fzf-preview.zsh
+
 zinit light romkatv/powerlevel10k
 [[ -f ~/.zsh/.p10k.zsh ]] && source ~/.zsh/.p10k.zsh
 
