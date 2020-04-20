@@ -98,6 +98,9 @@ Plug 'jeffkreeftmeijer/vim-numbertoggle'
 Plug 'haishanh/night-owl.vim'
 Plug 'Yggdroot/indentLine'
 Plug 'bronson/vim-trailing-whitespace'
+Plug 'kaicataldo/material.vim'
+Plug 'cocopon/iceberg.vim'
+Plug 'tomasr/molokai'
 
 " 2XX: グローバルなプラグイン
 "   lspやコマンドの拡張など
