@@ -4,17 +4,17 @@ endif
 
 " preview
 " https://qiita.com/kompiro/items/a09c0b44e7c741724c80#%E3%83%97%E3%83%AC%E3%83%93%E3%83%A5%E3%83%BC%E3%82%A6%E3%82%A3%E3%83%B3%E3%83%89%E3%82%A6%E3%81%AE%E8%B5%B7%E5%8B%95%E6%96%B9%E6%B3%95
-command! -bang -nargs=? -complete=dir Files
-  \ call fzf#vim#files(
-  \   <q-args>,
-  \   {'options': ['--layout=reverse', '--preview', 'bat --color=always --style=header,grid --line-range :100 {}']},
-  \   <bang>0)
+" command! -bang -nargs=? -complete=dir Files
+"   \ call fzf#vim#files(
+"   \   <q-args>,
+"   \   {'options': ['--layout=reverse', '--preview', 'bat --color=always --style=header,grid --line-range :100 {}']},
+"   \   <bang>0)
 
-command! -bang -nargs=? -complete=dir GitFiles
-  \ call fzf#vim#gitfiles(
-  \   <q-args>,
-  \   {'options': ['--layout=reverse', '--preview', 'bat --color=always --style=header,grid --line-range :100 {}']},
-  \   <bang>0)
+" command! -bang -nargs=? -complete=dir GitFiles
+"   \ call fzf#vim#gitfiles(
+"   \   <q-args>,
+"   \   {'options': ['--layout=reverse', '--preview', 'bat --color=always --style=header,grid --line-range :100 {}']},
+"   \   <bang>0)
 
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
@@ -59,6 +59,6 @@ if has('nvim')
   endfunction
 
   let g:fzf_layout = { 'window': 'call CreateCenteredFloatingWindow()' }
-else
-  let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
+" else
+"   let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
 endif
