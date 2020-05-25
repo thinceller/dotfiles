@@ -8,6 +8,7 @@ export PATH=$HOME/.cargo/bin:$PATH
 
 # brew tools
 export PATH=/usr/local/opt/mysql@5.7/bin:$PATH
+export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/opt/openssl/lib/
 
 ### Added by Zinit's installer
 source "$HOME/.zinit/bin/zinit.zsh"
