@@ -131,7 +131,8 @@ Plug 'tpope/vim-fugitive'
 Plug 'rhysd/git-messenger.vim'
 Plug 'lambdalisue/gina.vim'
 
-Plug 'tyru/open-browser.vim', { 'for': ['markdown', 'plantuml'] }
+Plug 'tyru/open-browser.vim'
+Plug 'tyru/open-browser-github.vim'
 Plug 'previm/previm', { 'for': 'markdown' }
 Plug 'junegunn/goyo.vim', { 'for': 'markdown' }
 Plug 'skanehira/preview-markdown.vim', { 'for': 'markdown' }
