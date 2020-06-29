@@ -18,7 +18,8 @@ let g:coc_global_extensions = [
 \ 'coc-stylelint',
 \ 'coc-tslint-plugin',
 \ 'coc-tsserver',
-\ 'coc-yaml'
+\ 'coc-yaml',
+\ 'coc-explorer'
 \ ]
 
 " Use tab for trigger completion with characters ahead and navigate.
@@ -70,3 +71,12 @@ autocmd FileType go nnoremap <leader>gtj :CocCommand go.tags.add json<CR>
 autocmd FileType go nnoremap <leader>gty :CocCommand go.tags.add yaml<CR>
 autocmd FileType go nnoremap <leader>gtd :CocCommand go.tags.add db<CR>
 autocmd FileType go nnoremap <leader>gtx :CocCommand go.tags.clear<CR>
+
+" coc-explorer
+nnoremap <leader>e :CocCommand explorer<CR>
+
+" coc-fzf
+nnoremap <silent> <leader>a :<C-u>CocFzfList diagnostics<CR>
+nnoremap <silent> <leader>d :<C-u>CocFzfList diagnostics --current-buf<CR>
+nnoremap <silent> <leader>c :<C-u>CocFzfList commands<CR>
+nnoremap <silent> <leader>s :<C-u>CocFzfList services<CR>

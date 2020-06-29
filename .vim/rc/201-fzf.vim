@@ -31,7 +31,7 @@ nnoremap <leader>F :GFiles?<CR>
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>l :BLines<CR>
 nnoremap <leader>h :History<CR>
-nnoremap <leader>c :Commands<CR>
+" nnoremap <leader>c :Commands<CR>
 
 if has('nvim')
   " https://github.com/neovim/neovim/issues/9718#issuecomment-559573308
@@ -59,6 +59,6 @@ if has('nvim')
   endfunction
 
   let g:fzf_layout = { 'window': 'call CreateCenteredFloatingWindow()' }
-" else
-"   let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
+else
+  let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
 endif

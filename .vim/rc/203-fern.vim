@@ -1,4 +1,4 @@
-if empty(globpath(&rtp, 'plugged/fzf.vim'))
+if empty(globpath(&rtp, 'plugged/fern.vim'))
   finish
 endif
 

@@ -107,8 +107,9 @@ Plug 'tomasr/molokai'
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile', 'branch': 'master'}
 Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
-Plug 'lambdalisue/fern.vim'
-Plug 'lambdalisue/fern-renderer-devicons.vim'
+Plug 'antoinemadec/coc-fzf'
+" Plug 'lambdalisue/fern.vim'
+" Plug 'lambdalisue/fern-renderer-devicons.vim'
 Plug 'thinca/vim-quickrun'
 
 Plug 'qpkorr/vim-bufkill'
