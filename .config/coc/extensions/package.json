@@ -4,9 +4,9 @@
     "coc-docker": ">=0.3.0",
     "coc-emoji": ">=1.2.3",
     "coc-eslint": ">=1.2.7",
-    "coc-explorer": ">=0.7.18",
+    "coc-explorer": ">=0.7.19",
     "coc-fsharp": ">=0.1.65",
-    "coc-go": ">=0.9.1",
+    "coc-go": ">=0.9.2",
     "coc-highlight": ">=1.2.5",
     "coc-html": ">=1.2.4",
     "coc-json": ">=1.2.6",
@@ -17,10 +17,10 @@
     "coc-sh": ">=0.5.1",
     "coc-snippets": ">=2.1.28",
     "coc-solargraph": ">=1.1.6",
-    "coc-sql": ">=0.2.26",
+    "coc-sql": ">=0.2.27",
     "coc-stylelint": ">=1.1.0",
     "coc-tslint-plugin": ">=1.1.1",
-    "coc-tsserver": ">=1.5.2",
+    "coc-tsserver": ">=1.5.3",
     "coc-yaml": ">=1.0.4"
   }
 }
