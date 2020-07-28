@@ -4,15 +4,18 @@ if empty(globpath(&rtp, 'plugged/night-owl.vim'))
 endif
 
 colorscheme night-owl
+" colorscheme iceberg
 autocmd BufRead,BufNewFile *.jsx,*.tsx set filetype=typescript.tsx
 
-hi SpecialKey ctermbg=NONE ctermfg=238 guibg=NONE guifg=NONE
-
-" hi Normal guibg=NONE ctermbg=NONE
-" hi NonText guibg=NONE ctermbg=NONE
-" hi EndOfBuffer guibg=NONE ctermbg=NONE
-" hi LineNr guibg=NONE ctermbg=NONE
-" hi CursorLineNr guibg=NONE ctermbg=NONE
+" hi SpecialKey ctermbg=NONE ctermfg=238 guibg=NONE guifg=NONE
+augroup TransparentBG
+  autocmd!
+  autocmd VimEnter,Colorscheme * hi Normal ctermbg=NONE
+  autocmd VimEnter,Colorscheme * hi NonText ctermbg=NONE
+  autocmd VimEnter,Colorscheme * hi EndOfBuffer ctermbg=NONE
+  autocmd VimEnter,Colorscheme * hi LineNr ctermbg=NONE
+  autocmd VimEnter,Colorscheme * hi CursorLineNr ctermbg=NONE
+augroup END
 
 let g:terminal_ansi_colors = [
 \ '#161821',
