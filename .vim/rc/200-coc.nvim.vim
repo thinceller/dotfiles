@@ -16,10 +16,10 @@ let g:coc_global_extensions = [
 \ 'coc-snippets',
 \ 'coc-solargraph',
 \ 'coc-stylelint',
-\ 'coc-tslint-plugin',
 \ 'coc-tsserver',
 \ 'coc-yaml',
-\ 'coc-explorer'
+\ 'coc-explorer',
+\ 'coc-prettier'
 \ ]
 
 " Use tab for trigger completion with characters ahead and navigate.
