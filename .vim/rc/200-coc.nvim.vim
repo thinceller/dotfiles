@@ -76,7 +76,7 @@ autocmd FileType go nnoremap <leader>gtx :CocCommand go.tags.clear<CR>
 nnoremap <leader>e :CocCommand explorer<CR>
 
 " coc-fzf
-nnoremap <silent> <leader>a :<C-u>CocFzfList diagnostics<CR>
-nnoremap <silent> <leader>d :<C-u>CocFzfList diagnostics --current-buf<CR>
-nnoremap <silent> <leader>c :<C-u>CocFzfList commands<CR>
-nnoremap <silent> <leader>s :<C-u>CocFzfList services<CR>
+nnoremap <silent> <leader>ca :<C-u>CocFzfList diagnostics<CR>
+nnoremap <silent> <leader>cd :<C-u>CocFzfList diagnostics --current-buf<CR>
+nnoremap <silent> <leader>cc :<C-u>CocFzfList commands<CR>
+nnoremap <silent> <leader>cs :<C-u>CocFzfList services<CR>
