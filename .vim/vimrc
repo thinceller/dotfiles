@@ -107,7 +107,6 @@ Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'antoinemadec/coc-fzf'
 Plug 'thinca/vim-quickrun'
-
 Plug 'qpkorr/vim-bufkill'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
@@ -117,9 +116,7 @@ Plug 'simeji/winresizer'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'cohama/lexima.vim'
-
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
-
 Plug 'mattn/vim-goimports', { 'for': 'go' }
 
 " 4XX: アプリケーション拡張
@@ -134,7 +131,6 @@ Plug 'previm/previm', { 'for': 'markdown' }
 Plug 'junegunn/goyo.vim', { 'for': 'markdown' }
 Plug 'skanehira/preview-markdown.vim', { 'for': 'markdown' }
 Plug 'weirongxu/plantuml-previewer.vim', { 'for': 'plantuml' }
-Plug 'glidenote/memolist.vim'
 
 call plug#end()
 

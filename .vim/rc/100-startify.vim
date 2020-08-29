@@ -32,4 +32,3 @@ let g:startify_custom_header = s:center([
   \'            |___/_/_/ /_/ /_/',
   \'',
   \])
-

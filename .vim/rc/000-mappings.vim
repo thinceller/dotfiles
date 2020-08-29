@@ -1,9 +1,8 @@
 inoremap <silent> jj <ESC>
 nnoremap ; :
 nnoremap : ;
-
 nnoremap Y y$
-
+nnoremap U <C-r>
 nnoremap <C-n> :bnext<CR>
 nnoremap <C-p> :bprev<CR>
 
@@ -23,8 +22,6 @@ else
 endif
 
 nnoremap <C-]> g<C-]>
-" nnoremap <C-h> :vsp<CR> :exe("tjump ".expand('<cword>'))<CR>
-" nnoremap <C-k> :split<CR> :exe("tjump ".expand('<cword>'))<CR>
 
 nnoremap <silent><Esc><Esc> :<C-u>set nohlsearch!<CR>
 
@@ -33,4 +30,3 @@ augroup MyXML
   autocmd Filetype xml inoremap <buffer> </ </<C-x><C-o>
   autocmd Filetype html inoremap <buffer> </ </<C-x><C-o>
 augroup END
-
