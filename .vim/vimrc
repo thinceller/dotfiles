@@ -85,7 +85,7 @@ set signcolumn=yes
 " プラグインの読み込み
 call plug#begin('~/.vim/plugged')
 
-" 0XX: Vim本体の拡張
+" 0XX: vim本体の拡張
 Plug 'mhinz/vim-startify'
 Plug 'vim-jp/vimdoc-ja'
 
@@ -94,13 +94,11 @@ Plug 'mengelbrecht/lightline-bufferline'
 Plug 'ryanoasis/vim-devicons'
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
 
-" 1XX: Vimのstyleの拡張
+" 1XX: vimのstyleの拡張
 Plug 'haishanh/night-owl.vim'
 Plug 'Yggdroot/indentLine'
 Plug 'bronson/vim-trailing-whitespace'
-Plug 'kaicataldo/material.vim'
 Plug 'cocopon/iceberg.vim'
-Plug 'tomasr/molokai'
 
 " 2XX: グローバルなプラグイン
 "   lspやコマンドの拡張など
@@ -108,8 +106,6 @@ Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile', 'branch': 'ma
 Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'antoinemadec/coc-fzf'
-" Plug 'lambdalisue/fern.vim'
-" Plug 'lambdalisue/fern-renderer-devicons.vim'
 Plug 'thinca/vim-quickrun'
 
 Plug 'qpkorr/vim-bufkill'
