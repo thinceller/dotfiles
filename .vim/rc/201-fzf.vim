@@ -25,12 +25,12 @@ command! -bang -nargs=* Rg
 
 nnoremap <C-g> :exec 'Rg' expand('<cword>')<CR>
 nnoremap <leader>/ :Rg<Space>
-nnoremap <leader>f :Files<CR>
-nnoremap <leader>p :GitFiles<CR>
-nnoremap <leader>F :GFiles?<CR>
-nnoremap <leader>b :Buffers<CR>
-nnoremap <leader>l :BLines<CR>
-nnoremap <leader>h :History<CR>
+" nnoremap <leader>f :Files<CR>
+" nnoremap <leader>p :GitFiles<CR>
+" nnoremap <leader>F :GFiles?<CR>
+" nnoremap <leader>b :Buffers<CR>
+" nnoremap <leader>l :BLines<CR>
+" nnoremap <leader>h :History<CR>
 " nnoremap <leader>c :Commands<CR>
 
 if has('nvim')
