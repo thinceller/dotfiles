@@ -74,6 +74,8 @@ nnoremap <leader>e :CocCommand explorer<CR>
 
 " coc-fzf-preview
 let g:fzf_preview_command = 'bat --color=always --plain {-1}'
+let g:fzf_preview_filelist_command = 'rg --files --hidden --follow --no-messages -g \!"* *"'
+let g:fzf_preview_grep_cmd = 'rg --line-number --no-heading --color=never'
 let g:fzf_preview_use_dev_icons = 1
 
 nmap <Leader>f [fzf-p]
