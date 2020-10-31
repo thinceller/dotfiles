@@ -17,7 +17,8 @@
 /.config/karabiner/automatic_backups/**
 !/.config/kitty/kitty.conf
 !/.config/memo/
-!/.config/memo/**
+!/.config/memo/config.toml
+!/.config/memo/template.txt
 !/.config/nvim
 !/.config/yarn/
 !/.config/yarn/global/
