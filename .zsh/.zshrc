@@ -29,9 +29,6 @@ zinit ice wait'!0'; zinit load zdharma/fast-syntax-highlighting
 zinit ice lucid wait"0" depth"1" blockf
 zinit light yuki-ycino/fzf-preview.zsh
 
-zinit light romkatv/powerlevel10k
-[[ -f ~/.zsh/.p10k.zsh ]] && source ~/.zsh/.p10k.zsh
-
 # load completions
 fpath=(~/.zsh/completions $fpath)
 autoload -Uz compinit && compinit
@@ -42,3 +39,6 @@ for f in $ZDOTDIR/_config/*.zsh
 do
   source "$f"
 done
+
+# initialize starship
+eval "$(starship init zsh)"
