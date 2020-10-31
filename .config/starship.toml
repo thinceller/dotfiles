@@ -1,0 +1,4 @@
+[character]
+success_symbol = "[\\(🌻・ワ・\\)](white)"
+error_symbol = "[\\(🌻・ワ・\\)？](red)"
+vicmd_symbol = "[\\(・ワ・\\🌻)](blue)"
