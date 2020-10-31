@@ -6,7 +6,7 @@ let g:quickrun_config = {
       \ '_': {
       \   'outputter': 'buffered',
       \   'outputter/buffered/target': 'buffer',
-      \   'outputter/buffer/split': ''
+      \   'outputter/buffer/split': '%{winwidth(0) * 2 < winheight(0) * 5 ? "" : "vertical"}'
       \ }
       \ }
 
