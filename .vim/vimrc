@@ -102,7 +102,7 @@ Plug 'cocopon/iceberg.vim'
 
 " 2XX: グローバルなプラグイン
 "   lspやコマンドの拡張など
-Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile', 'branch': 'master'}
+Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 if has('nvim')
   Plug 'yuki-ycino/fzf-preview.vim', { 'branch': 'release', 'do': ':UpdateRemotePlugins' }
 endif
