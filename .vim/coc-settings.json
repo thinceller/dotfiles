@@ -1,4 +1,12 @@
 {
+  "coc.preferences.formatOnSaveFiletypes": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "json",
+    "css"
+  ],
   "diagnostic.enable": true,
   "diagnostic.checkCurrentLine": true,
   "diagnostic.refreshAfterSave": false,
@@ -13,7 +21,7 @@
   "typescript.suggest.autoImports": true,
   "typescript.validate.enable": true,
   "javascript.validate.enable": true,
-  "eslint.autoFixOnSave": true,
+  "prettier.formatterPriority": 100,
   "python.linting.flake8Enabled": true,
   "explorer.icon.enableNerdfont": true,
   "go.goplsOptions": {

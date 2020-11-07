@@ -4,7 +4,7 @@ if empty(globpath(&rtp, 'plugged/night-owl.vim'))
 endif
 
 colorscheme night-owl
-autocmd BufRead,BufNewFile *.jsx,*.tsx set filetype=typescript.tsx
+" autocmd BufRead,BufNewFile *.jsx,*.tsx set filetype=typescript.tsx
 
 " hi SpecialKey ctermbg=NONE ctermfg=238 guibg=NONE guifg=NONE
 augroup TransparentBG
