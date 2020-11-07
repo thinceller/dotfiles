@@ -29,6 +29,13 @@ then
     zcompile /tmp/rbenv.cache
   fi
   source /tmp/rbenv.cache
+
+  if ! [ -f /tmp/goenv.cache ]
+  then
+    goenv init - > /tmp/goenv.cache
+    zcompile /tmp/goenv.cache
+  fi
+  source /tmp/goenv.cache
 fi
 # anyenv の設定後に GOPATH 等を設定する
 export GOROOT=$(go env GOROOT)
