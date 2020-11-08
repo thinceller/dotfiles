@@ -20,3 +20,7 @@ if type kubectl > /dev/null 2>&1; then
   alias k='kubectl'
 fi
 
+# neovim をメインで使いたいときにコメントアウトする
+if type nvim > /dev/null 2>&1; then
+  alias vim='nvim'
+fi
