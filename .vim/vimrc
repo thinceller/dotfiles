@@ -126,7 +126,7 @@ Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
 Plug 'mattn/vim-goimports', { 'for': 'go' }
 
 " 4XX: アプリケーション拡張
-Plug 'airblade/vim-gitgutter'
+" Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 Plug 'lambdalisue/gina.vim'
 
