@@ -23,7 +23,6 @@
 !/.config/yarn/
 !/.config/yarn/global/
 !/.config/yarn/global/package.json
-!/.config/starship.toml
 !/.gitconfig
 !/.gitignore_global
 !/.irbrc
