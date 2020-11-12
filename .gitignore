@@ -43,6 +43,7 @@
 !/.zsh/.zshrc
 !/.zsh/**
 /.zsh/.zcompdump*
+/.zsh/.zcompcache/
 .zsh_history
 .zcompdump
 
