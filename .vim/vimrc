@@ -82,6 +82,10 @@ set updatetime=100
 set cmdheight=2
 set signcolumn=yes
 
+if has('nvim')
+  let g:node_host_prog = '/Users/kawakami.kohei/.anyenv/envs/nodenv/versions/14.14.0/bin/neovim-node-host'
+endif
+
 " プラグインの読み込み
 call plug#begin('~/.vim/plugged')
 " polyglot 読み込み前に設定しないといけない
