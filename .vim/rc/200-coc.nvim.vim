@@ -7,20 +7,25 @@ let g:coc_global_extensions = [
 \ 'coc-docker',
 \ 'coc-emoji',
 \ 'coc-eslint',
+\ 'coc-explorer',
+\ 'coc-fsharp',
+\ 'coc-git',
 \ 'coc-go',
+\ 'coc-highlight',
 \ 'coc-html',
 \ 'coc-json',
 \ 'coc-marketplace',
+\ 'coc-omnisharp',
+\ 'coc-prettier',
 \ 'coc-python',
+\ 'coc-rust-analyzer',
 \ 'coc-sh',
 \ 'coc-snippets',
 \ 'coc-solargraph',
+\ 'coc-sql',
 \ 'coc-stylelint',
 \ 'coc-tsserver',
 \ 'coc-yaml',
-\ 'coc-explorer',
-\ 'coc-prettier',
-\ 'coc-git'
 \ ]
 
 " Use tab for trigger completion with characters ahead and navigate.
