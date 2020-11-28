@@ -4,6 +4,8 @@
 
 !/.bashrc
 !/.bash_profile
+!/.bin/
+!/.bin/**
 !/.config/
 !/.config/alacritty/alacritty.yml
 !/.config/coc/
