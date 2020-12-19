@@ -124,7 +124,8 @@ Plug 'tyru/columnskip.vim'
 
 " 3XX: ファイルタイプごとのプラグイン
 Plug 'editorconfig/editorconfig-vim'
-Plug 'sheerun/vim-polyglot'
+" Plug 'sheerun/vim-polyglot'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'cohama/lexima.vim'
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
 Plug 'mattn/vim-goimports', { 'for': 'go' }
