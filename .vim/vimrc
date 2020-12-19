@@ -48,8 +48,8 @@ set wrapscan
 set splitbelow
 
 set list
-set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%
-set list lcs=tab:\|\ 
+set listchars=tab:»-,space:･,trail:-,eol:↲,extends:»,precedes:«,nbsp:%
+" set list lcs=tab:\|\ 
 
 set wildmode=list:longest,full
 
@@ -103,7 +103,7 @@ Plug 'jeffkreeftmeijer/vim-numbertoggle'
 
 " 1XX: vimのstyleの拡張
 Plug 'haishanh/night-owl.vim'
-Plug 'Yggdroot/indentLine'
+" Plug 'Yggdroot/indentLine'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'cocopon/iceberg.vim'
 
