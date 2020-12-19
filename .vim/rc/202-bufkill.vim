@@ -3,4 +3,4 @@ if empty(globpath(&rtp, 'plugged/vim-bufkill'))
 endif
 
 let g:BufKillCreateMappings = 0
-nnoremap <leader>q :exec 'BW'<CR>
+nnoremap <leader>q :exec 'BD'<CR>
