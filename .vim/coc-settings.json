@@ -23,6 +23,7 @@
   "typescript.validate.enable": true,
   "javascript.validate.enable": true,
   "prettier.formatterPriority": 100,
+  "prettier.requireConfig": true,
   "python.linting.flake8Enabled": true,
   "explorer.icon.enableNerdfont": true,
   "go.goplsOptions": {
