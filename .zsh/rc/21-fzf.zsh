@@ -6,11 +6,11 @@ export FZF_TMUX=1
 export FZF_TMUX_HEIGHT=40%
 
 # hub pull-request checkout
-hbr() {
+gbr() {
   local pr
   pr=$(
     gh pr list --limit 100 \
-      | fzf-tmux --preview 'gh pr view -p {1}' \
+      | fzf-tmux --preview 'gh pr view {1}' \
       | cut -f1
   )
   if [ -z $pr ]; then
