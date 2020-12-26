@@ -54,15 +54,6 @@ then
     # fi
     # source /tmp/goenv.cache
   fi
-
-  if [ -d "$ANYENV_ROOT/envs/tfenv" ]; then
-    if ! [ -f /tmp/tfenv.cache ]
-    then
-      tfenv init - > /tmp/tfenv.cache
-      zcompile /tmp/tfenv.cache
-    fi
-    source /tmp/tfenv.cache
-  fi
 fi
 
 # direnv setting
