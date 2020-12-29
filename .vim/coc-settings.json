@@ -9,13 +9,17 @@
   ],
   "diagnostic.enable": true,
   "diagnostic.checkCurrentLine": true,
-  "diagnostic.refreshAfterSave": false,
   "diagnostic.refreshOnInsertMode": true,
   "diagnostic.displayByAle": false,
   "diagnostic.warningSign": "\uf071",
   "diagnostic.errorSign": "\uf05e",
   "diagnostic.infoSign": "\uf7fc",
+  "suggest.asciiCharactersOnly": true,
   "git.addGBlameToVirtualText": true,
+  "snippets.extends": {
+    "javascriptreact": ["javascript"],
+    "typescriptreact": ["typescript"]
+  },
   "solargraph.diagnostics": true,
   "solargraph.hover": true,
   "tsserver.implicitProjectConfig.checkJs": true,
@@ -25,6 +29,7 @@
   "prettier.formatterPriority": 100,
   "prettier.requireConfig": true,
   "python.linting.flake8Enabled": true,
+  "explorer.file.showHiddenFiles": true,
   "explorer.icon.enableNerdfont": true,
   "go.goplsOptions": {
     "completeUnimported": true
