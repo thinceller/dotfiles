@@ -18,7 +18,6 @@
 	process = git-lfs filter-process
 	required = true
 [ghq]
-	root = ~/go/src
 	root = ~/src
 [alias]
 	see = browse
