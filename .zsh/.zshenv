@@ -4,6 +4,7 @@ export EDITOR=vim
 export PATH=/usr/local/go/bin:$PATH
 
 export PATH=/usr/local/opt/llvm/bin:$PATH
+export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.cargo/bin:$PATH
 
 export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)

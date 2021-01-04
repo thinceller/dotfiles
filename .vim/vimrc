@@ -131,7 +131,7 @@ else
   Plug 'sheerun/vim-polyglot'
 endif
 Plug 'cohama/lexima.vim'
-" Plug 'mattn/vim-goimports', { 'for': 'go' }
+Plug 'mattn/vim-goimports', { 'for': 'go' }
 
 " 4XX: アプリケーション拡張
 " Plug 'airblade/vim-gitgutter'

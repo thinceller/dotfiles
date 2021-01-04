@@ -49,7 +49,7 @@ nmap <silent> [c <Plug>(coc-diagnostic-prev)
 nmap <silent> ]c <Plug>(coc-diagnostic-next)
 
 nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gt <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
@@ -74,6 +74,16 @@ autocmd FileType go nnoremap <leader>gtj :CocCommand go.tags.add json<CR>
 autocmd FileType go nnoremap <leader>gty :CocCommand go.tags.add yaml<CR>
 autocmd FileType go nnoremap <leader>gtd :CocCommand go.tags.add db<CR>
 autocmd FileType go nnoremap <leader>gtx :CocCommand go.tags.clear<CR>
+
+" coc-snippets
+" Use <C-l> for trigger snippet expand.
+imap <C-l> <Plug>(coc-snippets-expand)
+" Use <C-k> for select text for visual placeholder of snippet.
+vmap <C-k> <Plug>(coc-snippets-select)
+" Use <C-k> for both expand and jump (make expand higher priority.)
+imap <C-k> <Plug>(coc-snippets-expand-jump)
+" Use <leader>x for convert visual selected code to snippet
+xmap <leader>x  <Plug>(coc-convert-snippet)
 
 " coc-explorer
 nnoremap <leader>e :CocCommand explorer<CR>
