@@ -1,6 +1,7 @@
 # 環境変数
 export EDITOR=vim
 
+export PATH=$HOME/bin:$PATH
 export PATH=/usr/local/go/bin:$PATH
 
 export PATH=/usr/local/opt/llvm/bin:$PATH
