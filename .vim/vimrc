@@ -132,6 +132,7 @@ else
 endif
 Plug 'cohama/lexima.vim'
 Plug 'mattn/vim-goimports', { 'for': 'go' }
+Plug 'jxnblk/vim-mdx-js'
 
 " 4XX: アプリケーション拡張
 " Plug 'airblade/vim-gitgutter'
