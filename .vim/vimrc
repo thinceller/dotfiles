@@ -111,7 +111,7 @@ Plug 'cocopon/iceberg.vim'
 "   lspやコマンドの拡張など
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 if has('nvim')
-  Plug 'yuki-ycino/fzf-preview.vim', { 'branch': 'release', 'do': ':UpdateRemotePlugins' }
+  Plug 'yuki-ycino/fzf-preview.vim', { 'branch': 'release/remote', 'do': ':UpdateRemotePlugins' }
 endif
 Plug '~/.fzf'
 Plug 'junegunn/fzf.vim'
