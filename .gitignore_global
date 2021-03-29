@@ -2,3 +2,4 @@
 .DS_Store
 jsconfig.json
 tags
+node_modules
