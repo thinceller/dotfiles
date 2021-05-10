@@ -146,6 +146,9 @@ Plug 'junegunn/goyo.vim', { 'for': 'markdown' }
 Plug 'skanehira/preview-markdown.vim', { 'for': 'markdown' }
 Plug 'weirongxu/plantuml-previewer.vim', { 'for': 'plantuml' }
 
+Plug 'vim-denops/denops.vim'
+Plug 'yuki-yano/dps-slack-status.vim'
+
 call plug#end()
 
 " 各種設定の読み込み
