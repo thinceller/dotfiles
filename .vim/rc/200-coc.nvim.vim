@@ -26,7 +26,8 @@ let g:coc_global_extensions = [
 \ 'coc-stylelint',
 \ 'coc-tsserver',
 \ 'coc-yaml',
-\ 'coc-tailwindcss'
+\ 'coc-tailwindcss',
+\ 'coc-deno'
 \ ]
 
 " Use tab for trigger completion with characters ahead and navigate.
