@@ -6,6 +6,10 @@ endif
 colorscheme night-owl
 " autocmd BufRead,BufNewFile *.jsx,*.tsx set filetype=typescript.tsx
 
+" add jbuilder syntax highlighting
+au BufNewFile,BufRead *.json.jbuilder set ft=ruby
+au BufNewFile,BufRead *.html.slim set ft=ruby
+
 " hi SpecialKey ctermbg=NONE ctermfg=238 guibg=NONE guifg=NONE
 augroup TransparentBG
   autocmd!
