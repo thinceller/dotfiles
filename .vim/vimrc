@@ -137,7 +137,7 @@ Plug 'jxnblk/vim-mdx-js'
 " 4XX: アプリケーション拡張
 " Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
-Plug 'lambdalisue/gina.vim'
+" Plug 'lambdalisue/gina.vim'
 
 Plug 'tyru/open-browser.vim'
 Plug 'tyru/open-browser-github.vim'
