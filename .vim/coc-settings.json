@@ -63,5 +63,8 @@
       "filetypes": ["terraform", "tf"],
       "initializationOptions": {}
     }
-  }
+  },
+  "cSpell.userWords": [
+    "prefetch"
+  ]
 }

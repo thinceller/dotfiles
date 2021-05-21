@@ -27,7 +27,8 @@ let g:coc_global_extensions = [
 \ 'coc-tsserver',
 \ 'coc-yaml',
 \ 'coc-tailwindcss',
-\ 'coc-deno'
+\ 'coc-deno',
+\ 'coc-spell-checker'
 \ ]
 
 " Use tab for trigger completion with characters ahead and navigate.
@@ -58,8 +59,8 @@ nmap <silent> gr <Plug>(coc-references)
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 nmap <C-q> <Plug>(coc-fix-current)
-" vmap <leader>a <Plug>(coc-codeaction-selected)
-" nmap <leader>a <Plug>(coc-codeaction-selected)
+vmap <leader>a <Plug>(coc-codeaction-selected)
+nmap <leader>a <Plug>(coc-codeaction-selected)
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
