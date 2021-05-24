@@ -20,8 +20,9 @@ zinit load g-plane/zsh-yarn-autocompletions
 zinit ice wait'!0'; zinit load zsh-users/zsh-autosuggestions
 zinit ice wait'!0'; zinit load zdharma/fast-syntax-highlighting
 
-zinit ice lucid wait"0" depth"1" blockf
-zinit light yuki-ycino/fzf-preview.zsh
+zinit ice lucid depth"1" blockf
+zinit light yuki-yano/zeno.zsh
+
 
 zinit ice depth=1; zinit light romkatv/powerlevel10k
 

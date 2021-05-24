@@ -25,6 +25,8 @@
 !/.config/yarn/
 !/.config/yarn/global/
 !/.config/yarn/global/package.json
+!/.config/zeno/
+!/.config/zeno/config.yml
 !/.gitconfig
 !/.gitignore_global
 !/.irbrc
