@@ -21,7 +21,7 @@ export ZENO_GIT_CAT="bat --color=always"
 export ZENO_GIT_TREE="exa --tree"
 
 bindkey ' '  zeno-auto-snippet
-bindkey '^m' zeno-auto-snippet-and-accept-line
+# bindkey '^m' zeno-auto-snippet-and-accept-line
 bindkey '^i' zeno-completion
 
 bindkey '^r'   zeno-history-selection

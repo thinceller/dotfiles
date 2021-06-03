@@ -15,7 +15,7 @@ autoload -Uz _zinit
 # plugins
 zinit load mollifier/anyframe
 zinit load zsh-users/zsh-completions
-zinit load g-plane/zsh-yarn-autocompletions
+# zinit load g-plane/zsh-yarn-autocompletions
 
 zinit ice wait'!0'; zinit load zsh-users/zsh-autosuggestions
 zinit ice wait'!0'; zinit load zdharma/fast-syntax-highlighting
