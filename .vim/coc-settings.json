@@ -25,6 +25,7 @@
   "tsserver.implicitProjectConfig.checkJs": true,
   "typescript.suggest.autoImports": true,
   "typescript.validate.enable": true,
+  "typescript.autoClosingTags": true,
   "javascript.validate.enable": true,
   "prettier.formatterPriority": 100,
   "prettier.requireConfig": true,
@@ -66,6 +67,9 @@
   },
   "cSpell.userWords": [
     "Linaria",
+    "codegen",
+    "fontawesome",
+    "fortawesome",
     "prefetch",
     "tailwindcss",
     "thinceller"
