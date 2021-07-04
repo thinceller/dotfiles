@@ -5,12 +5,16 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    container: ubuntu:latest
     steps:
       - uses: actions/checkout@v1
-      - name: Run a one-line script
-        run: echo Hello, world!
-      - name: Run a multi-line script
+      - name: update pacakges
+        run: apt-get update -y && apt-get install -y git make vim
+      - name: check home dir
+        run: echo $HOME
+      - name: check deploy
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          make list
+          make deploy
+      - name: check dotfiles
+        run: ls -al $HOME
