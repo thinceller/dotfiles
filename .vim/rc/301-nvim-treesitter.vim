@@ -9,13 +9,14 @@ au BufRead,BufNewFile *.gql       setfiletype graphql
 if has('nvim')
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = "all",
+  ensure_installed = "maintained",
   highlight = {
     enable = true,
     disable = {
       "ruby",
       "c_sharp",
       "vue",
+      "haskell",
     }
   }
 }
