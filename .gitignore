@@ -1,0 +1,18 @@
+/*
+/**
+
+# config
+!/.config/
+!/.config/**
+
+# zsh
+!/.zshenv
+!/.zshrc
+
+# Homebrew
+!/Brewfile
+
+# other files
+!/README.md
+!/install.sh
+!/.gitignore

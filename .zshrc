@@ -1,0 +1,2 @@
+setopt nonomatch
+bindkey -e
