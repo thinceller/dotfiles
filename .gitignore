@@ -10,6 +10,9 @@
 !/.zshrc
 !/.p10k.zsh
 
+# vim
+!/.vimrc
+
 # Homebrew
 !/Brewfile
 
