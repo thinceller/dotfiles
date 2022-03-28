@@ -125,6 +125,15 @@ setup_shell() {
   fi
 }
 
+setup_vim_plug() {
+  title "Setting up vim-plug"
+
+  if [ ! -f "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim" ]; then
+    sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  fi
+}
+
 setup_rust() {
   title "Setting up Rust"
 
@@ -143,6 +152,9 @@ case "${1-default}" in
   shell)
     setup_shell
     ;;
+  vim)
+    setup_vim_plug
+    ;;
   rust)
     setup_rust
     ;;
@@ -151,9 +163,10 @@ case "${1-default}" in
     setup_homebrew
     setup_shell
     setup_rust
+    setup_vim_plug
     ;;
   *)
-    echo -e "\nUsage: $(basename "$0") {link|homebrew|shell|rust|all}\n"
+    echo -e "\nUsage: $(basename "$0") {link|homebrew|shell|vim|rust|all}\n"
     exit 1
     ;;
 esac
