@@ -1,3 +1,6 @@
+#================================================
+# basic
+#================================================
 setopt nonomatch
 bindkey -e
 
@@ -6,6 +9,14 @@ bindkey -e
 #================================================
 alias ll='exa -alh'
 alias la='exa -ah'
+
+if type kubectl > /dev/null 2>&1; then
+  alias k='kubectl'
+fi
+
+if type nvim > /dev/null 2>&1; then
+  alias vim='nvim'
+fi
 
 #================================================
 # plugins
@@ -36,6 +47,9 @@ fi
 [[ ! -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ]] && $(brew --prefix)/opt/fzf/install --xdg --no-bash --no-fish
 
 [ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ] && source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh
+
+export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git"'
+export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
 
 #================================================
 # zeno
