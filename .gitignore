@@ -8,6 +8,7 @@
 # zsh
 !/.zshenv
 !/.zshrc
+!/.p10k.zsh
 
 # Homebrew
 !/Brewfile
