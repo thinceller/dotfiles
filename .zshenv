@@ -14,10 +14,10 @@ path=(
   $path
 )
 
-if builtin command -v nvim > /dev/null 2>&1; then
-  export EDITOR=${EDITOR:-nvim}
+if type nvim > /dev/null 2>&1; then
+  export EDITOR=nvim
 else
-  export EDITOR=${EDITOR:-vim}
+  export EDITOR=vim
 fi
 
 export PAGER=less
