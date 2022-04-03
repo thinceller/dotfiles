@@ -70,6 +70,7 @@ call plug#begin()
 Plug 'vim-jp/vimdoc-ja'
 Plug 'mhinz/vim-startify'
 Plug 'haishanh/night-owl.vim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
@@ -118,6 +119,22 @@ let g:terminal_ansi_colors = [
 \ '#95c4ce',
 \ '#d2d4de'
 \ ]
+
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained",
+  highlight = {
+    enable = true,
+    disable = {
+      'lua',
+      'ruby',
+      'toml',
+      'c_sharp',
+      'vue',
+    }
+  }
+}
+EOF
 
 "================================================
 " vim-startify
