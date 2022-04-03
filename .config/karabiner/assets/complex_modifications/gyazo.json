@@ -1,5 +1,5 @@
 {
-  "title": "Fnキー単独でGyazo起動",
+  "title": "Gyazo起動",
   "rules": [
     {
       "description": "Fnキー単独でGyazo起動",
@@ -8,6 +8,22 @@
           "type": "basic",
           "from": {
             "key_code": "fn"
+          },
+          "to_if_alone": [
+            {
+              "shell_command": "open -a 'Gyazo.app'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Print Screenキー単独でGyazo起動",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "print_screen"
           },
           "to_if_alone": [
             {

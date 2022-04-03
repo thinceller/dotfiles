@@ -95,6 +95,22 @@
                                 "type": "basic"
                             }
                         ]
+                    },
+                    {
+                        "description": "Print Screenキー単独でGyazo起動",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "print_screen"
+                                },
+                                "to_if_alone": [
+                                    {
+                                        "shell_command": "open -a 'Gyazo.app'"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
                     }
                 ]
             },
