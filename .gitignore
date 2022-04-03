@@ -4,6 +4,7 @@
 # config
 !/.config/
 !/.config/**
+/.config/karabiner/automatic_backups/
 
 # zsh
 !/.zshenv
