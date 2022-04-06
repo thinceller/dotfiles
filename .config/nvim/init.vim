@@ -1,1 +1,1 @@
-/Users/thinceller/.dotfiles/.vimrc
+../../.vimrc
