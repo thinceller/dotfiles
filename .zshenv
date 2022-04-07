@@ -31,3 +31,7 @@ elif [[ -d /home/linuxbrew/.linuxbrew ]]; then
   test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 . "$HOME/.cargo/env"
+
+if [[ -f "$HOME/.env.sh" ]]; then
+  . "$HOME/.env.sh"
+fi
