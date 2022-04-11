@@ -22,6 +22,15 @@ snippets:
     context:
       lbuffer: '^git\s+checkout\s+'
     evaluate: true # eval snippet
+  - name: git commit fixup
+    keyword: gf
+    snippet: git commit --fixup
+  - name: git rebase interactive
+    keyword: gri
+    snippet: git rebase -i
+  - name: git switch -c
+    keyword: gsw
+    snippet: git switch -c '{{branch_name}}'
 
 completions:
   - name: kill
