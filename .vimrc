@@ -92,6 +92,7 @@ Plug 'prabirshrestha/vim-lsp'
 Plug 'mattn/vim-lsp-settings'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'airblade/vim-gitgutter'
 Plug 'vim-denops/denops.vim'
 Plug 'lambdalisue/gin.vim'
 
@@ -262,9 +263,17 @@ hi LspHintText guifg=#82dabf ctermfg=115 gui=bold cterm=bold
 hi LspHintHighlight gui=underline cterm=underline
 hi LspHintVirtualText guifg=#545c8c ctermfg=60 gui=bold cterm=bold
 
+let g:lsp_settings_filetype_ruby = ['solargraph']
+
+"================================================
+" vim-gitgutter
+"================================================
+nmap ]h <Plug>(GitGutterNextHunk)
+nmap [h <Plug>(GitGutterPrevHunk)
+
 "================================================
 " gin.vim
 "================================================
-nnoremap <Leader>gd <Cmd>GinDiff<CR>
-nnoremap [g <Plug>(gin-diffjump-old)
-nnoremap ]g <Plug>(gin-diffjump-new)
+" nnoremap <Leader>gd <Cmd>GinDiff<CR>
+" nnoremap [g <Plug>(gin-diffjump-old)
+" nnoremap ]g <Plug>(gin-diffjump-new)
