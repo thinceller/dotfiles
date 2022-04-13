@@ -233,6 +233,7 @@ nnoremap <Leader>fg <Cmd>Telescope live_grep<Cr>
 nnoremap <Leader>fb <Cmd>Telescope buffers<Cr>
 nnoremap <Leader>f/ <Cmd>Telescope current_buffer_fuzzy_find<Cr>
 nnoremap <Leader>gs <Cmd>Telescope git_status<Cr>
+nnoremap <C-g> <Cmd>Telescope grep_string<Cr>
 
 "================================================
 " vim-lsp
