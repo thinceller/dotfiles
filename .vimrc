@@ -73,6 +73,7 @@ Plug 'haishanh/night-owl.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
+Plug 'akinsho/toggleterm.nvim'
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'qpkorr/vim-bufkill'
@@ -191,6 +192,16 @@ let g:lightline = {
 let g:lightline#bufferline#show_number = 1
 
 "================================================
+" toggleterm.nvim
+"================================================
+let g:toggleterm_terminal_mapping = '<C-t>'
+autocmd TermEnter term://*toggleterm#*
+      \ tnoremap <silent><c-t> <Cmd>exe v:count1 . "ToggleTerm"<CR>
+
+nnoremap <silent><C-t> <Cmd>exe v:count1 . "ToggleTerm"<CR>
+inoremap <silent><C-t> <Esc><Cmd>exe v:count1 . "ToggleTerm"<CR>
+
+"================================================
 " fern.vim
 "================================================
 nnoremap <Leader>ee <Cmd>Fern . -drawer -reveal=% -toggle<CR>
@@ -229,9 +240,10 @@ xmap tk <Plug>(columnskip:nonblank:prev)
 " telescope.nvim
 "================================================
 nnoremap <Leader>ff <Cmd>Telescope find_files<Cr>
-nnoremap <Leader>fg <Cmd>Telescope live_grep<Cr>
+nnoremap <Leader>fg <Cmd>Telescope git_files<Cr>
+nnoremap <Leader>f/ <Cmd>Telescope live_grep<Cr>
 nnoremap <Leader>fb <Cmd>Telescope buffers<Cr>
-nnoremap <Leader>f/ <Cmd>Telescope current_buffer_fuzzy_find<Cr>
+nnoremap <Leader>fl <Cmd>Telescope current_buffer_fuzzy_find<Cr>
 nnoremap <Leader>gs <Cmd>Telescope git_status<Cr>
 nnoremap <C-g> <Cmd>Telescope grep_string<Cr>
 
