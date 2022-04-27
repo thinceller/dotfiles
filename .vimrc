@@ -125,16 +125,28 @@ let g:terminal_ansi_colors = [
 
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = "maintained",
+  ensure_installed = {
+    'bash',
+    'css',
+    'dockerfile',
+    'go',
+    'gomod',
+    'hcl',
+    'html',
+    'http',
+    'javascript',
+    'jsdoc',
+    'json',
+    'make',
+    'rust',
+    'toml',
+    'tsx',
+    'typescript',
+    'vim',
+    'yaml',
+  },
   highlight = {
     enable = true,
-    disable = {
-      'lua',
-      'ruby',
-      'toml',
-      'c_sharp',
-      'vue',
-    }
   }
 }
 EOF
@@ -198,8 +210,8 @@ let g:toggleterm_terminal_mapping = '<C-t>'
 autocmd TermEnter term://*toggleterm#*
       \ tnoremap <silent><c-t> <Cmd>exe v:count1 . "ToggleTerm"<CR>
 
-nnoremap <silent><C-t> <Cmd>exe v:count1 . "ToggleTerm"<CR>
-inoremap <silent><C-t> <Esc><Cmd>exe v:count1 . "ToggleTerm"<CR>
+nnoremap <silent><C-t> <Cmd>exe v:count1 . "ToggleTerm size=30"<CR>
+inoremap <silent><C-t> <Esc><Cmd>exe v:count1 . "ToggleTerm size=30"<CR>
 
 "================================================
 " fern.vim
