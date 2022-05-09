@@ -96,6 +96,8 @@ Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'vim-denops/denops.vim'
 Plug 'lambdalisue/gin.vim'
+Plug 'tyru/open-browser.vim'
+Plug 'tyru/open-browser-github.vim'
 
 call plug#end()
 
