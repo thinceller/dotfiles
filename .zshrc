@@ -62,6 +62,7 @@ alias fbr=anyframe-widget-checkout-git-branch
 # zeno
 #================================================
 export ZENO_HOME="$HOME/.config/zeno"
+export ZENO_DISABLE_EXECUTE_CACHE_COMMAND=1
 export ZENO_ENABLE_SOCK=1
 export ZENO_GIT_CAT="bat --color=always"
 export ZENO_GIT_TREE="exa --tree"
@@ -75,3 +76,8 @@ if [[ -n $ZENO_LOADED ]]; then
   bindkey '^r' zeno-history-selection
   bindkey '^g' zeno-ghq-cd
 fi
+
+#================================================
+# functions
+#================================================
+
