@@ -80,4 +80,10 @@ fi
 #================================================
 # functions
 #================================================
-
+function gbr() {
+  local prs out pr
+  prs=$(gh pr list) &&
+    out=$(echo $prs | fzf --preview "gh pr view {1}") &&
+    pr=$(echo $out | awk '{print $1}') &&
+    gh pr checkout $pr
+}
