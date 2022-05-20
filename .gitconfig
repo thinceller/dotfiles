@@ -21,6 +21,7 @@
 	see = browse
 [rebase]
 	autostash = true
+	autosquash = true
 [pull]
 	rebase = true
 [url "git@github.com:"]

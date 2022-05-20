@@ -27,7 +27,7 @@ snippets:
     snippet: git commit --fixup
   - name: git rebase interactive
     keyword: gri
-    snippet: git rebase -i --autosquash
+    snippet: git rebase -i
   - name: git switch -c
     keyword: gsw
     snippet: git switch -c '{{branch_name}}'
