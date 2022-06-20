@@ -5,6 +5,7 @@
 !/.config/
 !/.config/**
 /.config/karabiner/automatic_backups/
+/.config/nvim/plugin/
 
 # zsh
 !/.zshenv

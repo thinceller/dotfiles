@@ -93,7 +93,8 @@ Plug 'prabirshrestha/vim-lsp'
 Plug 'mattn/vim-lsp-settings'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'airblade/vim-gitgutter'
+" Plug 'airblade/vim-gitgutter'
+Plug 'lewis6991/gitsigns.nvim'
 Plug 'vim-denops/denops.vim'
 Plug 'lambdalisue/gin.vim'
 Plug 'tyru/open-browser.vim'
@@ -295,8 +296,12 @@ let g:lsp_settings_filetype_ruby = ['solargraph']
 "================================================
 " vim-gitgutter
 "================================================
-nmap ]h <Plug>(GitGutterNextHunk)
-nmap [h <Plug>(GitGutterPrevHunk)
+" nmap ]h <Plug>(GitGutterNextHunk)
+" nmap [h <Plug>(GitGutterPrevHunk)
+
+lua <<EOF
+require('gitsigns').setup()
+EOF
 
 "================================================
 " gin.vim

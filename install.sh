@@ -132,6 +132,13 @@ setup_vim_plug() {
     sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
   fi
+
+  title "Setting up packer.nvim"
+
+  if [ ! -d "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/pack/packer/start/packer.nvim" ]; then
+    git clone --depth 1 https://github.com/wbthomason/packer.nvim \
+      ${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/pack/packer/start/packer.nvim
+  fi
 }
 
 setup_rust() {
