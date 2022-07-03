@@ -24,6 +24,7 @@ vim.o.listchars = 'tab:»-,space:･,trail:-,eol:↲,extends:»,precedes:«,nbsp
 vim.o.wildmode = 'full'
 vim.o.showcmd = true
 vim.o.showtabline = 2
+vim.o.showmode = false
 vim.o.clipboard = 'unnamed'
 vim.o.backspace = 'indent,eol,start'
 vim.o.nrformats = ''
