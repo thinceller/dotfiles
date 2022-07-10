@@ -31,7 +31,6 @@ brew "deno"
 brew "direnv"
 brew "node"
 brew "openjdk"
-brew "python@3.10"
 brew "emscripten"
 brew "exa"
 brew "fzf"
@@ -73,7 +72,7 @@ brew "neovim"
 brew "nghttp2"
 brew "ninja"
 brew "openssl@3"
-brew "php", link: false
+brew "php"
 brew "pssh"
 brew "reattach-to-user-namespace"
 brew "redis", restart_service: true
@@ -92,6 +91,7 @@ brew "zlib"
 brew "zsh"
 brew "b4b4r07/tap/gomi"
 brew "hashicorp/tap/terraform-ls"
+cask "1password"
 cask "alacritty"
 cask "alfred"
 cask "alt-tab"
@@ -102,6 +102,7 @@ cask "deepl"
 cask "discord"
 cask "docker"
 cask "firefox"
+cask "flutter"
 cask "font-cica"
 cask "font-hackgen"
 cask "font-hackgen-nerd"
@@ -128,3 +129,4 @@ mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "PicGIF Lite", id: 844918735
 mas "Todoist", id: 585829637
+mas "Xcode", id: 497799835
