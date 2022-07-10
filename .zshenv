@@ -14,12 +14,6 @@ path=(
   $path
 )
 
-if type nvim > /dev/null 2>&1; then
-  export EDITOR=nvim
-else
-  export EDITOR=vim
-fi
-
 export PAGER=less
 
 if [[ -f /opt/homebrew/bin/brew ]]; then
@@ -30,6 +24,13 @@ elif [[ -d /home/linuxbrew/.linuxbrew ]]; then
   test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
   test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
+
+if type nvim > /dev/null 2>&1; then
+  export EDITOR=nvim
+else
+  export EDITOR=vim
+fi
+
 . "$HOME/.cargo/env"
 
 if [[ -f "$HOME/.env.sh" ]]; then
