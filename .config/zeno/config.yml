@@ -31,6 +31,9 @@ snippets:
   - name: git switch -c
     keyword: gsw
     snippet: git switch -c '{{branch_name}}'
+  - name: git commit amend no-edit
+    keyword: gca
+    snippet: git commit --amend --no-edit
 
 completions:
   - name: kill
