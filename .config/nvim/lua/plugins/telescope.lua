@@ -10,8 +10,8 @@ require('telescope').setup{
 
 local option = { noremap = true, silent = true }
 
-vim.keymap.set('n', '<Leader>ff', '<Cmd>Telescope find_files<CR>', option)
-vim.keymap.set('n', '<Leader>fg', '<Cmd>Telescope git_files<CR>', option)
+-- vim.keymap.set('n', '<Leader>ff', '<Cmd>Telescope find_files<CR>', option)
+vim.keymap.set('n', '<Leader>ff', '<Cmd>Telescope git_files<CR>', option)
 vim.keymap.set('n', '<Leader>f/', '<Cmd>Telescope live_grep<CR>', option)
 vim.keymap.set('n', '<Leader>fb', '<Cmd>Telescope buffers<CR>', option)
 vim.keymap.set('n', '<Leader>fl', '<Cmd>Telescope current_buffer_fuzzy_find<CR>', option)

@@ -1,7 +1,7 @@
 vim.cmd [[packadd packer.nvim]]
 
 return require('packer').startup(function(use)
-  use 'wbthomason/packer.nvim'
+  use { 'wbthomason/packer.nvim', opt = true }
 
   use {
     'haishanh/night-owl.vim',
@@ -186,13 +186,13 @@ return require('packer').startup(function(use)
       require('todo-comments').setup()
     end
   }
-  use {
-    'lukas-reineke/indent-blankline.nvim',
-    event = 'VimEnter',
-    config = function ()
-      require('plugins.indent-blankline')
-    end
-  }
+  -- use {
+  --   'lukas-reineke/indent-blankline.nvim',
+  --   event = 'VimEnter',
+  --   config = function ()
+  --     require('plugins.indent-blankline')
+  --   end
+  -- }
 
   -- terminal
   use {
