@@ -16,6 +16,13 @@ return require('packer').startup(function(use)
     end
   }
   use { 'kyazdani42/nvim-web-devicons', after = 'nightfox.nvim' }
+  use {
+    'xiyaowong/nvim-transparent',
+    after = 'nightfox.nvim',
+    config = function ()
+      require('plugins/nvim-transparent')
+    end
+  }
 
   -- denops.vim
   use 'vim-denops/denops.vim'
