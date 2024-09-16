@@ -41,5 +41,21 @@
       autohide = true;
       orientation = "bottom";
     };
+    finder = {
+      AppleShowAllExtensions = true;
+      AppleShowAllFiles = true;
+      ShowPathbar = true;
+    };
+    NSGlobalDomain = {
+      AppleShowAllExtensions = true;
+      AppleShowAllFiles = true;
+      AppleShowScrollBars = "Always";
+    };
+    WindowManager = {
+      EnableStandardClickToShowDesktop = false;
+    };
+    menuExtraClock = {
+      Show24Hour = true;
+    };
   };
 }
