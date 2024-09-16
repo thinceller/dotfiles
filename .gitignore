@@ -19,6 +19,13 @@
 # Homebrew
 !/Brewfile
 
+!/flake.nix
+!/flake.lock
+!/nix-darwin/
+!/nix-darwin/**
+!/home-manager/
+!/home-manager/**
+
 # other files
 !/README.md
 !/install.sh
