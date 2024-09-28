@@ -12,6 +12,7 @@ let
   lsd = import ./lsd { inherit pkgs; };
   mise = import ./mise { inherit pkgs; };
   ripgrep = import ./ripgrep { inherit pkgs; };
+  starship = import ./starship { inherit pkgs; };
   wezterm = import ./wezterm { inherit pkgs; };
 in [
   bat
@@ -26,5 +27,6 @@ in [
   lsd
   mise
   ripgrep
+  starship
   wezterm
 ]
