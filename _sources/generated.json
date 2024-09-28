@@ -1,0 +1,22 @@
+{
+    "fish-ghq": {
+        "cargoLocks": null,
+        "date": "2021-07-16",
+        "extract": null,
+        "name": "fish-ghq",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "decors",
+            "repo": "fish-ghq",
+            "rev": "cafaaabe63c124bf0714f89ec715cfe9ece87fa2",
+            "sha256": "sha256-6b1zmjtemNLNPx4qsXtm27AbtjwIZWkzJAo21/aVZzM=",
+            "type": "github"
+        },
+        "version": "cafaaabe63c124bf0714f89ec715cfe9ece87fa2"
+    }
+}

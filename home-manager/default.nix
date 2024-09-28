@@ -5,7 +5,9 @@ let
     config.allowUnfree = true;
   };
 
-  programs = import ./programs { inherit pkgs; };
+  sources = pkgs.callPackage ../_sources/generated.nix {};
+
+  programs = import ./programs { inherit pkgs sources; };
   files = import ./files.nix { inherit pkgs config; };
 in {
   home.username = "thinceller";

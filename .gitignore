@@ -25,6 +25,9 @@
 !/nix-darwin/**
 !/home-manager/
 !/home-manager/**
+!/nvfetcher.toml
+!/_sources/
+!/_sources/**
 
 # other files
 !/README.md

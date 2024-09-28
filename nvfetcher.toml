@@ -1,0 +1,4 @@
+[fish-ghq]
+src.git = "https://github.com/decors/fish-ghq"
+src.branch = "master"
+fetch.github = "decors/fish-ghq"
