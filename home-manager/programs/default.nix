@@ -12,6 +12,7 @@ let
   lsd = import ./lsd { inherit pkgs; };
   mise = import ./mise { inherit pkgs; };
   ripgrep = import ./ripgrep { inherit pkgs; };
+  wezterm = import ./wezterm { inherit pkgs; };
 in [
   bat
   bottom
@@ -25,4 +26,5 @@ in [
   lsd
   mise
   ripgrep
+  wezterm
 ]
