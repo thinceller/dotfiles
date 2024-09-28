@@ -1,13 +1,14 @@
-{ config, nixpkgs, system, ... }:
+{ config, nixpkgs, system, wezterm-flake, ... }:
 let
   pkgs = import nixpkgs {
     inherit system;
     config.allowUnfree = true;
   };
 
+  # Load the generated sources by nvfetcher
   sources = pkgs.callPackage ../_sources/generated.nix {};
 
-  programs = import ./programs { inherit pkgs sources; };
+  programs = import ./programs { inherit pkgs sources wezterm-flake; };
   files = import ./files.nix { inherit pkgs config; };
 in {
   home.username = "thinceller";

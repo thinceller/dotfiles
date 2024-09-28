@@ -7,9 +7,13 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    wezterm-flake = {
+      url = "github:wez/wezterm?dir=nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = inputs@{ self, nix-darwin, home-manager, nixpkgs }:
+  outputs = inputs@{ self, nix-darwin, home-manager, nixpkgs, wezterm-flake }:
   let
     system = "aarch64-darwin";
   in {
@@ -23,7 +27,7 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.users.thinceller = { config, lib, ... }: import ./home-manager {
-            inherit system nixpkgs config;
+            inherit system nixpkgs config wezterm-flake;
           };
         }
       ];

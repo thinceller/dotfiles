@@ -1,4 +1,4 @@
-{ pkgs, sources }:
+{ pkgs, sources, wezterm-flake }:
 let
   bat = import ./bat { inherit pkgs; };
   bottom = import ./bottom { inherit pkgs; };
@@ -13,7 +13,7 @@ let
   mise = import ./mise { inherit pkgs; };
   ripgrep = import ./ripgrep { inherit pkgs; };
   starship = import ./starship { inherit pkgs; };
-  wezterm = import ./wezterm { inherit pkgs; };
+  wezterm = import ./wezterm { inherit pkgs wezterm-flake; };
 in [
   bat
   bottom
