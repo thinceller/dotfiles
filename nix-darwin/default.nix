@@ -46,6 +46,7 @@
       "discord"
       "firefox"
       "google-chrome"
+      "hammerspoon"
       "karabiner-elements"
       "microsoft-edge"
       "notion"
