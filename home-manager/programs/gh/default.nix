@@ -1,8 +1,9 @@
 { pkgs }: {
   programs.gh = {
     enable = true;
-    extensions = [
-      pkgs.gh-poi
+    extensions = with pkgs; [
+      gh-poi
+      gh-copilot
     ];
     settings = {
       git_protocol = "https";
