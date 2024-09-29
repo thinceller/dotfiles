@@ -175,11 +175,11 @@ return require('packer').startup(function(use)
   use { 'gpanders/editorconfig.nvim', event = 'VimEnter' }
 
   -- git
-  use {
-    'lewis6991/gitsigns.nvim',
-    event = 'VimEnter',
-    config = function() require('plugins/gitsigns') end,
-  }
+  -- use {
+  --   'lewis6991/gitsigns.nvim',
+  --   event = 'VimEnter',
+  --   config = function() require('plugins/gitsigns') end,
+  -- }
 
   -- highlight
   use {
@@ -202,13 +202,13 @@ return require('packer').startup(function(use)
   -- }
 
   -- terminal
-  use {
-    'akinsho/toggleterm.nvim',
-    tag = 'v1.*',
-    config = function()
-      require('plugins/toggleterm')
-    end
-  }
+  -- use {
+  --   'akinsho/toggleterm.nvim',
+  --   tag = 'v1.*',
+  --   config = function()
+  --     require('plugins/toggleterm')
+  --   end
+  -- }
 
   -- browser
   use {
@@ -223,7 +223,7 @@ return require('packer').startup(function(use)
   -- test
   use {
     'klen/nvim-test',
-    event = 'VimEnter',
+    after = 'nvim-treesitter',
     config = function()
       require('plugins/nvim-test')
     end

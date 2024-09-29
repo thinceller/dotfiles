@@ -1,5 +1,8 @@
 require("nvim-lsp-installer").setup {}
 
+local lspconfig = require('lspconfig')
+local lsp_installer = require('nvim-lsp-installer')
+
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 local opts = { noremap=true, silent=true }
@@ -34,12 +37,20 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<Leader>fo', vim.lsp.buf.formatting, bufopts)
 end
 
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-local servers = require("nvim-lsp-installer").get_installed_servers()
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+local servers = lsp_installer.get_installed_servers()
 for _, server in pairs(servers) do
-  require('lspconfig')[server.name].setup {
+  local opts = {
     capabilities = capabilities,
     on_attach = on_attach,
   }
-end
 
+  -- うまく設定できないのでコメントアウト
+  -- if server.name == 'denols' then
+  --   opts.root_dir = lspconfig.util.root_pattern('deno.json', 'deno.jsonc', 'deps.ts', 'import_map.json')
+  -- elseif server.name == 'tsserver' then
+  --   opts.root_dir = lspconfig.util.root_pattern('package.json', 'node_modules')
+  -- end
+
+  lspconfig[server.name].setup(opts)
+end

@@ -1,9 +1,15 @@
 { config, ...}:
 let
-  rootDir = /Users/thinceller/.dotfiles;
+  # TODO: 固定値ではなく、実行時のカレントディレクトリを取得するようにする
+  rootDir = /Users/thinceller/.dotfiles/configs;
   symlink = config.lib.file.mkOutOfStoreSymlink;
 in {
   home.file = {
+    # Hammerspoon
+    ".hammerspoon" = {
+      source = symlink /${rootDir}/.hammerspoon;
+      recursive = true;
+    };
     # karabiner
     ".config/karabiner/karabiner.json" = {
       source = symlink /${rootDir}/.config/karabiner/karabiner.json;
