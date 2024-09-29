@@ -26,6 +26,30 @@
   programs.zsh.enable = true;
   programs.fish.enable = true;
 
+  homebrew = {
+    enable = true;
+    onActivation = {
+      autoUpdate = true;
+      upgrade = true;
+      # cleanup = "uninstall";
+    };
+    casks = [
+      "1password"
+      "chatgpt"
+      "discord"
+      "firefox"
+      "google-chrome"
+      "karabiner-elements"
+      "microsoft-edge"
+      "notion"
+      "orbstack"
+      "raycast"
+      "slack"
+      "visual-studio-code"
+      "zoom"
+    ];
+  };
+
   # Use Touch ID for sudo authentication.
   security.pam.enableSudoTouchIdAuth = true;
 
