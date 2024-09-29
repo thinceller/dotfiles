@@ -26,6 +26,13 @@
   programs.zsh.enable = true;
   programs.fish.enable = true;
 
+  fonts = {
+    packages = with pkgs; [
+      hackgen-font
+      hackgen-nf-font
+    ];
+  };
+
   homebrew = {
     enable = true;
     onActivation = {
