@@ -38,7 +38,7 @@
     onActivation = {
       autoUpdate = true;
       upgrade = true;
-      # cleanup = "uninstall";
+      cleanup = "uninstall";
     };
     casks = [
       "1password"
