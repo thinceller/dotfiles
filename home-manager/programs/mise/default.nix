@@ -8,6 +8,7 @@
         go = "latest";
         ruby = "3.3.0";
         dotnet = "8.0.204";
+        usage = "latest";
       };
 
       settings = {
