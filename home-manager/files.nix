@@ -14,8 +14,8 @@ in {
     ".config/karabiner/karabiner.json" = {
       source = symlink /${rootDir}/.config/karabiner/karabiner.json;
     };
-    ".config/karabiner/complex_modifications" = {
-      source = symlink /${rootDir}/.config/karabiner/complex_modifications;
+    ".config/karabiner/assets/complex_modifications" = {
+      source = symlink /${rootDir}/.config/karabiner/assets/complex_modifications;
       recursive = true;
     };
     # 1Password CLI
