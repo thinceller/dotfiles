@@ -23,6 +23,7 @@ in {
     curl
     ghq
     graphviz
+    nvfetcher
     tig
     wget
     _1password
