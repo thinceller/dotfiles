@@ -40,5 +40,8 @@
         defaultBranch = "main";
       };
     };
+    ignores = [
+      ".DS_Store"
+    ];
   };
 }

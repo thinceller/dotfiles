@@ -50,6 +50,7 @@
       "karabiner-elements"
       "microsoft-edge"
       "notion"
+      "notion-calendar"
       "orbstack"
       "raycast"
       "slack"

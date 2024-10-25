@@ -23,6 +23,7 @@ in {
     curl
     ghq
     graphviz
+    nixfmt-rfc-style
     nvfetcher
     tig
     wget
