@@ -24,6 +24,7 @@ in {
     curl
     ghq
     graphviz
+    mactop
     nix-search-cli
     nixfmt-rfc-style
     nvfetcher
