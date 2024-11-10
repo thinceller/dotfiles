@@ -15,6 +15,7 @@ in {
   home.homeDirectory = "/Users/thinceller";
 
   home.sessionVariables = {
+    EDITOR = "nvim";
     LANG = "ja_JP.UTF-8";
     LC_ALL = "ja_JP.UTF-8";
   };
@@ -23,11 +24,12 @@ in {
     curl
     ghq
     graphviz
+    nix-search-cli
     nixfmt-rfc-style
     nvfetcher
     tig
     wget
-    _1password
+    _1password-cli
   ];
 
   imports = programs ++ [files];
