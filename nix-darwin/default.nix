@@ -42,6 +42,7 @@
     };
     casks = [
       "1password"
+      # "arc"
       "chatgpt"
       "discord"
       "firefox"
@@ -54,7 +55,9 @@
       "orbstack"
       "raycast"
       "slack"
+      "tailscale"
       "visual-studio-code"
+      "zen-browser"
       "zoom"
     ];
   };
