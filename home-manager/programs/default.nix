@@ -1,4 +1,8 @@
-{ pkgs, sources, wezterm-flake }:
+{
+  pkgs,
+  sources,
+  wezterm-flake,
+}:
 let
   bat = import ./bat { inherit pkgs; };
   bottom = import ./bottom { inherit pkgs; };
@@ -14,7 +18,8 @@ let
   ripgrep = import ./ripgrep { inherit pkgs; };
   starship = import ./starship { inherit pkgs; };
   wezterm = import ./wezterm { inherit pkgs wezterm-flake; };
-in [
+in
+[
   bat
   bottom
   direnv

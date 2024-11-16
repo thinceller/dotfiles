@@ -1,4 +1,11 @@
-{ config, nixpkgs, wezterm-flake, system, userConfig, ... }:
+{
+  config,
+  nixpkgs,
+  wezterm-flake,
+  system,
+  userConfig,
+  ...
+}:
 let
   inherit (userConfig) username homeDir dotfilesDir;
 
@@ -8,11 +15,12 @@ let
   };
 
   # Load the generated sources by nvfetcher
-  sources = pkgs.callPackage ../_sources/generated.nix {};
+  sources = pkgs.callPackage ../_sources/generated.nix { };
 
   programs = import ./programs { inherit pkgs sources wezterm-flake; };
   files = import ./files.nix { inherit pkgs config dotfilesDir; };
-in {
+in
+{
   home.username = username;
   home.homeDirectory = homeDir;
 
@@ -35,7 +43,7 @@ in {
     _1password-cli
   ];
 
-  imports = programs ++ [files];
+  imports = programs ++ [ files ];
 
   home.stateVersion = "24.05";
 }

@@ -1,9 +1,10 @@
-{ config, dotfilesDir, ...}:
+{ config, dotfilesDir, ... }:
 let
   # TODO: 固定値ではなく、実行時のカレントディレクトリを取得するようにする
   rootDir = /. + dotfilesDir + /configs;
   symlink = config.lib.file.mkOutOfStoreSymlink;
-in {
+in
+{
   home.file = {
     # Hammerspoon
     ".hammerspoon" = {

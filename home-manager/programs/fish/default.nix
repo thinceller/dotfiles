@@ -1,4 +1,5 @@
-{ pkgs, sources }: {
+{ pkgs, sources }:
+{
   programs.fish = {
     enable = true;
     shellAbbrs = {

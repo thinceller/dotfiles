@@ -1,4 +1,10 @@
-{ pkgs, self, system, userConfig, ... }:
+{
+  pkgs,
+  self,
+  system,
+  userConfig,
+  ...
+}:
 let
   inherit (userConfig) username hostname homeDir;
 in
@@ -13,7 +19,11 @@ in
   networking.computerName = hostname;
   networking.hostName = hostname;
 
-  environment.shells = [ pkgs.bashInteractive pkgs.zsh pkgs.fish ];
+  environment.shells = [
+    pkgs.bashInteractive
+    pkgs.zsh
+    pkgs.fish
+  ];
 
   users.knownUsers = [ username ];
   users.users."${username}" = {
