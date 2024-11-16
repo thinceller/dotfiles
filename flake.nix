@@ -28,20 +28,7 @@
       ];
       flake = {
         darwinConfigurations = {
-          "kohei-m4-mac-mini" = nix-darwin.lib.darwinSystem {
-            modules = [
-              ./nix-darwin
-              home-manager.darwinModules.home-manager
-              {
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-                home-manager.users.thinceller = { config, lib, ... }: import ./home-manager {
-                  inherit nixpkgs config wezterm-flake;
-                };
-              }
-            ];
-            specialArgs = { inherit inputs; };
-          };
+          "kohei-m4-mac-mini" = import ./hosts/kohei-m4-mac-mini { inherit inputs; };
         };
       };
       perSystem = {};
