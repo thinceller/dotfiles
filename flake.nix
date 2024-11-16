@@ -1,5 +1,5 @@
 {
-  description = "Example Darwin system flake";
+  description = "thinceller's nix configurations";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -18,8 +18,8 @@
     system = "aarch64-darwin";
   in {
     # Build darwin flake using:
-    # $ darwin-rebuild build --flake .#kohei-macbook-air
-    darwinConfigurations."kohei-macbook-air" = nix-darwin.lib.darwinSystem {
+    # $ darwin-rebuild build --flake .#kohei-m4-mac-mini
+    darwinConfigurations."kohei-m4-mac-mini" = nix-darwin.lib.darwinSystem {
       modules = [
         ./nix-darwin
         home-manager.darwinModules.home-manager
@@ -35,6 +35,6 @@
     };
 
     # Expose the package set, including overlays, for convenience.
-    darwinPackages = self.darwinConfigurations."kohei-macbook-air".pkgs;
+    darwinPackages = self.darwinConfigurations."kohei-m4-mac-mini".pkgs;
   };
 }

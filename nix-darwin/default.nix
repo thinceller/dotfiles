@@ -6,8 +6,8 @@
   nixpkgs.hostPlatform = "aarch64-darwin";
 
   # network configurations
-  networking.computerName = "kohei-macbook-air";
-  networking.hostName = "kohei-macbook-air";
+  networking.computerName = "kohei-m4-mac-mini";
+  networking.hostName = "kohei-m4-mac-mini";
 
   environment.shells = [ pkgs.bashInteractive pkgs.zsh pkgs.fish ];
 
@@ -42,12 +42,14 @@
     };
     casks = [
       "1password"
-      # "arc"
+      "arc"
+      "atok"
       "chatgpt"
       "discord"
       "firefox"
       "google-chrome"
       "hammerspoon"
+      "jordanbaird-ice"
       "karabiner-elements"
       "microsoft-edge"
       "notion"
@@ -55,6 +57,7 @@
       "orbstack"
       "raycast"
       "slack"
+      "steam"
       "tailscale"
       "visual-studio-code"
       "zen-browser"
@@ -88,7 +91,7 @@
       AppleShowScrollBars = "Always";
     };
     WindowManager = {
-      EnableStandardClickToShowDesktop = false;
+      EnableStandardClickToShowDesktop = true;
     };
     menuExtraClock = {
       Show24Hour = true;
