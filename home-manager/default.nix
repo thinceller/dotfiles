@@ -1,6 +1,5 @@
-{ config, nixpkgs, wezterm-flake, ... }:
+{ config, nixpkgs, wezterm-flake, system, ... }:
 let
-  system = "aarch64-darwin";
   pkgs = import nixpkgs {
     inherit system;
     config.allowUnfree = true;

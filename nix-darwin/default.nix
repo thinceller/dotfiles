@@ -1,20 +1,20 @@
-{ pkgs, inputs, ... }: {
+{ pkgs, self, system, username, hostname, ... }: {
   # Necessary for using flakes on this system.
   nix.settings.experimental-features = "nix-command flakes";
 
   # The platform the configuration will be used on.
-  nixpkgs.hostPlatform = "aarch64-darwin";
+  nixpkgs.hostPlatform = system;
 
   # network configurations
-  networking.computerName = "kohei-m4-mac-mini";
-  networking.hostName = "kohei-m4-mac-mini";
+  networking.computerName = hostname;
+  networking.hostName = hostname;
 
   environment.shells = [ pkgs.bashInteractive pkgs.zsh pkgs.fish ];
 
-  users.knownUsers = [ "thinceller" ];
-  users.users."thinceller" = {
+  users.knownUsers = [ username ];
+  users.users."${username}" = {
     uid = 501;
-    home = "/Users/thinceller";
+    home = "/Users/${username}";
     shell = pkgs.fish;
   };
 
@@ -69,7 +69,7 @@
   security.pam.enableSudoTouchIdAuth = true;
 
   # Set Git commit hash for darwin-version.
-  system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
+  system.configurationRevision = self.rev or self.dirtyRev or null;
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
