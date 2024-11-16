@@ -1,4 +1,8 @@
-{ pkgs, self, system, username, hostname, ... }: {
+{ pkgs, self, system, userConfig, ... }:
+let
+  inherit (userConfig) username hostname homeDir;
+in
+{
   # Necessary for using flakes on this system.
   nix.settings.experimental-features = "nix-command flakes";
 
@@ -14,7 +18,7 @@
   users.knownUsers = [ username ];
   users.users."${username}" = {
     uid = 501;
-    home = "/Users/${username}";
+    home = homeDir;
     shell = pkgs.fish;
   };
 

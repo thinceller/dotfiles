@@ -2,19 +2,27 @@
 let
   inherit (inputs) self nixpkgs nix-darwin home-manager wezterm-flake;
   system = "aarch64-darwin";
-  username = "thinceller";
-  hostname = "kohei-m4-mac-mini";
+  userConfig =
+    let
+      username = "thinceller";
+      homeDir = "/Users/${username}";
+    in {
+      inherit username homeDir;
+      hostname = "kohei-m4-mac-mini";
+      # このリポジトリをcloneして配置したディレクトリパス
+      dotfilesDir = homeDir + "/.dotfiles";
+    };
 in
 nix-darwin.lib.darwinSystem {
-  specialArgs = { inherit self system username hostname; };
+  specialArgs = { inherit self system userConfig; };
   modules = [
     ../../nix-darwin
     home-manager.darwinModules.home-manager
     {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
-      home-manager.users."${username}" = { config, lib, ... }: import ../../home-manager {
-        inherit nixpkgs config wezterm-flake system;
+      home-manager.users."${userConfig.username}" = { config, lib, ... }: import ../../home-manager {
+        inherit nixpkgs config wezterm-flake system userConfig;
       };
     }
   ];

@@ -1,7 +1,7 @@
-{ config, ...}:
+{ config, dotfilesDir, ...}:
 let
   # TODO: 固定値ではなく、実行時のカレントディレクトリを取得するようにする
-  rootDir = /Users/thinceller/.dotfiles/configs;
+  rootDir = /. + dotfilesDir + /configs;
   symlink = config.lib.file.mkOutOfStoreSymlink;
 in {
   home.file = {

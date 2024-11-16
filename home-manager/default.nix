@@ -1,5 +1,7 @@
-{ config, nixpkgs, wezterm-flake, system, ... }:
+{ config, nixpkgs, wezterm-flake, system, userConfig, ... }:
 let
+  inherit (userConfig) username homeDir dotfilesDir;
+
   pkgs = import nixpkgs {
     inherit system;
     config.allowUnfree = true;
@@ -9,10 +11,10 @@ let
   sources = pkgs.callPackage ../_sources/generated.nix {};
 
   programs = import ./programs { inherit pkgs sources wezterm-flake; };
-  files = import ./files.nix { inherit pkgs config; };
+  files = import ./files.nix { inherit pkgs config dotfilesDir; };
 in {
-  home.username = "thinceller";
-  home.homeDirectory = "/Users/thinceller";
+  home.username = username;
+  home.homeDirectory = homeDir;
 
   home.sessionVariables = {
     EDITOR = "nvim";
