@@ -5,6 +5,15 @@
       # Necessary for using flakes on this system.
       experimental-features = "nix-command flakes";
     };
+    registry = {
+      dev = {
+        to = {
+          type = "github";
+          owner = "thinceller";
+          repo = "flake-templates";
+        };
+      };
+    };
     # package = pkgs.nix;
   };
   nixpkgs = {
