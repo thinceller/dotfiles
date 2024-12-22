@@ -15,6 +15,7 @@
       "firefox"
       "google-chrome"
       "hammerspoon"
+      "hhkb-studio"
       "jordanbaird-ice"
       "karabiner-elements"
       "microsoft-edge"
