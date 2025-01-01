@@ -25,7 +25,6 @@ in
   home.homeDirectory = homeDir;
 
   home.sessionVariables = {
-    EDITOR = "nvim";
     LANG = "ja_JP.UTF-8";
     LC_ALL = "ja_JP.UTF-8";
   };

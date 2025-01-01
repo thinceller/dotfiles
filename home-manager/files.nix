@@ -11,20 +11,27 @@ in
       source = symlink /${rootDir}/.hammerspoon;
       recursive = true;
     };
+  };
+  xdg.configFile = {
     # karabiner
-    ".config/karabiner/karabiner.json" = {
+    "karabiner/karabiner.json" = {
       source = symlink /${rootDir}/.config/karabiner/karabiner.json;
     };
-    ".config/karabiner/assets/complex_modifications" = {
+    "karaibner/assets/complex_modifications" = {
       source = symlink /${rootDir}/.config/karabiner/assets/complex_modifications;
       recursive = true;
     };
+    # Neovim
+    "nvim" = {
+      source = symlink /${rootDir}/.config/nvim;
+      recursive = true;
+    };
     # 1Password CLI
-    ".config/op/plugins.sh" = {
+    "op/plugins.sh" = {
       source = symlink /${rootDir}/.config/op/plugins.sh;
     };
     # pnpm
-    ".config/pnpm" = {
+    "pnpm" = {
       source = symlink /${rootDir}/.config/pnpm;
       recursive = true;
     };
