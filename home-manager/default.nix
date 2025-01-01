@@ -1,7 +1,6 @@
 {
   config,
   nixpkgs,
-  wezterm-flake,
   system,
   userConfig,
   ...
@@ -17,7 +16,7 @@ let
   # Load the generated sources by nvfetcher
   sources = pkgs.callPackage ../_sources/generated.nix { };
 
-  programs = import ./programs { inherit pkgs sources wezterm-flake; };
+  programs = import ./programs { inherit pkgs sources; };
   files = import ./files.nix { inherit pkgs config dotfilesDir; };
 in
 {

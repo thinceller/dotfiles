@@ -5,9 +5,8 @@ local open_wezterm = function()
   local app = hs.application.get(appName)
 
   if app == nil then
-    -- FIXME: launchOrFocusByBundleIDでWezTermを起動すると文字化けした状態で起動されてしまう
-    -- hs.application.launchOrFocusByBundleID(appName)
-    hs.alert("WezTerm is not launched")
+    hs.application.launchOrFocusByBundleID(appName)
+    -- hs.alert("WezTerm is not launched")
   elseif app:isHidden() then
     app:activate()
   elseif not(app:isFrontmost()) then

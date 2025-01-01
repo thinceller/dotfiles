@@ -5,7 +5,6 @@ let
     nixpkgs
     nix-darwin
     home-manager
-    wezterm-flake
     ;
   system = "aarch64-darwin";
   userConfig =
@@ -36,7 +35,6 @@ nix-darwin.lib.darwinSystem {
           inherit
             nixpkgs
             config
-            wezterm-flake
             system
             userConfig
             ;

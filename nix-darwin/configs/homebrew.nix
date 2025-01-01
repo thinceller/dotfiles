@@ -13,6 +13,7 @@
       "chatgpt"
       "discord"
       "firefox"
+      "ghostty"
       "google-chrome"
       "hammerspoon"
       "hhkb-studio"
@@ -27,6 +28,7 @@
       "steam"
       "tailscale"
       "visual-studio-code"
+      "wezterm"
       "zen-browser"
       "zoom"
     ];

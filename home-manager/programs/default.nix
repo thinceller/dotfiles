@@ -1,7 +1,6 @@
 {
   pkgs,
   sources,
-  wezterm-flake,
 }:
 let
   bat = import ./bat { inherit pkgs; };
@@ -18,7 +17,6 @@ let
   neovim = import ./neovim { inherit pkgs; };
   ripgrep = import ./ripgrep { inherit pkgs; };
   starship = import ./starship { inherit pkgs; };
-  wezterm = import ./wezterm { inherit pkgs wezterm-flake; };
 in
 [
   bat
@@ -35,5 +33,4 @@ in
   neovim
   ripgrep
   starship
-  wezterm
 ]
