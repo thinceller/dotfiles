@@ -38,6 +38,19 @@
       perSystem =
         { config, pkgs, ... }:
         {
+          apps = {
+            update = {
+              type = "app";
+              program = pkgs.writeShellScriptBin "update" ''
+                set -e
+                echo "Updating flake inputs..."
+                nix flake update
+                echo "Executing nvfetcher..."
+                nvfetcher
+              '';
+            };
+          };
+
           treefmt = {
             projectRootFile = "flake.nix";
             programs = {

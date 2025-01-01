@@ -7,9 +7,8 @@ management dotfiles
 ### Update dependencies
 
 ```bash
-# update flake.lock
-$ nix flake update
+# update flake.lock and _sources by nvfetcher
+$ nix run .#update
 
-# update _sources by nvfetcher
-$ nvfetcher
+$ darwin-rebuild switch --flake .#kohei-m4-mac-mini
 ```
