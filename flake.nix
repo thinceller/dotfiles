@@ -43,6 +43,13 @@
             programs = {
               nixfmt.enable = true;
             };
+            settings = {
+              global = {
+                excludes = [
+                  "_sources/**"
+                ];
+              };
+            };
           };
 
           devShells = {
