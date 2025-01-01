@@ -14,6 +14,7 @@ return {
   font_size = 16.0,
 
   use_ime = true,
+  macos_forward_to_ime_modifier_mask = "SHIFT|CTRL",
 
   -- Apperance
   color_scheme = 'Night Owl (Gogh)',

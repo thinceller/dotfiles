@@ -9,6 +9,7 @@
     casks = [
       "1password"
       "arc"
+      "aquaskk"
       "atok"
       "chatgpt"
       "discord"
