@@ -14,7 +14,7 @@ let
   jq = import ./jq { inherit pkgs; };
   lsd = import ./lsd { inherit pkgs; };
   mise = import ./mise { inherit pkgs; };
-  neovim = import ./neovim { inherit pkgs; };
+  neovim = import ./neovim { inherit pkgs sources; };
   ripgrep = import ./ripgrep { inherit pkgs; };
   starship = import ./starship { inherit pkgs; };
 in

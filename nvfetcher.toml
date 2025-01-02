@@ -2,3 +2,8 @@
 src.git = "https://github.com/decors/fish-ghq"
 src.branch = "master"
 fetch.github = "decors/fish-ghq"
+
+[vim-jetpack]
+src.git = "https://github.com/tani/vim-jetpack"
+src.branch = "main"
+fetch.github = "tani/vim-jetpack"
