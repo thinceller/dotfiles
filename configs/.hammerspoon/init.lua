@@ -6,10 +6,10 @@ local open_wezterm = function()
 
   if app == nil then
     hs.application.launchOrFocusByBundleID(appName)
-    -- hs.alert("WezTerm is not launched")
+  -- hs.alert("WezTerm is not launched")
   elseif app:isHidden() then
     app:activate()
-  elseif not(app:isFrontmost()) then
+  elseif not (app:isFrontmost()) then
     app:activate()
   else
     app:hide()

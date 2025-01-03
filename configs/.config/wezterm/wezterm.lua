@@ -1,4 +1,4 @@
-local wezterm = require 'wezterm'
+local wezterm = require("wezterm")
 
 local mux = wezterm.mux
 wezterm.on("gui-startup", function(cmd)
@@ -17,7 +17,7 @@ return {
   macos_forward_to_ime_modifier_mask = "SHIFT|CTRL",
 
   -- Apperance
-  color_scheme = 'Night Owl (Gogh)',
+  color_scheme = "Night Owl (Gogh)",
   window_background_opacity = 0.8,
   macos_window_background_blur = 10,
   window_decorations = "RESIZE",
@@ -37,42 +37,42 @@ return {
     {
       key = "h",
       mods = "LEADER",
-      action = act.ActivatePaneDirection 'Left',
+      action = act.ActivatePaneDirection("Left"),
     },
     {
       key = "j",
       mods = "LEADER",
-      action = act.ActivatePaneDirection 'Down',
+      action = act.ActivatePaneDirection("Down"),
     },
     {
       key = "k",
       mods = "LEADER",
-      action = act.ActivatePaneDirection 'Up',
+      action = act.ActivatePaneDirection("Up"),
     },
     {
       key = "l",
       mods = "LEADER",
-      action = act.ActivatePaneDirection 'Right',
+      action = act.ActivatePaneDirection("Right"),
     },
     {
       key = "H",
       mods = "LEADER",
-      action = act.AdjustPaneSize { 'Left', 5 },
+      action = act.AdjustPaneSize({ "Left", 5 }),
     },
     {
       key = "J",
       mods = "LEADER",
-      action = act.AdjustPaneSize { 'Down', 5 },
+      action = act.AdjustPaneSize({ "Down", 5 }),
     },
     {
       key = "K",
       mods = "LEADER",
-      action = act.AdjustPaneSize { 'Up', 5 },
+      action = act.AdjustPaneSize({ "Up", 5 }),
     },
     {
       key = "L",
       mods = "LEADER",
-      action = act.AdjustPaneSize { 'Right', 5 },
+      action = act.AdjustPaneSize({ "Right", 5 }),
     },
     {
       key = "q",
@@ -91,4 +91,3 @@ return {
     },
   },
 }
-

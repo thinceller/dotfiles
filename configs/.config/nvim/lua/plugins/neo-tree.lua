@@ -4,7 +4,7 @@ require("neo-tree").setup({
     filtered_items = {
       hide_dotfiles = false,
     },
-  }
+  },
 })
 
-vim.keymap.set('n', '<Leader>e', '<Cmd>NeoTreeRevealToggle<CR>', { noremap = true, silent = true })
+vim.keymap.set("n", "<Leader>e", "<Cmd>NeoTreeRevealToggle<CR>", { noremap = true, silent = true })

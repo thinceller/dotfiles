@@ -1,9 +1,9 @@
-require('nightfox').setup({
+require("nightfox").setup({
   options = {
     styles = {
-      comments = 'italic'
-    }
-  }
+      comments = "italic",
+    },
+  },
 })
 
 vim.cmd([[ colorscheme duskfox]])

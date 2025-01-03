@@ -1,10 +1,10 @@
-require('nvim-test').setup {
-  term = 'toggleterm',
+require("nvim-test").setup({
+  term = "toggleterm",
   termOpts = {
-    direction = 'horizontal'
-  }
-}
+    direction = "horizontal",
+  },
+})
 
-require('nvim-test.runners.rspec'):setup {
-  command = 'bundle exec rspec'
-}
+require("nvim-test.runners.rspec"):setup({
+  command = "bundle exec rspec",
+})

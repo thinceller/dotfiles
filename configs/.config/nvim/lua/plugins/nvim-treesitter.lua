@@ -1,6 +1,6 @@
-require('nvim-treesitter.configs').setup {
-  ensure_installed = 'all',
-  ignore_install = { 'phpdoc' },
+require("nvim-treesitter.configs").setup({
+  ensure_installed = "all",
+  ignore_install = { "phpdoc" },
   -- highlight = {
   --   enable = true,
   --   disable = { 'ruby' },
@@ -17,5 +17,5 @@ require('nvim-treesitter.configs').setup {
   },
   autotag = {
     enable = true,
-  }
-}
+  },
+})
