@@ -15,6 +15,10 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
+    git-hooks-nix = {
+      url = "github:cachix/git-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -22,12 +26,18 @@
   };
 
   outputs =
-    inputs@{ flake-parts, treefmt-nix, ... }:
+    inputs@{
+      flake-parts,
+      git-hooks-nix,
+      treefmt-nix,
+      ...
+    }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [
         "aarch64-darwin"
       ];
       imports = [
+        git-hooks-nix.flakeModule
         treefmt-nix.flakeModule
       ];
       flake = {
@@ -48,6 +58,16 @@
                 echo "Executing nvfetcher..."
                 nvfetcher
               '';
+            };
+          };
+
+          pre-commit = {
+            check.enable = true;
+            settings = {
+              src = ./.;
+              hooks = {
+                treefmt.enable = true;
+              };
             };
           };
 
@@ -78,6 +98,7 @@
               # * https://github.com/numtide/treefmt-nix#flake-parts
               # * https://community.flake.parts/haskell-flake/devshell#composing-devshells
               inputsFrom = [
+                config.pre-commit.devShell
                 config.treefmt.build.devShell
               ];
             };
