@@ -12,6 +12,7 @@ let
   git = import ./git { inherit pkgs; };
   htop = import ./htop { inherit pkgs; };
   jq = import ./jq { inherit pkgs; };
+  lazygit = import ./lazygit { inherit pkgs; };
   lsd = import ./lsd { inherit pkgs; };
   mise = import ./mise { inherit pkgs; };
   neovim = import ./neovim { inherit pkgs; };
@@ -28,6 +29,7 @@ in
   git
   htop
   jq
+  lazygit
   lsd
   mise
   neovim
