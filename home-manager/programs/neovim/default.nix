@@ -1,4 +1,4 @@
-{ pkgs, sources }:
+{ pkgs }:
 {
   programs.neovim = {
     enable = true;
@@ -6,12 +6,8 @@
     vimAlias = true;
     vimdiffAlias = true;
     withPython3 = false;
-    plugins = [
-      (pkgs.vimUtils.buildVimPlugin {
-        pname = sources.vim-jetpack.pname;
-        version = sources.vim-jetpack.version;
-        src = sources.vim-jetpack.src;
-      })
+    plugins = with pkgs.vimPlugins; [
+      vim-jetpack
     ];
   };
 }

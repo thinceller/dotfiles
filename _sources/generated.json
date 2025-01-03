@@ -18,25 +18,5 @@
             "type": "github"
         },
         "version": "cafaaabe63c124bf0714f89ec715cfe9ece87fa2"
-    },
-    "vim-jetpack": {
-        "cargoLocks": null,
-        "date": "2024-04-11",
-        "extract": null,
-        "name": "vim-jetpack",
-        "passthru": null,
-        "pinned": false,
-        "src": {
-            "deepClone": false,
-            "fetchSubmodules": false,
-            "leaveDotGit": false,
-            "name": null,
-            "owner": "tani",
-            "repo": "vim-jetpack",
-            "rev": "2ae7300f774cf1692bdb49c47c8c3ff15dd8d9b5",
-            "sha256": "sha256-AL89Ci75q0pAzbp7Kl046/yKSvAZe0Ed+G9e1bQitO4=",
-            "type": "github"
-        },
-        "version": "2ae7300f774cf1692bdb49c47c8c3ff15dd8d9b5"
     }
 }

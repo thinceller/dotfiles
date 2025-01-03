@@ -13,16 +13,4 @@
     };
     date = "2021-07-16";
   };
-  vim-jetpack = {
-    pname = "vim-jetpack";
-    version = "2ae7300f774cf1692bdb49c47c8c3ff15dd8d9b5";
-    src = fetchFromGitHub {
-      owner = "tani";
-      repo = "vim-jetpack";
-      rev = "2ae7300f774cf1692bdb49c47c8c3ff15dd8d9b5";
-      fetchSubmodules = false;
-      sha256 = "sha256-AL89Ci75q0pAzbp7Kl046/yKSvAZe0Ed+G9e1bQitO4=";
-    };
-    date = "2024-04-11";
-  };
 }
