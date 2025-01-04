@@ -58,6 +58,12 @@ require("jetpack.paq")({
   },
   -- git
   {
+    "lewis6991/gitsigns.nvim",
+    config = function()
+      require("plugins/gitsigns")
+    end,
+  },
+  {
     "kdheepak/lazygit.nvim",
     requires = { "nvim-lua/plenary.nvim" },
     config = function()
