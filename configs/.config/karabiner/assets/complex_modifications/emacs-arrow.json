@@ -11,7 +11,8 @@
                 "^com\\.apple\\.Terminal$",
                 "^com\\.googlecode\\.iterm2$",
                 "^com\\.runningwithcrayons\\.Alfred$",
-                "^com\\.microsoft\\.VSCode$"
+                "^com\\.microsoft\\.VSCode$",
+                "^com\\.github\\.wez\\.wezterm$"
               ],
               "type": "frontmost_application_unless"
             }
@@ -41,7 +42,8 @@
                 "^com\\.apple\\.Terminal$",
                 "^com\\.googlecode\\.iterm2$",
                 "^com\\.runningwithcrayons\\.Alfred$",
-                "^com\\.microsoft\\.VSCode$"
+                "^com\\.microsoft\\.VSCode$",
+                "^com\\.github\\.wez\\.wezterm$"
               ],
               "type": "frontmost_application_unless"
             }
@@ -71,7 +73,8 @@
                 "^com\\.apple\\.Terminal$",
                 "^com\\.googlecode\\.iterm2$",
                 "^com\\.runningwithcrayons\\.Alfred$",
-                "^com\\.microsoft\\.VSCode$"
+                "^com\\.microsoft\\.VSCode$",
+                "^com\\.github\\.wez\\.wezterm$"
               ],
               "type": "frontmost_application_unless"
             }
@@ -101,7 +104,8 @@
                 "^com\\.apple\\.Terminal$",
                 "^com\\.googlecode\\.iterm2$",
                 "^com\\.runningwithcrayons\\.Alfred$",
-                "^com\\.microsoft\\.VSCode$"
+                "^com\\.microsoft\\.VSCode$",
+                "^com\\.github\\.wez\\.wezterm$"
               ],
               "type": "frontmost_application_unless"
             }
