@@ -10,4 +10,10 @@ require("jetpack.paq")({
       require("plugins.night-owl")
     end,
   },
+  {
+    "xiyaowong/nvim-transparent",
+    config = function()
+      require("plugins.nvim-transparent")
+    end,
+  },
 })
