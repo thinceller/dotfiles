@@ -78,6 +78,19 @@ require("jetpack.paq")({
       require("plugins/no-neck-pain")
     end,
   },
+  {
+    "windwp/nvim-autopairs",
+    config = function()
+      require("nvim-autopairs").setup()
+    end,
+  },
+  {
+    "numToStr/Comment.nvim",
+    config = function()
+      require("Comment").setup()
+    end,
+  },
+  "machakann/vim-sandwich",
 })
 
 -- automatic plugin installation
