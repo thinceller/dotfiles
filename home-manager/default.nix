@@ -30,6 +30,7 @@ in
 
   home.packages = with pkgs; [
     curl
+    deno
     ghq
     graphviz
     mactop

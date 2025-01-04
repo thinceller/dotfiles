@@ -17,6 +17,14 @@ require("jetpack.paq")({
   },
   -- lua plugins
   "nvim-lua/plenary.nvim",
+  -- denops
+  {
+    "vim-denops/denops.vim",
+    requires = { "vim-denops/denops-shared-server.vim" },
+    config = function()
+      require("plugins/denops")
+    end,
+  },
   -- fuzzy finder
   {
     "nvim-telescope/telescope.nvim",
