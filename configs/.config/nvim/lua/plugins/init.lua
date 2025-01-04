@@ -39,4 +39,22 @@ require("jetpack.paq")({
       require("telescope").load_extension("gh")
     end,
   },
+  -- git
+  {
+    "kdheepak/lazygit.nvim",
+    requires = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("plugins/lazygit")
+    end,
+  },
 })
+
+-- automatic plugin installation
+-- https://github.com/tani/vim-jetpack#automatic-plugin-installation-on-startup
+local jetpack = require("jetpack")
+for _, name in ipairs(jetpack.names()) do
+  if not jetpack.tap(name) then
+    jetpack.sync()
+    break
+  end
+end
