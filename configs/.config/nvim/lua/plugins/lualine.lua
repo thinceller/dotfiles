@@ -1,5 +1,5 @@
 require("lualine").setup({
-  theme = "auto",
+  theme = "night-owl",
   tabline = {
     lualine_a = { "buffers" },
     lualine_b = {},

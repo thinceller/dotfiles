@@ -4,8 +4,7 @@ require("jetpack.paq")({
   { "tani/vim-jetpack" },
   -- color scheme
   {
-    "haishanh/night-owl.vim",
-    event = { "VimEnter", "ColorSchemePre" },
+    "oxfist/night-owl.nvim",
     config = function()
       require("plugins/night-owl")
     end,
@@ -52,6 +51,7 @@ require("jetpack.paq")({
   -- status line
   {
     "nvim-lualine/lualine.nvim",
+    requires = { "oxfist/night-owl.nvim" },
     config = function()
       require("plugins/lualine")
     end,
@@ -65,9 +65,9 @@ require("jetpack.paq")({
     end,
   },
   -- misc
+  "vim-jp/vimdoc-ja",
   {
     "famiu/bufdelete.nvim",
-    event = "VimEnter",
     config = function()
       require("plugins/bufdelete")
     end,
