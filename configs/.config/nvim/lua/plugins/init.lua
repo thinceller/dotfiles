@@ -39,12 +39,29 @@ require("jetpack.paq")({
       require("telescope").load_extension("gh")
     end,
   },
+  -- file explorer
+  {
+    "stevearc/oil.nvim",
+    requires = {
+      "nvim-tree/nvim-web-devicons",
+    },
+    config = function()
+      require("plugins/oil")
+    end,
+  },
   -- git
   {
     "kdheepak/lazygit.nvim",
     requires = { "nvim-lua/plenary.nvim" },
     config = function()
       require("plugins/lazygit")
+    end,
+  },
+  -- misc
+  {
+    "shortcuts/no-neck-pain.nvim",
+    config = function()
+      require("plugins/no-neck-pain")
     end,
   },
 })
