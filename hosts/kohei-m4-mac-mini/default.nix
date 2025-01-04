@@ -29,6 +29,7 @@ nix-darwin.lib.darwinSystem {
     {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
+      home-manager.backupFileExtension = "backup";
       home-manager.users."${userConfig.username}" =
         { config, lib, ... }:
         import ../../home-manager {
