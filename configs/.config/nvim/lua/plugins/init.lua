@@ -66,6 +66,13 @@ require("jetpack.paq")({
   },
   -- misc
   {
+    "famiu/bufdelete.nvim",
+    event = "VimEnter",
+    config = function()
+      require("plugins/bufdelete")
+    end,
+  },
+  {
     "shortcuts/no-neck-pain.nvim",
     config = function()
       require("plugins/no-neck-pain")
