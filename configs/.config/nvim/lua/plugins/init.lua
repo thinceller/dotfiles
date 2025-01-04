@@ -49,6 +49,13 @@ require("jetpack.paq")({
       require("plugins/oil")
     end,
   },
+  -- status line
+  {
+    "nvim-lualine/lualine.nvim",
+    config = function()
+      require("plugins/lualine")
+    end,
+  },
   -- git
   {
     "kdheepak/lazygit.nvim",
