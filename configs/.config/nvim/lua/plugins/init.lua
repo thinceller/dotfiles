@@ -25,6 +25,20 @@ require("jetpack.packer").startup(function(use)
       require("plugins/denops")
     end,
   })
+  -- completion and lsp
+  use({
+    "Shougo/ddc.vim",
+    requires = {
+      "Shougo/pum.vim",
+      "Shougo/ddc-ui-pum",
+      "Shougo/ddc-source-around",
+      "LumaKernel/ddc-source-file",
+      "tani/ddc-fuzzy",
+    },
+    config = function()
+      require("plugins/ddc")
+    end,
+  })
   -- fuzzy finder
   use({
     "nvim-telescope/telescope.nvim",
