@@ -1,12 +1,13 @@
 {
   pkgs,
   sources,
+  homeDir,
 }:
 let
   bat = import ./bat { inherit pkgs; };
   bottom = import ./bottom { inherit pkgs; };
   direnv = import ./direnv { inherit pkgs; };
-  fish = import ./fish { inherit pkgs sources; };
+  fish = import ./fish { inherit pkgs sources homeDir; };
   fzf = import ./fzf { inherit pkgs; };
   gh = import ./gh { inherit pkgs; };
   git = import ./git { inherit pkgs; };

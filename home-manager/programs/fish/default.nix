@@ -1,4 +1,8 @@
-{ pkgs, sources }:
+{
+  pkgs,
+  sources,
+  homeDir,
+}:
 {
   programs.fish = {
     enable = true;
@@ -30,7 +34,7 @@
     ];
     interactiveShellInit = ''
       op completion fish | source
-      source /Users/thinceller/.config/op/plugins.sh
+      source ${homeDir}/.config/op/plugins.sh
     '';
   };
 }

@@ -16,7 +16,13 @@ let
   # Load the generated sources by nvfetcher
   sources = pkgs.callPackage ../_sources/generated.nix { };
 
-  programs = import ./programs { inherit pkgs sources; };
+  programs = import ./programs {
+    inherit
+      pkgs
+      sources
+      homeDir
+      ;
+  };
   files = import ./files.nix { inherit pkgs config dotfilesDir; };
 in
 {
