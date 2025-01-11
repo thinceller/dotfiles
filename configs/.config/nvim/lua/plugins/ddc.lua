@@ -1,29 +1,29 @@
-vim.fn["ddc#custom#patch_global"]({
-  ui = "pum",
-  sources = {
-    "around",
-    "file",
-  },
-  sourceOptions = {
-    ["_"] = {
-      matchers = { "matcher_fuzzy" },
-      sorters = { "sorter_fuzzy" },
-      converters = { "converter_fuzzy" },
-    },
-    around = {
-      mark = "A",
-    },
-    file = {
-      mark = "F",
-      isVolatile = true,
-    },
-  },
-  sourceParams = {
-    around = {
-      maxSize = 100,
-    },
-  },
-})
+-- vim.fn["ddc#custom#patch_global"]({
+--   ui = "pum",
+--   sources = {
+--     "around",
+--     "file",
+--   },
+--   sourceOptions = {
+--     ["_"] = {
+--       matchers = { "matcher_fuzzy" },
+--       sorters = { "sorter_fuzzy" },
+--       converters = { "converter_fuzzy" },
+--     },
+--     around = {
+--       mark = "A",
+--     },
+--     file = {
+--       mark = "F",
+--       isVolatile = true,
+--     },
+--   },
+--   sourceParams = {
+--     around = {
+--       maxSize = 100,
+--     },
+--   },
+-- })
 
 vim.cmd([[
   inoremap <silent><expr> <TAB>

@@ -1,132 +1,107 @@
-vim.cmd("packadd vim-jetpack")
-
-require("jetpack.packer").startup(function(use)
-  use({ "tani/vim-jetpack" })
-  -- color scheme
-  use({
-    "oxfist/night-owl.nvim",
-    config = function()
+require("lz.n").load({
+  {
+    "night-owl.nvim",
+    -- should be setup before enabling the color scheme
+    -- colorscheme = "night-owl",
+    after = function()
       require("plugins/night-owl")
     end,
-  })
-  use({
-    "xiyaowong/nvim-transparent",
-    config = function()
+  },
+  {
+    "transparent.nvim",
+    after = function()
       require("plugins/nvim-transparent")
     end,
-  })
-  -- lua plugins
-  use("nvim-lua/plenary.nvim")
-  -- denops
-  use({
-    "vim-denops/denops.vim",
-    requires = { "vim-denops/denops-shared-server.vim" },
-    config = function()
-      require("plugins/denops")
-    end,
-  })
-  -- completion and lsp
-  use({
-    "Shougo/ddc.vim",
-    requires = {
-      "Shougo/pum.vim",
-      "Shougo/ddc-ui-pum",
-      "Shougo/ddc-source-around",
-      "LumaKernel/ddc-source-file",
-      "tani/ddc-fuzzy",
-    },
-    config = function()
+  },
+  {
+    "plenary.nvim",
+  },
+  {
+    "denops.vim",
+    -- after = function()
+    --   require("plugins/denops")
+    -- end,
+  },
+  --     requires = { "vim-denops/denops-shared-server.vim" },
+  {
+    "ddc.vim",
+    after = function()
       require("plugins/ddc")
     end,
-  })
-  -- fuzzy finder
-  use({
-    "nvim-telescope/telescope.nvim",
-    branch = "0.1.x",
-    requires = { "nvim-lua/plenary.nvim" },
-    config = function()
+  },
+  {
+    "pum.vim",
+  },
+  -- {
+  --   "ddc-pum-ui",
+  -- },
+  --       "Shougo/ddc-source-around",
+  --       "LumaKernel/ddc-source-file",
+  --       "tani/ddc-fuzzy",
+  {
+    "telescope.nvim",
+    after = function()
       require("plugins/telescope")
     end,
-  })
-  use({
-    "nvim-telescope/telescope-frecency.nvim",
-    config = function()
-      require("telescope").load_extension("frecency")
-    end,
-  })
-  use({
-    "nvim-telescope/telescope-github.nvim",
-    config = function()
-      require("telescope").load_extension("gh")
-    end,
-  })
-  -- file explorer
-  use({
-    "stevearc/oil.nvim",
-    requires = {
-      "nvim-tree/nvim-web-devicons",
-    },
-    config = function()
+  },
+  {
+    "telescope-frecency.nvim",
+  },
+  {
+    "telescope-github.nvim",
+  },
+  {
+    "oil.nvim",
+    after = function()
       require("plugins/oil")
     end,
-  })
-  -- status line
-  use({
-    "nvim-lualine/lualine.nvim",
-    requires = { "oxfist/night-owl.nvim" },
-    config = function()
+  },
+  {
+    "nvim-web-devicons",
+  },
+  {
+    "lualine.nvim",
+    after = function()
       require("plugins/lualine")
     end,
-  })
-  -- git
-  use({
-    "lewis6991/gitsigns.nvim",
-    config = function()
+  },
+  {
+    "gitsigns.nvim",
+    after = function()
       require("plugins/gitsigns")
     end,
-  })
-  use({
-    "kdheepak/lazygit.nvim",
-    requires = { "nvim-lua/plenary.nvim" },
-    config = function()
+  },
+  {
+    "lazygit.nvim",
+    after = function()
       require("plugins/lazygit")
     end,
-  })
-  -- misc
-  use("vim-jp/vimdoc-ja")
-  use({
-    "famiu/bufdelete.nvim",
-    config = function()
+  },
+  {
+    "bufdelete.nvim",
+    after = function()
       require("plugins/bufdelete")
     end,
-  })
-  use({
-    "shortcuts/no-neck-pain.nvim",
-    config = function()
+  },
+  {
+    "no-neck-pain.nvim",
+    after = function()
       require("plugins/no-neck-pain")
     end,
-  })
-  use({
-    "windwp/nvim-autopairs",
-    config = function()
+  },
+  {
+    "nvim-autopairs",
+    after = function()
       require("nvim-autopairs").setup()
     end,
-  })
-  use({
-    "numToStr/Comment.nvim",
-    config = function()
+  },
+  {
+    "Comment.nvim",
+    after = function()
       require("Comment").setup()
     end,
-  })
-  use("machakann/vim-sandwich")
-end)
-
--- automatic plugin installation
--- https://github.com/tani/vim-jetpack#automatic-plugin-installation-on-startup
-local jetpack = require("jetpack")
-for _, name in ipairs(jetpack.names()) do
-  if not jetpack.tap(name) then
-    jetpack.sync()
-    break
-  end
-end
+  },
+  {
+    "vim-sandwich",
+  },
+})
