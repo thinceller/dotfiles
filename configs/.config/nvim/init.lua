@@ -2,4 +2,4 @@ require("base")
 
 require("keymaps")
 
-require("plugins")
+require("lz.n").load("plugins")
