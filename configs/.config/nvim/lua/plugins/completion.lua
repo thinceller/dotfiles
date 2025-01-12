@@ -2,32 +2,41 @@ return {
   {
     "ddc.vim",
     after = function()
-      -- vim.fn["ddc#custom#patch_global"]({
-      --   ui = "pum",
-      --   sources = {
-      --     "around",
-      --     "file",
-      --   },
-      --   sourceOptions = {
-      --     ["_"] = {
-      --       matchers = { "matcher_fuzzy" },
-      --       sorters = { "sorter_fuzzy" },
-      --       converters = { "converter_fuzzy" },
-      --     },
-      --     around = {
-      --       mark = "A",
-      --     },
-      --     file = {
-      --       mark = "F",
-      --       isVolatile = true,
-      --     },
-      --   },
-      --   sourceParams = {
-      --     around = {
-      --       maxSize = 100,
-      --     },
-      --   },
-      -- })
+      vim.fn["ddc#custom#patch_global"]({
+        ui = "pum",
+        sources = {
+          -- "around",
+          -- "file",
+          "lsp",
+        },
+        sourceOptions = {
+          -- ["_"] = {
+          --   matchers = { "matcher_fuzzy" },
+          --   sorters = { "sorter_fuzzy" },
+          --   converters = { "converter_fuzzy" },
+          -- },
+          -- around = {
+          --   mark = "A",
+          -- },
+          -- file = {
+          --   mark = "F",
+          --   isVolatile = true,
+          -- },
+          lsp = {
+            mark = "LSP",
+            forceCompletionPattern = "\\.\\w*|:\\w*|->\\w*",
+          },
+        },
+        sourceParams = {
+          -- around = {
+          --   maxSize = 100,
+          -- },
+          lsp = {
+            enableResolveItem = true,
+            enableAdditionalTextEdit = true,
+          },
+        },
+      })
 
       vim.cmd([[
         inoremap <silent><expr> <TAB>

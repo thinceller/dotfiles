@@ -12,6 +12,12 @@ in
     vimAlias = true;
     vimdiffAlias = true;
     withPython3 = false;
+    extraPackages = with pkgs; [
+      # language servers
+      lua-language-server
+      nixd
+      typescript-language-server
+    ];
     plugins =
       with pkgs.vimPlugins;
       [ lz-n ]
@@ -27,6 +33,8 @@ in
         ddc-vim
         pum-vim
         ddc-ui-pum
+        ddc-source-lsp
+        nvim-lspconfig
         # fuzzy finder
         telescope-nvim
         telescope-frecency-nvim
