@@ -8,7 +8,7 @@ return {
         },
       })
 
-      vim.keymap.set("n", "<Leader>e", "<Cmd>Oil<CR>", { noremap = true, silent = true })
+      vim.keymap.set("n", "<Leader>o", "<Cmd>Oil<CR>", { noremap = true, silent = true })
     end,
   },
 }
