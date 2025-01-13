@@ -26,6 +26,7 @@ in
         night-owl-nvim
         tokyonight-nvim
         transparent-nvim
+        nvim-treesitter.withAllGrammars
         # lua plugins
         plenary-nvim
         # denops

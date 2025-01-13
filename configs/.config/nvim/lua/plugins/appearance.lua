@@ -94,4 +94,7 @@ return {
       })
     end,
   },
+  {
+    "nvim-treesitter",
+  },
 }
