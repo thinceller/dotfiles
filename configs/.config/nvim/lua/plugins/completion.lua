@@ -18,6 +18,12 @@ return {
         },
         sources = {
           default = { "lsp", "path", "buffer" },
+          providers = {
+            lsp = {
+              name = "LSP",
+              module = "blink.cmp.sources.lsp",
+            },
+          },
         },
         completion = {
           list = {
@@ -25,6 +31,9 @@ return {
           },
           menu = {
             border = "single",
+            draw = {
+              columns = { { "kind_icon" }, { "label", "label_description", "source_name", gap = 1 } },
+            },
           },
           documentation = {
             auto_show = true,
