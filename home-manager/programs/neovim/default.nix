@@ -24,6 +24,7 @@ in
       ++ loadPluginOptionally [
         # color scheme
         night-owl-nvim
+        tokyonight-nvim
         transparent-nvim
         # lua plugins
         plenary-nvim

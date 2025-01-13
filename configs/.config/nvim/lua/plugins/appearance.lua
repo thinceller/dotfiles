@@ -1,13 +1,19 @@
 return {
   {
-    "night-owl.nvim",
-    -- should be setup before enabling the color scheme
-    -- colorscheme = "night-owl",
+    "tokyonight.nvim",
     after = function()
-      require("night-owl").setup()
-      vim.cmd.colorscheme("night-owl")
+      vim.cmd.colorscheme("tokyonight-moon")
     end,
   },
+  -- {
+  --   "night-owl.nvim",
+  --   -- should be setup before enabling the color scheme
+  --   -- colorscheme = "night-owl",
+  --   after = function()
+  --     require("night-owl").setup()
+  --     vim.cmd.colorscheme("night-owl")
+  --   end,
+  -- },
   {
     "transparent.nvim",
     after = function()
@@ -45,7 +51,7 @@ return {
     "lualine.nvim",
     after = function()
       require("lualine").setup({
-        theme = "night-owl",
+        theme = "tokyonight",
         tabline = {
           lualine_a = {
             {
