@@ -9,7 +9,6 @@
     casks = [
       "1password"
       "arc"
-      "aquaskk"
       "atok"
       "chatgpt"
       "discord"
@@ -21,6 +20,7 @@
       "jordanbaird-ice"
       "karabiner-elements"
       "microsoft-edge"
+      "mtgto/macskk/macskk"
       "notion"
       "notion-calendar"
       "orbstack"
