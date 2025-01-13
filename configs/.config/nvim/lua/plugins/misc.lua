@@ -10,6 +10,14 @@ return {
     after = function()
       require("no-neck-pain").setup({
         width = 120,
+        autocmds = {
+          enableOnVimEnter = true,
+        },
+        buffers = {
+          wo = {
+            fillchars = "eob: ",
+          },
+        },
       })
 
       vim.keymap.set("n", "<Leader>np", "<Cmd>NoNeckPain<CR>", { noremap = true, silent = true })
