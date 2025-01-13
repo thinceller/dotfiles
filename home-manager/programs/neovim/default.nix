@@ -30,6 +30,7 @@ in
         # denops
         denops-vim
         # completion and lsp
+        blink-cmp
         ddc-vim
         pum-vim
         ddc-ui-pum
