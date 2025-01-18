@@ -11,6 +11,7 @@
       "arc"
       "atok"
       "chatgpt"
+      "cursor"
       "discord"
       "firefox"
       "ghostty"
