@@ -1,6 +1,7 @@
 return {
   {
     "bufdelete.nvim",
+    event = "DeferredUIEnter",
     after = function()
       vim.keymap.set("n", "<Leader>q", "<Cmd>bdelete<CR>", { noremap = true, silent = true })
     end,
@@ -25,17 +26,20 @@ return {
   },
   {
     "nvim-autopairs",
+    event = "DeferredUIEnter",
     after = function()
       require("nvim-autopairs").setup()
     end,
   },
   {
     "Comment.nvim",
+    event = "DeferredUIEnter",
     after = function()
       require("Comment").setup()
     end,
   },
   {
     "vim-sandwich",
+    event = "DeferredUIEnter",
   },
 }

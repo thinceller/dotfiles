@@ -96,5 +96,6 @@ return {
   },
   {
     "nvim-treesitter",
+    event = "DeferredUIEnter",
   },
 }

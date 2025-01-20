@@ -1,6 +1,7 @@
 return {
   {
     "telescope.nvim",
+    event = "DeferredUIEnter",
     after = function()
       require("telescope").setup({
         extensions = {
