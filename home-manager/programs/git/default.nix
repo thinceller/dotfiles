@@ -1,5 +1,7 @@
 { pkgs }:
 {
+  programs.gpg.enable = true;
+
   programs.git = {
     enable = true;
     aliases = {
@@ -9,7 +11,7 @@
       enable = true;
     };
     signing = {
-      key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILQwsbXl/1tHIdW/f+fZE7TJArqzvmbbaUsdKRFPoyZB";
+      key = "2AF8844D09D0ACAB67D5539D961BEC4D4FE5E3C3";
       signByDefault = true;
     };
     userEmail = "thinceller@gmail.com";
@@ -21,11 +23,11 @@
       ghq = {
         root = "~/src";
       };
-      gpg = {
-        format = "ssh";
-        ssh = {
-          program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
-        };
+      commit = {
+        gpgsign = true;
+      };
+      tag = {
+        gpgsign = true;
       };
       rebase = {
         autostash = true;

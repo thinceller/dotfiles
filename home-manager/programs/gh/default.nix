@@ -7,7 +7,7 @@
       gh-copilot
     ];
     settings = {
-      git_protocol = "https";
+      git_protocol = "ssh";
       prompt = "enabled";
       aliases = {
         co = ''!id="$(gh pr list -L100 | fzf | cut -f1)"; [ -n "$id" ] && gh pr checkout "$id"'';
