@@ -23,12 +23,6 @@
       ghq = {
         root = "~/src";
       };
-      commit = {
-        gpgsign = true;
-      };
-      tag = {
-        gpgsign = true;
-      };
       rebase = {
         autostash = true;
         autosquash = true;
