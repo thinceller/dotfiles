@@ -34,7 +34,6 @@
     ];
     interactiveShellInit = ''
       op completion fish | source
-      source ${homeDir}/.config/op/plugins.sh
     '';
   };
 }
