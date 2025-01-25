@@ -37,6 +37,8 @@ in
   home.packages = with pkgs; [
     curl
     deno
+    docker
+    docker-credential-helpers
     ghq
     graphviz
     mactop
