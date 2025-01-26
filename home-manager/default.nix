@@ -1,6 +1,7 @@
 {
   config,
   nixpkgs,
+  lib,
   system,
   userConfig,
   ...
@@ -19,6 +20,7 @@ let
   programs = import ./programs {
     inherit
       pkgs
+      lib
       sources
       homeDir
       ;

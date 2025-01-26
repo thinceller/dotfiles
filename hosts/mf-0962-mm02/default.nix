@@ -34,6 +34,7 @@ nix-darwin.lib.darwinSystem {
         import ../../home-manager {
           inherit
             nixpkgs
+            lib
             config
             wezterm-flake
             system

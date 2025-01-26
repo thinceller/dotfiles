@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   sources,
   homeDir,
 }:
@@ -28,6 +29,10 @@
     };
     plugins = [
       {
+        name = "tide";
+        src = pkgs.fishPlugins.tide.src;
+      }
+      {
         name = sources.fish-ghq.pname;
         src = sources.fish-ghq.src;
       }
@@ -36,4 +41,8 @@
       op completion fish | source
     '';
   };
+
+  home.activation.configure-tide = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    ${pkgs.fish}/bin/fish -c "tide configure --auto --style=Lean --prompt_colors='True color' --show_time=No --lean_prompt_height='Two lines' --prompt_connection=Disconnected --prompt_spacing=Sparse --icons='Many icons' --transient=No"
+  '';
 }

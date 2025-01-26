@@ -35,6 +35,7 @@ nix-darwin.lib.darwinSystem {
         import ../../home-manager {
           inherit
             nixpkgs
+            lib
             config
             system
             userConfig
