@@ -7,9 +7,21 @@
     stateVersion = 4;
 
     defaults = {
+      controlcenter = {
+        BatteryShowPercentage = true;
+      };
       dock = {
         autohide = true;
         orientation = "bottom";
+        magnification = true;
+        tilesize = 45;
+        largesize = 70;
+        mru-spaces = false;
+        show-recents = false;
+      };
+      trackpad = {
+        Clicking = true;
+        FirstClickThreshold = 2;
       };
       finder = {
         AppleShowAllExtensions = true;
@@ -27,6 +39,11 @@
       menuExtraClock = {
         Show24Hour = true;
       };
+    };
+
+    keyboard = {
+      enableKeyMapping = true;
+      remapCapsLockToControl = true;
     };
   };
 }

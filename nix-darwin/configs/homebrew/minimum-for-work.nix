@@ -7,6 +7,7 @@
       # cleanup = "uninstall";
     };
     casks = [
+      "1password"
       "aquaskk"
       "chatgpt"
       "cursor"

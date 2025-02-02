@@ -6,7 +6,12 @@
   ...
 }:
 let
-  inherit (userConfig) username hostname homeDir;
+  inherit (userConfig)
+    username
+    uid
+    hostname
+    homeDir
+    ;
 
   fonts = import ./configs/fonts.nix { inherit pkgs; };
   homebrew = import ./configs/homebrew/minimum-for-work.nix;
@@ -23,7 +28,7 @@ in
 
   users.knownUsers = [ username ];
   users.users."${username}" = {
-    uid = 504;
+    inherit uid;
     home = homeDir;
     shell = pkgs.fish;
   };

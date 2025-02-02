@@ -15,8 +15,8 @@ let
     in
     {
       inherit username homeDir;
-      uid = 504;
-      hostname = "mf-0962-mm02";
+      uid = 502;
+      hostname = "SC-N-843";
       dotfilesDir = homeDir + "/.dotfiles";
     };
 in
