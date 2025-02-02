@@ -9,6 +9,7 @@
     defaults = {
       controlcenter = {
         BatteryShowPercentage = true;
+        Bluetooth = true;
       };
       dock = {
         autohide = true;
