@@ -41,26 +41,6 @@
                         ]
                     },
                     {
-                        "description": "Fnキー単独でGyazo起動",
-                        "manipulators": [
-                            {
-                                "from": { "key_code": "fn" },
-                                "to_if_alone": [{ "shell_command": "open -a 'Gyazo.app'" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Print Screenキー単独でGyazo起動",
-                        "manipulators": [
-                            {
-                                "from": { "key_code": "print_screen" },
-                                "to_if_alone": [{ "shell_command": "open -a 'Gyazo.app'" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "description": "Change ctr+npfb to arrow keys",
                         "manipulators": [
                             {
@@ -71,7 +51,8 @@
                                             "^com\\.googlecode\\.iterm2$",
                                             "^com\\.runningwithcrayons\\.Alfred$",
                                             "^com\\.microsoft\\.VSCode$",
-                                            "^com\\.github\\.wez\\.wezterm$"
+                                            "^com\\.github\\.wez\\.wezterm$",
+                                            "^com\\.todesktop\\.230313mzl4w4u92"
                                         ],
                                         "type": "frontmost_application_unless"
                                     }
@@ -94,7 +75,8 @@
                                             "^com\\.googlecode\\.iterm2$",
                                             "^com\\.runningwithcrayons\\.Alfred$",
                                             "^com\\.microsoft\\.VSCode$",
-                                            "^com\\.github\\.wez\\.wezterm$"
+                                            "^com\\.github\\.wez\\.wezterm$",
+                                            "^com\\.todesktop\\.230313mzl4w4u92"
                                         ],
                                         "type": "frontmost_application_unless"
                                     }
@@ -117,7 +99,8 @@
                                             "^com\\.googlecode\\.iterm2$",
                                             "^com\\.runningwithcrayons\\.Alfred$",
                                             "^com\\.microsoft\\.VSCode$",
-                                            "^com\\.github\\.wez\\.wezterm$"
+                                            "^com\\.github\\.wez\\.wezterm$",
+                                            "^com\\.todesktop\\.230313mzl4w4u92"
                                         ],
                                         "type": "frontmost_application_unless"
                                     }
@@ -140,7 +123,8 @@
                                             "^com\\.googlecode\\.iterm2$",
                                             "^com\\.runningwithcrayons\\.Alfred$",
                                             "^com\\.microsoft\\.VSCode$",
-                                            "^com\\.github\\.wez\\.wezterm$"
+                                            "^com\\.github\\.wez\\.wezterm$",
+                                            "^com\\.todesktop\\.230313mzl4w4u92"
                                         ],
                                         "type": "frontmost_application_unless"
                                     }
