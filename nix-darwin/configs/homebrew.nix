@@ -23,6 +23,7 @@
       "logi-options+"
       "microsoft-edge"
       "mtgto/macskk/macskk"
+      "nikitabobko/tap/aerospace"
       "notion"
       "notion-calendar"
       "orbstack"
