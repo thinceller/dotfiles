@@ -20,6 +20,7 @@
       "hhkb-studio"
       "jordanbaird-ice"
       "karabiner-elements"
+      "logi-options+"
       "microsoft-edge"
       "mtgto/macskk/macskk"
       "notion"

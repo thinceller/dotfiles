@@ -13,6 +13,11 @@ in
     };
   };
   xdg.configFile = {
+    # AeroSpace
+    "aerospace" = {
+      source = symlink /${rootDir}/.config/aerospace;
+      recursive = true;
+    };
     # karabiner
     "karabiner/karabiner.json" = {
       source = symlink /${rootDir}/.config/karabiner/karabiner.json;
