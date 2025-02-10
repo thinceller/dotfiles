@@ -19,12 +19,9 @@ in
       recursive = true;
     };
     # karabiner
-    "karabiner/karabiner.json" = {
-      source = symlink /${rootDir}/.config/karabiner/karabiner.json;
-    };
-    "karaibner/assets/complex_modifications" = {
-      source = symlink /${rootDir}/.config/karabiner/assets/complex_modifications;
-      recursive = true;
+    # https://github.com/pqrs-org/Karabiner-Elements/issues/3248
+    "karabiner" = {
+      source = symlink /${rootDir}/.config/karabiner;
     };
     # Neovim
     "nvim" = {
