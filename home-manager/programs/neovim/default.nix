@@ -33,10 +33,6 @@ in
         denops-vim
         # completion and lsp
         blink-cmp
-        ddc-vim
-        pum-vim
-        ddc-ui-pum
-        ddc-source-lsp
         nvim-lspconfig
         # fuzzy finder
         telescope-nvim
@@ -52,10 +48,10 @@ in
         lazygit-nvim
         # misc
         bufdelete-nvim
-        no-neck-pain-nvim
         nvim-autopairs
         comment-nvim
         vim-sandwich
+        zen-mode-nvim
       ];
   };
 }

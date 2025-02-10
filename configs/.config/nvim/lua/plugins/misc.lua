@@ -7,21 +7,15 @@ return {
     end,
   },
   {
-    "no-neck-pain.nvim",
+    "zen-mode.nvim",
     after = function()
-      require("no-neck-pain").setup({
-        width = 120,
-        autocmds = {
-          enableOnVimEnter = true,
-        },
-        buffers = {
-          wo = {
-            fillchars = "eob: ",
-          },
+      require("zen-mode").setup({
+        window = {
+          backdrop = 1,
+          width = 140,
         },
       })
-
-      vim.keymap.set("n", "<Leader>np", "<Cmd>NoNeckPain<CR>", { noremap = true, silent = true })
+      vim.keymap.set("n", "<Leader>z", "<Cmd>ZenMode<CR>", { noremap = true, silent = true })
     end,
   },
   {
