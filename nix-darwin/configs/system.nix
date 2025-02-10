@@ -19,6 +19,7 @@
         largesize = 70;
         mru-spaces = false;
         show-recents = false;
+        expose-group-apps = true;
       };
       trackpad = {
         Clicking = true;

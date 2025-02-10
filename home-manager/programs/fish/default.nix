@@ -38,6 +38,7 @@
       }
     ];
     interactiveShellInit = ''
+      fish_add_path /opt/homebrew/bin
       op completion fish | source
     '';
   };
