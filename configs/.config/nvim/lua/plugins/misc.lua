@@ -36,4 +36,19 @@ return {
     "vim-sandwich",
     event = "DeferredUIEnter",
   },
+  {
+    "startup.nvim",
+    after = function()
+      require("startup").setup({
+        theme = "my_theme",
+      })
+
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "startup" },
+        callback = function()
+          vim.opt_local.spell = false
+        end,
+      })
+    end,
+  },
 }

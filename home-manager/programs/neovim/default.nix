@@ -52,6 +52,7 @@ in
         comment-nvim
         vim-sandwich
         zen-mode-nvim
+        startup-nvim
       ];
   };
 }
