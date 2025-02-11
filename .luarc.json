@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
+  "workspace.library": [
+    "configs/.config/nvim",
+    "configs/.config/wezterm",
+    "configs/.hammerspoon",
+    "$VIMRUNTIME"
+  ],
+  "runtime.version": "LuaJIT"
+}

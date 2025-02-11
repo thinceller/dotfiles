@@ -6,9 +6,13 @@ return {
       local capabilities = require("blink.cmp").get_lsp_capabilities()
       local lspconfig = require("lspconfig")
 
-      lspconfig.lua_ls.setup({ capabilities = capabilities })
+      lspconfig.lua_ls.setup({
+        capabilities = capabilities,
+        Lua = { runtime = { version = "LuaJIT" } },
+      })
       lspconfig.nixd.setup({ capabilities = capabilities })
       lspconfig.ts_ls.setup({ capabilities = capabilities })
+      lspconfig.jsonls.setup({ capabilities = capabilities })
 
       vim.api.nvim_create_autocmd("LspAttach", {
         -- group = vim.api.nvim_create_augroup("UserLspConfig", {}),

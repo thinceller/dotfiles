@@ -17,6 +17,7 @@ in
       lua-language-server
       nixd
       typescript-language-server
+      vscode-langservers-extracted
     ];
     plugins =
       with pkgs.vimPlugins;
