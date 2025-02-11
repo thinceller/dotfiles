@@ -23,7 +23,6 @@
       "logi-options+"
       "microsoft-edge"
       "mtgto/macskk/macskk"
-      "ngrok/ngrok/ngrok"
       "nikitabobko/tap/aerospace"
       "notion"
       "notion-calendar"
