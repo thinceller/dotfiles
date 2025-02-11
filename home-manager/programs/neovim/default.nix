@@ -63,6 +63,7 @@ in
         vim-sandwich
         zen-mode-nvim
         startup-nvim
+        fidget-nvim
       ];
   };
 }
