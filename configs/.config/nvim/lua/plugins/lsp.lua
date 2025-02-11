@@ -6,13 +6,61 @@ return {
       local capabilities = require("blink.cmp").get_lsp_capabilities()
       local lspconfig = require("lspconfig")
 
-      lspconfig.lua_ls.setup({
-        capabilities = capabilities,
-        Lua = { runtime = { version = "LuaJIT" } },
-      })
-      lspconfig.nixd.setup({ capabilities = capabilities })
-      lspconfig.ts_ls.setup({ capabilities = capabilities })
-      lspconfig.jsonls.setup({ capabilities = capabilities })
+      for _, ls in pairs({
+        "lua_ls",
+        "nixd",
+        "jsonls",
+        "ts_ls",
+        "html",
+        "cssls",
+        "eslint",
+        "stylelint_lsp",
+        "tailwindcss",
+        "rubocop",
+        "ruby_lsp",
+        "rust_analyzer",
+        "terraformls",
+        "dockerls",
+        "docker_compose_language_service",
+        "typos_lsp",
+      }) do
+        local config = {}
+
+        if ls == "eslint" then
+          config = {
+            on_attach = function(_, buf)
+              vim.api.nvim_create_autocmd("BufWritePre", {
+                buffer = buf,
+                command = "EslintFixAll",
+              })
+            end,
+          }
+        elseif ls == "stylelint_lsp" then
+          config = {
+            root_dir = lspconfig.util.root_pattern(
+              "stylelint.config.js",
+              "stylelint.config.mjs",
+              "stylelint.config.cjs"
+            ),
+            settings = {
+              stylelintplus = {
+                autoFixOnSave = true,
+              },
+            },
+          }
+        elseif ls == "nixd" then
+          config = {
+            settings = {
+              formatting = {
+                command = "nixfmt",
+              },
+            },
+          }
+        end
+
+        config.capabilities = capabilities
+        lspconfig[ls].setup(config)
+      end
 
       vim.api.nvim_create_autocmd("LspAttach", {
         -- group = vim.api.nvim_create_augroup("UserLspConfig", {}),

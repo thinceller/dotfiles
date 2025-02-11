@@ -14,9 +14,18 @@ in
     withPython3 = false;
     extraPackages = with pkgs; [
       # language servers
+      docker-compose-language-service
+      dockerfile-language-server-nodejs
       lua-language-server
       nixd
+      rubocop
+      ruby-lsp
+      rust-analyzer
+      stylelint-lsp
+      tailwindcss-language-server
+      terraform-ls
       typescript-language-server
+      typos-lsp
       vscode-langservers-extracted
     ];
     plugins =

@@ -6,5 +6,6 @@
     "configs/.hammerspoon",
     "$VIMRUNTIME"
   ],
-  "runtime.version": "LuaJIT"
+  "runtime.version": "LuaJIT",
+  "hint.enable": true
 }

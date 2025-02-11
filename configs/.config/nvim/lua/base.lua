@@ -40,5 +40,5 @@ vim.g.noundofile = true
 vim.g.noswapfile = true
 vim.o.updatetime = 100
 vim.o.signcolumn = "yes"
-vim.o.spell = true
-vim.o.spelllang = "en,cjk"
+-- vim.o.spell = true
+-- vim.o.spelllang = "en,cjk"
