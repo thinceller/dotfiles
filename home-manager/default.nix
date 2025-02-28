@@ -48,6 +48,7 @@ in
     nixfmt-rfc-style
     nvfetcher
     tig
+    uv
     wget
     _1password-cli
   ];
