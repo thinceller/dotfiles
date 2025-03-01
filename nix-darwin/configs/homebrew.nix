@@ -10,6 +10,7 @@
       "1password"
       "arc"
       "chatgpt"
+      "claude"
       "cursor"
       "discord"
       "firefox"

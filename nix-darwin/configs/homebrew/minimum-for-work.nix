@@ -11,6 +11,7 @@
       "arc"
       "aquaskk"
       "chatgpt"
+      "claude"
       "cursor"
       "discord"
       "firefox"
