@@ -16,7 +16,6 @@ let
   fonts = import ./configs/fonts.nix { inherit pkgs; };
   homebrew = import ./configs/homebrew/minimum-for-work.nix;
   nix = import ./configs/nix.nix { inherit pkgs system; };
-  services = import ./configs/services.nix;
   systemSettings = import ./configs/system.nix { inherit self; };
 in
 {
@@ -38,13 +37,15 @@ in
   programs.fish.enable = true;
 
   # Use Touch ID for sudo authentication.
-  security.pam.enableSudoTouchIdAuth = true;
+  security.pam.services.sudo_local = {
+    enable = true;
+    touchIdAuth = true;
+  };
 
   imports = [
     fonts
     homebrew
     nix
-    services
     systemSettings
   ];
 }

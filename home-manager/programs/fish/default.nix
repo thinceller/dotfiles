@@ -26,6 +26,7 @@
         expansion = ">/dev/null 2>&1";
       };
       fbr = "git branch --list | fzf --preview \"git log --pretty=format:'%h %cd %s' --date=format:'%Y-%m-%d %H:%M' {}\" | xargs git switch";
+      dc = "docker compose";
     };
     plugins = [
       {

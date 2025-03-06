@@ -34,6 +34,7 @@
         AppleShowAllExtensions = true;
         AppleShowAllFiles = true;
         AppleShowScrollBars = "Always";
+        ApplePressAndHoldEnabled = true;
       };
       WindowManager = {
         EnableStandardClickToShowDesktop = true;
