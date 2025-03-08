@@ -30,6 +30,7 @@
       "orbstack"
       "raycast"
       "sequel-ace"
+      "superwhisper"
       "visual-studio-code"
       "wezterm"
       "zen-browser"
