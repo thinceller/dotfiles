@@ -16,6 +16,7 @@
       "firefox"
       "ghostty"
       "google-chrome"
+      "google-japanese-ime"
       "hammerspoon"
       "hhkb-studio"
       "jordanbaird-ice"
