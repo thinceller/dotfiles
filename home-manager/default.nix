@@ -46,6 +46,7 @@ in
     mactop
     nix-search-cli
     nixfmt-rfc-style
+    nodejs_22
     nvfetcher
     tig
     uv
