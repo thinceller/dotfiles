@@ -14,6 +14,8 @@ let
   systemSettings = import ./configs/system.nix { inherit self; };
 in
 {
+  ids.gids.nixbld = 350;
+
   # network configurations
   networking.computerName = hostname;
   networking.hostName = hostname;
