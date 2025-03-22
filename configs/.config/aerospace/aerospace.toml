@@ -241,6 +241,10 @@ if.app-id = 'com.gather.Gather'
 run = 'move-node-to-workspace A'
 
 [[on-window-detected]]
+if.app-id = 'com.anthropic.claudefordesktop'
+run = 'move-node-to-workspace A'
+
+[[on-window-detected]]
 if.app-id = 'com.microsoft.VSCode'
 run = 'move-node-to-workspace E'
 
