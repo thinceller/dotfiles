@@ -22,7 +22,6 @@
       "karabiner-elements"
       "logi-options+"
       "microsoft-edge"
-      "nikitabobko/tap/aerospace"
       "notion"
       "notion-calendar"
       "orbstack"

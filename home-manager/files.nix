@@ -8,11 +8,6 @@ in
   home.file = {
   };
   xdg.configFile = {
-    # AeroSpace
-    "aerospace" = {
-      source = symlink /${rootDir}/.config/aerospace;
-      recursive = true;
-    };
     # karabiner
     # https://github.com/pqrs-org/Karabiner-Elements/issues/3248
     "karabiner" = {

@@ -12,6 +12,7 @@ let
   homebrew = import ./configs/homebrew.nix;
   nix = import ./configs/nix.nix { inherit pkgs system; };
   systemSettings = import ./configs/system.nix { inherit self; };
+  services = import ./configs/services;
 in
 {
   ids.gids.nixbld = 350;
@@ -48,5 +49,5 @@ in
     homebrew
     nix
     systemSettings
-  ];
+  ] ++ services;
 }
