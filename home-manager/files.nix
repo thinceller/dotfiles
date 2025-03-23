@@ -6,11 +6,6 @@ let
 in
 {
   home.file = {
-    # Hammerspoon
-    ".hammerspoon" = {
-      source = symlink /${rootDir}/.hammerspoon;
-      recursive = true;
-    };
   };
   xdg.configFile = {
     # AeroSpace

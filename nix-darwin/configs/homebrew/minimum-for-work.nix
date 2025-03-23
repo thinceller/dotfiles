@@ -17,7 +17,6 @@
       "firefox"
       "gather"
       "ghostty"
-      "hammerspoon"
       "hhkb-studio"
       "jordanbaird-ice"
       "karabiner-elements"
