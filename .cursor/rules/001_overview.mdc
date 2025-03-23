@@ -1,0 +1,27 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Overview
+
+このプロジェクトはnix-darwin + Home ManagerによるmacOSのdotfiles管理や環境構築を自動化するためのもの。Nixを用いて環境を宣言的に管理している。
+
+## ディレクトリ構成
+
+```
+.
+├── _sources                 # nvfetcherによって生成されるファイル
+├── configs                  # シンボリックリンクによって配置される設定ファイル
+├── flake.nix                # Nix Flakesの構成ファイル
+├── home-manager             # Home Managerの設定ファイル
+│   ├── default.nix          # Home Managerの設定のエントリーポイント
+│   ├── files.nix            # Home Managerによってシステムにファイルを配置する処理。configsディレクトリの内容を扱う
+│   └── programs             # Home Managerで導入されるprogramごとに設定ファイルを分割して配置
+├── hosts                    # ホストとなるMacごとのエントリーポイント
+├── nix-darwin               # nix-darwinの設定ファイル
+│   ├── configs              # 細かく分割されたnix-darwin設定ファイル
+│   ├── default.nix          # nix-darwinの設定のエントリーポイント
+│   └── minimum-for-work.nix # 仕事用のMac向けのnix-darwin設定エントリーポイント
+└── nvfetcher.toml           # nvfetcherの設定ファイル
+```
