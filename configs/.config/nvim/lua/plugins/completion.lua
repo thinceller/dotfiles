@@ -9,8 +9,10 @@ return {
           ["<C-space>"] = {},
           ["<C-t>"] = { "show", "show_documentation", "hide_documentation" },
           ["<CR>"] = { "accept", "fallback" },
-          cmdline = {
-            preset = "default",
+        },
+        cmdline = {
+          keymap = {
+            preset = "cmdline",
           },
         },
         appearance = {
