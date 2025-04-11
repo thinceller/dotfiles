@@ -4,7 +4,7 @@
     # configurationRevision = self.rev or self.dirtyRev or null;
     # Used for backwards compatibility, please read the changelog before changing.
     # $ darwin-rebuild changelog
-    stateVersion = 4;
+    stateVersion = 5;
 
     defaults = {
       controlcenter = {
@@ -34,7 +34,7 @@
         AppleShowAllExtensions = true;
         AppleShowAllFiles = true;
         AppleShowScrollBars = "Always";
-        ApplePressAndHoldEnabled = true;
+        ApplePressAndHoldEnabled = false;
       };
       WindowManager = {
         EnableStandardClickToShowDesktop = true;
