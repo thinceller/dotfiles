@@ -17,6 +17,7 @@ let
   homebrew = import ./configs/homebrew/minimum-for-work.nix;
   nix = import ./configs/nix.nix { inherit pkgs system; };
   systemSettings = import ./configs/system.nix { inherit self; };
+  services = import ./configs/services;
 in
 {
   environment.shells = [
@@ -47,5 +48,5 @@ in
     homebrew
     nix
     systemSettings
-  ];
+  ] ++ services;
 }

@@ -17,6 +17,7 @@
       "firefox"
       "gather"
       "ghostty"
+      "google-japanese-ime"
       "hhkb-studio"
       "jordanbaird-ice"
       "karabiner-elements"
