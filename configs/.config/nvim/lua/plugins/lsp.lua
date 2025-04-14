@@ -13,10 +13,7 @@ return {
         "ts_ls",
         "html",
         "cssls",
-        "eslint",
-        "stylelint_lsp",
         "tailwindcss",
-        "rubocop",
         "ruby_lsp",
         "rust_analyzer",
         "terraformls",
@@ -26,29 +23,7 @@ return {
       }) do
         local config = {}
 
-        if ls == "eslint" then
-          config = {
-            on_attach = function(_, buf)
-              vim.api.nvim_create_autocmd("BufWritePre", {
-                buffer = buf,
-                command = "EslintFixAll",
-              })
-            end,
-          }
-        elseif ls == "stylelint_lsp" then
-          config = {
-            root_dir = lspconfig.util.root_pattern(
-              "stylelint.config.js",
-              "stylelint.config.mjs",
-              "stylelint.config.cjs"
-            ),
-            settings = {
-              stylelintplus = {
-                autoFixOnSave = true,
-              },
-            },
-          }
-        elseif ls == "nixd" then
+        if ls == "nixd" then
           config = {
             settings = {
               formatting = {
@@ -88,7 +63,55 @@ return {
           vim.keymap.set("n", "<leader>cf", function()
             vim.lsp.buf.format({ async = true })
           end, opts)
+
+          -- vim.api.nvim_create_autocmd("BufWritePre", {
+          --   buffer = ev.buf,
+          --   callback = function()
+          --     vim.lsp.buf.format({ async = false })
+          --   end,
+          -- })
         end,
+      })
+    end,
+  },
+  {
+    "conform.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    after = function()
+      local available = function(formatter, bufnr)
+        return require("conform").get_formatter_info(formatter, bufnr).available
+      end
+
+      local js_formatters = function(bufnr)
+        local config = {}
+        if available("eslint_d", bufnr) then
+          table.insert(config, "eslint_d")
+        end
+        if available("biome-check", bufnr) then
+          table.insert(config, "biome-check")
+        end
+        if available("prettier", bufnr) then
+          table.insert(config, "prettier")
+        end
+        return config
+      end
+
+      require("conform").setup({
+        formatters_by_ft = {
+          lua = { "stylua" },
+          nix = { "nixfmt" },
+          javascript = js_formatters,
+          javascriptreact = js_formatters,
+          typescript = js_formatters,
+          typescriptreact = js_formatters,
+          json = js_formatters,
+          css = { "stylelint", "prettier" },
+          scss = { "stylelint", "prettier" },
+          ruby = { "rubocop" },
+        },
+        format_after_save = {
+          lsp_format = "fallback",
+        },
       })
     end,
   },

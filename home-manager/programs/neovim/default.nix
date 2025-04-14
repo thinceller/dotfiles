@@ -18,6 +18,7 @@ in
       dockerfile-language-server-nodejs
       lua-language-server
       nixd
+      eslint_d
       rubocop
       ruby-lsp
       rust-analyzer
@@ -44,6 +45,7 @@ in
         # completion and lsp
         blink-cmp
         nvim-lspconfig
+        conform-nvim
         # fuzzy finder
         telescope-nvim
         telescope-frecency-nvim
