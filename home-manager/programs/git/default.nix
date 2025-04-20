@@ -11,7 +11,8 @@
       enable = true;
     };
     signing = {
-      key = "2AF8844D09D0ACAB67D5539D961BEC4D4FE5E3C3";
+      format = "ssh";
+      key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILQwsbXl/1tHIdW/f+fZE7TJArqzvmbbaUsdKRFPoyZB";
       signByDefault = true;
     };
     userEmail = "thinceller@gmail.com";
@@ -22,6 +23,11 @@
       };
       ghq = {
         root = "~/src";
+      };
+      gpg = {
+        ssh = {
+          program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
+        };
       };
       rebase = {
         autostash = true;
