@@ -3,6 +3,7 @@
   lib,
   sources,
   homeDir,
+  config,
 }:
 {
   programs.fish = {
@@ -41,6 +42,7 @@
     interactiveShellInit = ''
       fish_add_path /opt/homebrew/bin
       op completion fish | source
+      export TEST=$(cat ${config.sops.secrets.test.path})
     '';
   };
 

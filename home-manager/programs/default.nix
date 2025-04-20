@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   sources,
@@ -14,6 +15,7 @@ let
       lib
       sources
       homeDir
+      config
       ;
   };
   fzf = import ./fzf { inherit pkgs; };

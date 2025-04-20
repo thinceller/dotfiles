@@ -1,0 +1,11 @@
+keys:
+  # users
+  - &admin age1r9r7z5crn6v77ye6psxvf24mdtmxgnng8xuvdryhckpjpmlyhdyqh8j2pc
+  # machines
+  - &mac age16hjw8qjvc0aakun7e4j9kfpzl787vqcvsfaqyr4u488vlyema5lsu95evr
+creation_rules:
+  - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+      - age:
+          - *admin
+          - *mac

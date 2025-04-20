@@ -5,6 +5,7 @@ let
     nixpkgs
     nix-darwin
     home-manager
+    sops-nix
     ;
   system = "aarch64-darwin";
   userConfig =
@@ -30,6 +31,9 @@ nix-darwin.lib.darwinSystem {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
       home-manager.backupFileExtension = "backup";
+      home-manager.sharedModules = [
+        sops-nix.homeManagerModules.sops
+      ];
       home-manager.users."${userConfig.username}" =
         { config, lib, ... }:
         import ../../home-manager {

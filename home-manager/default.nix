@@ -19,6 +19,7 @@ let
 
   programs = import ./programs {
     inherit
+      config
       pkgs
       lib
       sources
@@ -37,6 +38,7 @@ in
   };
 
   home.packages = with pkgs; [
+    age
     curl
     deno
     docker
@@ -48,11 +50,23 @@ in
     nixfmt-rfc-style
     nodejs_22
     nvfetcher
+    sops
     tig
     uv
     wget
     _1password-cli
   ];
+
+  sops = {
+    defaultSopsFile = ../secrets/default.yaml;
+    age = {
+      keyFile = "/var/lib/sops-nix/key.txt";
+      sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      generateKey = true;
+    };
+
+    secrets.test = { };
+  };
 
   imports = programs ++ [ files ];
 
