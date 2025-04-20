@@ -320,15 +320,15 @@
           run = "move-node-to-workspace 1";
         }
         {
+          "if".app-id = "com.apple.Music";
+          run = "move-node-to-workspace 1";
+        }
+        {
           "if".app-id = "com.apple.ActivityMonitor";
           run = "move-node-to-workspace 2";
         }
         {
           "if".app-id = "org.pqrs.Karabiner-Elements.Settings";
-          run = "move-node-to-workspace 2";
-        }
-        {
-          "if".app-id = "com.apple.Music";
           run = "move-node-to-workspace 2";
         }
         {
