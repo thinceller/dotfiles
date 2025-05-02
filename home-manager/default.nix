@@ -4,6 +4,7 @@
   lib,
   system,
   userConfig,
+  mcp-servers-nix,
   ...
 }:
 let
@@ -27,6 +28,7 @@ let
       ;
   };
   files = import ./files.nix { inherit pkgs config dotfilesDir; };
+  mcp-servers = import ./mcp-servers { inherit pkgs config mcp-servers-nix; };
 in
 {
   home.username = username;
@@ -66,7 +68,7 @@ in
     secrets.test = { };
   };
 
-  imports = programs ++ [ files ];
+  imports = programs ++ files ++ mcp-servers;
 
   home.stateVersion = "24.05";
 }

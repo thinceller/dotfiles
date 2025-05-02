@@ -6,6 +6,7 @@ let
     nix-darwin
     home-manager
     sops-nix
+    mcp-servers-nix
     ;
   system = "aarch64-darwin";
   userConfig =
@@ -38,11 +39,12 @@ nix-darwin.lib.darwinSystem {
         { config, lib, ... }:
         import ../../home-manager {
           inherit
+            config
             nixpkgs
             lib
-            config
             system
             userConfig
+            mcp-servers-nix
             ;
         };
     }

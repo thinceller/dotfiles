@@ -4,31 +4,33 @@ let
   rootDir = /. + dotfilesDir + /configs;
   symlink = config.lib.file.mkOutOfStoreSymlink;
 in
-{
-  home.file = {
-  };
-  xdg.configFile = {
-    # karabiner
-    # https://github.com/pqrs-org/Karabiner-Elements/issues/3248
-    "karabiner" = {
-      source = symlink /${rootDir}/.config/karabiner;
+[
+  {
+    home.file = {
     };
-    # Neovim
-    "nvim" = {
-      source = symlink /${rootDir}/.config/nvim;
-      recursive = true;
+    xdg.configFile = {
+      # karabiner
+      # https://github.com/pqrs-org/Karabiner-Elements/issues/3248
+      "karabiner" = {
+        source = symlink /${rootDir}/.config/karabiner;
+      };
+      # Neovim
+      "nvim" = {
+        source = symlink /${rootDir}/.config/nvim;
+        recursive = true;
+      };
+      # 1Password CLI
+      "op/plugins.sh" = {
+        source = symlink /${rootDir}/.config/op/plugins.sh;
+      };
+      # pnpm
+      "pnpm" = {
+        source = symlink /${rootDir}/.config/pnpm;
+        recursive = true;
+      };
+      "wezterm/wezterm.lua" = {
+        source = symlink /${rootDir}/.config/wezterm/wezterm.lua;
+      };
     };
-    # 1Password CLI
-    "op/plugins.sh" = {
-      source = symlink /${rootDir}/.config/op/plugins.sh;
-    };
-    # pnpm
-    "pnpm" = {
-      source = symlink /${rootDir}/.config/pnpm;
-      recursive = true;
-    };
-    "wezterm/wezterm.lua" = {
-      source = symlink /${rootDir}/.config/wezterm/wezterm.lua;
-    };
-  };
-}
+  }
+]
