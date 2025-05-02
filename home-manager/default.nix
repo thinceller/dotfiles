@@ -60,9 +60,7 @@ in
   sops = {
     defaultSopsFile = ../secrets/default.yaml;
     age = {
-      keyFile = "/var/lib/sops-nix/key.txt";
-      sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-      generateKey = true;
+      keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
     };
 
     secrets.test = { };
