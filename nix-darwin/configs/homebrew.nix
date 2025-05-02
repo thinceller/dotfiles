@@ -24,6 +24,7 @@
       "microsoft-edge"
       "notion"
       "notion-calendar"
+      "obsidian"
       "orbstack"
       "raycast"
       "slack"
