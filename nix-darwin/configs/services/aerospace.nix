@@ -310,6 +310,10 @@
           "if".app-id = "com.apple.Terminal";
           run = "move-node-to-workspace T";
         }
+        {
+          "if".app-id = "md.obsidian";
+          run = "move-node-to-workspace O";
+        }
         # secondary monitor apps
         {
           "if".app-id = "com.tinyspeck.slackmacgap";
