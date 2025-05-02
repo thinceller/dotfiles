@@ -4,6 +4,14 @@ management dotfiles
 
 ## Usage
 
+### Add new key
+
+```bash
+$ mkdir -p ~/.config/sops/age
+
+$ nix-shell -p age --run "age-keygen -o ~/.config/sops/age/keys.txt"
+```
+
 ### Update dependencies
 
 ```bash
