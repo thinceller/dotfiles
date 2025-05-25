@@ -31,7 +31,7 @@
       "superwhisper"
       "visual-studio-code"
       "wezterm"
-      "zen-browser"
+      "zen"
     ];
   };
 }

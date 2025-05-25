@@ -33,7 +33,7 @@
       "tailscale"
       "visual-studio-code"
       "wezterm"
-      "zen-browser"
+      "zen"
       "zoom"
     ];
   };
