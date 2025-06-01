@@ -29,6 +29,7 @@ let
   };
   files = import ./files.nix { inherit pkgs config dotfilesDir; };
   mcp-servers = import ./mcp-servers { inherit pkgs config mcp-servers-nix; };
+  packages = import ./pkgs { inherit pkgs; };
 in
 {
   home.username = username;
@@ -39,26 +40,6 @@ in
     LC_ALL = "ja_JP.UTF-8";
   };
 
-  home.packages = with pkgs; [
-    age
-    curl
-    deno
-    docker
-    docker-credential-helpers
-    ghq
-    graphviz
-    mactop
-    nix-search-cli
-    nixfmt-rfc-style
-    nodejs_22
-    nvfetcher
-    sops
-    tig
-    uv
-    wget
-    _1password-cli
-  ];
-
   sops = {
     defaultSopsFile = ../secrets/default.yaml;
     age = {
@@ -68,7 +49,7 @@ in
     secrets.test = { };
   };
 
-  imports = programs ++ files ++ mcp-servers;
+  imports = programs ++ files ++ mcp-servers ++ packages;
 
   home.stateVersion = "24.05";
 }
