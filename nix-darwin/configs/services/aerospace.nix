@@ -336,10 +336,6 @@
           run = "move-node-to-workspace 2";
         }
         {
-          "if".app-id = "com.1password.1password";
-          run = "move-node-to-workspace 2";
-        }
-        {
           "if".app-id = "us.zoom.xos";
           run = "move-node-to-workspace 2";
         }
