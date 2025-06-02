@@ -3,7 +3,6 @@
   {
     home.packages = with pkgs; [
       age
-      claude-code
       curl
       deno
       docker
