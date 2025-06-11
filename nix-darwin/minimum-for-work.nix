@@ -16,7 +16,7 @@ let
   fonts = import ./configs/fonts.nix { inherit pkgs; };
   homebrew = import ./configs/homebrew/minimum-for-work.nix;
   nix = import ./configs/nix.nix { inherit pkgs system; };
-  systemSettings = import ./configs/system.nix { inherit self; };
+  systemSettings = import ./configs/system.nix { inherit self username; };
   services = import ./configs/services;
 in
 {
