@@ -2,3 +2,5 @@
 .pre-commit-config.yaml
 
 configs/.config/karabiner/automatic_backups
+
+.claude/settings.local.json
