@@ -7,6 +7,13 @@ in
 [
   {
     home.file = {
+      # Claude Code
+      ".claude/CLAUDE.md" = {
+        source = symlink /${rootDir}/.claude/CLAUDE.md;
+      };
+      ".claude/settings.json" = {
+        source = symlink /${rootDir}/.claude/settings.json;
+      };
     };
     xdg.configFile = {
       # karabiner

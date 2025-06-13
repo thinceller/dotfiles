@@ -18,5 +18,5 @@ $ nix-shell -p age --run "age-keygen -o ~/.config/sops/age/keys.txt"
 # update flake.lock and _sources by nvfetcher
 $ nix run .#update
 
-$ darwin-rebuild switch --flake .#kohei-m4-mac-mini
+$ sudo darwin-rebuild switch --flake .#kohei-m4-mac-mini
 ```
