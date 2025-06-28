@@ -16,6 +16,7 @@ in
       # language servers
       docker-compose-language-service
       dockerfile-language-server-nodejs
+      haskell-language-server
       lua-language-server
       nixd
       eslint_d

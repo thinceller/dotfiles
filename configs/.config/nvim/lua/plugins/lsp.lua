@@ -3,10 +3,11 @@ return {
     "nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     after = function()
-      local capabilities = require("blink.cmp").get_lsp_capabilities()
-      local lspconfig = require("lspconfig")
+      -- local capabilities = require("blink.cmp").get_lsp_capabilities()
+      -- local lspconfig = require("lspconfig")
 
       for _, ls in pairs({
+        "hls",
         "lua_ls",
         "nixd",
         "jsonls",
@@ -24,17 +25,18 @@ return {
         local config = {}
 
         if ls == "nixd" then
-          config = {
+          vim.lsp.config(ls, {
             settings = {
               formatting = {
                 command = "nixfmt",
               },
             },
-          }
+          })
         end
 
-        config.capabilities = capabilities
-        lspconfig[ls].setup(config)
+        -- config.capabilities = capabilities
+        -- lspconfig[ls].setup(config)
+        vim.lsp.enable(ls)
       end
 
       vim.api.nvim_create_autocmd("LspAttach", {

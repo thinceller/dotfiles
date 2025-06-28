@@ -11,6 +11,7 @@
       "arc"
       "chatgpt"
       "claude"
+      "container"
       "cursor"
       "discord"
       "firefox"

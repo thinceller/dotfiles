@@ -9,6 +9,11 @@ local mux = wezterm.mux
 wezterm.on("gui-startup", resurrect.resurrect_on_gui_startup)
 resurrect.periodic_save({ interval_seconds = 15 * 60, save_workspaces = true, save_windows = true, save_tabs = true })
 
+-- for Claude Code notification
+wezterm.on("bell", function(window, pane)
+  window:toast_notification("Claude Code", "Task completed", nil, 4000)
+end)
+
 local act = wezterm.action
 
 local config = {
@@ -18,6 +23,7 @@ local config = {
 
   use_ime = true,
   macos_forward_to_ime_modifier_mask = "SHIFT|CTRL",
+  audible_bell = "SystemBeep",
 
   -- Appearance
   color_scheme = "Night Owl (Gogh)",
