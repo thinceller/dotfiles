@@ -102,6 +102,7 @@ local config = {
       mods = "LEADER",
       action = act.SplitHorizontal,
     },
+    { key = "Enter", mods = "SHIFT", action = wezterm.action.SendString("\n") },
     -- workspace
     {
       key = "s",
