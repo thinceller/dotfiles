@@ -30,6 +30,7 @@ let
   files = import ./files.nix { inherit pkgs config dotfilesDir; };
   mcp-servers = import ./mcp-servers { inherit pkgs config mcp-servers-nix; };
   packages = import ./pkgs { inherit pkgs; };
+  services = import ./services;
 in
 {
   home.username = username;
@@ -49,7 +50,7 @@ in
     secrets.test = { };
   };
 
-  imports = programs ++ files ++ mcp-servers ++ packages;
+  imports = programs ++ files ++ mcp-servers ++ packages ++ services;
 
   home.stateVersion = "24.05";
 }
