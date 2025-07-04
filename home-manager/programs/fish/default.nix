@@ -8,6 +8,21 @@
 {
   programs.fish = {
     enable = true;
+    functions = {
+      cc = {
+        body = ''
+          set git_root (git rev-parse --show-toplevel 2>/dev/null)
+          if test $status -eq 0
+            cd $git_root
+            ~/.claude/local/claude $argv
+          else
+            echo "Not in a git repository"
+            return 1
+          end
+        '';
+        description = "Move to git root and run claude with arguments";
+      };
+    };
     shellAbbrs = {
       gs = "git status --short --branch";
       gcim = {
