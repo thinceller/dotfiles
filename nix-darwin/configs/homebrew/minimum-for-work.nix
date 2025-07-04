@@ -12,7 +12,6 @@
       "aquaskk"
       "chatgpt"
       "claude"
-      "container"
       "cursor"
       "discord"
       "firefox"

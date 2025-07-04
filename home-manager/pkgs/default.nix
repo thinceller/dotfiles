@@ -3,6 +3,7 @@
   {
     home.packages = with pkgs; [
       age
+      container
       curl
       deno
       docker
