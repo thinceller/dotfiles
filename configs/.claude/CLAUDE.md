@@ -6,8 +6,6 @@ This file contains personal preferences and settings for Claude Code across all 
 
 ## Commonly Used Tools and Shortcuts
 
-## Project-Specific Patterns
-
 ## Communication
 
 Reasoning中は英語を使い、それ以外の出力は日本語化してください。
