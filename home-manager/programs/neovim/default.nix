@@ -67,6 +67,7 @@ in
         zen-mode-nvim
         startup-nvim
         fidget-nvim
+        toggleterm-nvim
       ];
   };
 }

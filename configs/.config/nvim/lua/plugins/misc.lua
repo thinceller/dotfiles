@@ -57,4 +57,28 @@ return {
       require("fidget").setup()
     end,
   },
+  {
+    "toggleterm.nvim",
+    after = function()
+      require("toggleterm").setup({
+        size = function(term)
+          if term.direction == "horizontal" then
+            return 20
+          elseif term.direction == "vertical" then
+            return vim.o.columns * 0.3
+          end
+        end,
+      })
+
+      local opt = { noremap = true, silent = true }
+      vim.keymap.set("n", "<Leader>th", "<Cmd>ToggleTerm direction=horizontal<CR>", opt)
+      vim.keymap.set("n", "<Leader>tv", "<Cmd>ToggleTerm direction=vertical<CR>", opt)
+
+      function _G.set_terminal_keymaps()
+        vim.keymap.set("t", "<ESC>", [[<C-\><C-n>]], opt)
+        vim.keymap.set("t", "<C-w>", [[<C-\><C-n><C-w>]], opt)
+      end
+      vim.cmd("autocmd! TermOpen term://*toggleterm#* lua set_terminal_keymaps()")
+    end,
+  },
 }
