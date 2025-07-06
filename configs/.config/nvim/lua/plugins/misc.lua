@@ -75,7 +75,8 @@ return {
       vim.keymap.set("n", "<Leader>tv", "<Cmd>ToggleTerm direction=vertical<CR>", opt)
 
       function _G.set_terminal_keymaps()
-        vim.keymap.set("t", "<ESC>", [[<C-\><C-n>]], opt)
+        -- Disable temporarily as claude-code.nvim prevents sending the Esc key
+        -- vim.keymap.set("t", "<ESC>", [[<C-\><C-n>]], opt)
         vim.keymap.set("t", "<C-w>", [[<C-\><C-n><C-w>]], opt)
       end
       vim.cmd("autocmd! TermOpen term://*toggleterm#* lua set_terminal_keymaps()")
