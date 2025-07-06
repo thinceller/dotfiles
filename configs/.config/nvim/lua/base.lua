@@ -19,6 +19,7 @@ vim.o.display = "lastline"
 vim.o.ignorecase = true
 vim.o.smartcase = true
 vim.o.splitbelow = true
+vim.o.splitright = true
 vim.o.list = true
 vim.o.listchars = "tab:»-,space:･,trail:-,eol:↲,extends:»,precedes:«,nbsp:%"
 vim.o.wildmode = "full"

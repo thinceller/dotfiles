@@ -47,6 +47,8 @@ in
         blink-cmp
         nvim-lspconfig
         conform-nvim
+        # AI tools
+        claude-code-nvim
         # fuzzy finder
         telescope-nvim
         telescope-frecency-nvim
