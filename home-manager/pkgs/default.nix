@@ -8,6 +8,7 @@
       deno
       docker
       docker-credential-helpers
+      dotenvx
       ghq
       graphviz
       mactop
