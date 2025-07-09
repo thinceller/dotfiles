@@ -10,6 +10,7 @@
       "1password"
       "arc"
       "aquaskk"
+      "azookey"
       "chatgpt"
       "claude"
       "cursor"

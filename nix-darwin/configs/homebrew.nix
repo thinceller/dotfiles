@@ -9,6 +9,7 @@
     casks = [
       "1password"
       "arc"
+      "azookey"
       "chatgpt"
       "claude"
       "cursor"
