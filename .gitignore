@@ -1,5 +1,7 @@
 .direnv
 .pre-commit-config.yaml
+env.sh
+env.fish
 
 configs/.config/karabiner/automatic_backups
 

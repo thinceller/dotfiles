@@ -25,6 +25,7 @@ let
       lib
       sources
       homeDir
+      dotfilesDir
       ;
   };
   files = import ./files.nix { inherit pkgs config dotfilesDir; };

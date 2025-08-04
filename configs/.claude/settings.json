@@ -1,10 +1,36 @@
 {
-  "permissions": {
-    "allow": [],
-    "deny": []
-  },
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "env": {},
-  "notifications": {
-    "channels": []
+  "permissions": {
+    "allow": [
+      "WebFetch"
+    ],
+    "deny": [],
+    "defaultMode": "acceptEdits"
+  },
+  "model": "opus",
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Submarine.aiff"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Blow.aiff"
+          }
+        ]
+      }
+    ]
   }
 }

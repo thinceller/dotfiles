@@ -4,6 +4,7 @@
   sources,
   homeDir,
   config,
+  dotfilesDir,
 }:
 {
   programs.fish = {
@@ -58,6 +59,11 @@
       }
     ];
     interactiveShellInit = ''
+      # Source env.fish if it exists in dotfiles directory
+      if test -f "${dotfilesDir}/env.fish"
+        source "${dotfilesDir}/env.fish"
+      end
+
       fish_add_path /opt/homebrew/bin
       op completion fish | source
       export TEST=$(cat ${config.sops.secrets.test.path})

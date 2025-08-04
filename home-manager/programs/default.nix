@@ -4,6 +4,7 @@
   lib,
   sources,
   homeDir,
+  dotfilesDir,
 }:
 let
   bat = import ./bat { inherit pkgs; };
@@ -16,6 +17,7 @@ let
       sources
       homeDir
       config
+      dotfilesDir
       ;
   };
   fzf = import ./fzf { inherit pkgs; };
