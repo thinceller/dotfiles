@@ -30,8 +30,6 @@
       "raycast"
       "slack"
       "steam"
-      "superwhisper"
-      "tailscale"
       "visual-studio-code"
       "wezterm"
       "zen"
