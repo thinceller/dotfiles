@@ -16,6 +16,7 @@
       nixfmt-rfc-style
       nodejs_22
       nvfetcher
+      pinentry_mac
       sops
       tig
       uv

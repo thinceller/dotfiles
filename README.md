@@ -2,15 +2,11 @@
 
 management dotfiles
 
+## Documentation
+
+- [SOPS Manual](docs/SOPS.md) - Comprehensive guide for secrets management with SOPS
+
 ## Usage
-
-### Add new key
-
-```bash
-$ mkdir -p ~/.config/sops/age
-
-$ nix-shell -p age --run "age-keygen -o ~/.config/sops/age/keys.txt"
-```
 
 ### Update dependencies
 
