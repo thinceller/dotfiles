@@ -47,7 +47,6 @@
       flake = {
         darwinConfigurations = {
           "kohei-m4-mac-mini" = import ./hosts/kohei-m4-mac-mini { inherit inputs; };
-          "mf-0962-mm02" = import ./hosts/mf-0962-mm02 { inherit inputs; };
           "SC-N-843" = import ./hosts/SC-N-843 { inherit inputs; };
         };
       };
