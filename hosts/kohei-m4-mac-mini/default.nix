@@ -6,7 +6,6 @@ let
     nix-darwin
     home-manager
     sops-nix
-    mcp-servers-nix
     ;
   system = "aarch64-darwin";
   userConfig =
@@ -44,7 +43,6 @@ nix-darwin.lib.darwinSystem {
             lib
             system
             userConfig
-            mcp-servers-nix
             ;
         };
     }
