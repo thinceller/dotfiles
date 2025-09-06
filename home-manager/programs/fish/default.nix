@@ -65,6 +65,7 @@
       end
 
       fish_add_path /opt/homebrew/bin
+      fish_add_path ${homeDir}/.local/bin
       op completion fish | source
       export TEST=$(cat ${config.sops.secrets.test.path})
     '';
