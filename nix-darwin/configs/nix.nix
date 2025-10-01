@@ -20,5 +20,6 @@
   nixpkgs = {
     # The platform the configuration will be used on.
     hostPlatform = system;
+    config.allowUnfree = true;
   };
 }

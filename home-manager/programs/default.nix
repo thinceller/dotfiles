@@ -5,10 +5,12 @@
   sources,
   homeDir,
   dotfilesDir,
+  mcp-servers-nix,
 }:
 let
   bat = import ./bat { inherit pkgs; };
   bottom = import ./bottom { inherit pkgs; };
+  claude-code = import ./claude-code { inherit pkgs mcp-servers-nix; };
   direnv = import ./direnv { inherit pkgs; };
   fish = import ./fish {
     inherit
@@ -34,6 +36,7 @@ in
 [
   bat
   bottom
+  claude-code
   direnv
   fish
   fzf

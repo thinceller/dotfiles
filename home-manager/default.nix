@@ -4,6 +4,8 @@
   lib,
   system,
   userConfig,
+  edgepkgs,
+  mcp-servers-nix,
   ...
 }:
 let
@@ -12,6 +14,7 @@ let
   pkgs = import nixpkgs {
     inherit system;
     config.allowUnfree = true;
+    overlays = [ edgepkgs.overlays.default ];
   };
 
   # Load the generated sources by nvfetcher
@@ -25,6 +28,7 @@ let
       sources
       homeDir
       dotfilesDir
+      mcp-servers-nix
       ;
   };
   files = import ./files.nix { inherit pkgs config dotfilesDir; };

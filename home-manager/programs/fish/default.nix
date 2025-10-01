@@ -15,7 +15,7 @@
           set git_root (git rev-parse --show-toplevel 2>/dev/null)
           if test $status -eq 0
             cd $git_root
-            ~/.claude/local/claude $argv
+            claude $argv
           else
             echo "Not in a git repository"
             return 1
@@ -44,9 +44,6 @@
       };
       fbr = "git branch --list | fzf --preview \"git log --pretty=format:'%h %cd %s' --date=format:'%Y-%m-%d %H:%M' {}\" | xargs git switch";
       dc = "docker compose";
-    };
-    shellAliases = {
-      claude = "${homeDir}/.claude/local/claude";
     };
     plugins = [
       {
