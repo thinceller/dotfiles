@@ -16,6 +16,8 @@
       nixfmt-rfc-style
       nodejs_22
       nvfetcher
+      php83
+      php83Packages.composer
       pinentry_mac
       sops
       tig
