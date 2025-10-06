@@ -37,7 +37,7 @@
 
     memory.source = ./CLAUDE.md;
 
-    # agentsDir = ./agents;
+    agentsDir = ./agents;
     commandsDir = ./commands;
     # hooksDir = ./hooks;
 
