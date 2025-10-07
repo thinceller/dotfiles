@@ -6,18 +6,6 @@ let
 in
 [
   {
-    # home.file = {
-    #   # Claude Code
-    #   ".claude/CLAUDE.md" = {
-    #     source = symlink /${rootDir}/.claude/CLAUDE.md;
-    #   };
-    #   ".claude/settings.json" = {
-    #     source = symlink /${rootDir}/.claude/settings.json;
-    #   };
-    #   ".claude/statusline-command.sh" = {
-    #     source = symlink /${rootDir}/.claude/statusline-command.sh;
-    #   };
-    # };
     xdg.configFile = {
       # karabiner
       # https://github.com/pqrs-org/Karabiner-Elements/issues/3248
