@@ -20,6 +20,7 @@
       php83Packages.composer
       pinentry_mac
       sops
+      terminal-notifier
       tig
       uv
       wget

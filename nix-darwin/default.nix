@@ -50,5 +50,6 @@ in
     homebrew
     nix
     systemSettings
-  ] ++ services;
+  ]
+  ++ services;
 }

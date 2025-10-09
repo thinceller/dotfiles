@@ -52,7 +52,8 @@
                                             "^com\\.runningwithcrayons\\.Alfred$",
                                             "^com\\.microsoft\\.VSCode$",
                                             "^com\\.github\\.wez\\.wezterm$",
-                                            "^com\\.todesktop\\.230313mzl4w4u92"
+                                            "^com\\.todesktop\\.230313mzl4w4u92",
+                                            "^org\\.alacritty$"
                                         ],
                                         "type": "frontmost_application_unless"
                                     }
@@ -76,7 +77,8 @@
                                             "^com\\.runningwithcrayons\\.Alfred$",
                                             "^com\\.microsoft\\.VSCode$",
                                             "^com\\.github\\.wez\\.wezterm$",
-                                            "^com\\.todesktop\\.230313mzl4w4u92"
+                                            "^com\\.todesktop\\.230313mzl4w4u92",
+                                            "^org\\.alacritty$"
                                         ],
                                         "type": "frontmost_application_unless"
                                     }
@@ -100,7 +102,8 @@
                                             "^com\\.runningwithcrayons\\.Alfred$",
                                             "^com\\.microsoft\\.VSCode$",
                                             "^com\\.github\\.wez\\.wezterm$",
-                                            "^com\\.todesktop\\.230313mzl4w4u92"
+                                            "^com\\.todesktop\\.230313mzl4w4u92",
+                                            "^org\\.alacritty$"
                                         ],
                                         "type": "frontmost_application_unless"
                                     }
@@ -124,7 +127,8 @@
                                             "^com\\.runningwithcrayons\\.Alfred$",
                                             "^com\\.microsoft\\.VSCode$",
                                             "^com\\.github\\.wez\\.wezterm$",
-                                            "^com\\.todesktop\\.230313mzl4w4u92"
+                                            "^com\\.todesktop\\.230313mzl4w4u92",
+                                            "^org\\.alacritty$"
                                         ],
                                         "type": "frontmost_application_unless"
                                     }

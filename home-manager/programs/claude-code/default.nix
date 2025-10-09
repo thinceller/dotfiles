@@ -29,6 +29,20 @@
         USE_BUILTIN_RIPGREP = "1";
       };
 
+      hooks = {
+        Stop = [
+          {
+            matcher = "";
+            hooks = [
+              {
+                type = "command";
+                command = "terminal-notifier -title 'Claude Code' -message 'タスクが完了しました！' -sound Submerge";
+              }
+            ];
+          }
+        ];
+      };
+
       statusLine = {
         type = "command";
         command = ./statusline-command.sh;

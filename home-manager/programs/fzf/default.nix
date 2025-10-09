@@ -8,5 +8,7 @@
       "--reverse"
       "--border"
     ];
+
+    tmux.enableShellIntegration = true;
   };
 }

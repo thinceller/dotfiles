@@ -8,6 +8,7 @@
   mcp-servers-nix,
 }:
 let
+  alacritty = import ./alacritty { inherit pkgs; };
   bat = import ./bat { inherit pkgs; };
   bottom = import ./bottom { inherit pkgs; };
   claude-code = import ./claude-code { inherit pkgs mcp-servers-nix; };
@@ -32,8 +33,10 @@ let
   mise = import ./mise { inherit pkgs; };
   neovim = import ./neovim { inherit pkgs; };
   ripgrep = import ./ripgrep { inherit pkgs; };
+  tmux = import ./tmux { inherit pkgs; };
 in
 [
+  alacritty
   bat
   bottom
   claude-code
@@ -49,4 +52,5 @@ in
   mise
   neovim
   ripgrep
+  tmux
 ]
