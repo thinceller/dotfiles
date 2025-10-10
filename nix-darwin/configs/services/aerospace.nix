@@ -291,6 +291,10 @@
           run = "move-node-to-workspace A";
         }
         {
+          "if".app-id = "com.gather.GatherV2";
+          run = "move-node-to-workspace A";
+        }
+        {
           "if".app-id = "com.anthropic.claudefordesktop";
           run = "move-node-to-workspace A";
         }
@@ -308,6 +312,10 @@
         }
         {
           "if".app-id = "com.apple.Terminal";
+          run = "move-node-to-workspace T";
+        }
+        {
+          "if".app-id = "org.alacritty";
           run = "move-node-to-workspace T";
         }
         {
