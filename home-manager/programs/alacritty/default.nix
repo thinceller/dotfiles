@@ -3,7 +3,7 @@
   programs.alacritty = {
     enable = true;
 
-    theme = "night_owl";
+    theme = "tokyo_night";
 
     settings = {
       # 一般設定
@@ -15,7 +15,7 @@
       window = {
         decorations = "Buttonless";
         # ウィンドウの透明度 (0.0 - 1.0)
-        opacity = 0.7;
+        opacity = 0.85;
 
         # ウィンドウのパディング
         padding = {

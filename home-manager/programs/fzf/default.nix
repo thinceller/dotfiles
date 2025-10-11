@@ -9,6 +9,8 @@
       "--border"
     ];
 
-    tmux.enableShellIntegration = true;
+    tmux = {
+      enableShellIntegration = true;
+    };
   };
 }

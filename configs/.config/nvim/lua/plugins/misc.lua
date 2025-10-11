@@ -68,6 +68,11 @@ return {
             return vim.o.columns * 0.3
           end
         end,
+        highlights = {
+          Normal = {
+            link = "Normal",
+          },
+        },
       })
 
       local opt = { noremap = true, silent = true }

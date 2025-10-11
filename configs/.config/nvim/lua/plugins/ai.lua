@@ -7,7 +7,6 @@ return {
         window = {
           position = "vertical",
         },
-        command = "~/.claude/local/claude",
       })
     end,
   },

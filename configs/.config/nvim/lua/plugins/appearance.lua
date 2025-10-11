@@ -45,14 +45,12 @@ return {
           "CursorLineNr",
           "EndOfBuffer",
         },
-        extra_groups = {
-          -- neo-tree.nvim
-          "NeoTreeNormal",
-          "NeoTreeNormalNC",
-          "NormalFloat",
-        }, -- table: additional groups that should be cleared
+        extra_groups = {}, -- table: additional groups that should be cleared
         exclude_groups = {}, -- table: groups you don't want to clear
       })
+      require("transparent").clear_prefix("NeoTree")
+      require("transparent").clear_prefix("Telescope")
+      -- require("transparent").clear_prefix("lualine")
     end,
   },
   {
