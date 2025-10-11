@@ -50,6 +50,8 @@ in
         conform-nvim
         # AI tools
         claude-code-nvim
+        copilot-lsp
+        copilot-lua
         # fuzzy finder
         telescope-nvim
         telescope-frecency-nvim
