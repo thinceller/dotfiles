@@ -2,6 +2,9 @@ return {
   {
     "tokyonight.nvim",
     after = function()
+      require("tokyonight").setup({
+        transparent = vim.g.transparent_enabled,
+      })
       vim.cmd.colorscheme("tokyonight-moon")
     end,
   },
@@ -42,7 +45,12 @@ return {
           "CursorLineNr",
           "EndOfBuffer",
         },
-        extra_groups = {}, -- table: additional groups that should be cleared
+        extra_groups = {
+          -- neo-tree.nvim
+          "NeoTreeNormal",
+          "NeoTreeNormalNC",
+          "NormalFloat",
+        }, -- table: additional groups that should be cleared
         exclude_groups = {}, -- table: groups you don't want to clear
       })
     end,

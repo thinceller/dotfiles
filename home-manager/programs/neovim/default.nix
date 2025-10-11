@@ -41,6 +41,7 @@ in
         nvim-treesitter.withAllGrammars
         # lua plugins
         plenary-nvim
+        nui-nvim
         # denops
         denops-vim
         # completion and lsp
@@ -54,6 +55,7 @@ in
         telescope-frecency-nvim
         telescope-github-nvim
         # file explorer
+        neo-tree-nvim
         oil-nvim
         nvim-web-devicons
         # status line
