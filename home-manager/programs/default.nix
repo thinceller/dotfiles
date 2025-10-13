@@ -12,6 +12,7 @@ let
   bat = import ./bat { inherit pkgs; };
   bottom = import ./bottom { inherit pkgs; };
   claude-code = import ./claude-code { inherit pkgs mcp-servers-nix; };
+  clock-rs = import ./clock-rs { inherit pkgs; };
   direnv = import ./direnv { inherit pkgs; };
   fish = import ./fish {
     inherit
@@ -40,6 +41,7 @@ in
   bat
   bottom
   claude-code
+  clock-rs
   direnv
   fish
   fzf
