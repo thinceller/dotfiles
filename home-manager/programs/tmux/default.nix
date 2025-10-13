@@ -50,5 +50,6 @@
     ];
 
     prefix = "C-j";
+    terminal = "xterm-256color";
   };
 }
