@@ -3,7 +3,7 @@ return {
     "bufdelete.nvim",
     event = "DeferredUIEnter",
     after = function()
-      vim.keymap.set("n", "<Leader>q", "<Cmd>bdelete<CR>", { noremap = true, silent = true })
+      vim.keymap.set("n", "<Leader>q", "<Cmd>Bdelete<CR>", { noremap = true, silent = true })
     end,
   },
   {
