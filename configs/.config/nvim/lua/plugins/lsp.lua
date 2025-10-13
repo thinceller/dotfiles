@@ -7,6 +7,7 @@ return {
       -- local lspconfig = require("lspconfig")
 
       for _, ls in pairs({
+        "biome",
         "hls",
         "lua_ls",
         "nixd",

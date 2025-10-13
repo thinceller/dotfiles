@@ -14,6 +14,7 @@ in
     withPython3 = false;
     extraPackages = with pkgs; [
       # language servers
+      biome
       docker-compose-language-service
       dockerfile-language-server
       haskell-language-server
