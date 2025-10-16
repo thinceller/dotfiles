@@ -6,6 +6,10 @@
     baseIndex = 1;
     clock24 = true;
     customPaneNavigationAndResize = true;
+    keyMode = "vi";
+    mouse = true;
+    prefix = "C-j";
+    terminal = "xterm-256color";
 
     extraConfig = ''
       # base
@@ -27,30 +31,27 @@
       bind r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
     '';
 
-    keyMode = "vi";
-    mouse = true;
-
-    plugins = with pkgs; [
+    plugins = with pkgs.tmuxPlugins; [
       {
-        plugin = tmuxPlugins.tmux-powerline;
+        plugin = tmux-powerline;
       }
       {
-        plugin = tmuxPlugins.tmux-fzf;
+        plugin = tmux-fzf;
       }
       {
-        plugin = tmuxPlugins.resurrect;
+        plugin = resurrect;
         extraConfig = "set -g @resurrect-strategy-nvim 'session'";
       }
       {
-        plugin = tmuxPlugins.continuum;
+        plugin = continuum;
         extraConfig = ''
           set -g @continuum-restore 'on'
           set -g @continuum-save-interval '60'
         '';
       }
+      {
+        plugin = urlview;
+      }
     ];
-
-    prefix = "C-j";
-    terminal = "xterm-256color";
   };
 }
