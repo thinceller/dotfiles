@@ -14,6 +14,7 @@
       set -g set-clipboard on
       set -g copy-command 'pbcopy'
       set -g status-position top
+      set -g display-panes-time 10000
       setw -g pane-base-index 1
 
       # keymaps
