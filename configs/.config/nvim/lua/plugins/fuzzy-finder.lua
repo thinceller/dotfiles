@@ -4,19 +4,23 @@ return {
     event = "DeferredUIEnter",
     after = function()
       require("telescope").setup({
+        defaults = {
+          vimgrep_arguments = {
+            "rg",
+            "--color=never",
+            "--no-heading",
+            "--with-filename",
+            "--line-number",
+            "--column",
+            "--hidden",
+          },
+        },
         pickers = {
           find_files = {
             hidden = true,
           },
           live_grep = {
-            additional_args = function()
-              return { "--hidden" }
-            end,
-          },
-          grep_string = {
-            additional_args = function()
-              return { "--hidden" }
-            end,
+            glob_pattern = { "!**/node_modules/**", "!.git" },
           },
         },
         extensions = {
@@ -40,6 +44,7 @@ return {
       vim.keymap.set("n", "<Leader>fc", builtin.commands, option)
       vim.keymap.set("n", "<Leader>fk", builtin.keymaps, option)
       vim.keymap.set("n", "<Leader>fl", builtin.current_buffer_fuzzy_find, option)
+      vim.keymap.set("n", "<Leader>fd", builtin.diagnostics, option)
       vim.keymap.set("n", "<Leader>gs", builtin.git_status, option)
       vim.keymap.set("n", "<Leader>ghp", gh.pull_request, option)
       vim.keymap.set("n", "<Leader><Leader>", frecency.frecency, option)
