@@ -35,6 +35,7 @@ let
   neovim = import ./neovim { inherit pkgs; };
   ripgrep = import ./ripgrep { inherit pkgs; };
   tmux = import ./tmux { inherit pkgs; };
+  wezterm = import ./wezterm { inherit pkgs; };
 in
 [
   alacritty
@@ -55,4 +56,5 @@ in
   neovim
   ripgrep
   tmux
+  wezterm
 ]

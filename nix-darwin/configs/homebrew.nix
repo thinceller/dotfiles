@@ -31,7 +31,6 @@
       "slack"
       "steam"
       "visual-studio-code"
-      "wezterm"
       "zen"
       "zoom"
     ];

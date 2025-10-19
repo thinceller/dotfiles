@@ -26,9 +26,9 @@ in
         source = symlink /${rootDir}/.config/pnpm;
         recursive = true;
       };
-      "wezterm/wezterm.lua" = {
-        source = symlink /${rootDir}/.config/wezterm/wezterm.lua;
-      };
+      # "wezterm/wezterm.lua" = {
+      #   source = symlink /${rootDir}/.config/wezterm/wezterm.lua;
+      # };
     };
   }
 ]
