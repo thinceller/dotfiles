@@ -4,7 +4,20 @@ return {
     align = "center",
     highlight = "Statement",
     margin = 5,
-    content = require("startup.headers").hydra_header,
+    content = {
+      "████████╗██╗  ██╗██╗███╗   ██╗ ██████╗███████╗██╗     ██╗     ███████╗██████╗ ",
+      "╚══██╔══╝██║  ██║██║████╗  ██║██╔════╝██╔════╝██║     ██║     ██╔════╝██╔══██╗",
+      "   ██║   ███████║██║██╔██╗ ██║██║     █████╗  ██║     ██║     █████╗  ██████╔╝",
+      "   ██║   ██╔══██║██║██║╚██╗██║██║     ██╔══╝  ██║     ██║     ██╔══╝  ██╔══██╗",
+      "   ██║   ██║  ██║██║██║ ╚████║╚██████╗███████╗███████╗███████╗███████╗██║  ██║",
+      "   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝",
+      "███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗",
+      "████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║",
+      "██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║",
+      "██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║",
+      "██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║",
+      "╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝",
+    },
   },
   header_2 = {
     type = "text",
@@ -20,32 +33,13 @@ return {
     title = "Basic Commands",
     margin = 5,
     content = {
-      { "Git File", "Telescope git_files", "<Leader>ff" },
-      { "Recents", "Telescope frecency", "<Leader><Leader>" },
+      { "Git File", "Telescope git_files", "<leader>ff" },
+      { "Git Status", "Telescope git_status", "<leader>gs" },
+      { "Live Grep", "Telescope live_grep", "<leader>f/" },
+      { "GitHub PRs", "Telescope gh pull_request", "<leader>ghp" },
+      { "Recents", "Telescope frecency", "<leader><leader>" },
     },
     highlight = "String",
-  },
-  body_2 = {
-    type = "oldfiles",
-    oldfiles_directory = true,
-    align = "center",
-    fold_section = false,
-    title = "Oldfiles of Directory",
-    margin = 5,
-    content = "startup.nvim",
-    highlight = "String",
-    oldfiles_amount = 5,
-  },
-  footer = {
-    type = "oldfiles",
-    oldfiles_directory = false,
-    align = "center",
-    fold_section = true,
-    title = "Oldfiles",
-    margin = 5,
-    content = "startup.nvim",
-    highlight = "TSString",
-    oldfiles_amount = 5,
   },
   clock = {
     type = "text",
@@ -60,10 +54,26 @@ return {
     end,
     highlight = "TSString",
   },
-  options = {
-    after = function()
-      require("startup.utils").oldfiles_mappings()
+  footer = {
+    type = "text",
+    align = "center",
+    fold_section = false,
+    title = "",
+    margin = 5,
+    content = function()
+      local packpath_plugins = vim.fn.globpath(vim.o.packpath, "pack/*/start/*", 0, 1)
+      local count = 0
+      for _, plugin in ipairs(packpath_plugins) do
+        -- Exclude treesitter grammar plugins from count
+        if not plugin:match("treesitter%-grammar%-") then
+          count = count + 1
+        end
+      end
+      return { string.format("📦 %d plugins loaded", count) }
     end,
+    highlight = "TSString",
+  },
+  options = {
     mapping_keys = true,
     cursor_column = 0.5,
     empty_lines_between_mappings = true,
@@ -74,8 +84,7 @@ return {
     "header",
     "header_2",
     "body",
-    "body_2",
-    "footer",
     "clock",
+    "footer",
   },
 }
