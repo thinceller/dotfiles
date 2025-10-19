@@ -19,6 +19,7 @@
       set -g copy-command 'pbcopy'
       set -g status-position top
       set -g display-panes-time 10000
+      set -g escape-time 1
       setw -g pane-base-index 1
 
       # keymaps
