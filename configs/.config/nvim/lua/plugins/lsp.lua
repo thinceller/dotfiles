@@ -66,6 +66,12 @@ return {
           vim.keymap.set("n", "<leader>cf", function()
             vim.lsp.buf.format({ async = true })
           end, opts)
+          vim.keymap.set("n", "<leader>dl", vim.diagnostic.setloclist, opts)
+
+          -- Diagnostics
+          vim.diagnostic.config({
+            virtual_text = true,
+          })
 
           -- vim.api.nvim_create_autocmd("BufWritePre", {
           --   buffer = ev.buf,
