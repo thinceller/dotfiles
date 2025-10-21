@@ -4,20 +4,19 @@
 
   programs.git = {
     enable = true;
-    aliases = {
-      pushf = "push --force-with-lease --force-if-includes";
-    };
-    delta = {
-      enable = true;
-    };
     signing = {
       format = "ssh";
       key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILQwsbXl/1tHIdW/f+fZE7TJArqzvmbbaUsdKRFPoyZB";
       signByDefault = true;
     };
-    userEmail = "thinceller@gmail.com";
-    userName = "thinceller";
-    extraConfig = {
+    settings = {
+      alias = {
+        pushf = "push --force-with-lease --force-if-includes";
+      };
+      user = {
+        email = "thinceller@gmail.com";
+        name = "thinceller";
+      };
       core = {
         editor = "vim";
       };

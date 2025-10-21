@@ -13,6 +13,7 @@ let
   bottom = import ./bottom { inherit pkgs; };
   claude-code = import ./claude-code { inherit pkgs mcp-servers-nix; };
   clock-rs = import ./clock-rs { inherit pkgs; };
+  delta = import ./delta { inherit pkgs; };
   direnv = import ./direnv { inherit pkgs; };
   fish = import ./fish {
     inherit
@@ -43,6 +44,7 @@ in
   bottom
   claude-code
   clock-rs
+  delta
   direnv
   fish
   fzf
