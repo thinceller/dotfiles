@@ -14,10 +14,19 @@
       enableAllProjectMcpServers = true;
       alwaysThinkinEnabled = true;
 
+      sandbox = {
+        enabled = true;
+        network = {
+          allowLocalBinding = true;
+        };
+      };
+
       permissions = {
         allow = [ "WebFetch" ];
-        deny = [ ];
-        defaultMode = "acceptEdits";
+        deny = [
+          "Read(~/.ssh)"
+        ];
+        defaultMode = "plan";
       };
 
       env = {
@@ -30,13 +39,24 @@
       };
 
       hooks = {
+        Notification = [
+          {
+            matcher = "";
+            hooks = [
+              {
+                type = "command";
+                command = "terminal-notifier -title 'Claude Code' -message 'あなたの入力を待っています' -sound Submerge";
+              }
+            ];
+          }
+        ];
         Stop = [
           {
             matcher = "";
             hooks = [
               {
                 type = "command";
-                command = "terminal-notifier -title 'Claude Code' -message 'タスクが完了しました！' -sound Submerge";
+                command = "terminal-notifier -title 'Claude Code' -message 'タスクが完了しました！' -sound Breeze";
               }
             ];
           }
