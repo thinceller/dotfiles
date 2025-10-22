@@ -16,6 +16,7 @@
 
       sandbox = {
         enabled = true;
+        excludedCommands = [ "git" ];
         network = {
           allowLocalBinding = true;
         };
