@@ -12,6 +12,7 @@
       "aquaskk"
       "azookey"
       "chatgpt"
+      "chatgpt-atlas"
       "claude"
       "cursor"
       "figma"

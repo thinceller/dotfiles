@@ -11,6 +11,7 @@
       "arc"
       "azookey"
       "chatgpt"
+      "chatgpt-atlas"
       "claude"
       "cursor"
       "discord"
