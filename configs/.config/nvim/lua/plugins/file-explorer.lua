@@ -11,6 +11,7 @@ return {
             hide_gitignored = false,
           },
           follow_current_file = {
+            enabled = true,
             leave_dirs_open = true,
           },
         },
@@ -21,7 +22,7 @@ return {
   },
   {
     "oil.nvim",
-    cmd = "Oil",
+    event = "DeferredUIEnter",
     after = function()
       require("oil").setup({
         view_options = {
