@@ -14,6 +14,7 @@
       "chatgpt"
       "chatgpt-atlas"
       "claude"
+      "craft"
       "cursor"
       "figma"
       "firefox"
