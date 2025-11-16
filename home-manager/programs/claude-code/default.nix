@@ -23,7 +23,10 @@
       };
 
       permissions = {
-        allow = [ "WebFetch" ];
+        allow = [
+          "WebFetch"
+          "WebSearch"
+        ];
         deny = [
           "Read(~/.ssh)"
         ];

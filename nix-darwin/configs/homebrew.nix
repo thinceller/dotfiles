@@ -13,6 +13,7 @@
       "chatgpt"
       "chatgpt-atlas"
       "claude"
+      "craft"
       "cursor"
       "discord"
       "firefox"

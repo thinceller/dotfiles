@@ -1,6 +1,9 @@
 return {
   {
     "blink.cmp",
+    enabled = function()
+      return vim.bo.filetype ~= "markdown"
+    end,
     event = "InsertEnter",
     after = function()
       require("blink.cmp").setup({
