@@ -16,6 +16,14 @@
         window_background_opacity = 0.85,
         window_decorations = "RESIZE",
         hide_tab_bar_if_only_one_tab = true,
+
+        keys = {
+          {
+            key = "Enter",
+            mods = "SHIFT",
+            action = wezterm.action.SendString('\n')
+          }
+        }
       }
 
       return config
