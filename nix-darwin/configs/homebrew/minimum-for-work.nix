@@ -29,7 +29,6 @@
       "raycast"
       "sequel-ace"
       "visual-studio-code"
-      "wezterm"
       "zen"
     ];
   };

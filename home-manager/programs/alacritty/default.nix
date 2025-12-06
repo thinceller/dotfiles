@@ -57,6 +57,16 @@
         history = 10000;
         multiplier = 3;
       };
+
+      keyboard = {
+        bindings = [
+          {
+            key = "Return";
+            mods = "Shift";
+            chars = "\n";
+          }
+        ];
+      };
     };
   };
 }
