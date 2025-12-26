@@ -18,6 +18,7 @@
       "discord"
       "firefox"
       "google-chrome"
+      "google-chrome@canary"
       "google-japanese-ime"
       "hhkb-studio"
       "jordanbaird-ice"
