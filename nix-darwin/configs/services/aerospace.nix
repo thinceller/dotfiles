@@ -296,7 +296,7 @@
         }
         {
           "if".app-id = "com.anthropic.claudefordesktop";
-          run = "move-node-to-workspace A";
+          run = "move-node-to-workspace C";
         }
         {
           "if".app-id = "com.microsoft.VSCode";
@@ -333,6 +333,10 @@
         }
         {
           "if".app-id = "com.apple.Music";
+          run = "move-node-to-workspace 1";
+        }
+        {
+          "if".app-id = "com.lukilabs.lukiapp";
           run = "move-node-to-workspace 1";
         }
         {
