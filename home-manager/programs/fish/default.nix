@@ -15,7 +15,7 @@
           set git_root (git rev-parse --show-toplevel 2>/dev/null)
           if test $status -eq 0
             cd $git_root
-            claude $argv
+            claude --dangerously-skip-permissions $argv
           else
             echo "Not in a git repository"
             return 1
