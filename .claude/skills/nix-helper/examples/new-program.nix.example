@@ -1,0 +1,79 @@
+# Example: New Program Configuration
+# Path: home-manager/programs/<program-name>/default.nix
+
+# Basic program module
+{ pkgs, ... }:
+{
+  programs.program-name = {
+    enable = true;
+    # Common options
+    package = pkgs.program-name;
+    settings = {
+      theme = "dark";
+      fontSize = 14;
+    };
+  };
+}
+
+# ---
+
+# Program module with userConfig
+{ pkgs, userConfig, ... }:
+{
+  programs.git = {
+    enable = true;
+    userName = userConfig.username;
+    userEmail = "${userConfig.username}@example.com";
+  };
+}
+
+# ---
+
+# Program module with additional files
+{ pkgs, config, ... }:
+{
+  programs.my-program = {
+    enable = true;
+  };
+
+  # Additional config files
+  xdg.configFile."my-program/extra.toml".text = ''
+    [settings]
+    debug = false
+  '';
+
+  # Or from a file
+  xdg.configFile."my-program/themes/dark.json".source = ./themes/dark.json;
+}
+
+# ---
+
+# Program module with shell integration
+{ pkgs, ... }:
+{
+  programs.my-tool = {
+    enable = true;
+  };
+
+  # Add shell aliases
+  home.shellAliases = {
+    mt = "my-tool";
+    mtv = "my-tool --verbose";
+  };
+
+  # Add environment variables
+  home.sessionVariables = {
+    MY_TOOL_HOME = "$HOME/.my-tool";
+  };
+}
+
+# ---
+
+# Remember to import in home-manager/programs/default.nix:
+# let
+#   new-program = import ./new-program { inherit pkgs; };
+# in
+# [
+#   # ... existing programs
+#   new-program
+# ]

@@ -1,0 +1,62 @@
+# Example: Out-of-Store Symlinks
+# Path: home-manager/files.nix
+#
+# Out-of-store symlinks allow editing config files directly without
+# rebuilding the Nix configuration. Use for frequently edited configs
+# like Neovim, WezTerm, etc.
+
+{ config, userConfig, ... }:
+let
+  # Base path for config files
+  rootDir = userConfig.dotfilesDir + "/configs";
+
+  # Helper function for creating symlinks
+  symlink = config.lib.file.mkOutOfStoreSymlink;
+in
+[
+  {
+    # Single directory symlink
+    xdg.configFile."nvim" = {
+      source = symlink /${rootDir}/.config/nvim;
+      recursive = true; # Required for directories
+    };
+
+    # Single file symlink
+    xdg.configFile."starship.toml" = {
+      source = symlink /${rootDir}/.config/starship.toml;
+    };
+
+    # Multiple configs
+    xdg.configFile = {
+      "wezterm" = {
+        source = symlink /${rootDir}/.config/wezterm;
+        recursive = true;
+      };
+
+      "karabiner" = {
+        source = symlink /${rootDir}/.config/karabiner;
+        recursive = true;
+      };
+    };
+  }
+]
+
+# ---
+
+# Key points:
+# 1. Use `config.lib.file.mkOutOfStoreSymlink` for the symlink function
+# 2. Set `recursive = true` for directories
+# 3. Place actual config files in `configs/.config/<app>/`
+# 4. Edits to files in `configs/` apply immediately (no rebuild needed)
+
+# ---
+
+# When NOT to use out-of-store symlinks:
+# - Configs managed entirely by Home Manager options
+# - Configs with secrets (use sops instead)
+# - Configs generated from Nix expressions
+
+# When TO use out-of-store symlinks:
+# - Frequently edited configs (editor, terminal)
+# - Configs with complex syntax not easily expressed in Nix
+# - Configs you want to edit without rebuild

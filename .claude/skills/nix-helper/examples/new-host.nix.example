@@ -1,0 +1,82 @@
+# Example: New Host Configuration
+# Path: hosts/<hostname>/default.nix
+
+{ inputs, ... }:
+let
+  # Define user configuration for this host
+  userConfig = {
+    username = "thinceller";  # or "kawakami.kohei" for work
+    homeDir = "/Users/${userConfig.username}";
+    hostname = "new-hostname";
+    dotfilesDir = userConfig.homeDir + "/.dotfiles";
+    # uid = 501;  # Optional, only needed for work machines
+  };
+in
+{
+  # System configuration (nix-darwin)
+  darwinConfigurations."${userConfig.hostname}" = inputs.darwin.lib.darwinSystem {
+    system = "aarch64-darwin";  # or "x86_64-darwin" for Intel
+    specialArgs = {
+      inherit inputs userConfig;
+    };
+    modules = [
+      # Choose one:
+      ../../nix-darwin              # Full configuration (personal)
+      # ../../nix-darwin/minimum-for-work.nix  # Minimal (work)
+
+      # Home Manager integration
+      inputs.home-manager.darwinModules.home-manager
+      {
+        home-manager = {
+          useGlobalPkgs = true;
+          useUserPackages = true;
+          extraSpecialArgs = {
+            inherit inputs userConfig;
+          };
+          users.${userConfig.username} = import ../../home-manager;
+        };
+      }
+    ];
+  };
+}
+
+# ---
+
+# Then add to flake.nix darwinConfigurations:
+#
+# darwinConfigurations = {
+#   # ... existing hosts
+#   "new-hostname" = (import ./hosts/new-hostname { inherit inputs; }).darwinConfigurations."new-hostname";
+# };
+
+# ---
+
+# For work machines with minimum config:
+{ inputs, ... }:
+let
+  userConfig = {
+    username = "kawakami.kohei";
+    homeDir = "/Users/${userConfig.username}";
+    hostname = "WORK-MACHINE";
+    dotfilesDir = userConfig.homeDir + "/.dotfiles";
+    uid = 501;  # Required for work machines
+  };
+in
+{
+  darwinConfigurations."${userConfig.hostname}" = inputs.darwin.lib.darwinSystem {
+    system = "aarch64-darwin";
+    specialArgs = { inherit inputs userConfig; };
+    modules = [
+      ../../nix-darwin/minimum-for-work.nix  # Minimal configuration
+      inputs.home-manager.darwinModules.home-manager
+      {
+        home-manager = {
+          useGlobalPkgs = true;
+          useUserPackages = true;
+          extraSpecialArgs = { inherit inputs userConfig; };
+          users.${userConfig.username} = import ../../home-manager;
+        };
+      }
+    ];
+  };
+}
