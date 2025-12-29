@@ -71,12 +71,22 @@
         type = "command";
         command = ./statusline-command.sh;
       };
+
+      enabledPlugins = {
+        "code-review@claude-plugins-official" = true;
+        "commit-commands@claude-plugins-official" = true;
+        "feature-dev@claude-plugins-official" = true;
+        "frontend-design@claude-plugins-official" = true;
+        "plugin-dev@claude-plugins-official" = true;
+        "pr-review-toolkit@claude-plugins-official" = true;
+      };
     };
 
     memory.source = ./CLAUDE.md;
 
     # agentsDir = ./agents;
     commandsDir = ./commands;
+    skillsDir = ./skills;
     # hooksDir = ./hooks;
 
     mcpServers =
