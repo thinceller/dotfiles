@@ -12,11 +12,17 @@
       theme = "dark";
       autoCompactEnabled = false;
       enableAllProjectMcpServers = true;
-      alwaysThinkinEnabled = true;
+      alwaysThinkingEnabled = true;
+
+      model = "opus";
 
       sandbox = {
         enabled = true;
-        excludedCommands = [ "git" ];
+        excludedCommands = [
+          "git"
+          "docker"
+          "gh"
+        ];
         network = {
           allowLocalBinding = true;
         };
@@ -27,8 +33,19 @@
           "WebFetch"
           "WebSearch"
         ];
+        ask = [
+          "Bash(rm:*)"
+          "Bash(git merge:*)"
+          "Bash(git rebase:*)"
+          "Bash(git push:*)"
+        ];
         deny = [
-          "Read(~/.ssh)"
+          "Read(~/.ssh/**)"
+          "Read(.env*)"
+          "Bash(sudo:*)"
+          "Bash(rm -rf:*)"
+          "Write(~/.ssh/**)"
+          "Write(.env*)"
         ];
         defaultMode = "plan";
       };
@@ -43,17 +60,6 @@
       };
 
       hooks = {
-        Notification = [
-          {
-            matcher = "";
-            hooks = [
-              {
-                type = "command";
-                command = "terminal-notifier -title 'Claude Code' -message 'あなたの入力を待っています' -sound Submerge";
-              }
-            ];
-          }
-        ];
         Stop = [
           {
             matcher = "";
