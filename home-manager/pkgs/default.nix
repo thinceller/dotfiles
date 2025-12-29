@@ -3,6 +3,7 @@
   {
     home.packages = with pkgs; [
       age
+      bun
       container
       curl
       deno
