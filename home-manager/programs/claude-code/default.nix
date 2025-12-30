@@ -57,6 +57,9 @@
         CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC = "1";
         MAX_THINKING_TOKENS = "31999";
         USE_BUILTIN_RIPGREP = "1";
+
+        ENABLE_TOOL_SEARCH = true;
+        ENABLE_EXPERIMENTAL_MCP_CLI = false;
       };
 
       hooks = {
