@@ -31,7 +31,7 @@ in
   users.users."${username}" = {
     uid = 501;
     home = homeDir;
-    shell = pkgs.fish;
+    shell = pkgs.bashInteractive;
   };
 
   # Create /etc/zshrc that loads the nix-darwin environment.

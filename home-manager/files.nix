@@ -6,6 +6,16 @@ let
 in
 [
   {
+    # ホームディレクトリ直下のファイル
+    home.file = {
+      ".bashrc" = {
+        source = symlink /${rootDir}/.bashrc;
+      };
+      ".bash_profile" = {
+        source = symlink /${rootDir}/.bash_profile;
+      };
+    };
+
     xdg.configFile = {
       # karabiner
       # https://github.com/pqrs-org/Karabiner-Elements/issues/3248
