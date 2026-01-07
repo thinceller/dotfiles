@@ -68,7 +68,10 @@
     '';
   };
 
+  # Workaround: Set __NIX_DARWIN_SET_ENVIRONMENT_DONE=1 to skip fenv call in /etc/fish/nixos-env-preinit.fish
+  # Without this, fish -c fails with "Unknown command: fenv" because foreign-env functions
+  # are not properly loaded in non-interactive mode during activation phase.
   home.activation.configure-tide = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    ${pkgs.fish}/bin/fish -c "tide configure --auto --style=Lean --prompt_colors='True color' --show_time=No --lean_prompt_height='Two lines' --prompt_connection=Disconnected --prompt_spacing=Sparse --icons='Many icons' --transient=No"
+    __NIX_DARWIN_SET_ENVIRONMENT_DONE=1 ${pkgs.fish}/bin/fish -c "tide configure --auto --style=Lean --prompt_colors='True color' --show_time=No --lean_prompt_height='Two lines' --prompt_connection=Disconnected --prompt_spacing=Sparse --icons='Many icons' --transient=No"
   '';
 }
