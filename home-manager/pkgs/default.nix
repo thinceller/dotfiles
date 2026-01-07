@@ -11,6 +11,7 @@
       docker-credential-helpers
       dotenvx
       ghq
+      google-cloud-sdk
       graphviz
       mactop
       nix-search-cli

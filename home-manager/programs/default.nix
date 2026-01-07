@@ -27,6 +27,7 @@ let
   };
   fzf = import ./fzf { inherit pkgs; };
   gh = import ./gh { inherit pkgs; };
+  ghostty = import ./ghostty { inherit pkgs; };
   git = import ./git { inherit pkgs; };
   htop = import ./htop { inherit pkgs; };
   jq = import ./jq { inherit pkgs; };
@@ -49,6 +50,7 @@ in
   fish
   fzf
   gh
+  ghostty
   git
   htop
   jq
