@@ -8,14 +8,19 @@
     settings = {
       font-family = "HackGen Console NF";
       font-size = 14;
+
       cursor-style = "block";
       cursor-style-blink = false;
+
       window-padding-x = 8;
       window-padding-y = 8;
       background-opacity = 0.85;
       theme = "tokyonight";
-      macos-option-as-alt = true;
+
+      quick-terminal-size = "40%";
+
       window-save-state = "always";
+      macos-option-as-alt = true;
       macos-titlebar-style = "tabs";
 
       keybind = [
@@ -26,6 +31,7 @@
         "super+shift+z=redo"
         "super+shift+i=inspector:toggle"
         "super+shift+comma=reload_config"
+        "global:super+backquote=toggle_quick_terminal"
 
         # font size
         "super+equal=increase_font_size:1"
@@ -47,6 +53,7 @@
         "ctrl+j>l=goto_split:right"
         "ctrl+j>shift+period=resize_split:up,10"
         "ctrl+j>shift+comma=resize_split:down,10"
+        "ctrl+j>z=toggle_split_zoom"
 
         # tab
         "super+t=new_tab"
