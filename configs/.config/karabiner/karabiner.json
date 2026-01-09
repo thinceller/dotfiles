@@ -53,6 +53,7 @@
                                             "^com\\.microsoft\\.VSCode$",
                                             "^com\\.github\\.wez\\.wezterm$",
                                             "^com\\.todesktop\\.230313mzl4w4u92",
+                                            "^com\\.mitchellh\\.ghostty",
                                             "^org\\.alacritty$"
                                         ],
                                         "type": "frontmost_application_unless"
@@ -78,6 +79,7 @@
                                             "^com\\.microsoft\\.VSCode$",
                                             "^com\\.github\\.wez\\.wezterm$",
                                             "^com\\.todesktop\\.230313mzl4w4u92",
+                                            "^com\\.mitchellh\\.ghostty",
                                             "^org\\.alacritty$"
                                         ],
                                         "type": "frontmost_application_unless"
@@ -103,6 +105,7 @@
                                             "^com\\.microsoft\\.VSCode$",
                                             "^com\\.github\\.wez\\.wezterm$",
                                             "^com\\.todesktop\\.230313mzl4w4u92",
+                                            "^com\\.mitchellh\\.ghostty",
                                             "^org\\.alacritty$"
                                         ],
                                         "type": "frontmost_application_unless"
@@ -128,6 +131,7 @@
                                             "^com\\.microsoft\\.VSCode$",
                                             "^com\\.github\\.wez\\.wezterm$",
                                             "^com\\.todesktop\\.230313mzl4w4u92",
+                                            "^com\\.mitchellh\\.ghostty",
                                             "^org\\.alacritty$"
                                         ],
                                         "type": "frontmost_application_unless"
