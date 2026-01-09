@@ -319,6 +319,13 @@
           run = "move-node-to-workspace T";
         }
         {
+          "if".app-id = "com.mitchellh.ghostty";
+          run = [
+            "move-node-to-workspace T"
+            "layout floating"
+          ];
+        }
+        {
           "if".app-id = "md.obsidian";
           run = "move-node-to-workspace O";
         }
