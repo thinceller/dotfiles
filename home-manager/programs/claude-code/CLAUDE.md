@@ -29,6 +29,19 @@ This file contains personal preferences and settings for Claude Code across all 
 - **テスタビリティが確保されているか**: 依存性注入やモック可能な設計
 - **冗長な中間層がないか**: 薄いラッパーや意味のない中継層は統合を検討
 
+## コード改善
+
+**重要**: コードの実装が完了したら、code-simplifier:code-simplifier subagentを使用してコードの改善を行ってください。
+
+### 実行タイミング
+- 実装コードの編集が完了した後、動作確認の前
+- Planモードで実装計画を立てる際は、code-simplifier:code-simplifier実行ステップを必ず計画に含める
+- Todoリストを作成する際は、code-simplifier:code-simplifierによる改善タスクを必ず追加する
+
+### 実行方法
+- Task toolを使用してcode-simplifier:code-simplifier subagentを起動する（subagent_type: "code-simplifier:code-simplifier"）
+- 対象は直近で変更したコードファイル
+
 ## 動作確認
 
 **重要**: コードの変更後は、変更の大小に関わらず必ず動作確認を行ってください。
