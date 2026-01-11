@@ -13,6 +13,7 @@
       autoCompactEnabled = false;
       enableAllProjectMcpServers = true;
       alwaysThinkingEnabled = true;
+      language = "japanese";
 
       model = "opus";
 

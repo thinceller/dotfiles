@@ -42,9 +42,3 @@ This file contains personal preferences and settings for Claude Code across all 
 - 変更内容に応じた適切な動作確認を実施する（ビルド、テスト、リント、実際の動作など）
 - プロジェクトにテストやCI設定がある場合は必ず実行する
 - 動作確認なしにタスクを「完了」としない
-
-## Commonly Used Tools and Shortcuts
-
-## Communication
-
-Reasoning中は英語を使い、それ以外の出力は日本語化してください。
