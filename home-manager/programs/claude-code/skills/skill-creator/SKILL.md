@@ -1,5 +1,5 @@
 ---
-name: Skill Creator
+name: skill-creator
 description: This skill should be used when the user asks to "create a skill", "add a new skill", "write a skill", "make a skill", "skill template", "scaffold a skill", "skill directory structure", "SKILL.md format", "skill frontmatter", or needs guidance on skill structure, trigger descriptions, progressive disclosure, or skill validation for Claude Code.
 ---
 
