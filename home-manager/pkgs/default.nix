@@ -3,6 +3,7 @@
   {
     home.packages = with pkgs; [
       age
+      appcleaner
       bun
       container
       curl

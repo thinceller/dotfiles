@@ -9,7 +9,6 @@
     casks = [
       "1password"
       "arc"
-      "aquaskk"
       "azookey"
       "chatgpt"
       "chatgpt-atlas"
@@ -18,6 +17,7 @@
       "cursor"
       "figma"
       "firefox"
+      "google-chrome@beta"
       "google-japanese-ime"
       "hhkb-studio"
       "jordanbaird-ice"
@@ -28,6 +28,7 @@
       "orbstack"
       "raycast"
       "sequel-ace"
+      "thebrowsercompany-dia"
       "visual-studio-code"
       "zen"
     ];
