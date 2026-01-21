@@ -14,9 +14,8 @@
       ghq
       google-cloud-sdk
       graphviz
-      mactop
       nix-search-cli
-      nixfmt-rfc-style
+      nixfmt
       nodejs_22
       nvfetcher
       php83
