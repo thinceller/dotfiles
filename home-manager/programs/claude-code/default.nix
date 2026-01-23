@@ -46,6 +46,7 @@
           "Read(.env*)"
           "Bash(sudo:*)"
           "Bash(rm -rf:*)"
+          "Bash(git commit --no-gpg-sign:*)"
           "Write(~/.ssh/**)"
           "Write(.env*)"
         ];
