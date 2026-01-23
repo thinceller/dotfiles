@@ -14,7 +14,7 @@
 
       window-padding-x = 8;
       window-padding-y = 8;
-      background-opacity = 0.85;
+      # background-opacity = 0.85;
       theme = "tokyonight";
 
       quick-terminal-size = "40%";
