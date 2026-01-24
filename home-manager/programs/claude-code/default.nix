@@ -63,6 +63,7 @@
 
         ENABLE_TOOL_SEARCH = true;
         ENABLE_EXPERIMENTAL_MCP_CLI = false;
+        CLAUDE_CODE_ENABLE_TASKS = true;
       };
 
       hooks = {
