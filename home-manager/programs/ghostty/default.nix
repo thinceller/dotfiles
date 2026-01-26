@@ -45,15 +45,15 @@
         "paste=paste_from_clipboard"
 
         # split
-        "ctrl+j>minus=new_split:down"
-        "ctrl+j>backslash=new_split:right"
-        "ctrl+j>h=goto_split:left"
-        "ctrl+j>j=goto_split:down"
-        "ctrl+j>k=goto_split:up"
-        "ctrl+j>l=goto_split:right"
-        "ctrl+j>shift+period=resize_split:up,10"
-        "ctrl+j>shift+comma=resize_split:down,10"
-        "ctrl+j>z=toggle_split_zoom"
+        "super+j>minus=new_split:down"
+        "super+j>backslash=new_split:right"
+        "super+j>h=goto_split:left"
+        "super+j>j=goto_split:down"
+        "super+j>k=goto_split:up"
+        "super+j>l=goto_split:right"
+        "super+j>shift+period=resize_split:up,10"
+        "super+j>shift+comma=resize_split:down,10"
+        "super+j>z=toggle_split_zoom"
 
         # tab
         "super+t=new_tab"
