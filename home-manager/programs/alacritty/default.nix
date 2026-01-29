@@ -15,7 +15,7 @@
       window = {
         decorations = "Buttonless";
         # ウィンドウの透明度 (0.0 - 1.0)
-        opacity = 0.85;
+        # opacity = 0.85;
 
         # ウィンドウのパディング
         padding = {
