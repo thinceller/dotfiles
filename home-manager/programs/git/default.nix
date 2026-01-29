@@ -25,6 +25,7 @@
       };
       wt = {
         basedir = "./.wt";
+        copyignored = true;
       };
       gpg = {
         ssh = {
