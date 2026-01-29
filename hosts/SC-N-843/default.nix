@@ -8,6 +8,8 @@ let
     sops-nix
     edgepkgs
     mcp-servers-nix
+    nixpkgs-dotenvx
+    nixpkgs-git-wt
     ;
   system = "aarch64-darwin";
   userConfig =
@@ -40,13 +42,15 @@ nix-darwin.lib.darwinSystem {
         { config, lib, ... }:
         import ../../home-manager {
           inherit
+            config
             nixpkgs
             lib
-            config
             system
             userConfig
             edgepkgs
             mcp-servers-nix
+            nixpkgs-dotenvx
+            nixpkgs-git-wt
             ;
         };
     }

@@ -8,6 +8,8 @@ let
     sops-nix
     edgepkgs
     mcp-servers-nix
+    nixpkgs-dotenvx
+    nixpkgs-git-wt
     ;
   system = "aarch64-darwin";
   userConfig =
@@ -47,6 +49,8 @@ nix-darwin.lib.darwinSystem {
             userConfig
             edgepkgs
             mcp-servers-nix
+            nixpkgs-dotenvx
+            nixpkgs-git-wt
             ;
         };
     }

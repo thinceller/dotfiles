@@ -12,6 +12,7 @@
       docker-credential-helpers
       dotenvx
       ghq
+      git-wt
       google-cloud-sdk
       graphviz
       nix-search-cli

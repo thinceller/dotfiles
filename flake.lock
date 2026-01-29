@@ -175,6 +175,38 @@
         "type": "github"
       }
     },
+    "nixpkgs-dotenvx": {
+      "locked": {
+        "lastModified": 1766119346,
+        "narHash": "sha256-MhfCfNmdQ2B/JAzKaQbd3qddEfMTpoyArhtOJQ3nbUs=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "8198298755cad59b220641b8a76e372e27dc6471",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "8198298755cad59b220641b8a76e372e27dc6471",
+        "type": "github"
+      }
+    },
+    "nixpkgs-git-wt": {
+      "locked": {
+        "lastModified": 1768946963,
+        "narHash": "sha256-lPyWKaRKtkYmfjRDmPgCvfEwKpOBMqtqcZnSOWPGdhg=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "17a5fcf927843a8b80fa42f18f862a43ca9d1a7f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "17a5fcf927843a8b80fa42f18f862a43ca9d1a7f",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "edgepkgs": "edgepkgs",
@@ -184,6 +216,8 @@
         "mcp-servers-nix": "mcp-servers-nix",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-dotenvx": "nixpkgs-dotenvx",
+        "nixpkgs-git-wt": "nixpkgs-git-wt",
         "sops-nix": "sops-nix",
         "treefmt-nix": "treefmt-nix"
       }

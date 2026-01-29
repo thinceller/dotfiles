@@ -4,7 +4,6 @@
     enable = true;
     extensions = with pkgs; [
       gh-poi
-      gh-copilot
     ];
     settings = {
       git_protocol = "ssh";

@@ -6,15 +6,31 @@
   userConfig,
   edgepkgs,
   mcp-servers-nix,
+  nixpkgs-dotenvx,
+  nixpkgs-git-wt,
   ...
 }:
 let
   inherit (userConfig) username homeDir dotfilesDir;
 
+  pkgs-dotenvx = import nixpkgs-dotenvx {
+    inherit system;
+  };
+
+  pkgs-git-wt = import nixpkgs-git-wt {
+    inherit system;
+  };
+
   pkgs = import nixpkgs {
     inherit system;
     config.allowUnfree = true;
-    overlays = [ edgepkgs.overlays.default ];
+    overlays = [
+      edgepkgs.overlays.default
+      (_final: _prev: {
+        dotenvx = pkgs-dotenvx.dotenvx;
+        git-wt = pkgs-git-wt.git-wt;
+      })
+    ];
   };
 
   # Load the generated sources by nvfetcher
