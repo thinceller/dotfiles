@@ -23,6 +23,9 @@
       ghq = {
         root = "~/src";
       };
+      wt = {
+        basedir = "{gitroot}/.wt";
+      };
       gpg = {
         ssh = {
           program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
