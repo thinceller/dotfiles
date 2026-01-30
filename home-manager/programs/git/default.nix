@@ -25,6 +25,9 @@
       };
       wt = {
         basedir = "./.git/wt";
+        copy = [
+          ".claude/settings.local.json"
+        ];
       };
       gpg = {
         ssh = {
