@@ -24,8 +24,7 @@
         root = "~/src";
       };
       wt = {
-        basedir = "./.wt";
-        copyignored = true;
+        basedir = "./.git/wt";
       };
       gpg = {
         ssh = {
@@ -48,7 +47,6 @@
     };
     ignores = [
       ".DS_Store"
-      ".wt"
     ];
   };
 }
