@@ -269,6 +269,10 @@
           run = "move-node-to-workspace A";
         }
         {
+          "if".app-id = "company.thebrowser.dia";
+          run = "move-node-to-workspace A";
+        }
+        {
           "if".app-id = "org.mozilla.firefox";
           run = "move-node-to-workspace A";
         }
