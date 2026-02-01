@@ -11,7 +11,7 @@ return {
           preset = "default",
           ["<C-space>"] = {},
           ["<C-t>"] = { "show", "show_documentation", "hide_documentation" },
-          ["<CR>"] = { "accept", "fallback" },
+          -- ["<CR>"] = { "accept", "fallback" },
         },
         cmdline = {
           keymap = {
