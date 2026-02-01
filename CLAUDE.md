@@ -42,6 +42,18 @@ sops -r secrets/default.yaml
 
 See `docs/SOPS.md` for comprehensive secrets management documentation.
 
+### Verification (for coding agents)
+```bash
+# Build configuration without applying (use for verification)
+nix build .#darwinConfigurations.kohei-m4-mac-mini.system --no-link
+nix build .#darwinConfigurations.SC-N-843.system --no-link
+
+# Format check
+nix fmt
+```
+
+**Important**: When creating new files, you must stage them with `git add` before running `nix build`, as Nix Flakes only sees files tracked by git.
+
 ## Architecture
 
 ### Directory Structure
