@@ -1,5 +1,45 @@
 {
   "nodes": {
+    "brew-api": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1769882788,
+        "narHash": "sha256-b7YxOCSjtM4uuQkMPz+yJ6dNioQlbh557Z3Soaujwo0=",
+        "owner": "BatteredBunny",
+        "repo": "brew-api",
+        "rev": "feb3b9084f6503e4ba4e9df18e95b4a69d0ce119",
+        "type": "github"
+      },
+      "original": {
+        "owner": "BatteredBunny",
+        "repo": "brew-api",
+        "type": "github"
+      }
+    },
+    "brew-nix": {
+      "inputs": {
+        "brew-api": [
+          "brew-api"
+        ],
+        "nix-darwin": "nix-darwin",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1764779851,
+        "narHash": "sha256-7WrgeIYBEuFG7DZtS8dio0y9nvRHf3otk7oqsPIoECs=",
+        "owner": "BatteredBunny",
+        "repo": "brew-nix",
+        "rev": "b314426c17667bcebd73ed7e57ecae2bac9755cf",
+        "type": "github"
+      },
+      "original": {
+        "owner": "BatteredBunny",
+        "repo": "brew-nix",
+        "type": "github"
+      }
+    },
     "edgepkgs": {
       "inputs": {
         "nixpkgs": [
@@ -142,6 +182,27 @@
     "nix-darwin": {
       "inputs": {
         "nixpkgs": [
+          "brew-nix",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1764161084,
+        "narHash": "sha256-HN84sByg9FhJnojkGGDSrcjcbeioFWoNXfuyYfJ1kBE=",
+        "owner": "nix-darwin",
+        "repo": "nix-darwin",
+        "rev": "e95de00a471d07435e0527ff4db092c84998698e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-darwin",
+        "repo": "nix-darwin",
+        "type": "github"
+      }
+    },
+    "nix-darwin_2": {
+      "inputs": {
+        "nixpkgs": [
           "nixpkgs"
         ]
       },
@@ -172,6 +233,22 @@
         "owner": "NixOS",
         "ref": "nixpkgs-unstable",
         "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-1password": {
+      "locked": {
+        "lastModified": 1769961609,
+        "narHash": "sha256-2qR+UibTeAfsy5hSYH/JDZ/tGHYuewZwReS6ick4390=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "043a781b82dff90b74f68cd5376d89cc29a5f6b5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "043a781b82dff90b74f68cd5376d89cc29a5f6b5",
         "type": "github"
       }
     },
@@ -209,13 +286,16 @@
     },
     "root": {
       "inputs": {
+        "brew-api": "brew-api",
+        "brew-nix": "brew-nix",
         "edgepkgs": "edgepkgs",
         "flake-parts": "flake-parts",
         "git-hooks-nix": "git-hooks-nix",
         "home-manager": "home-manager",
         "mcp-servers-nix": "mcp-servers-nix",
-        "nix-darwin": "nix-darwin",
+        "nix-darwin": "nix-darwin_2",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-1password": "nixpkgs-1password",
         "nixpkgs-dotenvx": "nixpkgs-dotenvx",
         "nixpkgs-git-wt": "nixpkgs-git-wt",
         "sops-nix": "sops-nix",

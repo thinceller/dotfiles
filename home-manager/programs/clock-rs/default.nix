@@ -1,4 +1,4 @@
-{ pkgs }:
+{ pkgs, ... }:
 {
   programs.clock-rs = {
     enable = true;

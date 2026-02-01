@@ -1,4 +1,7 @@
 {
+  ...
+}:
+{
   services.aerospace = {
     enable = true;
     settings = {
@@ -302,6 +305,10 @@
         }
         {
           "if".app-id = "com.todesktop.230313mzl4w4u92"; # Cursor
+          run = "move-node-to-workspace E";
+        }
+        {
+          "if".app-id = "com.google.antigravity";
           run = "move-node-to-workspace E";
         }
         {

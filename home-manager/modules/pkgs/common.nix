@@ -1,0 +1,30 @@
+{
+  pkgs,
+  ...
+}:
+{
+  home.packages = with pkgs; [
+    age
+    bun
+    container
+    curl
+    deno
+    docker
+    docker-credential-helpers
+    dotenvx
+    ghq
+    git-wt
+    google-cloud-sdk
+    graphviz
+    nix-search-cli
+    nixfmt
+    nodejs_22
+    nvfetcher
+    php83
+    php83Packages.composer
+    sops
+    tig
+    uv
+    wget
+  ];
+}

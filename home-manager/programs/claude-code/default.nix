@@ -1,6 +1,7 @@
 {
   pkgs,
   mcp-servers-nix,
+  ...
 }:
 {
   programs.claude-code = {

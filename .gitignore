@@ -3,6 +3,8 @@
 env.sh
 env.fish
 
+result
+
 configs/.config/karabiner/automatic_backups
 
 .claude/settings.local.json

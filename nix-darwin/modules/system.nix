@@ -1,9 +1,12 @@
-{ self, username, ... }:
+{
+  userConfig,
+  ...
+}:
+let
+  inherit (userConfig) username;
+in
 {
   system = {
-    # configurationRevision = self.rev or self.dirtyRev or null;
-    # Used for backwards compatibility, please read the changelog before changing.
-    # $ darwin-rebuild changelog
     stateVersion = 5;
 
     primaryUser = username;

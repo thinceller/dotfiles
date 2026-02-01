@@ -1,11 +1,14 @@
 {
   pkgs,
   lib,
-  sources,
-  homeDir,
   config,
-  dotfilesDir,
+  sources,
+  userConfig,
+  ...
 }:
+let
+  inherit (userConfig) homeDir dotfilesDir;
+in
 {
   programs.fish = {
     enable = true;
@@ -79,5 +82,7 @@
   # are not properly loaded in non-interactive mode during activation phase.
   home.activation.configure-tide = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     __NIX_DARWIN_SET_ENVIRONMENT_DONE=1 ${pkgs.fish}/bin/fish -c "tide configure --auto --style=Lean --prompt_colors='True color' --show_time=No --lean_prompt_height='Two lines' --prompt_connection=Disconnected --prompt_spacing=Sparse --icons='Many icons' --transient=No"
+    # Remove kubectl from tide right prompt items (kubectl is not installed)
+    __NIX_DARWIN_SET_ENVIRONMENT_DONE=1 ${pkgs.fish}/bin/fish -c "set -U tide_right_prompt_items (string match -v kubectl \$tide_right_prompt_items)"
   '';
 }

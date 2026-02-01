@@ -35,10 +35,21 @@
       url = "github:natsukium/mcp-servers-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    brew-nix = {
+      url = "github:BatteredBunny/brew-nix";
+      inputs.brew-api.follows = "brew-api";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    brew-api = {
+      url = "github:BatteredBunny/brew-api";
+      flake = false;
+    };
     # dotenvx build failure workaround: https://github.com/NixOS/nixpkgs/issues/478005
     nixpkgs-dotenvx.url = "github:NixOS/nixpkgs/8198298755cad59b220641b8a76e372e27dc6471";
     # git-wt: pinned to a revision that includes git-wt 0.14.2
     nixpkgs-git-wt.url = "github:NixOS/nixpkgs/17a5fcf927843a8b80fa42f18f862a43ca9d1a7f";
+    # 1password: pinned to nixpkgs HEAD for latest version (8.12.0)
+    nixpkgs-1password.url = "github:NixOS/nixpkgs/043a781b82dff90b74f68cd5376d89cc29a5f6b5";
   };
 
   outputs =
@@ -68,13 +79,13 @@
           apps = {
             update = {
               type = "app";
-              program = pkgs.writeShellScriptBin "update" ''
+              program = "${pkgs.writeShellScriptBin "update" ''
                 set -e
                 echo "Updating flake inputs..."
                 nix flake update
                 echo "Executing nvfetcher..."
                 nvfetcher
-              '';
+              ''}/bin/update";
             };
           };
 
