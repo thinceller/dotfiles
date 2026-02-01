@@ -3,7 +3,7 @@ name: Build nix-darwin
 on:
   push:
     branches:
-      - "**"
+      - master
   pull_request:
 
 concurrency:
