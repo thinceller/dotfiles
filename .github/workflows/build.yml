@@ -1,0 +1,69 @@
+name: Build nix-darwin
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        host:
+          - kohei-m4-mac-mini
+          - SC-N-843
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v15
+        with:
+          name: thinceller-dotfiles
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          skipAddingSubstituter: true
+
+      - name: Build nix-darwin configuration
+        run: |
+          nix build .#darwinConfigurations.${{ matrix.host }}.system --show-trace
+
+  diff:
+    if: github.event_name == 'pull_request'
+    runs-on: macos-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v15
+        with:
+          name: thinceller-dotfiles
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          skipAddingSubstituter: true
+
+      - name: Diff nix-darwin configurations
+        uses: natsukium/nix-diff-action@main
+        with:
+          attributes: |
+            - displayName: kohei-m4-mac-mini
+              attribute: darwinConfigurations.kohei-m4-mac-mini.system
+            - displayName: SC-N-843
+              attribute: darwinConfigurations.SC-N-843.system

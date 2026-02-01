@@ -1,6 +1,17 @@
 {
   description = "thinceller's nix configurations";
 
+  nixConfig = {
+    extra-substituters = [
+      "https://nix-community.cachix.org"
+      "https://thinceller-dotfiles.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "thinceller-dotfiles.cachix.org-1:ygv46mR2J9KTVXN+c13mtokug8dwhYmuYdoXaAGKIBY="
+    ];
+  };
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nix-darwin = {
