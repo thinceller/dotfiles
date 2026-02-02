@@ -9,6 +9,7 @@
     settings = {
       experimental-features = "nix-command flakes";
     };
+    optimise.automatic = true;
     registry = {
       dev = {
         to = {
