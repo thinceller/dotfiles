@@ -68,13 +68,13 @@
       };
 
       hooks = {
-        Stop = [
+        Notification = [
           {
-            matcher = "";
+            matcher = "permission_prompt|idle_prompt|elicitation_dialog";
             hooks = [
               {
                 type = "command";
-                command = "terminal-notifier -title 'Claude Code' -message 'タスクが完了しました！' -sound Breeze";
+                command = ./hooks/notification.sh;
               }
             ];
           }
