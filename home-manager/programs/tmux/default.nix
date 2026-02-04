@@ -29,6 +29,8 @@
       bind - split-window -v -c "#{pane_current_path}"
       bind C new-session
 
+      bind -n S-Enter send-keys Escape "[13;2u"
+
       bind r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
     '';
 
