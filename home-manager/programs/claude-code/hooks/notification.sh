@@ -15,8 +15,11 @@ case "$NOTIFICATION_TYPE" in
   *)                   SUBTITLE="" ;;
 esac
 
+ICON_PATH="@iconPath@"
+
 ARGS=(-title "$TITLE" -message "$MESSAGE" -group "$SESSION_ID" -sound Breeze)
 [[ -n "$SUBTITLE" ]] && ARGS+=(-subtitle "$SUBTITLE")
+[[ -f "$ICON_PATH" ]] && ARGS+=(-contentImage "$ICON_PATH")
 
 if [[ -n "${TMUX:-}" ]]; then
   TMUX_SOCKET="${TMUX%%,*}"

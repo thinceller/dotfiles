@@ -3,6 +3,13 @@
   mcp-servers-nix,
   ...
 }:
+let
+  notificationScript = pkgs.writeShellScript "claude-notification" (
+    builtins.replaceStrings [ "@iconPath@" ] [ "${./hooks/claude-icon.png}" ] (
+      builtins.readFile ./hooks/notification.sh
+    )
+  );
+in
 {
   programs.claude-code = {
     enable = true;
@@ -74,7 +81,7 @@
             hooks = [
               {
                 type = "command";
-                command = ./hooks/notification.sh;
+                command = notificationScript;
               }
             ];
           }
@@ -88,8 +95,6 @@
 
       enabledPlugins = {
         "code-review@claude-plugins-official" = true;
-        "commit-commands@claude-plugins-official" = true;
-        "feature-dev@claude-plugins-official" = true;
         "frontend-design@claude-plugins-official" = true;
         "plugin-dev@claude-plugins-official" = true;
         "pr-review-toolkit@claude-plugins-official" = true;
