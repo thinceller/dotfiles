@@ -73,7 +73,6 @@ in
     brewCasks.microsoft-edge
     brewCasks.nani
     brewCasks.notion
-    brewCasks.orbstack
     brewCasks.raycast
     brewCasks.thebrowsercompany-dia
     brewCasks.visual-studio-code

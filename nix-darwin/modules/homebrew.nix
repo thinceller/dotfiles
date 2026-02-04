@@ -13,6 +13,7 @@
       "hhkb-studio"
       "karabiner-elements" # nix-darwin serviceが v15.0 以降で壊れているためHomebrewで管理
       "logi-options+"
+      "orbstack" # brew-nixでバイナリが壊れる
     ];
   };
 }
