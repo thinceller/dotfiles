@@ -1,6 +1,7 @@
 {
   pkgs,
   system,
+  userConfig,
   ...
 }:
 {
@@ -8,6 +9,10 @@
     enable = true;
     settings = {
       experimental-features = "nix-command flakes";
+      trusted-users = [
+        "root"
+        userConfig.username
+      ];
     };
     optimise.automatic = true;
     registry = {
