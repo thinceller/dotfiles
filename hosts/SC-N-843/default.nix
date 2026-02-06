@@ -8,7 +8,6 @@ let
     sops-nix
     edgepkgs
     mcp-servers-nix
-    brew-nix
     nixpkgs-dotenvx
     nixpkgs-git-wt
     nixpkgs-1password
@@ -44,7 +43,6 @@ let
     config.allowUnfree = true;
     overlays = [
       edgepkgs.overlays.default
-      brew-nix.overlays.default
       (_final: _prev: {
         dotenvx = pkgs-dotenvx.dotenvx;
         git-wt = pkgs-git-wt.git-wt;

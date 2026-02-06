@@ -7,4 +7,10 @@
     touchIdAuth = true;
     # watchIdAuthは使わない
   };
+
+  homebrew.casks = [
+    "cursor"
+    "figma"
+    "sequel-ace"
+  ];
 }

@@ -1,6 +1,5 @@
 { ... }:
 {
-  # brew-nixでビルドできないcasksをHomebrewで管理
   homebrew = {
     enable = true;
     onActivation = {
@@ -9,11 +8,26 @@
       cleanup = "uninstall";
     };
     casks = [
-      "azookey" # brew-nixだとIMEとして認識されない（copyApps有効でも解決しない）
+      "arc"
+      "azookey"
+      "chatgpt"
+      "chatgpt-atlas"
+      "claude"
+      "craft"
+      "firefox"
+      "google-chrome@beta"
       "hhkb-studio"
-      "karabiner-elements" # nix-darwin serviceが v15.0 以降で壊れているためHomebrewで管理
+      "jordanbaird-ice"
+      "karabiner-elements"
       "logi-options+"
-      "orbstack" # brew-nixでバイナリが壊れる
+      "microsoft-edge"
+      "nani"
+      "notion"
+      "orbstack"
+      "raycast"
+      "thebrowsercompany-dia"
+      "visual-studio-code"
+      "zen"
     ];
   };
 }

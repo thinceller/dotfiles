@@ -9,4 +9,15 @@
     touchIdAuth = true;
     watchIdAuth = true;
   };
+
+  homebrew.casks = [
+    "antigravity"
+    "discord"
+    "google-chrome"
+    "obsidian"
+    "readdle-spark"
+    "slack"
+    "steam"
+    "zoom"
+  ];
 }
