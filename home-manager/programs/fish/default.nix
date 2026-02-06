@@ -41,10 +41,7 @@ in
       };
       gca = "git commit --amend --no-edit";
       gd = "git diff --no-index";
-      gw = {
-        setCursor = true;
-        expansion = "git wt '%'";
-      };
+      gw = "git wt";
       cgw = "cd (git-wt | fzf | awk '{print $1}')";
       null = {
         position = "anywhere";
