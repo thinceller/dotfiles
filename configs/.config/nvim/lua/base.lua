@@ -43,3 +43,4 @@ vim.o.updatetime = 100
 vim.o.signcolumn = "yes"
 -- vim.o.spell = true
 -- vim.o.spelllang = "en,cjk"
+vim.cmd("filetype plugin indent on")
