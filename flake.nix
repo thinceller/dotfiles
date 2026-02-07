@@ -38,8 +38,8 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    edgepkgs = {
-      url = "github:natsukium/edgepkgs";
+    claude-code-overlay = {
+      url = "github:ryoppippi/claude-code-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     mcp-servers-nix = {

@@ -1,6 +1,6 @@
 ---
 name: Nix Helper
-description: This skill should be used when the user asks to "add a new package", "configure a new program", "troubleshoot Nix build errors", "update flake inputs", "add a new host", "manage secrets with SOPS", "create out-of-store symlink", "use nvfetcher", "use edgepkgs", or mentions Nix, Home Manager, or nix-darwin configuration in this dotfiles repository.
+description: This skill should be used when the user asks to "add a new package", "configure a new program", "troubleshoot Nix build errors", "update flake inputs", "add a new host", "manage secrets with SOPS", "create out-of-store symlink", "use nvfetcher", "use claude-code-overlay", or mentions Nix, Home Manager, or nix-darwin configuration in this dotfiles repository.
 ---
 
 # Nix Helper
@@ -15,7 +15,7 @@ This dotfiles repository uses:
 - **Home Manager** for user-level configuration
 - **SOPS** for secrets management
 - **nvfetcher** for external packages not in nixpkgs
-- **edgepkgs** overlay for bleeding-edge packages
+- **claude-code-overlay** for the claude-code package
 
 ## Directory Structure
 
@@ -48,14 +48,6 @@ Edit `home-manager/pkgs/default.nix`:
 home.packages = with pkgs; [
   # ... existing packages
   new-package-name
-];
-```
-
-For bleeding-edge packages, use the edgepkgs overlay:
-
-```nix
-home.packages = [
-  pkgs.edge.package-name  # From nixpkgs HEAD
 ];
 ```
 
@@ -246,7 +238,7 @@ See `examples/new-host.nix.example` for complete template.
 
 ## Additional Resources
 
-- **`references/package-management.md`** - nvfetcher, edgepkgs, external packages
+- **`references/package-management.md`** - nvfetcher, claude-code-overlay, external packages
 - **`references/secrets-management.md`** - SOPS workflow and best practices
 - **`references/home-manager-patterns.md`** - Program configuration patterns
 - **`examples/new-program.nix.example`** - Program configuration template

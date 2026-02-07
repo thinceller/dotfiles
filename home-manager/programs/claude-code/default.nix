@@ -13,7 +13,7 @@ in
 {
   programs.claude-code = {
     enable = true;
-    package = pkgs.edge.claude-code;
+    package = pkgs.claude-code;
 
     settings = {
       includeCoAuthoredBy = true;

@@ -16,24 +16,25 @@ Add packages in `home-manager/pkgs/default.nix`:
 }
 ```
 
-## Bleeding-Edge Packages (edgepkgs)
+## Claude Code (claude-code-overlay)
 
-Use the edgepkgs overlay for packages from nixpkgs HEAD:
+The claude-code package is provided via claude-code-overlay, which builds from Anthropic's official binary:
 
 ```nix
 { pkgs, ... }:
 {
-  home.packages = [
-    pkgs.edge.claude-code  # From nixpkgs HEAD
-  ];
+  programs.claude-code = {
+    enable = true;
+    package = pkgs.claude-code;
+  };
 }
 ```
 
-The edgepkgs overlay is configured in `flake.nix`:
+The overlay is configured in each host's `default.nix`:
 
 ```nix
 pkgs = import nixpkgs {
-  overlays = [ edgepkgs.overlays.default ];
+  overlays = [ claude-code-overlay.overlays.default ];
 };
 ```
 

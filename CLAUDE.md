@@ -122,13 +122,13 @@ Packages not in nixpkgs are fetched via nvfetcher:
 3. Import sources: `sources = pkgs.callPackage ../_sources/generated.nix { };`
 4. Use in programs: `package = sources.package-name;`
 
-#### 5. Bleeding-Edge Packages with edgepkgs
-The `edgepkgs` overlay provides packages from nixpkgs HEAD:
+#### 5. Claude Code with claude-code-overlay
+The `claude-code-overlay` provides the claude-code package built from Anthropic's official binary:
 ```nix
 pkgs = import nixpkgs {
-  overlays = [ edgepkgs.overlays.default ];
+  overlays = [ claude-code-overlay.overlays.default ];
 };
-# Then use: pkgs.edge.claude-code
+# Then use: pkgs.claude-code
 ```
 
 #### 6. MCP Servers Configuration

@@ -1,22 +1,22 @@
 {
   "nodes": {
-    "edgepkgs": {
+    "claude-code-overlay": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1770371218,
-        "narHash": "sha256-lCTZZ7xisoXB9Zlq88oYOao4EH/1BFbIX3NgFzX2sxk=",
-        "owner": "natsukium",
-        "repo": "edgepkgs",
-        "rev": "fbbb4a8565c271e0efa1109a0c1e63df6aff38e1",
+        "lastModified": 1770362193,
+        "narHash": "sha256-XGXXAVCVjD4chV6aw0DHzbvQEhMvAs+GPoW6fJQ/5uQ=",
+        "owner": "ryoppippi",
+        "repo": "claude-code-overlay",
+        "rev": "bb8e4fb03709a4487e19130f5cc94f5bc74653c3",
         "type": "github"
       },
       "original": {
-        "owner": "natsukium",
-        "repo": "edgepkgs",
+        "owner": "ryoppippi",
+        "repo": "claude-code-overlay",
         "type": "github"
       }
     },
@@ -225,7 +225,7 @@
     },
     "root": {
       "inputs": {
-        "edgepkgs": "edgepkgs",
+        "claude-code-overlay": "claude-code-overlay",
         "flake-parts": "flake-parts",
         "git-hooks-nix": "git-hooks-nix",
         "home-manager": "home-manager",
