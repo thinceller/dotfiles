@@ -6,5 +6,9 @@
   "prConcurrentLimit": 10,
   "nix": {
     "enabled": true
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "extends": ["schedule:daily"]
   }
 }
