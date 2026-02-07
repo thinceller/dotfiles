@@ -54,7 +54,8 @@
                                             "^com\\.github\\.wez\\.wezterm$",
                                             "^com\\.todesktop\\.230313mzl4w4u92",
                                             "^com\\.mitchellh\\.ghostty",
-                                            "^org\\.alacritty$"
+                                            "^org\\.alacritty$",
+                                            "^com\\.google\\.antigravity$"
                                         ],
                                         "type": "frontmost_application_unless"
                                     }
@@ -80,7 +81,8 @@
                                             "^com\\.github\\.wez\\.wezterm$",
                                             "^com\\.todesktop\\.230313mzl4w4u92",
                                             "^com\\.mitchellh\\.ghostty",
-                                            "^org\\.alacritty$"
+                                            "^org\\.alacritty$",
+                                            "^com\\.google\\.antigravity$"
                                         ],
                                         "type": "frontmost_application_unless"
                                     }
@@ -106,7 +108,8 @@
                                             "^com\\.github\\.wez\\.wezterm$",
                                             "^com\\.todesktop\\.230313mzl4w4u92",
                                             "^com\\.mitchellh\\.ghostty",
-                                            "^org\\.alacritty$"
+                                            "^org\\.alacritty$",
+                                            "^com\\.google\\.antigravity$"
                                         ],
                                         "type": "frontmost_application_unless"
                                     }
@@ -132,7 +135,8 @@
                                             "^com\\.github\\.wez\\.wezterm$",
                                             "^com\\.todesktop\\.230313mzl4w4u92",
                                             "^com\\.mitchellh\\.ghostty",
-                                            "^org\\.alacritty$"
+                                            "^org\\.alacritty$",
+                                            "^com\\.google\\.antigravity$"
                                         ],
                                         "type": "frontmost_application_unless"
                                     }
