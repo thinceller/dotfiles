@@ -1,3 +1,8 @@
+[arto-vim]
+src.git = "https://github.com/arto-app/arto.vim"
+src.branch = "main"
+fetch.github = "arto-app/arto.vim"
+
 [fish-ghq]
 src.git = "https://github.com/decors/fish-ghq"
 src.branch = "master"

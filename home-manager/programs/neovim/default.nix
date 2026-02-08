@@ -1,9 +1,13 @@
-{ pkgs, ... }:
+{ pkgs, sources, ... }:
 let
   loadPluginOptionally = map (p: {
     plugin = p;
     optional = false;
   });
+
+  arto-vim = pkgs.vimUtils.buildVimPlugin {
+    inherit (sources.arto-vim) pname version src;
+  };
 in
 {
   programs.neovim = {
@@ -73,6 +77,8 @@ in
         startup-nvim
         fidget-nvim
         toggleterm-nvim
+        # Arto (macOS Markdown reader)
+        arto-vim
       ];
   };
 }

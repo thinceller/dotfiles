@@ -1,4 +1,25 @@
 {
+    "arto-vim": {
+        "cargoLocks": null,
+        "date": "2026-02-01",
+        "extract": null,
+        "name": "arto-vim",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "arto-app",
+            "repo": "arto.vim",
+            "rev": "b05936238ff835ceca43442bf4ab8e843e73815c",
+            "sha256": "sha256-/Rk/t7Hm/VTa1KQptzd+1sZIiRR2l++tA98DSe9uwV4=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "b05936238ff835ceca43442bf4ab8e843e73815c"
+    },
     "fish-ghq": {
         "cargoLocks": null,
         "date": "2021-07-16",

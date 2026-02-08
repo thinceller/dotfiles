@@ -9,6 +9,7 @@
     };
     casks = [
       "arc"
+      "arto-app/tap/arto"
       "azookey"
       "chatgpt"
       "chatgpt-atlas"
