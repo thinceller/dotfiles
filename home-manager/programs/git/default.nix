@@ -50,6 +50,7 @@
     };
     ignores = [
       ".DS_Store"
+      ".claude/worktrees"
     ];
   };
 }
