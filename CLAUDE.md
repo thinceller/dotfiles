@@ -69,9 +69,10 @@ nix fmt
   - `pkgs/`: Single file (`default.nix`) containing all packages to install
   - `services/`: User-level services
   - `files.nix`: Symlink configuration for files in `configs/`
-- `configs/`: Raw configuration files (e.g., Neovim, Karabiner, WezTerm)
+- `configs/`: Raw configuration files (e.g., Neovim, Karabiner, ccstatusline)
 - `secrets/`: SOPS-encrypted secrets (default.yaml)
 - `_sources/`: Auto-generated external package sources (managed by nvfetcher)
+- `.github/workflows/`: CI configuration (Cachix + nix build)
 
 ### Key Design Patterns
 
@@ -134,6 +135,21 @@ pkgs = import nixpkgs {
 #### 6. MCP Servers Configuration
 Claude Code MCP servers are configured using `mcp-servers-nix` in `home-manager/programs/claude-code/default.nix`. This includes both NPM-based servers (context7, chrome-devtools) and HTTP-based servers (Notion, Figma).
 
+#### 7. Claude Code Global Skills and Commands
+Global (user-level, not project-level) custom skills and commands for Claude Code are managed under `home-manager/programs/claude-code/`:
+- `skills/`: Custom skills (e.g., `skill-creator`, `team-task`)
+- `commands/`: Custom slash commands (e.g., `commit-staged-changes`)
+- `home-manager/programs/claude-code/CLAUDE.md`: Claude Code project-specific memory
+
+These are symlinked into `~/.claude/` via the `skillsDir` / `commandsDir` options, making them available globally across all projects.
+
+#### 8. Homebrew Management
+Homebrew packages are declaratively managed in `nix-darwin/modules/homebrew.nix`:
+- `taps`: Third-party taps (e.g., `arto-app/tap`, `k1LoW/tap`)
+- `brews`: CLI tools (e.g., `tcmux`)
+- `casks`: GUI applications
+- `onActivation.cleanup = "uninstall"`: Automatically removes undeclared packages
+
 ### Adding New Configurations
 
 #### New Program
@@ -165,8 +181,25 @@ home.packages = with pkgs; [
    ```nix
    xdg.configFile."new-app" = {
      source = symlink /${rootDir}/.config/new-app;
+     recursive = true;
    };
    ```
+
+#### New Homebrew Package
+Add to `nix-darwin/modules/homebrew.nix`:
+```nix
+# For CLI tools
+brews = [ "new-tool" ];
+# For GUI apps
+casks = [ "new-app" ];
+# For third-party taps
+taps = [ "owner/tap" ];
+```
+
+#### New Claude Code Skill
+1. Create directory: `home-manager/programs/claude-code/skills/new-skill/`
+2. Add `SKILL.md` with frontmatter (description, trigger patterns)
+3. Optionally add `references/` directory for supplementary content
 
 #### New Host
 1. Create `hosts/new-hostname/default.nix`
