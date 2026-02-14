@@ -91,7 +91,8 @@ in
 
       statusLine = {
         type = "command";
-        command = ./statusline-command.sh;
+        # command = ./statusline-command.sh;
+        command = "bunx -y ccstatusline@latest";
       };
 
       enabledPlugins = {

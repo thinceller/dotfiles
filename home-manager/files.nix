@@ -40,6 +40,10 @@ in
       source = symlink /${rootDir}/.config/pnpm;
       recursive = true;
     };
+    "ccstatusline" = {
+      source = symlink /${rootDir}/.config/ccstatusline;
+      recursive = true;
+    };
     # "wezterm/wezterm.lua" = {
     #   source = symlink /${rootDir}/.config/wezterm/wezterm.lua;
     # };
