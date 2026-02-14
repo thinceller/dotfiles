@@ -7,9 +7,12 @@
       upgrade = true;
       cleanup = "uninstall";
     };
+    taps = [
+      "arto-app/tap"
+    ];
     casks = [
       "arc"
-      "arto-app/tap/arto"
+      "arto"
       "azookey"
       "chatgpt"
       "chatgpt-atlas"
