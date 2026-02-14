@@ -24,6 +24,7 @@
       "microsoft-edge"
       "nani"
       "notion"
+      "obsidian"
       "orbstack"
       "raycast"
       "thebrowsercompany-dia"
