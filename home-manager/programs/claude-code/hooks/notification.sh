@@ -23,8 +23,11 @@ ARGS=(-title "$TITLE" -message "$MESSAGE" -group "$SESSION_ID" -sound Breeze)
 
 if [[ -n "${TMUX:-}" ]]; then
   TMUX_SOCKET="${TMUX%%,*}"
-  SESSION_NAME=$(tmux -S "$TMUX_SOCKET" display-message -p '#S' 2>/dev/null || true)
-  if [[ -n "$SESSION_NAME" ]]; then
+  # TMUX_PANE (e.g. %5) でセッション・ウィンドウ・ペインを一括切り替え
+  # フォールバック: セッション名のみ（従来の動作）
+  SWITCH_TARGET="${TMUX_PANE:-$(tmux -S "$TMUX_SOCKET" display-message -p '#S' 2>/dev/null || true)}"
+
+  if [[ -n "$SWITCH_TARGET" ]]; then
     # 一時スクリプトを作成（-executeでのエスケープ問題を回避）
     ACTIVATE_SCRIPT="/tmp/claude/activate-tmux-${SESSION_ID}.sh"
     mkdir -p /tmp/claude
@@ -33,7 +36,7 @@ if [[ -n "${TMUX:-}" ]]; then
 export PATH=/etc/profiles/per-user/\$USER/bin:/run/current-system/sw/bin:/usr/local/bin:/opt/homebrew/bin:\$PATH
 osascript -e 'tell application "Alacritty" to activate'
 for client in \$(tmux -S '$TMUX_SOCKET' list-clients -F '#{client_tty}'); do
-  tmux -S '$TMUX_SOCKET' switch-client -c "\$client" -t '$SESSION_NAME'
+  tmux -S '$TMUX_SOCKET' switch-client -c "\$client" -t '$SWITCH_TARGET' 2>/dev/null || true
 done
 EOF
     chmod +x "$ACTIVATE_SCRIPT"
