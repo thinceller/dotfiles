@@ -2,6 +2,15 @@
 
 This file contains personal preferences and settings for Claude Code across all projects.
 
+## Git Worktree Rules
+
+**IMPORTANT**: When a session is started within a git worktree, all file exploration, reading, and editing MUST be performed within the worktree directory.
+
+- Always use the CWD (current working directory) at session start as the project root
+- To detect a worktree, check if `.git` is a file (not a directory) — this indicates a worktree
+- NEVER resolve the git root from `.git` and operate on files there; stay within the CWD tree
+- CLAUDE.md and other configuration files MUST be referenced and edited within the worktree
+
 ## Personal Code Style Preferences
 
 ## 設計原則の優先順位
