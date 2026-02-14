@@ -29,6 +29,14 @@
       bind - split-window -v -c "#{pane_current_path}"
       bind C new-session
 
+      # tcmux: list and switch to coding agent windows across all sessions
+      bind w run-shell "\
+        tcmux list-windows -a --color=always \
+        | fzf --ansi --tmux 80%,50% --layout reverse \
+        | sed 's/: .*//' \
+        | xargs -I{} tmux switch-client -t '{}' \
+      "
+
       bind -n S-Enter send-keys Escape "[13;2u"
 
       bind r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"

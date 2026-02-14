@@ -9,6 +9,10 @@
     };
     taps = [
       "arto-app/tap"
+      "k1LoW/tap"
+    ];
+    brews = [
+      "k1LoW/tap/tcmux"
     ];
     casks = [
       "arc"
