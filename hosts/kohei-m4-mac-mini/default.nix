@@ -11,6 +11,7 @@ let
     nixpkgs-dotenvx
     nixpkgs-git-wt
     nixpkgs-1password
+    arto
     ;
   system = "aarch64-darwin";
   userConfig =
@@ -47,6 +48,7 @@ let
         dotenvx = pkgs-dotenvx.dotenvx;
         git-wt = pkgs-git-wt.git-wt;
         _1password-gui-latest = pkgs-1password._1password-gui;
+        arto = arto.packages.${system}.default;
       })
     ];
   };

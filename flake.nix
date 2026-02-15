@@ -46,6 +46,10 @@
       url = "github:natsukium/mcp-servers-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    arto = {
+      url = "github:arto-app/Arto";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # dotenvx build failure workaround: https://github.com/NixOS/nixpkgs/issues/478005
     nixpkgs-dotenvx.url = "github:NixOS/nixpkgs/8198298755cad59b220641b8a76e372e27dc6471";
     # git-wt: pinned to a revision that includes git-wt 0.14.2

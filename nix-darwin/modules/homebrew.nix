@@ -8,7 +8,6 @@
       cleanup = "uninstall";
     };
     taps = [
-      "arto-app/tap"
       "k1LoW/tap"
     ];
     brews = [
@@ -16,7 +15,6 @@
     ];
     casks = [
       "arc"
-      "arto"
       "azookey"
       "chatgpt"
       "chatgpt-atlas"

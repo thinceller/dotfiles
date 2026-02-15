@@ -11,6 +11,7 @@ in
 lib.mkIf isDarwin {
   home.packages = with pkgs; [
     appcleaner
+    arto
     pinentry_mac
     terminal-notifier
   ];

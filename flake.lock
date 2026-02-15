@@ -1,5 +1,26 @@
 {
   "nodes": {
+    "arto": {
+      "inputs": {
+        "crane": "crane",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1771091932,
+        "narHash": "sha256-a/UqkmCp8Xsz3c/MbyS4U/Zjz4VZC+LgH6PIv+BnqMk=",
+        "owner": "arto-app",
+        "repo": "Arto",
+        "rev": "6f2ac2ee8f8856da3a4e8f7f0422ff76a7f5feab",
+        "type": "github"
+      },
+      "original": {
+        "owner": "arto-app",
+        "repo": "Arto",
+        "type": "github"
+      }
+    },
     "claude-code-overlay": {
       "inputs": {
         "nixpkgs": [
@@ -17,6 +38,21 @@
       "original": {
         "owner": "ryoppippi",
         "repo": "claude-code-overlay",
+        "type": "github"
+      }
+    },
+    "crane": {
+      "locked": {
+        "lastModified": 1770419512,
+        "narHash": "sha256-o8Vcdz6B6bkiGUYkZqFwH3Pv1JwZyXht3dMtS7RchIo=",
+        "owner": "ipetkov",
+        "repo": "crane",
+        "rev": "2510f2cbc3ccd237f700bb213756a8f35c32d8d7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ipetkov",
+        "repo": "crane",
         "type": "github"
       }
     },
@@ -225,6 +261,7 @@
     },
     "root": {
       "inputs": {
+        "arto": "arto",
         "claude-code-overlay": "claude-code-overlay",
         "flake-parts": "flake-parts",
         "git-hooks-nix": "git-hooks-nix",
