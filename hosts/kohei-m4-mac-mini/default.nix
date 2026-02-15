@@ -8,6 +8,7 @@ let
     sops-nix
     claude-code-overlay
     mcp-servers-nix
+    nix-index-database
     nixpkgs-dotenvx
     nixpkgs-git-wt
     nixpkgs-1password
@@ -70,6 +71,7 @@ nix-darwin.lib.darwinSystem {
       home-manager.backupFileExtension = "backup";
       home-manager.sharedModules = [
         sops-nix.homeManagerModules.sops
+        nix-index-database.homeModules.nix-index
       ];
       home-manager.extraSpecialArgs = {
         inherit

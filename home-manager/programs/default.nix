@@ -21,6 +21,7 @@
     ./lsd
     ./mise
     ./neovim
+    ./nix-index
     ./ripgrep
     ./tmux
     ./wezterm
