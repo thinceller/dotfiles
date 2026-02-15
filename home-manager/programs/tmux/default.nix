@@ -36,6 +36,9 @@ in
     terminal = "xterm-256color";
 
     extraConfig = ''
+      # true color support
+      set -ga terminal-overrides ",*:Tc"
+
       # base
       set -g set-titles on
       set -g renumber-windows on
@@ -45,6 +48,11 @@ in
       set -g display-panes-time 10000
       set -g escape-time 1
       setw -g pane-base-index 1
+
+      # pane focus highlighting
+      set -g window-style 'bg=#222436'
+      set -g window-active-style 'bg=#1a1b26'
+      set -g pane-border-indicators colour
 
       # keymaps
       bind -r C-h select-window -t :-
@@ -65,9 +73,9 @@ in
     '';
 
     plugins = with pkgs.tmuxPlugins; [
-      {
-        plugin = tmux-powerline;
-      }
+      # {
+      #   plugin = tmux-powerline;
+      # }
       {
         plugin = tmux-fzf;
       }
@@ -84,6 +92,9 @@ in
       }
       {
         plugin = urlview;
+      }
+      {
+        plugin = tokyo-night-tmux;
       }
     ];
   };
