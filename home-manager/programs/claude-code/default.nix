@@ -16,7 +16,6 @@ in
     package = pkgs.claude-code;
 
     settings = {
-      includeCoAuthoredBy = true;
       theme = "dark";
       autoCompactEnabled = false;
       enableAllProjectMcpServers = true;
