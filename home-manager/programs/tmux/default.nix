@@ -1,4 +1,28 @@
 { pkgs, ... }:
+let
+  tmux-switch-session = pkgs.writeShellScript "tmux-switch-session" ''
+    session=$(
+      tcmux list-sessions --color=always \
+      | fzf --ansi --tmux 80%,50% --layout reverse \
+          --preview 'echo {} | sed "s/: .*//" | xargs -I@ tcmux list-windows -t @ --color=always'
+    )
+    if [ -n "$session" ]; then
+      session_name=$(echo "$session" | sed 's/: .*//')
+      tmux switch-client -t "$session_name"
+    fi
+  '';
+
+  tmux-switch-window = pkgs.writeShellScript "tmux-switch-window" ''
+    window=$(
+      tcmux list-windows -a --color=always \
+      | fzf --ansi --tmux 80%,50% --layout reverse
+    )
+    if [ -n "$window" ]; then
+      window_name=$(echo "$window" | sed 's/: .*//')
+      tmux switch-client -t "$window_name"
+    fi
+  '';
+in
 {
   programs.tmux = {
     enable = true;
@@ -29,13 +53,11 @@
       bind - split-window -v -c "#{pane_current_path}"
       bind C new-session
 
+      # tcmux: list and switch to sessions with window preview
+      bind S run-shell "${tmux-switch-session}"
+
       # tcmux: list and switch to coding agent windows across all sessions
-      bind w run-shell "\
-        tcmux list-windows -a --color=always \
-        | fzf --ansi --tmux 80%,50% --layout reverse \
-        | sed 's/: .*//' \
-        | xargs -I{} tmux switch-client -t '{}' \
-      "
+      bind w run-shell "${tmux-switch-window}"
 
       bind -n S-Enter send-keys Escape "[13;2u"
 
