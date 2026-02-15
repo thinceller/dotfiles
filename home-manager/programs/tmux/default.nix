@@ -95,6 +95,9 @@ in
       }
       {
         plugin = tokyo-night-tmux;
+        extraConfig = ''
+          set -g @tokyo-night-tmux_window_id_style "fsquare"
+        '';
       }
     ];
   };
