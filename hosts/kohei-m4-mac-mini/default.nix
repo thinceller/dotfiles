@@ -11,7 +11,6 @@ let
     nix-index-database
     nixpkgs-dotenvx
     nixpkgs-git-wt
-    nixpkgs-1password
     arto
     ;
   system = "aarch64-darwin";
@@ -35,11 +34,6 @@ let
     inherit system;
   };
 
-  pkgs-1password = import nixpkgs-1password {
-    inherit system;
-    config.allowUnfree = true;
-  };
-
   pkgs = import nixpkgs {
     inherit system;
     config.allowUnfree = true;
@@ -48,7 +42,6 @@ let
       (_final: _prev: {
         dotenvx = pkgs-dotenvx.dotenvx;
         git-wt = pkgs-git-wt.git-wt;
-        _1password-gui-latest = pkgs-1password._1password-gui;
         arto = arto.packages.${system}.default;
       })
     ];

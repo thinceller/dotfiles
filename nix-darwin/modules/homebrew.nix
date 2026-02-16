@@ -14,6 +14,7 @@
       "k1LoW/tap/tcmux"
     ];
     casks = [
+      "1password"
       "arc"
       "azookey"
       "chatgpt"
