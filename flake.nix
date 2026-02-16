@@ -59,7 +59,7 @@
     # git-wt: pinned to a revision that includes git-wt 0.14.2
     nixpkgs-git-wt.url = "github:NixOS/nixpkgs/17a5fcf927843a8b80fa42f18f862a43ca9d1a7f";
     # 1password: pinned to nixpkgs HEAD for latest version (8.12.0)
-    nixpkgs-1password.url = "github:NixOS/nixpkgs/043a781b82dff90b74f68cd5376d89cc29a5f6b5";
+    nixpkgs-1password.url = "github:NixOS/nixpkgs/d1c15b7d5806069da59e819999d70e1cec0760bf";
   };
 
   outputs =
