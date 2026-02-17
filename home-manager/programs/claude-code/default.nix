@@ -57,7 +57,7 @@ in
           "Write(~/.ssh/**)"
           "Write(.env*)"
         ];
-        defaultMode = "plan";
+        defaultMode = "acceptEdits";
       };
 
       env = {
