@@ -68,6 +68,7 @@ in
         # git
         gitsigns-nvim
         lazygit-nvim
+        openingh-nvim
         # misc
         bufdelete-nvim
         nvim-autopairs
