@@ -23,6 +23,7 @@
     ./neovim
     ./nix-index
     ./ripgrep
+    ./starship
     ./tmux
     ./wezterm
   ];

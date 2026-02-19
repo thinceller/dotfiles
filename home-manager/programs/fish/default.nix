@@ -1,6 +1,5 @@
 {
   pkgs,
-  lib,
   config,
   sources,
   userConfig,
@@ -52,16 +51,11 @@ in
     };
     plugins = [
       {
-        name = "tide";
-        src = pkgs.fishPlugins.tide.src;
-      }
-      {
         name = sources.fish-ghq.pname;
         src = sources.fish-ghq.src;
       }
     ];
     interactiveShellInit = ''
-      # Source env.fish if it exists in dotfiles directory
       if test -f "${dotfilesDir}/env.fish"
         source "${dotfilesDir}/env.fish"
       end
@@ -73,13 +67,4 @@ in
       export TEST=$(cat ${config.sops.secrets.test.path})
     '';
   };
-
-  # Workaround: Set __NIX_DARWIN_SET_ENVIRONMENT_DONE=1 to skip fenv call in /etc/fish/nixos-env-preinit.fish
-  # Without this, fish -c fails with "Unknown command: fenv" because foreign-env functions
-  # are not properly loaded in non-interactive mode during activation phase.
-  home.activation.configure-tide = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    __NIX_DARWIN_SET_ENVIRONMENT_DONE=1 ${pkgs.fish}/bin/fish -c "tide configure --auto --style=Lean --prompt_colors='True color' --show_time=No --lean_prompt_height='Two lines' --prompt_connection=Disconnected --prompt_spacing=Sparse --icons='Many icons' --transient=No"
-    # Remove kubectl from tide right prompt items (kubectl is not installed)
-    __NIX_DARWIN_SET_ENVIRONMENT_DONE=1 ${pkgs.fish}/bin/fish -c "set -U tide_right_prompt_items (string match -v kubectl \$tide_right_prompt_items)"
-  '';
 }
