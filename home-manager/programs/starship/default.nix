@@ -33,8 +33,10 @@
 
       directory = {
         style = "bold #7dcfff";
-        truncation_length = 3;
-        truncate_to_repo = true;
+        truncation_length = 1;
+        truncate_to_repo = false;
+        fish_style_pwd_dir_length = 1;
+        truncation_symbol = "…/";
       };
 
       git_branch = {
