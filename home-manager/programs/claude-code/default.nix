@@ -94,12 +94,22 @@ in
         command = "bunx -y ccstatusline@latest";
       };
 
+      extraKnownMarketplaces = {
+        "chrome-devtools-plugins" = {
+          source = {
+            source = "github";
+            repo = "ChromeDevTools/chrome-devtools-mcp";
+          };
+        };
+      };
+
       enabledPlugins = {
         "code-review@claude-plugins-official" = true;
         "frontend-design@claude-plugins-official" = true;
         "plugin-dev@claude-plugins-official" = true;
         "pr-review-toolkit@claude-plugins-official" = true;
         "code-simplifier@claude-plugins-official" = true;
+        "chrome-devtools-mcp@chrome-devtools-plugins" = true;
       };
     };
 
