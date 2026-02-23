@@ -104,10 +104,11 @@ in
 
       enabledPlugins = {
         "code-review@claude-plugins-official" = true;
+        "code-simplifier@claude-plugins-official" = true;
         "frontend-design@claude-plugins-official" = true;
         "plugin-dev@claude-plugins-official" = true;
         "pr-review-toolkit@claude-plugins-official" = true;
-        "code-simplifier@claude-plugins-official" = true;
+        "ralph-loop@claude-plugins-official" = true;
         "chrome-devtools-mcp@chrome-devtools-plugins" = true;
       };
     };
