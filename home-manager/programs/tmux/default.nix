@@ -62,7 +62,8 @@ in
       bind C new-session
 
       # tcmux: list and switch to sessions with window preview
-      bind S run-shell "${tmux-switch-session}"
+      bind s run-shell "${tmux-switch-session}"
+      bind S choose-tree -Zs
 
       # tcmux: list and switch to coding agent windows across all sessions
       bind w run-shell "${tmux-switch-window}"
