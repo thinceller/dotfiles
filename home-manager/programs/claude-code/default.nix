@@ -21,6 +21,7 @@ in
       enableAllProjectMcpServers = true;
       alwaysThinkingEnabled = true;
       language = "japanese";
+      autoMemoryEnabled = true;
 
       model = "opus";
 
