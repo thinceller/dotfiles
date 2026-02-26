@@ -9,6 +9,7 @@
     };
     taps = [
       "k1LoW/tap"
+      "manaflow-ai/cmux"
     ];
     brews = [
       "k1LoW/tap/tcmux"
@@ -20,6 +21,7 @@
       "chatgpt"
       "chatgpt-atlas"
       "claude"
+      "cmux"
       "craft"
       "firefox"
       "google-chrome@beta"
