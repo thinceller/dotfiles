@@ -42,6 +42,8 @@ in
         allow = [
           "WebFetch"
           "WebSearch"
+          "Bash(ls:*)"
+          "Bash(grep:*)"
         ];
         ask = [
           "Bash(rm:*)"
@@ -101,6 +103,12 @@ in
             repo = "ChromeDevTools/chrome-devtools-mcp";
           };
         };
+        "thinceller-claude-plugins" = {
+          source = {
+            source = "github";
+            repo = "thinceller/claude-plugins";
+          };
+        };
       };
 
       enabledPlugins = {
@@ -111,13 +119,13 @@ in
         "pr-review-toolkit@claude-plugins-official" = true;
         "ralph-loop@claude-plugins-official" = true;
         "chrome-devtools-mcp@chrome-devtools-plugins" = true;
+        "git-toolkit@thinceller-claude-plugins" = true;
       };
     };
 
     memory.source = ./CLAUDE.md;
 
     # agentsDir = ./agents;
-    commandsDir = ./commands;
     skillsDir = ./skills;
     # hooksDir = ./hooks;
 
