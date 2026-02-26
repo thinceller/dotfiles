@@ -50,6 +50,10 @@
       url = "github:arto-app/Arto";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    cage = {
+      url = "github:Warashi/cage";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";

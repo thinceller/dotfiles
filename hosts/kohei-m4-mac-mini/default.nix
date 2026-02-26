@@ -12,6 +12,7 @@ let
     nixpkgs-dotenvx
     nixpkgs-git-wt
     arto
+    cage
     ;
   system = "aarch64-darwin";
   userConfig =
@@ -43,6 +44,7 @@ let
         dotenvx = pkgs-dotenvx.dotenvx;
         git-wt = pkgs-git-wt.git-wt;
         arto = arto.packages.${system}.default;
+        cage = cage.packages.${system}.default;
       })
     ];
   };
