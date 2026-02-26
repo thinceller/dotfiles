@@ -13,6 +13,9 @@ in
   home.sessionVariables = {
     LANG = "ja_JP.UTF-8";
     LC_ALL = "ja_JP.UTF-8";
+    # macOS のデフォルトは ~/Library/Application Support だが、
+    # cage 等の XDG 準拠ツールが ~/.config を参照するよう明示的に設定
+    XDG_CONFIG_HOME = "$HOME/.config";
   };
 
   sops = {

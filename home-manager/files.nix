@@ -40,6 +40,10 @@ in
       source = symlink /${rootDir}/.config/pnpm;
       recursive = true;
     };
+    "cage" = {
+      source = symlink /${rootDir}/.config/cage;
+      recursive = true;
+    };
     "ccstatusline" = {
       source = symlink /${rootDir}/.config/ccstatusline;
       recursive = true;
