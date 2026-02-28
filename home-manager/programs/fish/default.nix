@@ -17,13 +17,16 @@ in
           set git_root (git rev-parse --show-toplevel 2>/dev/null)
           if test $status -eq 0
             cd $git_root
-            claude --dangerously-skip-permissions $argv
+            # sandbox-exec が /bin/ps をブロックするため ccstatusline の
+            # ターミナル幅検出が失敗する。COLUMNS を明示的に渡して回避。
+            set -x COLUMNS (tput cols)
+            cage claude --dangerously-skip-permissions $argv
           else
             echo "Not in a git repository"
             return 1
           end
         '';
-        description = "Move to git root and run claude with arguments";
+        description = "Move to git root and run claude via cage sandbox";
       };
     };
     shellAbbrs = {

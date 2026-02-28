@@ -10,6 +10,12 @@ presets:
       - "/dev/tty"
       # Claude Code データ
       - "$HOME/.claude"
+      - "$HOME/.claude.json"
+      - "$HOME/.claude.json.backup"
+      - "$HOME/.claude.json.lock"
+      - "$HOME/.claude.lock"
+      # Claude Code MCP ログ
+      - "$HOME/Library/Caches/claude-cli-nodejs"
       # npm/npx キャッシュ (MCP サーバー等)
       - "$HOME/.npm"
       # bun キャッシュ (bunx for ccstatusline 等)
