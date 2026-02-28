@@ -118,6 +118,7 @@ in
         "plugin-dev@claude-plugins-official" = true;
         "pr-review-toolkit@claude-plugins-official" = true;
         "ralph-loop@claude-plugins-official" = true;
+        "skill-creator@claude-plugins-official" = true;
         "chrome-devtools-mcp@chrome-devtools-plugins" = true;
         "git-toolkit@thinceller-claude-plugins" = true;
       };
