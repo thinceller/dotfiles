@@ -40,15 +40,27 @@ This file contains personal preferences and settings for Claude Code across all 
 
 ## コード改善
 
-**重要**: コードの実装が完了したら、code-simplifier:code-simplifier subagentを使用してコードの改善を行ってください。
+**重要**: コードの実装が完了したら、変更の規模に応じて適切なツールを選択してコードの改善を行ってください。
+
+### ツール選択基準
+
+変更の規模を判定し、以下の基準でツールを選択する:
+
+- **小規模の変更**（3ファイル以下、概ね100行未満）→ `code-simplifier:code-simplifier`
+  - コードの明確さ・一貫性・保守性に特化し、プロジェクトのコーディング規約に沿って洗練する
+  - トークン効率が良い（単一エージェント）
+- **中〜大規模の変更**（4ファイル以上、または100行以上）→ `/simplify`
+  - 再利用性・品質・効率の3軸で並列レビューし、既存ユーティリティとの重複検出やN+1パターン等の構造的問題も検出する
+  - 3並列エージェントのためトークン消費は大きいが、中規模以上の変更での見落としを防げる
 
 ### 実行タイミング
 - 実装コードの編集が完了した後、動作確認の前
-- Planモードで実装計画を立てる際は、code-simplifier:code-simplifier実行ステップを必ず計画に含める
-- Todoリストを作成する際は、code-simplifier:code-simplifierによる改善タスクを必ず追加する
+- Planモードで実装計画を立てる際は、コード改善ステップを必ず計画に含める
+- Todoリストを作成する際は、コード改善タスクを必ず追加する
 
 ### 実行方法
-- Task toolを使用してcode-simplifier:code-simplifier subagentを起動する（subagent_type: "code-simplifier:code-simplifier"）
+- **code-simplifier**: Agent toolを使用してsubagentを起動する（subagent_type: "code-simplifier:code-simplifier"）
+- **/simplify**: Skill toolを使用して実行する
 - 対象は直近で変更したコードファイル
 
 ## 動作確認
