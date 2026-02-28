@@ -11,68 +11,66 @@ This file contains personal preferences and settings for Claude Code across all 
 - NEVER resolve the git root from `.git` and operate on files there; stay within the CWD tree
 - CLAUDE.md and other configuration files MUST be referenced and edited within the worktree
 
-## Personal Code Style Preferences
+## Design Principle Priorities
 
-## 設計原則の優先順位
+Always keep the following priorities in mind when refactoring or designing code:
 
-リファクタリングやコード設計において、以下の優先順位を常に念頭に置いてください：
+1. **Simplicity > Complexity**
+   - Choose simple, easy-to-understand solutions
+   - Avoid excessive abstraction or overuse of design patterns
 
-1. **単純性 > 複雑性**
-   - シンプルで理解しやすい解決策を選ぶ
-   - 過度な抽象化や設計パターンの適用を避ける
+2. **Clarity > Abstraction**
+   - Prioritize code whose intent is clearly communicated
+   - Prefer concrete, straightforward implementations over complexity for generality
 
-2. **明確性 > 抽象性**
-   - コードの意図が明確に伝わることを重視
-   - 汎用性のための複雑さよりも、具体的で分かりやすい実装を優先
+3. **Practicality > Theory**
+   - Focus on solving real problems
+   - Avoid designs that are theoretically perfect but impractical
 
-3. **実用性 > 理論性**
-   - 実際の問題解決に焦点を当てる
-   - 理論的に完璧でも実用的でない設計は避ける
+## Refactoring Checklist
 
-## リファクタリング時の確認事項
+When improving code, always verify the following:
 
-コードの改善を行う際は、以下の観点で必ず確認してください：
+- **Appropriate call hierarchy between files**: Review hierarchies deeper than 3 layers
+- **Each file has a clear responsibility**: Follows the single responsibility principle
+- **Testability is ensured**: Design with dependency injection and mockability
+- **No redundant intermediate layers**: Consider consolidating thin wrappers or meaningless relay layers
 
-- **ファイル間の呼び出し階層が適切か**: 3層以上の深い階層は見直し対象
-- **各ファイルが明確な責任を持っているか**: 単一責任の原則に従っている
-- **テスタビリティが確保されているか**: 依存性注入やモック可能な設計
-- **冗長な中間層がないか**: 薄いラッパーや意味のない中継層は統合を検討
+## Code Improvement
 
-## コード改善
+**IMPORTANT**: After completing code implementation, select the appropriate tool based on the scale of changes to improve the code.
 
-**重要**: コードの実装が完了したら、変更の規模に応じて適切なツールを選択してコードの改善を行ってください。
+### Tool Selection Criteria
 
-### ツール選択基準
+Assess the scale of changes and select a tool based on the following criteria:
 
-変更の規模を判定し、以下の基準でツールを選択する:
+- **Small changes** (3 files or fewer, roughly under 100 lines) → `code-simplifier:code-simplifier`
+  - Focuses on code clarity, consistency, and maintainability, refining code to match project coding conventions
+  - Token-efficient (single agent)
+- **Medium to large changes** (4+ files, or 100+ lines) → `/simplify`
+  - Performs parallel review across 3 axes: reusability, quality, and efficiency; detects duplication with existing utilities and structural issues like N+1 patterns
+  - Higher token consumption due to 3 parallel agents, but prevents oversights in medium-to-large changes
 
-- **小規模の変更**（3ファイル以下、概ね100行未満）→ `code-simplifier:code-simplifier`
-  - コードの明確さ・一貫性・保守性に特化し、プロジェクトのコーディング規約に沿って洗練する
-  - トークン効率が良い（単一エージェント）
-- **中〜大規模の変更**（4ファイル以上、または100行以上）→ `/simplify`
-  - 再利用性・品質・効率の3軸で並列レビューし、既存ユーティリティとの重複検出やN+1パターン等の構造的問題も検出する
-  - 3並列エージェントのためトークン消費は大きいが、中規模以上の変更での見落としを防げる
+### When to Run
+- After completing code edits, before verification
+- When creating an implementation plan in Plan mode, always include a code improvement step
+- When creating a Todo list, always add a code improvement task
 
-### 実行タイミング
-- 実装コードの編集が完了した後、動作確認の前
-- Planモードで実装計画を立てる際は、コード改善ステップを必ず計画に含める
-- Todoリストを作成する際は、コード改善タスクを必ず追加する
+### How to Run
+- **code-simplifier**: Launch a subagent using the Agent tool (subagent_type: "code-simplifier:code-simplifier")
+- **/simplify**: Execute using the Skill tool
+- Target: recently changed code files
 
-### 実行方法
-- **code-simplifier**: Agent toolを使用してsubagentを起動する（subagent_type: "code-simplifier:code-simplifier"）
-- **/simplify**: Skill toolを使用して実行する
-- 対象は直近で変更したコードファイル
+## Verification
 
-## 動作確認
+**IMPORTANT**: After any code change, always perform verification regardless of the change size.
 
-**重要**: コードの変更後は、変更の大小に関わらず必ず動作確認を行ってください。
+### When to Verify
+- Immediately after implementing code changes
+- When creating an implementation plan in Plan mode, always include a verification step
+- When creating a Todo list, always add a verification task
 
-### 確認タイミング
-- コード変更を実装した直後
-- Planモードで実装計画を立てる際は、動作確認ステップを必ず計画に含める
-- Todoリストを作成する際は、動作確認タスクを必ず追加する
-
-### 確認方法
-- 変更内容に応じた適切な動作確認を実施する（ビルド、テスト、リント、実際の動作など）
-- プロジェクトにテストやCI設定がある場合は必ず実行する
-- 動作確認なしにタスクを「完了」としない
+### How to Verify
+- Perform appropriate verification based on the changes (build, test, lint, actual behavior, etc.)
+- If the project has tests or CI configuration, always run them
+- Never mark a task as "completed" without verification
