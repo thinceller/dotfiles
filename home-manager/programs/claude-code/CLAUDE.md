@@ -61,6 +61,22 @@ Assess the scale of changes and select a tool based on the following criteria:
 - **/simplify**: Execute using the Skill tool
 - Target: recently changed code files
 
+## Command Execution via Nix
+
+When executing a command via the Bash tool that is not available on the system, use `nix run` to run it from nixpkgs instead of attempting to install it.
+
+```bash
+# Example: python3 is not installed
+nix run nixpkgs#python3 -- script.py
+
+# Example: jq is not installed
+nix run nixpkgs#jq -- '.key' file.json
+```
+
+- Always use the `nix run nixpkgs#<package> -- <args>` format
+- Do NOT attempt to install packages with `nix-env`, `brew install`, `apt install`, or similar commands
+- If the command fails with `nix run`, inform the user rather than trying alternative installation methods
+
 ## Verification
 
 **IMPORTANT**: After any code change, always perform verification regardless of the change size.

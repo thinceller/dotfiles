@@ -23,6 +23,7 @@
     nvfetcher
     php83
     php83Packages.composer
+    python3
     sops
     tig
     uv
