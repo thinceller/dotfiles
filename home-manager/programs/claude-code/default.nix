@@ -13,7 +13,7 @@ in
 {
   programs.claude-code = {
     enable = true;
-    package = pkgs.claude-code;
+    package = pkgs.edge.claude-code-bin;
 
     settings = {
       theme = "dark";
@@ -25,18 +25,18 @@ in
 
       model = "opus";
 
-      sandbox = {
-        enabled = true;
-        excludedCommands = [
-          "docker"
-          "git"
-          "gh"
-          "nix"
-        ];
-        network = {
-          allowLocalBinding = true;
-        };
-      };
+      # sandbox = {
+      #   enabled = true;
+      #   excludedCommands = [
+      #     "docker"
+      #     "git"
+      #     "gh"
+      #     "nix"
+      #   ];
+      #   network = {
+      #     allowLocalBinding = true;
+      #   };
+      # };
 
       permissions = {
         allow = [
@@ -67,7 +67,7 @@ in
         BASH_DEFAULT_TIMEOUT_MS = "60000";
         BASH_MAX_TIMEOUT_MS = "180000";
         CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR = "1";
-        CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC = "1";
+        CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC = "0";
         USE_BUILTIN_RIPGREP = "1";
 
         ENABLE_TOOL_SEARCH = true;

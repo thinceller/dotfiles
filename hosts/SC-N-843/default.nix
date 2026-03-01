@@ -6,7 +6,7 @@ let
     nix-darwin
     home-manager
     sops-nix
-    claude-code-overlay
+    edgepkgs
     mcp-servers-nix
     nix-index-database
     nixpkgs-dotenvx
@@ -39,7 +39,7 @@ let
     inherit system;
     config.allowUnfree = true;
     overlays = [
-      claude-code-overlay.overlays.default
+      edgepkgs.overlays.default
       (_final: _prev: {
         dotenvx = pkgs-dotenvx.dotenvx;
         git-wt = pkgs-git-wt.git-wt;
