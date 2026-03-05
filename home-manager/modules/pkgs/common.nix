@@ -25,6 +25,7 @@
     php83Packages.composer
     python3
     sops
+    sox
     tig
     uv
     wget
