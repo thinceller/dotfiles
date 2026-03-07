@@ -65,6 +65,7 @@ in
 
       fish_add_path /opt/homebrew/bin
       fish_add_path ${homeDir}/.local/bin
+      fish_add_path /Applications/Obsidian.app/Contents/MacOS
       git wt --init fish | source
       op completion fish | source
       export TEST=$(cat ${config.sops.secrets.test.path})

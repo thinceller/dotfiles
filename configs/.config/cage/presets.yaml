@@ -26,6 +26,9 @@ presets:
       - "$HOME/.local"
       # ランタイムで書き込まれるツール設定 (op, gcloud 等)
       - "$HOME/.config"
+      # Obsidian CLI
+      - "/Applications/Obsidian.app"
+      - "$HOME/Library/Application Support/obsidian"
     allow-keychain: true
     allow-git: true
 
