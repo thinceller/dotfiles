@@ -15,6 +15,7 @@ let
   tmux-switch-window = pkgs.writeShellScript "tmux-switch-window" ''
     window=$(
       tcmux list-windows -a --color=always \
+        -F '#{session_name}:#{window_index}: #{window_name} (#{window_panes} panes) #{agent_status}' \
       | fzf --ansi --tmux 80%,50% --layout reverse
     )
     if [ -n "$window" ]; then
