@@ -12,7 +12,7 @@ in
   programs.fish = {
     enable = true;
     functions = {
-      cc = {
+      scc = {
         body = ''
           set git_root (git rev-parse --show-toplevel 2>/dev/null)
           if test $status -eq 0
