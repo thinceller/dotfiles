@@ -61,7 +61,7 @@
     # dotenvx build failure workaround: https://github.com/NixOS/nixpkgs/issues/478005
     nixpkgs-dotenvx.url = "github:NixOS/nixpkgs/8198298755cad59b220641b8a76e372e27dc6471";
     # git-wt: pinned to a revision that includes git-wt 0.14.2
-    nixpkgs-git-wt.url = "github:NixOS/nixpkgs/17a5fcf927843a8b80fa42f18f862a43ca9d1a7f";
+    nixpkgs-git-wt.url = "github:NixOS/nixpkgs/8b125fb751ec77314834edba95eeea0bb6bc324f";
   };
 
   outputs =
