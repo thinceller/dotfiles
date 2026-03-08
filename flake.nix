@@ -46,10 +46,6 @@
       url = "github:natsukium/mcp-servers-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    arto = {
-      url = "github:arto-app/Arto";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     cage = {
       url = "github:Warashi/cage";
       inputs.nixpkgs.follows = "nixpkgs";

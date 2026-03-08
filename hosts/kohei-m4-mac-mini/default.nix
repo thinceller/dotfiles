@@ -11,7 +11,6 @@ let
     nix-index-database
     nixpkgs-dotenvx
     nixpkgs-git-wt
-    arto
     cage
     ;
   system = "aarch64-darwin";
@@ -43,7 +42,6 @@ let
       (_final: _prev: {
         dotenvx = pkgs-dotenvx.dotenvx;
         git-wt = pkgs-git-wt.git-wt;
-        arto = arto.packages.${system}.default;
         cage = cage.packages.${system}.default;
       })
     ];

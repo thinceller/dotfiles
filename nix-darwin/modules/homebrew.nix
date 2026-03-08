@@ -8,6 +8,7 @@
       cleanup = "uninstall";
     };
     taps = [
+      "arto-app/tap"
       "k1LoW/tap"
       "manaflow-ai/cmux"
     ];
@@ -17,6 +18,7 @@
     casks = [
       "1password"
       "arc"
+      "arto-app/tap/arto"
       "azookey"
       "chatgpt"
       "chatgpt-atlas"

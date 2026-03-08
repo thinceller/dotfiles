@@ -1,26 +1,5 @@
 {
   "nodes": {
-    "arto": {
-      "inputs": {
-        "crane": "crane",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1772159306,
-        "narHash": "sha256-d5mz5Zh0pmbUvEDub9jtNeFlwgUursxAta7CiYvgKoA=",
-        "owner": "arto-app",
-        "repo": "Arto",
-        "rev": "de77c679732d6b5ce4d0f1970a633b6c5a232ce1",
-        "type": "github"
-      },
-      "original": {
-        "owner": "arto-app",
-        "repo": "Arto",
-        "type": "github"
-      }
-    },
     "cage": {
       "inputs": {
         "flake-parts": "flake-parts",
@@ -41,21 +20,6 @@
       "original": {
         "owner": "Warashi",
         "repo": "cage",
-        "type": "github"
-      }
-    },
-    "crane": {
-      "locked": {
-        "lastModified": 1770419512,
-        "narHash": "sha256-o8Vcdz6B6bkiGUYkZqFwH3Pv1JwZyXht3dMtS7RchIo=",
-        "owner": "ipetkov",
-        "repo": "crane",
-        "rev": "2510f2cbc3ccd237f700bb213756a8f35c32d8d7",
-        "type": "github"
-      },
-      "original": {
-        "owner": "ipetkov",
-        "repo": "crane",
         "type": "github"
       }
     },
@@ -382,7 +346,6 @@
     },
     "root": {
       "inputs": {
-        "arto": "arto",
         "cage": "cage",
         "edgepkgs": "edgepkgs",
         "flake-parts": "flake-parts_2",
