@@ -332,7 +332,7 @@
         }
         {
           "if".app-id = "md.obsidian";
-          run = "move-node-to-workspace O";
+          run = "move-node-to-workspace 1";
         }
         # secondary monitor apps
         {
