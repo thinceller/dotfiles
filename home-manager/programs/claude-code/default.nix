@@ -92,8 +92,7 @@ in
 
       statusLine = {
         type = "command";
-        # command = ./statusline-command.sh;
-        command = "bunx -y ccstatusline@latest";
+        command = ./statusline-command.sh;
       };
 
       extraKnownMarketplaces = {
