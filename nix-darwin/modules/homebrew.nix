@@ -13,6 +13,7 @@
       "manaflow-ai/cmux"
     ];
     brews = [
+      "k1LoW/tap/mo"
       "k1LoW/tap/tcmux"
     ];
     casks = [
