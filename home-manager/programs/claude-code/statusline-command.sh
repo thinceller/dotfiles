@@ -3,9 +3,7 @@ set -euo pipefail
 
 CACHE_DIR="$HOME/.cache/claude-statusline"
 CACHE_FILE="$CACHE_DIR/usage.json"
-RESETS_FILE="$CACHE_DIR/resets.json"
-CACHE_TTL=1800
-RESETS_TTL=14400  # 4 hours
+CACHE_TTL=180
 LOCK_FILE="$CACHE_DIR/fetch.lock"
 
 # ── Nerd Font icons ──────────────────────────────────────────────────
@@ -99,8 +97,6 @@ _do_fetch() {
 
   if printf '%s' "$response" | jq -e '.five_hour' >/dev/null 2>&1; then
     printf '%s' "$response" > "$CACHE_FILE"
-    # Cache reset times separately with longer TTL
-    printf '%s' "$response" | jq '{five_hour_resets_at: .five_hour.resets_at, seven_day_resets_at: .seven_day.resets_at}' > "$RESETS_FILE" 2>/dev/null
   fi
 }
 
@@ -223,12 +219,6 @@ if [[ -n "$usage_json" && "$usage_json" != "{}" ]]; then
   five_hour_reset=$(printf '%s' "$usage_json" | jq -r '.five_hour.resets_at // ""' 2>/dev/null) || five_hour_reset=""
   seven_day_pct=$(printf '%s' "$usage_json" | jq -r '(.seven_day.utilization // 0) | floor' 2>/dev/null) || seven_day_pct=0
   seven_day_reset=$(printf '%s' "$usage_json" | jq -r '.seven_day.resets_at // ""' 2>/dev/null) || seven_day_reset=""
-fi
-
-# Fallback to resets cache if reset times are missing
-if [[ (-z "$five_hour_reset" || -z "$seven_day_reset") && -f "$RESETS_FILE" ]]; then
-  [[ -z "$five_hour_reset" ]] && five_hour_reset=$(jq -r '.five_hour_resets_at // ""' "$RESETS_FILE" 2>/dev/null) || true
-  [[ -z "$seven_day_reset" ]] && seven_day_reset=$(jq -r '.seven_day_resets_at // ""' "$RESETS_FILE" 2>/dev/null) || true
 fi
 
 five_color=$(color_for_pct "$five_hour_pct")
