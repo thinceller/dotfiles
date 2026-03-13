@@ -152,10 +152,13 @@ input=$(cat)
 
 # Parse fields from stdin JSON
 model=$(printf '%s' "$input" | jq -r '.model.display_name // "Unknown"' 2>/dev/null) || model="Unknown"
-ctx_pct=$(printf '%s' "$input" | jq -r '.context_window.used_percentage // 0' 2>/dev/null) || ctx_pct=0
+ctx_raw_pct=$(printf '%s' "$input" | jq -r '.context_window.used_percentage // 0' 2>/dev/null) || ctx_raw_pct=0
 current_dir=$(printf '%s' "$input" | jq -r '.workspace.current_dir // .cwd // ""' 2>/dev/null) || current_dir=""
 worktree_name=$(printf '%s' "$input" | jq -r '.worktree.name // ""' 2>/dev/null) || worktree_name=""
-ctx_pct=${ctx_pct%%.*}  # strip decimal
+
+# Convert context usage to percentage of auto-compact threshold
+compact_threshold=${CLAUDE_AUTOCOMPACT_PCT_OVERRIDE:-95}
+ctx_pct=$(printf '%s' "$ctx_raw_pct" | awk -v threshold="$compact_threshold" '{printf "%d", $1 / threshold * 100}')
 
 # ── Line 1: Git info ────────────────────────────────────────────────
 
@@ -208,7 +211,7 @@ fi
 ctx_color=$(color_for_pct "$ctx_pct")
 ctx_bar=$(render_bar "$ctx_pct" 20 "$ctx_color")
 
-line2="🤖 \033[35m${model}\033[0m | 📊 [${ctx_bar}] \033[${ctx_color}m${ctx_pct}%\033[0m"
+line2="🤖 \033[35m${model}\033[0m | 📊 [${ctx_bar}] \033[${ctx_color}m${ctx_pct}%\033[0m (compact@${compact_threshold}%)"
 
 # ── Lines 3-4: Usage (session / weekly) ─────────────────────────────
 
