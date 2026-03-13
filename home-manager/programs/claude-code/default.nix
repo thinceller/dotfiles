@@ -24,7 +24,8 @@ in
       autoMemoryEnabled = true;
       remoteControlAtStartup = true;
 
-      model = "opus";
+      # model = "opus";
+      effortLevel = "high";
 
       # sandbox = {
       #   enabled = true;
@@ -56,7 +57,6 @@ in
           "Read(~/.ssh/**)"
           "Read(.env*)"
           "Bash(sudo:*)"
-          "Bash(rm -rf:*)"
           "Bash(git commit --no-gpg-sign:*)"
           "Write(~/.ssh/**)"
           "Write(.env*)"
