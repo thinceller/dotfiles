@@ -9,6 +9,7 @@ let
       builtins.readFile ./hooks/notification.sh
     )
   );
+  openPlanScript = pkgs.writeShellScript "claude-open-plan" (builtins.readFile ./hooks/open-plan.sh);
 in
 {
   programs.claude-code = {
@@ -26,6 +27,7 @@ in
 
       # model = "opus";
       effortLevel = "high";
+      voiceEnabled = true;
 
       # sandbox = {
       #   enabled = true;
@@ -84,6 +86,17 @@ in
               {
                 type = "command";
                 command = notificationScript;
+              }
+            ];
+          }
+        ];
+        PostToolUse = [
+          {
+            matcher = "ExitPlanMode";
+            hooks = [
+              {
+                type = "command";
+                command = openPlanScript;
               }
             ];
           }
