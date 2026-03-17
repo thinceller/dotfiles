@@ -30,11 +30,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1773463535,
-        "narHash": "sha256-kdzrtHjaYWlY2GnmjoXb7RAFlqX4X5FSe5T15j+6aq8=",
+        "lastModified": 1773713141,
+        "narHash": "sha256-AJWDJ2CPJ3x1eo0zdBwHDH7Tc4Roni/mUWVnAaZiHtQ=",
         "owner": "natsukium",
         "repo": "edgepkgs",
-        "rev": "948bb12457ceeb41f0abb75e20ee9ac13e446714",
+        "rev": "672702c6ddf341ae3172e3fe47d8ffed64c54f6f",
         "type": "github"
       },
       "original": {
