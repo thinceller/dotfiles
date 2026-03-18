@@ -48,6 +48,7 @@ in
       set -g status-position top
       set -g display-panes-time 10000
       set -g escape-time 1
+      set -g allow-passthrough on
       setw -g pane-base-index 1
 
       # pane focus highlighting
