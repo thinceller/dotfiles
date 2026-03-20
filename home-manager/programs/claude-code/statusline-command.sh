@@ -1,11 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-CACHE_DIR="$HOME/.cache/claude-statusline"
-CACHE_FILE="$CACHE_DIR/usage.json"
-CACHE_TTL=180
-LOCK_FILE="$CACHE_DIR/fetch.lock"
-
 # ── Nerd Font icons ──────────────────────────────────────────────────
 
 ICON_REPO=$(printf '\xef\x90\x81')        # nf-oct-repo U+F401
@@ -40,9 +35,8 @@ render_bar() {
 
 fish_style_path() {
   local path=$1
-  # Replace $HOME with ~
   [[ "$path" == "$HOME"* ]] && path="~${path#"$HOME"}"
-  # Abbreviate intermediate directories to first char, keep last component full
+
   local IFS='/' parts=() result=()
   read -ra parts <<< "$path"
   local last_idx=$(( ${#parts[@]} - 1 ))
@@ -50,107 +44,66 @@ fish_style_path() {
     local part="${parts[$i]}"
     if [[ -z "$part" ]]; then
       continue
-    elif (( i == last_idx )); then
-      result+=("$part")
-    elif [[ "$part" == "~" ]]; then
+    elif (( i == last_idx )) || [[ "$part" == "~" ]]; then
       result+=("$part")
     elif [[ "$part" == .* ]]; then
-      # Dotfiles: keep dot + first char (e.g. .dotfiles → .d)
       result+=("${part:0:2}")
     else
       result+=("${part:0:1}")
     fi
   done
-  local joined=""
-  for i in "${!result[@]}"; do
-    (( i > 0 )) && joined+="/"
-    joined+="${result[$i]}"
-  done
-  echo "$joined"
+
+  local IFS='/'
+  echo "${result[*]}"
 }
 
 format_jst() {
-  local utc=$1 fmt=${2:-"%H:%M JST"}
-  if [[ -z "$utc" || "$utc" == "null" ]]; then echo "N/A"; return; fi
+  local ts=$1 fmt=${2:-"%H:%M JST"}
+  if [[ -z "$ts" || "$ts" == "null" || "$ts" == "0" ]]; then echo "N/A"; return; fi
+
   local epoch
-  # Strip fractional seconds and timezone offset for macOS date parsing
-  local clean="${utc%%+*}"
-  clean="${clean%%Z*}"
-  clean="${clean%%.*}"
-  # Parse as UTC, then convert to JST (use /bin/date for macOS -j flag)
-  epoch=$(TZ=UTC /bin/date -j -f "%Y-%m-%dT%H:%M:%S" "$clean" "+%s" 2>/dev/null) || { echo "N/A"; return; }
-  TZ=Asia/Tokyo /bin/date -j -r "$epoch" "+${fmt}" 2>/dev/null || echo "N/A"
-}
 
-_do_fetch() {
-  # Extract OAuth token from macOS Keychain
-  local creds token
-  creds=$(security find-generic-password -s "Claude Code-credentials" -w 2>/dev/null) || return 1
-  token=$(printf '%s' "$creds" | jq -r '.claudeAiOauth.accessToken // empty' 2>/dev/null) || return 1
-  [[ -z "$token" ]] && return 1
-
-  local response
-  response=$(curl -s --max-time 3 \
-    -H "Authorization: Bearer $token" \
-    -H "anthropic-beta: oauth-2025-04-20" \
-    "https://api.anthropic.com/api/oauth/usage" 2>/dev/null) || return 1
-
-  if printf '%s' "$response" | jq -e '.five_hour' >/dev/null 2>&1; then
-    printf '%s' "$response" > "$CACHE_FILE"
-  fi
-}
-
-fetch_usage() {
-  mkdir -p "$CACHE_DIR"
-
-  local now
-  now=$(date +%s)
-
-  # Always return cache immediately if it exists
-  if [[ -f "$CACHE_FILE" ]]; then
-    local mtime
-    mtime=$(/usr/bin/stat -f %m "$CACHE_FILE" 2>/dev/null) || mtime=0
-
-    if (( now - mtime < CACHE_TTL )); then
-      # Cache is fresh
-      cat "$CACHE_FILE"
-      return
-    fi
-
-    # Cache is stale: return it now, refresh in background (with lock to prevent stampede)
-    cat "$CACHE_FILE"
-    local lock_age=999
-    if [[ -f "$LOCK_FILE" ]]; then
-      local lock_mtime
-      lock_mtime=$(/usr/bin/stat -f %m "$LOCK_FILE" 2>/dev/null) || lock_mtime=0
-      lock_age=$(( now - lock_mtime ))
-    fi
-    if (( lock_age > 30 )); then
-      touch "$LOCK_FILE"
-      ( _do_fetch; rm -f "$LOCK_FILE" ) &
-      disown 2>/dev/null
-    fi
-    return
-  fi
-
-  # No cache at all: synchronous fetch (first run only)
-  _do_fetch
-  if [[ -f "$CACHE_FILE" ]]; then
-    cat "$CACHE_FILE"
+  if [[ "$ts" =~ ^[0-9]+$ ]]; then
+    # Unix epoch seconds
+    epoch="$ts"
   else
-    echo '{}'
+    # ISO 8601 fallback
+    local clean="${ts%%+*}"
+    clean="${clean%%Z*}"
+    clean="${clean%%.*}"
+    epoch=$(TZ=UTC /bin/date -j -f "%Y-%m-%dT%H:%M:%S" "$clean" "+%s" 2>/dev/null) || { echo "N/A"; return; }
   fi
+
+  TZ=Asia/Tokyo /bin/date -j -r "$epoch" "+${fmt}" 2>/dev/null || echo "N/A"
 }
 
 # ── main ─────────────────────────────────────────────────────────────
 
 input=$(cat)
 
-# Parse fields from stdin JSON
-model=$(printf '%s' "$input" | jq -r '.model.display_name // "Unknown"' 2>/dev/null) || model="Unknown"
-ctx_raw_pct=$(printf '%s' "$input" | jq -r '.context_window.used_percentage // 0' 2>/dev/null) || ctx_raw_pct=0
-current_dir=$(printf '%s' "$input" | jq -r '.workspace.current_dir // .cwd // ""' 2>/dev/null) || current_dir=""
-worktree_name=$(printf '%s' "$input" | jq -r '.worktree.name // ""' 2>/dev/null) || worktree_name=""
+# Parse all fields from stdin JSON in a single jq call (one field per line)
+{
+  read -r model
+  read -r ctx_raw_pct
+  read -r current_dir
+  read -r worktree_name
+  read -r five_hour_pct
+  read -r five_hour_reset
+  read -r seven_day_pct
+  read -r seven_day_reset
+} < <(printf '%s' "$input" | jq -r '
+  (.model.display_name // "Unknown"),
+  (.context_window.used_percentage // 0),
+  (.workspace.current_dir // .cwd // ""),
+  (.worktree.name // ""),
+  (.rate_limits.five_hour.used_percentage // 0),
+  (.rate_limits.five_hour.resets_at // ""),
+  (.rate_limits.seven_day.used_percentage // 0),
+  (.rate_limits.seven_day.resets_at // "")
+' 2>/dev/null) || {
+  model="Unknown"; ctx_raw_pct=0; current_dir=""; worktree_name=""
+  five_hour_pct=0; five_hour_reset=""; seven_day_pct=0; seven_day_reset=""
+}
 
 # Convert context usage to percentage of auto-compact threshold
 compact_threshold=${CLAUDE_AUTOCOMPACT_PCT_OVERRIDE:-95}
@@ -210,16 +163,6 @@ ctx_bar=$(render_bar "$ctx_pct" 20 "$ctx_color")
 line2="🤖 \033[35m${model}\033[0m | 📊 [${ctx_bar}] \033[${ctx_color}m${ctx_pct}%\033[0m (compact@${compact_threshold}%)"
 
 # ── Lines 3-4: Usage (session / weekly) ─────────────────────────────
-
-usage_json=$(fetch_usage)
-
-five_hour_pct=0; five_hour_reset=""; seven_day_pct=0; seven_day_reset=""
-if [[ -n "$usage_json" && "$usage_json" != "{}" ]]; then
-  five_hour_pct=$(printf '%s' "$usage_json" | jq -r '(.five_hour.utilization // 0) | floor' 2>/dev/null) || five_hour_pct=0
-  five_hour_reset=$(printf '%s' "$usage_json" | jq -r '.five_hour.resets_at // ""' 2>/dev/null) || five_hour_reset=""
-  seven_day_pct=$(printf '%s' "$usage_json" | jq -r '(.seven_day.utilization // 0) | floor' 2>/dev/null) || seven_day_pct=0
-  seven_day_reset=$(printf '%s' "$usage_json" | jq -r '.seven_day.resets_at // ""' 2>/dev/null) || seven_day_reset=""
-fi
 
 five_color=$(color_for_pct "$five_hour_pct")
 five_bar=$(render_bar "$five_hour_pct" 20 "$five_color")
