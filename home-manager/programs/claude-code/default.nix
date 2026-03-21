@@ -133,6 +133,7 @@ in
         "skill-creator@claude-plugins-official" = true;
         "chrome-devtools-mcp@chrome-devtools-plugins" = true;
         "git-toolkit@thinceller-claude-plugins" = true;
+        "discord@claude-plugins-official" = true;
       };
     };
 

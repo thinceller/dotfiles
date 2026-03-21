@@ -24,6 +24,7 @@ in
       keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
     };
     secrets.test = { };
+    secrets.discord-bot-token = { };
   };
 
   # mac-app-util の代わりに home-manager 組み込みの copyApps を使用

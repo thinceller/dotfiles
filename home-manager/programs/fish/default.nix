@@ -69,6 +69,7 @@ in
       git wt --init fish | source
       op completion fish | source
       export TEST=$(cat ${config.sops.secrets.test.path})
+      export DISCORD_BOT_TOKEN=$(cat ${config.sops.secrets.discord-bot-token.path})
     '';
   };
 }
