@@ -35,6 +35,7 @@ render_bar() {
 
 fish_style_path() {
   local path=$1
+  [[ -z "$path" ]] && return
   [[ "$path" == "$HOME"* ]] && path="~${path#"$HOME"}"
 
   local IFS='/' parts=() result=()
