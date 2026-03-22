@@ -10,7 +10,6 @@ let
     mcp-servers-nix
     nix-index-database
     nixpkgs-dotenvx
-    nixpkgs-git-wt
     cage
     ;
   system = "aarch64-darwin";
@@ -30,10 +29,6 @@ let
     inherit system;
   };
 
-  pkgs-git-wt = import nixpkgs-git-wt {
-    inherit system;
-  };
-
   pkgs = import nixpkgs {
     inherit system;
     config.allowUnfree = true;
@@ -41,7 +36,6 @@ let
       edgepkgs.overlays.default
       (_final: _prev: {
         dotenvx = pkgs-dotenvx.dotenvx;
-        git-wt = pkgs-git-wt.git-wt;
         cage = cage.packages.${system}.default;
       })
     ];
