@@ -12,6 +12,7 @@ PLANS_DIR="${HOME}/.claude/plans"
 PLAN_FILE=$(ls -t "$PLANS_DIR"/*.md 2>/dev/null | head -1)
 [[ -n "$PLAN_FILE" ]] || exit 0
 
-"$MO" --open "$PLAN_FILE" &>/dev/null &
+"$MO" --open "$PLAN_FILE" </dev/null &>/dev/null &
+disown
 
 exit 0

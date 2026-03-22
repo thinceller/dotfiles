@@ -90,7 +90,7 @@ in
             ];
           }
         ];
-        PostToolUse = [
+        PreToolUse = [
           {
             matcher = "ExitPlanMode";
             hooks = [
