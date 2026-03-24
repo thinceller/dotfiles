@@ -9,7 +9,6 @@
   };
 
   homebrew.casks = [
-    "cursor"
     "figma"
     "sequel-ace"
   ];
