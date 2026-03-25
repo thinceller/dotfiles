@@ -97,7 +97,14 @@ in
         plugin = urlview;
       }
       {
-        plugin = tokyo-night-tmux;
+        plugin = tokyo-night-tmux.overrideAttrs (old: {
+          postInstall = (old.postInstall or "") + ''
+            # Fix: patch shebangs to use Nix bash (5.x) instead of macOS /bin/bash (3.2)
+            # bash 3.2 doesn't support declare -A (associative arrays) used in themes.sh
+            find $out -type f \( -name '*.sh' -o -name '*.tmux' \) -exec \
+              sed -i 's|#!/usr/bin/env bash|#!${pkgs.bash}/bin/bash|' {} +
+          '';
+        });
         extraConfig = ''
           set -g @tokyo-night-tmux_window_id_style "fsquare"
         '';
