@@ -28,6 +28,7 @@ in
       # model = "opus";
       effortLevel = "high";
       voiceEnabled = true;
+      skipAutoPermissionPrompt = true;
 
       # sandbox = {
       #   enabled = true;
@@ -63,7 +64,7 @@ in
           "Write(~/.ssh/**)"
           "Write(.env*)"
         ];
-        defaultMode = "acceptEdits";
+        defaultMode = "auto";
       };
 
       env = {
