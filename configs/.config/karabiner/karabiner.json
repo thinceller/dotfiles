@@ -55,7 +55,8 @@
                                             "^com\\.todesktop\\.230313mzl4w4u92",
                                             "^com\\.mitchellh\\.ghostty",
                                             "^org\\.alacritty$",
-                                            "^com\\.google\\.antigravity$"
+                                            "^com\\.google\\.antigravity$",
+                                            "^com\\.cmuxterm\\.app$"
                                         ],
                                         "type": "frontmost_application_unless"
                                     }
@@ -82,7 +83,8 @@
                                             "^com\\.todesktop\\.230313mzl4w4u92",
                                             "^com\\.mitchellh\\.ghostty",
                                             "^org\\.alacritty$",
-                                            "^com\\.google\\.antigravity$"
+                                            "^com\\.google\\.antigravity$",
+                                            "^com\\.cmuxterm\\.app$"
                                         ],
                                         "type": "frontmost_application_unless"
                                     }
@@ -109,7 +111,8 @@
                                             "^com\\.todesktop\\.230313mzl4w4u92",
                                             "^com\\.mitchellh\\.ghostty",
                                             "^org\\.alacritty$",
-                                            "^com\\.google\\.antigravity$"
+                                            "^com\\.google\\.antigravity$",
+                                            "^com\\.cmuxterm\\.app$"
                                         ],
                                         "type": "frontmost_application_unless"
                                     }
@@ -136,7 +139,8 @@
                                             "^com\\.todesktop\\.230313mzl4w4u92",
                                             "^com\\.mitchellh\\.ghostty",
                                             "^org\\.alacritty$",
-                                            "^com\\.google\\.antigravity$"
+                                            "^com\\.google\\.antigravity$",
+                                            "^com\\.cmuxterm\\.app$"
                                         ],
                                         "type": "frontmost_application_unless"
                                     }

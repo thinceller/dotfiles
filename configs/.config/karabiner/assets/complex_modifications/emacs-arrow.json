@@ -12,7 +12,8 @@
                 "^com\\.googlecode\\.iterm2$",
                 "^com\\.runningwithcrayons\\.Alfred$",
                 "^com\\.microsoft\\.VSCode$",
-                "^com\\.github\\.wez\\.wezterm$"
+                "^com\\.github\\.wez\\.wezterm$",
+                "^com\\.cmuxterm\\.app$"
               ],
               "type": "frontmost_application_unless"
             }
@@ -43,7 +44,8 @@
                 "^com\\.googlecode\\.iterm2$",
                 "^com\\.runningwithcrayons\\.Alfred$",
                 "^com\\.microsoft\\.VSCode$",
-                "^com\\.github\\.wez\\.wezterm$"
+                "^com\\.github\\.wez\\.wezterm$",
+                "^com\\.cmuxterm\\.app$"
               ],
               "type": "frontmost_application_unless"
             }
@@ -74,7 +76,8 @@
                 "^com\\.googlecode\\.iterm2$",
                 "^com\\.runningwithcrayons\\.Alfred$",
                 "^com\\.microsoft\\.VSCode$",
-                "^com\\.github\\.wez\\.wezterm$"
+                "^com\\.github\\.wez\\.wezterm$",
+                "^com\\.cmuxterm\\.app$"
               ],
               "type": "frontmost_application_unless"
             }
@@ -105,7 +108,8 @@
                 "^com\\.googlecode\\.iterm2$",
                 "^com\\.runningwithcrayons\\.Alfred$",
                 "^com\\.microsoft\\.VSCode$",
-                "^com\\.github\\.wez\\.wezterm$"
+                "^com\\.github\\.wez\\.wezterm$",
+                "^com\\.cmuxterm\\.app$"
               ],
               "type": "frontmost_application_unless"
             }
