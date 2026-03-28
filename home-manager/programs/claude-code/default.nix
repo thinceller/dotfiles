@@ -125,16 +125,24 @@ in
       };
 
       enabledPlugins = {
-        "code-review@claude-plugins-official" = true;
-        "code-simplifier@claude-plugins-official" = true;
-        "frontend-design@claude-plugins-official" = true;
+        # claude-plugins-official
+        "claude-code-setup@claude-plugins-official" = true;
+        "claude-md-management@claude-plugins-official" = true;
+        "superpowers@claude-plugins-official" = true;
         "plugin-dev@claude-plugins-official" = true;
-        "pr-review-toolkit@claude-plugins-official" = true;
-        "ralph-loop@claude-plugins-official" = true;
         "skill-creator@claude-plugins-official" = true;
-        "chrome-devtools-mcp@chrome-devtools-plugins" = true;
-        "git-toolkit@thinceller-claude-plugins" = true;
+        "frontend-design@claude-plugins-official" = true;
+        "ralph-loop@claude-plugins-official" = true;
+        "code-simplifier@claude-plugins-official" = true;
+        "code-review@claude-plugins-official" = true;
+        "pr-review-toolkit@claude-plugins-official" = true;
         "discord@claude-plugins-official" = true;
+
+        # chrome-devtools-plugins
+        "chrome-devtools-mcp@chrome-devtools-plugins" = true;
+
+        # thinceller-claude-plugins
+        "git-toolkit@thinceller-claude-plugins" = true;
       };
     };
 
