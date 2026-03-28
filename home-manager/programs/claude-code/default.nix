@@ -77,6 +77,7 @@ in
         ENABLE_EXPERIMENTAL_MCP_CLI = false;
         CLAUDE_CODE_ENABLE_TASKS = true;
         CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1";
+        CLAUDE_CODE_NEW_INIT = "1";
       };
 
       hooks = {
