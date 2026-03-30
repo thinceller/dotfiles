@@ -23,7 +23,6 @@ in
       alwaysThinkingEnabled = true;
       language = "japanese";
       autoMemoryEnabled = true;
-      remoteControlAtStartup = true;
 
       # model = "opus";
       effortLevel = "high";
