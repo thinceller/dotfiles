@@ -77,6 +77,7 @@ in
         CLAUDE_CODE_ENABLE_TASKS = true;
         CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1";
         CLAUDE_CODE_NEW_INIT = "1";
+        CLAUDE_CODE_NO_FLICKER = "1";
       };
 
       hooks = {
