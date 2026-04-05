@@ -147,7 +147,7 @@ in
       };
     };
 
-    memory.source = ./CLAUDE.md;
+    memory.source = ./user-memory.md;
 
     # agentsDir = ./agents;
     skillsDir = ./skills;
