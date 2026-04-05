@@ -331,6 +331,10 @@
           ];
         }
         {
+          "if".app-id = "com.linear";
+          run = "move-node-to-workspace I";
+        }
+        {
           "if".app-id = "md.obsidian";
           run = "move-node-to-workspace O";
         }
