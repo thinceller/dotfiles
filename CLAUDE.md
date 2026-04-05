@@ -60,16 +60,18 @@ nix fmt
 - `flake.nix`: Main entry point defining inputs, outputs, and host configurations
 - `hosts/`: Machine-specific configurations that combine nix-darwin and home-manager
   - Each host defines a `userConfig` with username, homeDir, hostname, and dotfilesDir
-  - Work machines (like SC-N-843) use `nix-darwin/minimum-for-work.nix` instead of the default
-- `nix-darwin/`: System-level macOS configurations (fonts, homebrew, services)
-  - `default.nix`: Full configuration for personal machines
-  - `minimum-for-work.nix`: Minimal configuration for work machines
+  - Work machines (like SC-N-843) have host-specific settings in `nix-darwin/modules/hosts/`
+- `nix-darwin/modules/`: System-level macOS configurations
+  - `hosts/`: Host-specific settings (e.g., `kohei-m4-mac-mini.nix`, `SC-N-843.nix`)
+  - `programs/`: System-level program configs (e.g., `1password.nix`)
+  - `services/`: System-level services (e.g., `aerospace.nix`, `karabiner-elements.nix`)
+  - `homebrew.nix`, `fonts.nix`, `networking.nix`, `nix.nix`, `shells.nix`, `system.nix`, `users.nix`
 - `home-manager/`: User-level configurations
   - `programs/`: Individual CLI tool configurations (each tool has its own directory)
   - `pkgs/`: Single file (`default.nix`) containing all packages to install
   - `services/`: User-level services
   - `files.nix`: Symlink configuration for files in `configs/`
-- `configs/`: Raw configuration files (e.g., Neovim, Karabiner, ccstatusline)
+- `configs/`: Raw configuration files (e.g., Neovim, Karabiner, cage, pnpm)
 - `secrets/`: SOPS-encrypted secrets (default.yaml)
 - `_sources/`: Auto-generated external package sources (managed by nvfetcher)
 - `.github/workflows/`: CI configuration (Cachix + nix build)
@@ -135,18 +137,17 @@ pkgs = import nixpkgs {
 #### 6. MCP Servers Configuration
 Claude Code MCP servers are configured using `mcp-servers-nix` in `home-manager/programs/claude-code/default.nix`. This includes both NPM-based servers (context7, chrome-devtools) and HTTP-based servers (Notion, Figma).
 
-#### 7. Claude Code Global Skills and Commands
-Global (user-level, not project-level) custom skills and commands for Claude Code are managed under `home-manager/programs/claude-code/`:
-- `skills/`: Custom skills (e.g., `skill-creator`, `team-task`)
-- `commands/`: Custom slash commands (e.g., `commit-staged-changes`)
-- `home-manager/programs/claude-code/CLAUDE.md`: Claude Code project-specific memory
+#### 7. Claude Code Global Skills and User Memory
+Global (user-level, not project-level) custom skills for Claude Code are managed under `home-manager/programs/claude-code/`:
+- `skills/`: Custom skills (e.g., `team-task`)
+- `user-memory.md`: Global user memory for Claude Code (symlinked to `~/.claude/CLAUDE.md` via `memory.source`)
 
-These are symlinked into `~/.claude/` via the `skillsDir` / `commandsDir` options, making them available globally across all projects.
+Skills are symlinked into `~/.claude/` via the `skillsDir` option, making them available globally across all projects.
 
 #### 8. Homebrew Management
 Homebrew packages are declaratively managed in `nix-darwin/modules/homebrew.nix`:
-- `taps`: Third-party taps (e.g., `arto-app/tap`, `k1LoW/tap`)
-- `brews`: CLI tools (e.g., `tcmux`)
+- `taps`: Third-party taps (e.g., `k1LoW/tap`, `manaflow-ai/cmux`)
+- `brews`: CLI tools (e.g., `k1LoW/tap/tcmux`)
 - `casks`: GUI applications
 - `onActivation.cleanup = "uninstall"`: Automatically removes undeclared packages
 
@@ -204,7 +205,7 @@ taps = [ "owner/tap" ];
 #### New Host
 1. Create `hosts/new-hostname/default.nix`
 2. Define `userConfig` with username, homeDir, hostname, dotfilesDir
-3. Choose nix-darwin module: `../../nix-darwin` or `../../nix-darwin/minimum-for-work.nix`
+3. Add host-specific nix-darwin settings in `nix-darwin/modules/hosts/new-hostname.nix`
 4. Import home-manager with correct user configuration
 5. Add to `flake.nix` darwinConfigurations
 
