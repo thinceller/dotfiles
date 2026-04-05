@@ -9,7 +9,6 @@ let
     edgepkgs
     mcp-servers-nix
     nix-index-database
-    nixpkgs-dotenvx
     cage
     ;
   system = "aarch64-darwin";
@@ -25,17 +24,12 @@ let
       dotfilesDir = homeDir + "/.dotfiles";
     };
 
-  pkgs-dotenvx = import nixpkgs-dotenvx {
-    inherit system;
-  };
-
   pkgs = import nixpkgs {
     inherit system;
     config.allowUnfree = true;
     overlays = [
       edgepkgs.overlays.default
       (_final: _prev: {
-        dotenvx = pkgs-dotenvx.dotenvx;
         cage = cage.packages.${system}.default;
       })
     ];

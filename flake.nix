@@ -54,8 +54,6 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # dotenvx build failure workaround: https://github.com/NixOS/nixpkgs/issues/478005
-    nixpkgs-dotenvx.url = "github:NixOS/nixpkgs/8198298755cad59b220641b8a76e372e27dc6471";
   };
 
   outputs =

@@ -283,33 +283,17 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1773840656,
-        "narHash": "sha256-9tpvMGFteZnd3gRQZFlRCohVpqooygFuy9yjuyRL2C0=",
+        "lastModified": 1775126147,
+        "narHash": "sha256-J0dZU4atgcfo4QvM9D92uQ0Oe1eLTxBVXjJzdEMQpD0=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "9cf7092bdd603554bd8b63c216e8943cf9b12512",
+        "rev": "8d8c1fa5b412c223ffa47410867813290cdedfef",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
         "ref": "nixpkgs-unstable",
         "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs-dotenvx": {
-      "locked": {
-        "lastModified": 1766119346,
-        "narHash": "sha256-MhfCfNmdQ2B/JAzKaQbd3qddEfMTpoyArhtOJQ3nbUs=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "8198298755cad59b220641b8a76e372e27dc6471",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "8198298755cad59b220641b8a76e372e27dc6471",
         "type": "github"
       }
     },
@@ -339,7 +323,6 @@
         "nix-darwin": "nix-darwin",
         "nix-index-database": "nix-index-database",
         "nixpkgs": "nixpkgs",
-        "nixpkgs-dotenvx": "nixpkgs-dotenvx",
         "sops-nix": "sops-nix",
         "treefmt-nix": "treefmt-nix_2"
       }
