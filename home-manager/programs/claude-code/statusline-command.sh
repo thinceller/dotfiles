@@ -1,5 +1,16 @@
-#!/bin/bash
-set -euo pipefail
+# Statusline command for Claude Code
+# This script is wrapped by pkgs.writeShellScript (Nix bash 5.3)
+# Do NOT add set -euo pipefail — resilience over strictness for statusline
+
+# ── Fallback trap ───────────────────────────────────────────────────
+# Ensure we always output something (4 lines) even on unexpected errors.
+# Claude Code blanks the statusline when the command produces no output.
+_output_done=""
+trap '
+  if [[ -z "$_output_done" ]]; then
+    printf "\033[33m⚠ statusline error\033[0m\n\n\n"
+  fi
+' EXIT
 
 # ── Nerd Font icons ──────────────────────────────────────────────────
 
@@ -14,7 +25,7 @@ ICON_UNTRACKED=$(printf '\xee\xa9\xb6')   # nf-cod-question U+EA76
 # ── helpers ──────────────────────────────────────────────────────────
 
 color_for_pct() {
-  local pct=$1
+  local pct=${1:-0}
   if (( pct < 50 )); then echo 32   # green
   elif (( pct < 80 )); then echo 33  # yellow
   else echo 31                        # red
@@ -23,13 +34,13 @@ color_for_pct() {
 
 render_bar() {
   local pct=${1:-0} width=${2:-20} color=${3:-32}
-  (( pct > 100 )) && pct=100
-  (( pct < 0 )) && pct=0
+  if (( pct > 100 )); then pct=100; fi
+  if (( pct < 0 )); then pct=0; fi
   local filled=$(( pct * width / 100 ))
   local empty=$(( width - filled ))
   local filled_str="" empty_str=""
-  (( filled > 0 )) && printf -v filled_str '%*s' "$filled" '' && filled_str="${filled_str// /█}"
-  (( empty > 0 )) && printf -v empty_str '%*s' "$empty" '' && empty_str="${empty_str// /░}"
+  if (( filled > 0 )); then printf -v filled_str '%*s' "$filled" '' && filled_str="${filled_str// /█}"; fi
+  if (( empty > 0 )); then printf -v empty_str '%*s' "$empty" '' && empty_str="${empty_str// /░}"; fi
   printf '\033[%sm%s\033[90m%s\033[0m' "$color" "$filled_str" "$empty_str"
 }
 
@@ -65,10 +76,8 @@ format_jst() {
   local epoch
 
   if [[ "$ts" =~ ^[0-9]+$ ]]; then
-    # Unix epoch seconds
     epoch="$ts"
   else
-    # ISO 8601 fallback
     local clean="${ts%%+*}"
     clean="${clean%%Z*}"
     clean="${clean%%.*}"
@@ -83,16 +92,10 @@ format_jst() {
 input=$(cat)
 
 # Parse all fields from stdin JSON in a single jq call (one field per line)
-{
-  read -r model
-  read -r ctx_raw_pct
-  read -r current_dir
-  read -r worktree_name
-  read -r five_hour_pct
-  read -r five_hour_reset
-  read -r seven_day_pct
-  read -r seven_day_reset
-} < <(printf '%s' "$input" | jq -r '
+model="Unknown"; ctx_raw_pct=0; current_dir=""; worktree_name=""
+five_hour_pct=0; five_hour_reset=""; seven_day_pct=0; seven_day_reset=""
+
+if jq_output=$(printf '%s' "$input" | jq -r '
   (.model.display_name // "Unknown"),
   (.context_window.used_percentage // 0),
   (.workspace.current_dir // .cwd // ""),
@@ -101,14 +104,22 @@ input=$(cat)
   (.rate_limits.five_hour.resets_at // ""),
   (.rate_limits.seven_day.used_percentage // 0),
   (.rate_limits.seven_day.resets_at // "")
-' 2>/dev/null) || {
-  model="Unknown"; ctx_raw_pct=0; current_dir=""; worktree_name=""
-  five_hour_pct=0; five_hour_reset=""; seven_day_pct=0; seven_day_reset=""
-}
+' 2>/dev/null); then
+  {
+    read -r model
+    read -r ctx_raw_pct
+    read -r current_dir
+    read -r worktree_name
+    read -r five_hour_pct
+    read -r five_hour_reset
+    read -r seven_day_pct
+    read -r seven_day_reset
+  } <<< "$jq_output" || true
+fi
 
 # Convert context usage to percentage of auto-compact threshold
 compact_threshold=${CLAUDE_AUTOCOMPACT_PCT_OVERRIDE:-95}
-ctx_pct=$(printf '%s' "$ctx_raw_pct" | awk -v threshold="$compact_threshold" '{printf "%d", $1 / threshold * 100}')
+ctx_pct=$(printf '%s' "${ctx_raw_pct:-0}" | awk -v threshold="$compact_threshold" '{printf "%d", $1 / threshold * 100}') || ctx_pct=0
 
 # ── Line 1: Git info ────────────────────────────────────────────────
 
@@ -132,31 +143,38 @@ if [[ -n "$current_dir" ]] && git -C "$current_dir" --no-optional-locks rev-pars
     wt=$(basename "$current_dir")
   fi
 
-  # Git status counts
+  # Git status counts (with 150ms timeout to prevent slow execution)
   staged=0; modified=0; untracked=0
-  while IFS= read -r st_line; do
-    [[ -z "$st_line" ]] && continue
-    x="${st_line:0:1}"; y="${st_line:1:1}"
-    if [[ "$x" == "?" ]]; then (( untracked++ )) || true; continue; fi
-    [[ "$x" != " " && "$x" != "?" ]] && { (( staged++ )) || true; }
-    [[ "$y" != " " && "$y" != "?" ]] && { (( modified++ )) || true; }
-  done < <(git -C "$current_dir" --no-optional-locks status --porcelain 2>/dev/null)
+  git_porcelain=""
+  if read -r -d '' -t 0.15 git_porcelain < <(git -C "$current_dir" --no-optional-locks status --porcelain 2>/dev/null) 2>/dev/null; then
+    : # completed within timeout
+  fi
+  # Process whatever output we got (full or partial)
+  if [[ -n "$git_porcelain" ]]; then
+    while IFS= read -r st_line; do
+      [[ -z "$st_line" ]] && continue
+      x="${st_line:0:1}"; y="${st_line:1:1}"
+      if [[ "$x" == "?" ]]; then (( untracked++ )) || true; continue; fi
+      if [[ "$x" != " " && "$x" != "?" ]]; then (( staged++ )) || true; fi
+      if [[ "$y" != " " && "$y" != "?" ]]; then (( modified++ )) || true; fi
+    done <<< "$git_porcelain"
+  fi
 
   # Build line 1
   line1="\033[36m${ICON_REPO} ${repo_name}\033[0m"
-  [[ -n "$rel_path" ]] && line1+="  \033[34m${ICON_FOLDER} ${rel_path}\033[0m"
-  [[ -n "$branch" ]] && line1+="  \033[35m${ICON_BRANCH} ${branch}\033[0m"
-  [[ -n "$wt" ]] && line1+="  \033[33m${ICON_WORKTREE} ${wt}\033[0m"
-  (( staged > 0 )) && line1+="  \033[32m${ICON_STAGED} ${staged}\033[0m"
-  (( modified > 0 )) && line1+="  \033[33m${ICON_MODIFIED} ${modified}\033[0m"
-  (( untracked > 0 )) && line1+="  \033[31m${ICON_UNTRACKED} ${untracked}\033[0m"
+  if [[ -n "$rel_path" ]]; then line1+="  \033[34m${ICON_FOLDER} ${rel_path}\033[0m"; fi
+  if [[ -n "$branch" ]]; then line1+="  \033[35m${ICON_BRANCH} ${branch}\033[0m"; fi
+  if [[ -n "$wt" ]]; then line1+="  \033[33m${ICON_WORKTREE} ${wt}\033[0m"; fi
+  if (( staged > 0 )); then line1+="  \033[32m${ICON_STAGED} ${staged}\033[0m"; fi
+  if (( modified > 0 )); then line1+="  \033[33m${ICON_MODIFIED} ${modified}\033[0m"; fi
+  if (( untracked > 0 )); then line1+="  \033[31m${ICON_UNTRACKED} ${untracked}\033[0m"; fi
 else
   # Not in git repo
   display_dir=$(fish_style_path "$current_dir")
   line1="\033[36m${ICON_FOLDER} ${display_dir}\033[0m"
 fi
 
-# ── Line 2: Model / Thinking / Context ──────────────────────────────
+# ── Line 2: Model / Context ─────────────────────────────────────────
 
 ctx_color=$(color_for_pct "$ctx_pct")
 ctx_bar=$(render_bar "$ctx_pct" 20 "$ctx_color")
@@ -173,11 +191,12 @@ seven_color=$(color_for_pct "$seven_day_pct")
 seven_bar=$(render_bar "$seven_day_pct" 20 "$seven_color")
 seven_reset_fmt=$(format_jst "$seven_day_reset" "%m/%d %H:%M JST")
 
-printf -v five_pct_str '%3d%%' "$five_hour_pct"
-printf -v seven_pct_str '%3d%%' "$seven_day_pct"
+printf -v five_pct_str '%3d%%' "${five_hour_pct:-0}"
+printf -v seven_pct_str '%3d%%' "${seven_day_pct:-0}"
 line3="⏱  5h [${five_bar}] \033[${five_color}m${five_pct_str}\033[0m  🔄 ${five_reset_fmt}"
 line4="📅 7d [${seven_bar}] \033[${seven_color}m${seven_pct_str}\033[0m  🔄 ${seven_reset_fmt}"
 
 # ── Output ───────────────────────────────────────────────────────────
 
 printf '%b\n%b\n%b\n%b' "$line1" "$line2" "$line3" "$line4"
+_output_done=1

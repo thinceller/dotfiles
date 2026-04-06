@@ -10,6 +10,9 @@ let
     )
   );
   openPlanScript = pkgs.writeShellScript "claude-open-plan" (builtins.readFile ./hooks/open-plan.sh);
+  statuslineScript = pkgs.writeShellScript "claude-statusline" (
+    builtins.readFile ./statusline-command.sh
+  );
 in
 {
   programs.claude-code = {
@@ -107,7 +110,7 @@ in
 
       statusLine = {
         type = "command";
-        command = ./statusline-command.sh;
+        command = statuslineScript;
       };
 
       extraKnownMarketplaces = {
