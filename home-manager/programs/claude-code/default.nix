@@ -55,6 +55,7 @@ in
       alwaysThinkingEnabled = true;
       language = "japanese";
       autoMemoryEnabled = true;
+      cleanupPeriodDays = 9999;
 
       # model = "opus";
       effortLevel = "high";
