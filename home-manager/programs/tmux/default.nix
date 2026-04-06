@@ -3,8 +3,8 @@ let
   tmux-switch-session = pkgs.writeShellScript "tmux-switch-session" ''
     session=$(
       tcmux list-sessions --color=always \
-      | fzf --ansi --tmux 80%,50% --layout reverse \
-          --preview 'echo {} | sed "s/: .*//" | xargs -I@ tcmux list-windows -t @ --color=always'
+      | fzf --ansi --tmux 80%,80% --layout reverse \
+          --preview 'session_name=$(echo {} | sed "s/: .*//"); tcmux list-windows -t "$session_name" --color=always; echo ""; echo "─── Active Pane ───"; tmux capture-pane -t "$session_name:" -p -e'
     )
     if [ -n "$session" ]; then
       session_name=$(echo "$session" | sed 's/: .*//')
@@ -16,7 +16,8 @@ let
     window=$(
       tcmux list-windows -a --color=always \
         -F '#{session_name}:#{window_index}: #{window_name} (#{window_panes} panes) #{agent_status}' \
-      | fzf --ansi --tmux 80%,50% --layout reverse
+      | fzf --ansi --tmux 80%,80% --layout reverse \
+          --preview 'target=$(echo {} | sed "s/: .*//"); tmux capture-pane -t "$target" -p -e'
     )
     if [ -n "$window" ]; then
       window_name=$(echo "$window" | sed 's/: .*//')
