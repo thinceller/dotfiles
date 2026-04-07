@@ -34,6 +34,7 @@ color_for_pct() {
 
 render_bar() {
   local pct=${1:-0} width=${2:-20} color=${3:-32}
+  pct=${pct%.*}; pct=${pct:-0}  # truncate float (e.g. "14.5" → "14", ".5" → "0")
   if (( pct > 100 )); then pct=100; fi
   if (( pct < 0 )); then pct=0; fi
   local filled=$(( pct * width / 100 ))
@@ -97,12 +98,12 @@ five_hour_pct=0; five_hour_reset=""; seven_day_pct=0; seven_day_reset=""
 
 if jq_output=$(printf '%s' "$input" | jq -r '
   (.model.display_name // "Unknown"),
-  (.context_window.used_percentage // 0),
+  ((.context_window.used_percentage // 0) | floor),
   (.workspace.current_dir // .cwd // ""),
   (.worktree.name // ""),
-  (.rate_limits.five_hour.used_percentage // 0),
+  ((.rate_limits.five_hour.used_percentage // 0) | floor),
   (.rate_limits.five_hour.resets_at // ""),
-  (.rate_limits.seven_day.used_percentage // 0),
+  ((.rate_limits.seven_day.used_percentage // 0) | floor),
   (.rate_limits.seven_day.resets_at // "")
 ' 2>/dev/null); then
   {
