@@ -29,17 +29,20 @@
         size = 14.0;
 
         normal = {
-          family = "HackGen Console NF";
+          # family = "HackGen Console NF";
+          family = "PlemolJP Console NF";
           style = "Regular";
         };
 
         bold = {
-          family = "HackGen Console NF";
+          # family = "HackGen Console NF";
+          family = "PlemolJP Console NF";
           style = "Bold";
         };
 
         italic = {
-          family = "HackGen Console NF";
+          # family = "HackGen Console NF";
+          family = "PlemolJP Console NF";
           style = "Italic";
         };
       };
