@@ -9,6 +9,7 @@ let
     edgepkgs
     mcp-servers-nix
     nix-index-database
+    gh-prism
     cage
     ;
   system = "aarch64-darwin";
@@ -53,6 +54,7 @@ nix-darwin.lib.darwinSystem {
       home-manager.sharedModules = [
         sops-nix.homeManagerModules.sops
         nix-index-database.homeModules.nix-index
+        gh-prism.homeManagerModules.default
       ];
       home-manager.extraSpecialArgs = {
         inherit

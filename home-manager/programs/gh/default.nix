@@ -1,5 +1,7 @@
 { pkgs, ... }:
 {
+  programs.gh-prism.enable = true;
+
   programs.gh = {
     enable = true;
     extensions = with pkgs; [
