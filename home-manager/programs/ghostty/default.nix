@@ -6,7 +6,7 @@
     enableFishIntegration = true;
     clearDefaultKeybinds = true;
     settings = {
-      font-family = "HackGen Console NF";
+      font-family = "PlemolJP Console NF";
       font-size = 14;
 
       cursor-style = "block";
