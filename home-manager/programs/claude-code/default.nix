@@ -57,7 +57,7 @@ in
       autoMemoryEnabled = true;
       cleanupPeriodDays = 9999;
 
-      model = "opusplan";
+      # model = "opus";
       advisorModel = "opus";
       effortLevel = "high";
       voiceEnabled = true;
