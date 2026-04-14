@@ -1,6 +1,5 @@
 {
   pkgs,
-  mcp-servers-nix,
   ...
 }:
 let
@@ -47,6 +46,7 @@ in
   programs.claude-code = {
     enable = true;
     package = claudeCodePackage;
+    enableMcpIntegration = true;
 
     settings = {
       theme = "dark";
@@ -188,31 +188,31 @@ in
     # agentsDir = ./agents;
     skillsDir = ./skills;
     # hooksDir = ./hooks;
+  };
 
-    mcpServers =
-      (mcp-servers-nix.lib.evalModule pkgs {
-        programs = {
-          context7.enable = true;
-        };
-        settings.servers = {
-          chrome-devtools = {
-            command = "${pkgs.lib.getExe' pkgs.nodejs "npx"}";
-            args = [
-              "-y"
-              "chrome-devtools-mcp@latest"
-              "--headless=true"
-              "--isolated=true"
-            ];
-          };
-          notion = {
-            type = "http";
-            url = "https://mcp.notion.com/mcp";
-          };
-          figma = {
-            type = "http";
-            url = "https://mcp.figma.com/mcp";
-          };
-        };
-      }).config.settings.servers;
+  programs.mcp.enable = true;
+
+  mcp-servers.programs = {
+    context7.enable = true;
+  };
+
+  mcp-servers.settings.servers = {
+    chrome-devtools = {
+      command = "${pkgs.lib.getExe' pkgs.nodejs "npx"}";
+      args = [
+        "-y"
+        "chrome-devtools-mcp@latest"
+        "--headless=true"
+        "--isolated=true"
+      ];
+    };
+    notion = {
+      type = "http";
+      url = "https://mcp.notion.com/mcp";
+    };
+    figma = {
+      type = "http";
+      url = "https://mcp.figma.com/mcp";
+    };
   };
 }

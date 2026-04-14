@@ -55,12 +55,12 @@ nix-darwin.lib.darwinSystem {
         sops-nix.homeManagerModules.sops
         nix-index-database.homeModules.nix-index
         gh-prism.homeManagerModules.default
+        mcp-servers-nix.homeManagerModules.default
       ];
       home-manager.extraSpecialArgs = {
         inherit
           userConfig
           sources
-          mcp-servers-nix
           ;
       };
       home-manager.users."${userConfig.username}" = import ./home.nix;
