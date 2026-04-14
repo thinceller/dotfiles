@@ -206,10 +206,6 @@ in
         "--isolated=true"
       ];
     };
-    notion = {
-      type = "http";
-      url = "https://mcp.notion.com/mcp";
-    };
     figma = {
       type = "http";
       url = "https://mcp.figma.com/mcp";
