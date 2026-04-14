@@ -90,3 +90,13 @@ nix run nixpkgs#jq -- '.key' file.json
 - Perform appropriate verification based on the changes (build, test, lint, actual behavior, etc.)
 - If the project has tests or CI configuration, always run them
 - Never mark a task as "completed" without verification
+
+### Frontend Verification
+
+Use the `playwright-cli` skill to verify frontend and UI changes in the browser.
+
+- Start the dev server, then open the browser with `playwright-cli open <URL>`
+- Use `playwright-cli snapshot` to inspect the page state and interact with elements via their refs (`playwright-cli click`, `playwright-cli fill`, `playwright-cli type`, etc.)
+- Verify both the golden path and edge cases
+- Close the browser with `playwright-cli close` when done
+- Refer to the `playwright-cli` skill (SKILL.md) for the full command reference
