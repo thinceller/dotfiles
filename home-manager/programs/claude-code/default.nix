@@ -82,6 +82,7 @@ in
           "WebSearch"
           "Bash(ls:*)"
           "Bash(grep:*)"
+          "Bash(playwright-cli:*)"
         ];
         ask = [
           "Bash(rm:*)"
@@ -147,12 +148,6 @@ in
       };
 
       extraKnownMarketplaces = {
-        "chrome-devtools-plugins" = {
-          source = {
-            source = "github";
-            repo = "ChromeDevTools/chrome-devtools-mcp";
-          };
-        };
         "thinceller-claude-plugins" = {
           source = {
             source = "github";
@@ -175,9 +170,6 @@ in
         "pr-review-toolkit@claude-plugins-official" = true;
         "discord@claude-plugins-official" = true;
 
-        # chrome-devtools-plugins
-        "chrome-devtools-mcp@chrome-devtools-plugins" = true;
-
         # thinceller-claude-plugins
         "git-toolkit@thinceller-claude-plugins" = true;
       };
@@ -197,15 +189,6 @@ in
   };
 
   mcp-servers.settings.servers = {
-    chrome-devtools = {
-      command = "${pkgs.lib.getExe' pkgs.nodejs "npx"}";
-      args = [
-        "-y"
-        "chrome-devtools-mcp@latest"
-        "--headless=true"
-        "--isolated=true"
-      ];
-    };
     figma = {
       type = "http";
       url = "https://mcp.figma.com/mcp";

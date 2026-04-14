@@ -135,14 +135,14 @@ pkgs = import nixpkgs {
 ```
 
 #### 6. MCP Servers Configuration
-Claude Code MCP servers are configured using `mcp-servers-nix` in `home-manager/programs/claude-code/default.nix`. This includes both NPM-based servers (context7, chrome-devtools) and HTTP-based servers (Notion, Figma).
+Claude Code MCP servers are configured using `mcp-servers-nix` in `home-manager/programs/claude-code/default.nix`. This includes NPM-based servers (context7) and HTTP-based servers (Figma).
 
 #### 7. Claude Code Global Skills and User Memory
 Global (user-level, not project-level) custom skills for Claude Code are managed under `home-manager/programs/claude-code/`:
-- `skills/`: Custom skills (e.g., `team-task`)
+- `skills/`: Custom skills (e.g., `team-task`, `playwright-cli`)
 - `user-memory.md`: Global user memory for Claude Code (symlinked to `~/.claude/CLAUDE.md` via `memory.source`)
 
-Skills are symlinked into `~/.claude/` via the `skillsDir` option, making them available globally across all projects.
+Skills are symlinked into `~/.claude/` via the `skillsDir` option, making them available globally across all projects. The `playwright-cli` skill provides structured Playwright CLI (`@playwright/cli`) command documentation for browser automation via `npx`.
 
 #### 8. Homebrew Management
 Homebrew packages are declaratively managed in `nix-darwin/modules/homebrew.nix`:
@@ -201,6 +201,12 @@ taps = [ "owner/tap" ];
 1. Create directory: `home-manager/programs/claude-code/skills/new-skill/`
 2. Add `SKILL.md` with frontmatter (description, trigger patterns)
 3. Optionally add `references/` directory for supplementary content
+
+#### New CLI Tool Requiring Filesystem Access
+When adding a CLI tool that writes outside the project directory (caches, daemon sockets, browser data, etc.):
+1. Identify its data/cache paths (check docs or run with `fs_usage`)
+2. Add the paths to `configs/.config/cage/presets.yaml` under the `claude-code` preset's `allow` list
+3. A cage session restart is required for the change to take effect
 
 #### New Host
 1. Create `hosts/new-hostname/default.nix`

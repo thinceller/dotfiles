@@ -16,6 +16,8 @@ presets:
       - "$HOME/.claude.lock"
       # Claude Code MCP ログ
       - "$HOME/Library/Caches/claude-cli-nodejs"
+      # Playwright CLI (playwright-cli daemon, browser sessions)
+      - "$HOME/Library/Caches/ms-playwright"
       # npm/npx キャッシュ (MCP サーバー等)
       - "$HOME/.npm"
       # bun キャッシュ (bunx for ccstatusline 等)
