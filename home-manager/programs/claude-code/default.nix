@@ -57,7 +57,7 @@ in
       autoMemoryEnabled = true;
       cleanupPeriodDays = 9999;
 
-      # model = "opus";
+      model = "opusplan";
       advisorModel = "opus";
       effortLevel = "high";
       voiceEnabled = true;
@@ -105,6 +105,8 @@ in
         BASH_MAX_TIMEOUT_MS = "180000";
         CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR = "1";
         USE_BUILTIN_RIPGREP = "1";
+
+        ANTHROPIC_DEFAULT_OPUS_MODEL = "claude-opus-4-6[1m]";
 
         ENABLE_TOOL_SEARCH = true;
         ENABLE_EXPERIMENTAL_MCP_CLI = false;
