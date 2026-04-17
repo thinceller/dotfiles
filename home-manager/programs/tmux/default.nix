@@ -50,6 +50,7 @@ in
       set -g display-panes-time 10000
       set -g escape-time 1
       set -g allow-passthrough on
+      set -g focus-events on
       setw -g pane-base-index 1
 
       # pane focus highlighting
