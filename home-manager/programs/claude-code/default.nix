@@ -59,7 +59,7 @@ in
 
       # model = "opus";
       advisorModel = "opus";
-      effortLevel = "high";
+      effortLevel = "xhigh";
       voiceEnabled = true;
       skipAutoPermissionPrompt = true;
 
