@@ -154,13 +154,19 @@ in
             repo = "thinceller/claude-plugins";
           };
         };
+        "superpowers-dev" = {
+          source = {
+            source = "github";
+            repo = "obra/superpowers";
+          };
+        };
       };
 
       enabledPlugins = {
         # claude-plugins-official
         "claude-code-setup@claude-plugins-official" = true;
         "claude-md-management@claude-plugins-official" = true;
-        "superpowers@claude-plugins-official" = true;
+        "superpowers@superpowers-dev" = true;
         "plugin-dev@claude-plugins-official" = true;
         "skill-creator@claude-plugins-official" = true;
         "frontend-design@claude-plugins-official" = true;
