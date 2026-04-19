@@ -12,6 +12,7 @@
 
   homebrew.casks = [
     "antigravity"
+    "codex-app"
     "discord"
     "google-chrome"
     "obsidian"
