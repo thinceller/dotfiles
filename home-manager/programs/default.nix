@@ -8,6 +8,7 @@
     ./bottom
     ./claude-code
     ./clock-rs
+    ./codex
     ./delta
     ./direnv
     ./fish
@@ -19,6 +20,7 @@
     ./jq
     ./lazygit
     ./lsd
+    ./mcp-servers
     ./mise
     ./neovim
     ./nix-index

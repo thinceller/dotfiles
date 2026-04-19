@@ -1,8 +1,12 @@
 {
   pkgs,
+  lib,
+  userConfig,
   ...
 }:
 let
+  inherit (userConfig) isPersonal;
+
   notificationScript = pkgs.writeShellScript "claude-notification" (
     builtins.replaceStrings [ "@iconPath@" ] [ "${./hooks/claude-icon.png}" ] (
       builtins.readFile ./hooks/notification.sh
@@ -160,13 +164,20 @@ in
             repo = "obra/superpowers";
           };
         };
+      }
+      // lib.optionalAttrs isPersonal {
+        "openai-codex" = {
+          source = {
+            source = "github";
+            repo = "openai/codex-plugin-cc";
+          };
+        };
       };
 
       enabledPlugins = {
         # claude-plugins-official
         "claude-code-setup@claude-plugins-official" = true;
         "claude-md-management@claude-plugins-official" = true;
-        "superpowers@superpowers-dev" = true;
         "plugin-dev@claude-plugins-official" = true;
         "skill-creator@claude-plugins-official" = true;
         "frontend-design@claude-plugins-official" = true;
@@ -176,8 +187,14 @@ in
         "pr-review-toolkit@claude-plugins-official" = true;
         "discord@claude-plugins-official" = true;
 
+        # superpowers-dev
+        "superpowers@superpowers-dev" = true;
+
         # thinceller-claude-plugins
         "git-toolkit@thinceller-claude-plugins" = true;
+      }
+      // lib.optionalAttrs isPersonal {
+        "codex@openai-codex" = true;
       };
     };
 
@@ -186,18 +203,5 @@ in
     # agentsDir = ./agents;
     skillsDir = ./skills;
     # hooksDir = ./hooks;
-  };
-
-  programs.mcp.enable = true;
-
-  mcp-servers.programs = {
-    context7.enable = true;
-  };
-
-  mcp-servers.settings.servers = {
-    figma = {
-      type = "http";
-      url = "https://mcp.figma.com/mcp";
-    };
   };
 }

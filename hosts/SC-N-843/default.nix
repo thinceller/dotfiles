@@ -23,6 +23,7 @@ let
       uid = 502;
       hostname = "SC-N-843";
       dotfilesDir = homeDir + "/.dotfiles";
+      isPersonal = false;
     };
 
   pkgs = import nixpkgs {

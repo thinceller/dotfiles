@@ -23,6 +23,7 @@ let
       uid = 501;
       hostname = "kohei-m4-mac-mini";
       dotfilesDir = homeDir + "/.dotfiles";
+      isPersonal = true;
     };
 
   pkgs = import nixpkgs {
