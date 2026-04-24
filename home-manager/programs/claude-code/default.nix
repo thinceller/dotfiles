@@ -58,7 +58,7 @@ in
       cleanupPeriodDays = 9999;
 
       # model = "opus";
-      advisorModel = "opus";
+      # advisorModel = "opus";
       effortLevel = "xhigh";
       voiceEnabled = true;
       skipAutoPermissionPrompt = true;
