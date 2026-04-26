@@ -19,5 +19,26 @@
             "type": "github"
         },
         "version": "cafaaabe63c124bf0714f89ec715cfe9ece87fa2"
+    },
+    "tmux-agent-sidebar": {
+        "cargoLock": null,
+        "date": null,
+        "extract": null,
+        "name": "tmux-agent-sidebar",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "hiroppy",
+            "repo": "tmux-agent-sidebar",
+            "rev": "v0.9.1",
+            "sha256": "sha256-9y2Wc9NnHmita9/0NQ1kTpk1AZd8MA2TxI8Y+/Qy7Ng=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "v0.9.1"
     }
 }

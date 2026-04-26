@@ -164,6 +164,12 @@ in
             repo = "obra/superpowers";
           };
         };
+        "hiroppy" = {
+          source = {
+            source = "github";
+            repo = "hiroppy/tmux-agent-sidebar";
+          };
+        };
       }
       // lib.optionalAttrs isPersonal {
         "openai-codex" = {
@@ -192,6 +198,9 @@ in
 
         # thinceller-claude-plugins
         "git-toolkit@thinceller-claude-plugins" = true;
+
+        # hiroppy
+        "tmux-agent-sidebar@hiroppy" = true;
       }
       // lib.optionalAttrs isPersonal {
         "codex@openai-codex" = true;

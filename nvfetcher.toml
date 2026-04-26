@@ -2,3 +2,7 @@
 src.git = "https://github.com/decors/fish-ghq"
 src.branch = "master"
 fetch.github = "decors/fish-ghq"
+
+[tmux-agent-sidebar]
+src.github = "hiroppy/tmux-agent-sidebar"
+fetch.github = "hiroppy/tmux-agent-sidebar"

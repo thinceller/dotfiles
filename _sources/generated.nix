@@ -18,4 +18,15 @@
     };
     date = "2021-07-16";
   };
+  tmux-agent-sidebar = {
+    pname = "tmux-agent-sidebar";
+    version = "v0.9.1";
+    src = fetchFromGitHub {
+      owner = "hiroppy";
+      repo = "tmux-agent-sidebar";
+      rev = "v0.9.1";
+      fetchSubmodules = false;
+      sha256 = "sha256-9y2Wc9NnHmita9/0NQ1kTpk1AZd8MA2TxI8Y+/Qy7Ng=";
+    };
+  };
 }
