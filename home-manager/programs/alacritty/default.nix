@@ -66,7 +66,8 @@
           {
             key = "Return";
             mods = "Shift";
-            chars = "\n";
+            # Send CSI u sequence (ESC[13;2u) so Claude Code can detect Shift+Enter
+            chars = builtins.fromJSON "\"\\u001b[13;2u\"";
           }
         ];
       };
