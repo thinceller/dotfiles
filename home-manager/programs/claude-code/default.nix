@@ -7,11 +7,6 @@
 let
   inherit (userConfig) isPersonal;
 
-  notificationScript = pkgs.writeShellScript "claude-notification" (
-    builtins.replaceStrings [ "@iconPath@" ] [ "${./hooks/claude-icon.png}" ] (
-      builtins.readFile ./hooks/notification.sh
-    )
-  );
   openPlanScript = pkgs.writeShellScript "claude-open-plan" (builtins.readFile ./hooks/open-plan.sh);
   statuslineScript = pkgs.writeShellScript "claude-statusline" (
     builtins.readFile ./statusline-command.sh
@@ -122,17 +117,6 @@ in
       };
 
       hooks = {
-        Notification = [
-          {
-            matcher = "permission_prompt|idle_prompt|elicitation_dialog";
-            hooks = [
-              {
-                type = "command";
-                command = notificationScript;
-              }
-            ];
-          }
-        ];
         PreToolUse = [
           {
             matcher = "ExitPlanMode";
