@@ -8,6 +8,7 @@
     settings = {
       font-family = "PlemolJP Console NF";
       font-size = 14;
+      font-thicken = true;
 
       cursor-style = "block";
       cursor-style-blink = false;
