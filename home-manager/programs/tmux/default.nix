@@ -51,6 +51,8 @@ in
       set -g escape-time 1
       set -g allow-passthrough on
       set -g focus-events on
+      set -s extended-keys on
+      set -as terminal-features 'xterm*:extkeys'
       setw -g pane-base-index 1
 
       # pane focus highlighting
@@ -71,8 +73,6 @@ in
 
       # tcmux: list and switch to coding agent windows across all sessions
       bind w run-shell "${tmux-switch-window}"
-
-      bind -n S-Enter send-keys Escape "[13;2u"
 
       bind r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
     '';
