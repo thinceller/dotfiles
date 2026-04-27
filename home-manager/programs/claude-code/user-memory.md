@@ -27,6 +27,16 @@ Always keep the following priorities in mind when refactoring or designing code:
    - Focus on solving real problems
    - Avoid designs that are theoretically perfect but impractical
 
+## Avoid Over-Engineering
+
+**IMPORTANT**: Only make changes that are directly requested or clearly necessary. Keep solutions simple and focused.
+
+- **Scope**: Do not add features, refactor code, or make "improvements" beyond what was asked
+- **Documentation**: Do not add docstrings, comments, or type annotations to code you did not change
+- **Defensive coding**: Do not add error handling, fallbacks, or validation for scenarios that cannot happen
+- **Abstractions**: Do not create helpers, utilities, or abstractions for one-time operations
+- **Future-proofing**: Do not design for hypothetical future requirements; three similar lines is better than a premature abstraction
+
 ## Refactoring Checklist
 
 When improving code, always verify the following:
