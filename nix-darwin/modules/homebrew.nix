@@ -33,7 +33,6 @@
       "logi-options+"
       "microsoft-edge"
       "nani"
-      "notion"
       "obsidian"
       "orbstack"
       "raycast"
