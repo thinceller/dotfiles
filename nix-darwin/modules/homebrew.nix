@@ -14,6 +14,7 @@
     brews = [
       "k1LoW/tap/mo"
       "k1LoW/tap/tcmux"
+      "vite-plus"
     ];
     casks = [
       "1password"
