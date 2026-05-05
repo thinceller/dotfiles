@@ -15,6 +15,10 @@
       "k1LoW/tap/mo"
       "k1LoW/tap/tcmux"
       "vite-plus"
+      {
+        name = "node";
+        link = false;
+      }
     ];
     casks = [
       "1password"
