@@ -19,7 +19,7 @@
     graphviz
     nix-search-cli
     nixfmt
-    nodejs_22
+    nodejs_24
     nvfetcher
     php83
     php83Packages.composer
