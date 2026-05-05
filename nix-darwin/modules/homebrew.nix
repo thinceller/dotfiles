@@ -10,6 +10,7 @@
     taps = [
       "k1LoW/tap"
       "manaflow-ai/cmux"
+      "nikitabobko/tap"
     ];
     brews = [
       "k1LoW/tap/mo"
@@ -22,6 +23,7 @@
     ];
     casks = [
       "1password"
+      "aerospace"
       "alacritty"
       "arc"
       "azookey"

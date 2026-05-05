@@ -21,6 +21,11 @@ in
   };
 
   xdg.configFile = {
+    # AeroSpace
+    "aerospace" = {
+      source = symlink /${rootDir}/.config/aerospace;
+      recursive = true;
+    };
     # Alacritty
     "alacritty" = {
       source = symlink /${rootDir}/.config/alacritty;
