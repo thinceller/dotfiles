@@ -22,6 +22,7 @@
     ];
     casks = [
       "1password"
+      "alacritty"
       "arc"
       "azookey"
       "chatgpt"

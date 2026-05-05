@@ -21,6 +21,11 @@ in
   };
 
   xdg.configFile = {
+    # Alacritty
+    "alacritty" = {
+      source = symlink /${rootDir}/.config/alacritty;
+      recursive = true;
+    };
     # karabiner
     # https://github.com/pqrs-org/Karabiner-Elements/issues/3248
     "karabiner" = {

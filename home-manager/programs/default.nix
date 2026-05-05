@@ -3,7 +3,6 @@
 }:
 {
   imports = [
-    ./alacritty
     ./bat
     ./bottom
     ./claude-code

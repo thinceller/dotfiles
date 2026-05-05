@@ -1,0 +1,28 @@
+[general]
+live_config_reload = true
+import = ["~/.config/alacritty/themes/tokyo_night.toml"]
+
+[window]
+decorations = "Buttonless"
+padding = { x = 8, y = 8 }
+# opacity = 0.85
+
+[font]
+size = 14.0
+normal = { family = "PlemolJP Console NF", style = "Regular" }
+bold   = { family = "PlemolJP Console NF", style = "Bold" }
+italic = { family = "PlemolJP Console NF", style = "Italic" }
+
+[cursor.style]
+shape = "Block"
+blinking = "Never"
+
+[scrolling]
+history = 10000
+multiplier = 3
+
+# Send CSI u sequence (ESC[13;2u) so Claude Code can detect Shift+Enter
+[[keyboard.bindings]]
+key = "Return"
+mods = "Shift"
+chars = "\u001B[13;2u"
