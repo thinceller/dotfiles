@@ -6,3 +6,8 @@ fetch.github = "decors/fish-ghq"
 [tmux-agent-sidebar]
 src.github = "hiroppy/tmux-agent-sidebar"
 fetch.github = "hiroppy/tmux-agent-sidebar"
+
+[direnv-nvim]
+src.git = "https://github.com/NotAShelf/direnv.nvim"
+src.branch = "main"
+fetch.github = "NotAShelf/direnv.nvim"

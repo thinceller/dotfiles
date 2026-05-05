@@ -7,6 +7,16 @@ return {
     end,
   },
   {
+    "direnv.nvim",
+    after = function()
+      local direnv = require("direnv")
+      direnv.setup({
+        autoload_direnv = true,
+      })
+      direnv.check_direnv()
+    end,
+  },
+  {
     "zen-mode.nvim",
     after = function()
       require("zen-mode").setup({

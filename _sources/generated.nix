@@ -6,6 +6,18 @@
   dockerTools,
 }:
 {
+  direnv-nvim = {
+    pname = "direnv-nvim";
+    version = "564146278b3d5fe4ffa389cd103bab20f9b515d6";
+    src = fetchFromGitHub {
+      owner = "NotAShelf";
+      repo = "direnv.nvim";
+      rev = "564146278b3d5fe4ffa389cd103bab20f9b515d6";
+      fetchSubmodules = false;
+      sha256 = "sha256-JbnGoZMApLtq4lSdGolcpKdsneolSOrzIi+O5yR2NDQ=";
+    };
+    date = "2026-03-28";
+  };
   fish-ghq = {
     pname = "fish-ghq";
     version = "cafaaabe63c124bf0714f89ec715cfe9ece87fa2";

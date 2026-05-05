@@ -1,10 +1,14 @@
-{ pkgs, ... }:
+{ pkgs, sources, ... }:
 let
   loadPluginOptionally = map (p: {
     plugin = p;
     optional = false;
   });
 
+  direnv-nvim = pkgs.vimUtils.buildVimPlugin {
+    pname = "direnv.nvim";
+    inherit (sources.direnv-nvim) version src;
+  };
 in
 {
   programs.neovim = {
@@ -68,6 +72,7 @@ in
         openingh-nvim
         # misc
         bufdelete-nvim
+        direnv-nvim
         nvim-autopairs
         comment-nvim
         vim-sandwich

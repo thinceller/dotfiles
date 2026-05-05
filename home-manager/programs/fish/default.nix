@@ -71,6 +71,12 @@ in
       op completion fish | source
       export TEST=$(cat ${config.sops.secrets.test.path})
       export DISCORD_BOT_TOKEN=$(cat ${config.sops.secrets.discord-bot-token.path})
+
+      # nvim の :terminal から起動された fish では direnv state が継承されるが
+      # fish_add_path / mise activate に PATH を上書きされる。reload で復元する。
+      if set -q NVIM; and set -q DIRENV_DIR
+        direnv reload 2>/dev/null
+      end
     '';
   };
 }

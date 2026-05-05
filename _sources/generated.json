@@ -1,4 +1,25 @@
 {
+    "direnv-nvim": {
+        "cargoLock": null,
+        "date": "2026-03-28",
+        "extract": null,
+        "name": "direnv-nvim",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "NotAShelf",
+            "repo": "direnv.nvim",
+            "rev": "564146278b3d5fe4ffa389cd103bab20f9b515d6",
+            "sha256": "sha256-JbnGoZMApLtq4lSdGolcpKdsneolSOrzIi+O5yR2NDQ=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "564146278b3d5fe4ffa389cd103bab20f9b515d6"
+    },
     "fish-ghq": {
         "cargoLock": null,
         "date": "2021-07-16",
