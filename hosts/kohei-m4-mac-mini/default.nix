@@ -11,6 +11,7 @@ let
     nix-index-database
     gh-prism
     cage
+    nixpkgs-codex
     ;
   system = "aarch64-darwin";
   userConfig =
@@ -26,6 +27,10 @@ let
       isPersonal = true;
     };
 
+  pkgs-codex = import nixpkgs-codex {
+    inherit system;
+  };
+
   pkgs = import nixpkgs {
     inherit system;
     config.allowUnfree = true;
@@ -33,6 +38,9 @@ let
       edgepkgs.overlays.default
       (_final: _prev: {
         cage = cage.packages.${system}.default;
+        # gpt-5.5 サポート (codex 0.123+) のため、locked nixpkgs が
+        # 追いつくまで nixpkgs-codex から codex を上書き取得する。
+        codex = pkgs-codex.codex;
       })
     ];
   };

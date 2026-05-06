@@ -58,6 +58,10 @@
       url = "github:kawarimidoll/gh-prism";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # codex 0.125.0 (gpt-5.5 サポート: 0.123 以降) を含む nixpkgs リビジョン。
+    # cache.nixos.org にビルド済みの最新を選んでいる。
+    # 通常の nixpkgs が追いついたら削除する。
+    nixpkgs-codex.url = "github:NixOS/nixpkgs/0de8465d2b54";
   };
 
   outputs =

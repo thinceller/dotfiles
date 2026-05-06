@@ -379,6 +379,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-codex": {
+      "locked": {
+        "lastModified": 1777061873,
+        "narHash": "sha256-+NL0GnHsDCuMP1AcCeOe97D8O95IhNKrmy3+vk60rFE=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "0de8465d2b54ddd962422706d932c3354b4237ec",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "0de8465d2b54",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-lib": {
       "locked": {
         "lastModified": 1751159883,
@@ -406,6 +422,7 @@
         "nix-darwin": "nix-darwin",
         "nix-index-database": "nix-index-database",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-codex": "nixpkgs-codex",
         "sops-nix": "sops-nix",
         "treefmt-nix": "treefmt-nix_2"
       }
