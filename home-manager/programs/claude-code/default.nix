@@ -114,6 +114,15 @@ in
         CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1";
         CLAUDE_CODE_NEW_INIT = "1";
         CLAUDE_CODE_NO_FLICKER = "1";
+
+        # codex-plugin-cc が thread/start に sandbox: "read-only" 等を強制送信し、
+        # cage の中で codex 内部の Seatbelt をネストしようとして失敗するため、
+        # plugin 経由のときだけ sandbox を danger-full-access に切り替える。
+        # cage が外側で十分に守っており codex の内部 sandbox は冗長。
+        # CLI 直接利用 (`codex` / `codex exec` 等) はこの env を読まないため
+        # 通常通りデフォルト sandbox が適用される。
+        # See: https://github.com/openai/codex-plugin-cc/pull/241
+        CODEX_COMPANION_SANDBOX_MODE = "danger-full-access";
       };
 
       hooks = {
@@ -159,7 +168,9 @@ in
         "openai-codex" = {
           source = {
             source = "github";
-            repo = "openai/codex-plugin-cc";
+            # PR #241 (CODEX_COMPANION_SANDBOX_MODE 対応) を取り込んだ fork。
+            # upstream にマージされたら "openai/codex-plugin-cc" に戻す。
+            repo = "thinceller/codex-plugin-cc";
           };
         };
       };
