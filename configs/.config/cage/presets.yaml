@@ -31,6 +31,8 @@ presets:
       # Obsidian CLI
       - "/Applications/Obsidian.app"
       - "$HOME/Library/Application Support/obsidian"
+      # Codex CLI (auth.json, config.toml, sessions 等)
+      - "$HOME/.codex"
     allow-keychain: true
     allow-git: true
 
