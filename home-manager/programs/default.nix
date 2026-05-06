@@ -13,7 +13,6 @@
     ./fish
     ./fzf
     ./gh
-    ./ghostty
     ./git
     ./htop
     ./jq
@@ -26,6 +25,5 @@
     ./ripgrep
     ./starship
     ./tmux
-    ./wezterm
   ];
 }

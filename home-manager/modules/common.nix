@@ -28,16 +28,5 @@ in
     secrets.discord-bot-token = { };
   };
 
-  # darwin-rebuild switch のたびに ~/Applications/Home Manager Apps/*.app への
-  # touch チェックで tccutil reset が走り、App Management 権限がリセットされる問題があるため無効化
-  # （Alacritty などから darwin-rebuild が打てなくなる）
-  # GUI アプリは Homebrew cask で管理する方針
-  # TODO: Ghostty / WezTerm / AppCleaner / pinentry-mac を Homebrew cask に移行後、
-  # targets.darwin ブロック自体を削除する
-  targets.darwin = {
-    copyApps.enable = false;
-    linkApps.enable = false;
-  };
-
   home.stateVersion = "24.05";
 }

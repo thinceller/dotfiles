@@ -15,6 +15,7 @@
     brews = [
       "k1LoW/tap/mo"
       "k1LoW/tap/tcmux"
+      "pinentry-mac"
       "vite-plus"
       {
         name = "node";
@@ -25,6 +26,7 @@
       "1password"
       "aerospace"
       "alacritty"
+      "appcleaner"
       "arc"
       "azookey"
       "chatgpt"
@@ -33,6 +35,7 @@
       "cmux"
       "craft"
       "firefox"
+      "ghostty"
       "google-chrome@beta"
       "hhkb-studio"
       "jordanbaird-ice"
@@ -46,6 +49,7 @@
       "raycast"
       "thebrowsercompany-dia"
       "visual-studio-code"
+      "wezterm"
       "zen"
     ];
   };

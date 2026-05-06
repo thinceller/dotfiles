@@ -31,6 +31,10 @@ in
       source = symlink /${rootDir}/.config/alacritty;
       recursive = true;
     };
+    # Ghostty
+    "ghostty/config" = {
+      source = symlink /${rootDir}/.config/ghostty/config;
+    };
     # karabiner
     # https://github.com/pqrs-org/Karabiner-Elements/issues/3248
     "karabiner" = {
@@ -54,8 +58,9 @@ in
       source = symlink /${rootDir}/.config/cage;
       recursive = true;
     };
-    # "wezterm/wezterm.lua" = {
-    #   source = symlink /${rootDir}/.config/wezterm/wezterm.lua;
-    # };
+    # WezTerm
+    "wezterm/wezterm.lua" = {
+      source = symlink /${rootDir}/.config/wezterm/wezterm.lua;
+    };
   };
 }
