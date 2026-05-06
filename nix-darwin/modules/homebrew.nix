@@ -47,6 +47,7 @@
       "obsidian"
       "orbstack"
       "raycast"
+      "shottr"
       "thebrowsercompany-dia"
       "visual-studio-code"
       "wezterm"
