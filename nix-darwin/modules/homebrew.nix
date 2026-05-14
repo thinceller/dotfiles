@@ -40,7 +40,7 @@
       "hhkb-studio"
       "jordanbaird-ice"
       "karabiner-elements"
-      "linear-linear"
+      "linear"
       "logi-options+"
       "microsoft-edge"
       "nani"
