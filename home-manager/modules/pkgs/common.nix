@@ -7,6 +7,7 @@
     age
     bun
     cage
+    cloudflared
     container
     curl
     deno

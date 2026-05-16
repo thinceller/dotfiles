@@ -23,6 +23,7 @@
     ./neovim
     ./nix-index
     ./ripgrep
+    ./ssh
     ./starship
     ./tmux
   ];

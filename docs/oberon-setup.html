@@ -1,0 +1,1163 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Oberon (Sakura VPS + NixOS + Forgejo) セットアップ手順</title>
+    <style>
+      :root {
+        --fg: #1a1a1a;
+        --bg: #fafafa;
+        --muted: #6b6b6b;
+        --accent: #5b3a8c;
+        --accent-bg: #efeaf8;
+        --code-bg: #f0eee8;
+        --warn-bg: #fff4e0;
+        --warn-border: #d99c30;
+        --ok-bg: #e6f4ea;
+        --ok-border: #2f8a4d;
+        --border: #d8d2c2;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic UI", sans-serif;
+        color: var(--fg);
+        background: var(--bg);
+        line-height: 1.75;
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 2.5em 1.5em 6em;
+      }
+      h1 {
+        font-size: 1.9em;
+        border-bottom: 2px solid var(--accent);
+        padding-bottom: 0.3em;
+        margin-top: 0;
+      }
+      h2 {
+        font-size: 1.4em;
+        margin-top: 2.5em;
+        color: var(--accent);
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 0.2em;
+      }
+      h3 {
+        font-size: 1.15em;
+        margin-top: 1.8em;
+      }
+      h2 .step {
+        display: inline-block;
+        background: var(--accent);
+        color: white;
+        font-size: 0.65em;
+        padding: 0.15em 0.6em;
+        border-radius: 4px;
+        margin-right: 0.5em;
+        vertical-align: middle;
+        font-weight: normal;
+      }
+      code {
+        font-family: "SF Mono", "Menlo", Consolas, monospace;
+        background: var(--code-bg);
+        padding: 0.1em 0.4em;
+        border-radius: 3px;
+        font-size: 0.92em;
+      }
+      pre {
+        background: #2a2a2a;
+        color: #f5f5f5;
+        padding: 1em 1.2em;
+        border-radius: 6px;
+        overflow-x: auto;
+        font-size: 0.88em;
+        line-height: 1.55;
+      }
+      pre code {
+        background: transparent;
+        color: inherit;
+        padding: 0;
+        font-size: 1em;
+      }
+      .callout {
+        border-left: 4px solid;
+        padding: 0.8em 1.1em;
+        margin: 1.2em 0;
+        border-radius: 0 4px 4px 0;
+      }
+      .callout.warn {
+        background: var(--warn-bg);
+        border-color: var(--warn-border);
+      }
+      .callout.info {
+        background: var(--accent-bg);
+        border-color: var(--accent);
+      }
+      .callout.ok {
+        background: var(--ok-bg);
+        border-color: var(--ok-border);
+      }
+      .callout .label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 0.3em;
+      }
+      ol,
+      ul {
+        padding-left: 1.5em;
+      }
+      ol li,
+      ul li {
+        margin: 0.4em 0;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1em 0;
+        font-size: 0.95em;
+      }
+      th,
+      td {
+        border: 1px solid var(--border);
+        padding: 0.5em 0.8em;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background: var(--code-bg);
+      }
+      .toc {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 1em 1.4em;
+        margin: 2em 0;
+      }
+      .toc h3 {
+        margin: 0 0 0.5em;
+        font-size: 1em;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .toc ol {
+        margin: 0;
+        padding-left: 1.4em;
+      }
+      .toc a {
+        color: var(--fg);
+        text-decoration: none;
+      }
+      .toc a:hover {
+        color: var(--accent);
+      }
+      .kbd {
+        background: white;
+        border: 1px solid var(--border);
+        border-bottom-width: 2px;
+        border-radius: 3px;
+        padding: 0.05em 0.45em;
+        font-family: monospace;
+        font-size: 0.85em;
+      }
+      .file {
+        color: var(--accent);
+        font-family: monospace;
+        font-size: 0.9em;
+      }
+      hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 3em 0;
+      }
+      .muted {
+        color: var(--muted);
+        font-size: 0.9em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Oberon セットアップ手順</h1>
+    <p class="muted">
+      さくらのVPS 上に NixOS + Forgejo を構築し、Cloudflare Tunnel 経由で
+      <code>forgejo.thinceller.dev</code> と <code>oberon.thinceller.dev</code>
+      を <strong>自分だけアクセスできる形 (Cloudflare Access)</strong> で公開するための、
+      リポジトリ scaffolding 完了後の作業手順書です。
+    </p>
+
+    <div class="callout info">
+      <span class="label">前提</span>
+      dotfiles リポジトリへの初期コミット (<code>nixosConfigurations.oberon</code>、
+      <code>nixos/modules/*.nix</code>、<code>hosts/oberon/*.nix</code>、Mac 側
+      <code>cloudflared</code> / SSH config 追加) は完了済みです。<br />
+      このドキュメントでは <strong>残っている手動作業</strong> と、その合間に行う
+      <strong>プレースホルダの置換</strong> を、上から順に実行できる粒度で説明します。
+    </div>
+
+    <div class="toc">
+      <h3>目次</h3>
+      <ol>
+        <li><a href="#prereq">必要な情報・準備物の確認</a></li>
+        <li><a href="#step1">Mac の SSH 公開鍵を <code>common.nix</code> に貼り付け</a></li>
+        <li><a href="#step2">Cloudflare Tunnel を作成</a></li>
+        <li><a href="#step3">Cloudflare Access で Forgejo Web UI と SSH を保護</a></li>
+        <li><a href="#step4">トンネル UUID を <code>cloudflared.nix</code> に書き込む</a></li>
+        <li><a href="#step5">nixos-anywhere で NixOS を投入</a></li>
+        <li><a href="#step6">VPS の age 公開鍵を取得して sops を有効化</a></li>
+        <li><a href="#step7">Credentials を暗号化し <code>cloudflared.nix</code> の sops 統合を有効化</a></li>
+        <li><a href="#step8">最初の nixos-rebuild (cloudflared 起動)</a></li>
+        <li><a href="#step9">動作確認 (HTTPS / トンネル SSH)</a></li>
+        <li><a href="#step10">Forgejo の管理者ユーザ作成</a></li>
+        <li><a href="#step11">git CLI 用 Service Token を発行し Mac 側 git を設定</a></li>
+        <li><a href="#step12">ロックダウン (sshd を 127.0.0.1 バインドに切替)</a></li>
+        <li><a href="#ops">日常運用コマンド</a></li>
+        <li><a href="#troubleshoot">トラブルシューティング</a></li>
+      </ol>
+    </div>
+
+    <hr />
+
+    <h2 id="prereq"><span class="step">Step 0</span>必要な情報・準備物の確認</h2>
+    <p>作業を始める前に、以下が手元に揃っていることを確認してください。</p>
+    <table>
+      <thead>
+        <tr>
+          <th>項目</th>
+          <th>内容・取得方法</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>VPS の <strong>グローバル IP アドレス</strong></td>
+          <td>さくらインターネットのコントロールパネル → サーバー詳細</td>
+        </tr>
+        <tr>
+          <td>VPS への <strong>初回 SSH 鍵</strong></td>
+          <td>
+            さくらVPS 契約時に登録した公開鍵に対応する Mac 側の秘密鍵。デフォルトは <code>~/.ssh/id_ed25519</code>
+          </td>
+        </tr>
+        <tr>
+          <td>VPS の <strong>初期ユーザ名</strong></td>
+          <td>Ubuntu 24.04 の場合は <code>ubuntu</code> または <code>root</code>。<code>ssh ubuntu@&lt;IP&gt;</code> または <code>ssh root@&lt;IP&gt;</code> で疎通を確認</td>
+        </tr>
+        <tr>
+          <td>Cloudflare アカウント</td>
+          <td><code>thinceller.dev</code> のネームサーバが Cloudflare を向いていること</td>
+        </tr>
+        <tr>
+          <td>Mac 側の <strong>age 秘密鍵</strong></td>
+          <td>
+            <code>~/.config/sops/age/keys.txt</code> に既存。これが無いと sops 復号化ができません。
+            <code>age-keygen -y ~/.config/sops/age/keys.txt</code> で公開鍵が確認できます。
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>また、dotfiles 側で次の変更が <strong>新しい <code>darwin-rebuild switch</code> で適用済み</strong> であることを確認してください。Mac 側に <code>cloudflared</code> コマンドが入っていないと、後段のトンネル経由 SSH ができません。</p>
+    <pre><code>which cloudflared
+# /run/current-system/sw/bin/cloudflared (またはhome-managerのprofile配下)が出ればOK
+
+# まだの場合:
+sudo darwin-rebuild switch --flake .#kohei-m4-mac-mini</code></pre>
+
+    <hr />
+
+    <h2 id="step1"><span class="step">Step 1</span>Mac の SSH 公開鍵を <code>common.nix</code> に貼り付け</h2>
+
+    <p><code>nixos/modules/common.nix</code> の <code>openssh.authorizedKeys.keys</code> にはプレースホルダが入っています。これを Mac の実際の公開鍵で置き換えます。</p>
+
+    <ol>
+      <li>
+        <strong>Mac で公開鍵を表示する</strong>:
+        <pre><code>cat ~/.ssh/id_ed25519.pub</code></pre>
+        例: <code>ssh-ed25519 AAAAC3Nz...XYZ thinceller@kohei-m4-mac-mini</code>
+      </li>
+      <li>
+        <strong><span class="file">nixos/modules/common.nix</span> を開き、以下の行を置き換える</strong>:
+        <pre><code>- "ssh-ed25519 AAAA_REPLACE_WITH_MAC_PUBLIC_KEY thinceller@mac"
++ "ssh-ed25519 AAAAC3Nz...XYZ thinceller@kohei-m4-mac-mini"</code></pre>
+      </li>
+    </ol>
+
+    <div class="callout info">
+      <span class="label">補足</span>
+      公開鍵は <strong>公開して問題ない情報</strong> なので、そのまま git にコミットしても構いません。
+      逆に、ここを置換し忘れると nixos-anywhere による初回投入の後、自分自身が SSH で入れなくなるので必ず置換してください。
+    </div>
+
+    <hr />
+
+    <h2 id="step2"><span class="step">Step 2</span>Cloudflare Tunnel を作成</h2>
+
+    <ol>
+      <li>
+        <a href="https://dash.cloudflare.com" target="_blank">dash.cloudflare.com</a>
+        にログインし、左メニューの <strong>Zero Trust</strong> をクリックします。
+        (初回は Zero Trust の team 名を聞かれます。任意の名前で OK。無料プランで足ります。)
+      </li>
+      <li><strong>Networks</strong> → <strong>Tunnels</strong> → <strong>Create a tunnel</strong></li>
+      <li>コネクタは <strong>Cloudflared</strong> を選択 → <strong>Next</strong></li>
+      <li>
+        Tunnel name に <strong><code>oberon</code></strong> と入力し、<strong>Save tunnel</strong>。
+      </li>
+      <li>
+        次の画面で OS 別のインストールコマンドが表示されますが、
+        <strong>そのままスクロールして無視</strong> してください。
+        本構成では cloudflared を NixOS 上で <code>services.cloudflared</code> が管理するため、ここでは何も実行しません。<br />
+        ただし、<strong>画面に表示されるトークンを含む URL を控えておく必要はありません</strong>。代わりに次の手順で Credentials JSON を取得します。
+        <strong>Next</strong> をクリックして進む。
+      </li>
+      <li>
+        <strong>Public Hostnames</strong> 画面で次の 2 行を登録します:
+        <table>
+          <thead>
+            <tr><th>Subdomain</th><th>Domain</th><th>Type</th><th>URL</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>git</code></td><td><code>thinceller.dev</code></td><td>HTTP</td><td><code>localhost:3000</code></td></tr>
+            <tr><td><code>oberon</code></td><td><code>thinceller.dev</code></td><td>SSH</td><td><code>localhost:22</code></td></tr>
+          </tbody>
+        </table>
+        2 つ目を追加するには <strong>+ Add a public hostname</strong> をクリック。
+      </li>
+      <li><strong>Save tunnel</strong> をクリック。これでトンネルが作成されます。</li>
+      <li>
+        <strong>Credentials JSON とトンネル UUID を取得する</strong>:<br />
+        作成完了後の画面右上の <strong>...</strong> → <strong>Configure</strong> でトンネル詳細に入り、左メニュー <strong>Overview</strong> でトンネル ID (UUID) を確認、メモします。<br />
+        Credentials JSON はトンネル作成画面では直接ダウンロードできないため、次の手順で取得します。
+      </li>
+    </ol>
+
+    <h3>Credentials JSON を取得する別経路</h3>
+    <p>
+      Cloudflare の Web UI からは Credentials JSON ファイルを直接ダウンロードできないため、
+      Mac 上で <code>cloudflared</code> CLI を使ってトンネルにログイン → JSON を取得します。
+    </p>
+    <ol>
+      <li>
+        <strong>cloudflared を Cloudflare アカウントと紐付ける</strong>:
+        <pre><code>cloudflared login</code></pre>
+        ブラウザが開き、<code>thinceller.dev</code> のゾーンを選択して認可します。完了後 <code>~/.cloudflared/cert.pem</code> が作成されます。
+      </li>
+      <li>
+        <strong>既存トンネル <code>oberon</code> の Credentials を吐き出す</strong>:
+        <pre><code>cloudflared tunnel token --cred-file /tmp/cf-tunnel.json oberon</code></pre>
+        <code>/tmp/cf-tunnel.json</code> に <code>{"AccountTag", "TunnelID", "TunnelSecret"}</code> 形式の JSON が書き出されます。
+        この内容は後で sops で暗号化するので、終わったら必ず削除します。
+      </li>
+    </ol>
+
+    <div class="callout info">
+      <span class="label">補足</span>
+      上記 <code>cloudflared tunnel token</code> が UUID を含む JSON 出力にならない場合、
+      <code>cloudflared tunnel list</code> で UUID を確認し、
+      <code>cloudflared tunnel info &lt;UUID&gt;</code> でも詳細が見られます。
+    </div>
+
+    <hr />
+
+    <h2 id="step3"><span class="step">Step 3</span>Cloudflare Access で Forgejo Web UI と SSH を保護</h2>
+
+    <p>
+      <code>oberon.thinceller.dev</code> (SSH) と <code>forgejo.thinceller.dev</code> (Forgejo Web UI / git HTTPS)
+      の <strong>両方</strong> を、自分のメールアドレスでのみ認可される Self-hosted アプリで保護します。
+      git CLI からの clone/push にはブラウザ認証が使えないため、
+      Service Token (Client ID / Secret) も発行して、Forgejo Web アプリのポリシーに追加します。
+    </p>
+
+    <h3>3-1. Oberon SSH アプリを作成</h3>
+
+    <ol>
+      <li>Zero Trust → <strong>Access</strong> → <strong>Applications</strong> → <strong>Add an application</strong></li>
+      <li><strong>Self-hosted</strong> を選択</li>
+      <li>
+        Configuration:
+        <ul>
+          <li>Application name: <code>Oberon SSH</code></li>
+          <li>Session Duration: <code>24 hours</code> (好みで)</li>
+          <li>Application domain: <code>oberon.thinceller.dev</code></li>
+        </ul>
+      </li>
+      <li>Identity providers: One-time PIN (デフォルト) のままで OK</li>
+      <li>
+        Add policies →
+        <ul>
+          <li>Policy name: <code>allow-self</code></li>
+          <li>Action: <code>Allow</code></li>
+          <li>Configure rules → <strong>Emails</strong> → <strong>is</strong> → <code>thinceller@gmail.com</code></li>
+        </ul>
+      </li>
+      <li>残りの画面はデフォルトのまま <strong>Next</strong> → <strong>Add application</strong>。</li>
+    </ol>
+
+    <h3>3-2. git CLI 用 Service Token を発行</h3>
+
+    <p>
+      git CLI は OTP メール認証フローを通れないため、HTTP ヘッダで認証を渡す
+      Service Token を Forgejo Web アプリに紐付けます。先にトークンだけ作っておきます。
+    </p>
+
+    <ol>
+      <li>Zero Trust → <strong>Access</strong> → <strong>Service Auth</strong> → <strong>Service Tokens</strong> → <strong>Create Service Token</strong></li>
+      <li>
+        Configuration:
+        <ul>
+          <li>Service Token Name: <code>forgejo-cli</code></li>
+          <li>Service Token Duration: <code>1 year</code> (好みで、最長は Cloudflare 側に従う)</li>
+        </ul>
+      </li>
+      <li>
+        <strong>表示される Client ID と Client Secret を安全な場所に控える</strong>。
+        <strong>Secret はこの画面でしか表示されない</strong>ため、必ずコピーしてください。
+        後で 1Password などのパスワードマネージャに保管します。
+      </li>
+    </ol>
+
+    <h3>3-3. Forgejo Web アプリを作成</h3>
+
+    <ol>
+      <li>Zero Trust → <strong>Access</strong> → <strong>Applications</strong> → <strong>Add an application</strong></li>
+      <li><strong>Self-hosted</strong> を選択</li>
+      <li>
+        Configuration:
+        <ul>
+          <li>Application name: <code>Forgejo Web</code></li>
+          <li>Session Duration: <code>24 hours</code></li>
+          <li>Application domain: <code>forgejo.thinceller.dev</code></li>
+        </ul>
+      </li>
+      <li>Identity providers: One-time PIN (デフォルト) のままで OK</li>
+      <li>
+        Add policies → <strong>2 つのポリシーを別々に作成</strong>:
+        <ul>
+          <li>
+            <strong>1 つ目 (ブラウザ用)</strong>:
+            <ul>
+              <li>Policy name: <code>allow-self-email</code></li>
+              <li>Action: <code>Allow</code></li>
+              <li>Configure rules → <strong>Emails</strong> → <strong>is</strong> → <code>thinceller@gmail.com</code></li>
+            </ul>
+          </li>
+          <li>
+            <strong>2 つ目 (git CLI 用)</strong>:
+            <ul>
+              <li>Policy name: <code>allow-service-token</code></li>
+              <li>Action: <code>Service Auth</code> <span class="muted">(<code>Allow</code> ではなく <code>Service Auth</code> を選ぶことで、メール認証フローをスキップし Service Token のみで通すポリシーになります)</span></li>
+              <li>Configure rules → <strong>Service Token</strong> → <strong>is</strong> → <code>forgejo-cli</code></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><strong>Next</strong> → <strong>Add application</strong>。</li>
+    </ol>
+
+    <div class="callout info">
+      <span class="label">補足</span>
+      Cloudflare Access のポリシーには 2 種類あります:
+      <ul style="margin-top: 0.4em;">
+        <li><strong>Allow</strong>: 通常の人間ユーザ向け。Identity Provider (メール OTP 等) での認証が必要。</li>
+        <li><strong>Service Auth</strong>: 自動化用。<code>CF-Access-Client-Id</code> / <code>CF-Access-Client-Secret</code> HTTP ヘッダだけで通る。</li>
+      </ul>
+      Forgejo Web アプリは両方持たせることで、「ブラウザでは自分のメールで、CLI では Service Token で」というデュアル運用ができます。
+    </div>
+
+    <hr />
+
+    <h2 id="step4"><span class="step">Step 4</span>トンネル UUID を <code>cloudflared.nix</code> に書き込む</h2>
+
+    <p><span class="file">nixos/modules/cloudflared.nix</span> を開き、UUID プレースホルダを実際の値に置換します。</p>
+
+    <pre><code>- "REPLACE_WITH_TUNNEL_UUID" = {
++ "12345678-aaaa-bbbb-cccc-1234567890ab" = {</code></pre>
+
+    <p>この段階ではまだ <code>sops.secrets."cloudflared"</code> ブロックはコメントアウトされたままで OK です (sops 統合は Step 7 で有効化)。</p>
+
+    <hr />
+
+    <h2 id="step5"><span class="step">Step 5</span>nixos-anywhere で NixOS を投入</h2>
+
+    <p>
+      さくらVPS の Ubuntu を NixOS で上書きします。<code>nixos-anywhere</code> は SSH 経由で
+      VPS に kexec NixOS インストーラを送り込み、<code>disko</code> でディスクをパーティショニングし、NixOS を書き込みます。
+    </p>
+
+    <div class="callout warn">
+      <span class="label">破壊的操作</span>
+      この手順は VPS のディスクを <strong><code>disko</code> によって完全にワイプ・再パーティショニング</strong>
+      します (<code>hosts/oberon/disko.nix</code> の宣言通り、GPT + 1MiB BIOS boot partition + ext4 root)。
+      実行前に、VPS 上に残したいデータが無いことを確認してください。
+    </div>
+
+    <div class="callout info">
+      <span class="label">さくらのVPS は静的 IP 構成 (DHCP 不在)</span>
+      さくらのVPS は DHCP を提供せず、コンパネで割り当てられた静的 IP / netmask / gateway / DNS を
+      OS 側で設定する運用。Ubuntu/CentOS では cloud-init が自動投入しますが、
+      NixOS には cloud-init が無いので <strong><code>hosts/oberon/network.nix</code></strong>
+      で値を宣言する必要があります。<br />
+      <strong>このファイルは <code>.gitignore</code> 済み</strong>です — origin IP を
+      public repo に晒すと cloudflared で隠蔽している意味がなくなるため。
+      テンプレートは <code>hosts/oberon/network.nix.example</code>。<br />
+      コンパネ → 該当VPS → "ネットワーク" タブに表示される
+      アドレス / ネットマスク / ゲートウェイ / DNS を <code>network.nix</code> に
+      転記してください。これを忘れると install 完了・boot しても
+      NIC に IP が割り当たらず、外から到達不能になります。
+    </div>
+
+    <div class="callout warn">
+      <span class="label">Flakes は untracked ファイルを見ない</span>
+      <code>network.nix</code> は <code>.gitignore</code> されているので、そのままでは
+      <code>nix flake</code> 系コマンドや <code>nixos-anywhere</code> から見えません。
+      毎回 nixos-anywhere / nixos-rebuild の前に:
+      <pre><code>git add -fN hosts/oberon/network.nix</code></pre>
+      で <strong>intent-to-add (force)</strong> しておくと、flake は見るが
+      <code>git commit</code> 対象にはならない状態になります。<br />
+      ただし <code>git commit -a</code> (-a で全変更を自動 stage する形) を
+      使うとこのファイルも巻き込まれる ので、<strong>このリポジトリでは
+      <code>-a</code> は使わず明示的に <code>git add &lt;path&gt;</code> で stage</strong>
+      する運用にしてください。
+    </div>
+
+    <div class="callout info">
+      <span class="label">さくらのVPS は SeaBIOS (legacy BIOS) なので注意</span>
+      さくらのVPS の firmware は <strong>UEFI ではなく SeaBIOS</strong> です。
+      bootloader は <code>systemd-boot</code> ではなく <code>GRUB</code> を BIOS モードで使う必要があります
+      (<code>hosts/oberon/configuration.nix</code> の <code>boot.loader.grub.enable = true</code>)。<br />
+      disko 側も ESP (vfat, EF00) ではなく <strong>BIOS boot partition (1MiB, EF02)</strong>
+      を GPT の最初に置くこと。<br />
+      これらが噛み合っていないと、install 自体は完走するが reboot 後に SeaBIOS の起動エントリで
+      ハングして VPS が起動しません (<code>Booting from Hard Disk...</code> から先に進まない)。
+    </div>
+
+    <div class="callout info">
+      <span class="label">なぜ disko と --build-on remote が必要か</span>
+      現行版の <code>nixos-anywhere</code> は <strong>disko によるディスク宣言を必須</strong>
+      とします (<code>config.system.build.diskoScript</code> を要求)。<br />
+      また Mac (aarch64-darwin) から x86_64-linux のクロージャを作るには Linux ビルダーが必要ですが、
+      未整備の状態では <code>--build-on remote</code> を付けて <strong>ビルドを VPS 側で実行</strong>
+      させるのが最短ルートです。Mac 側はあくまで eval だけを行います。
+    </div>
+
+    <div class="callout warn">
+      <span class="label">重要: bootstrap モードで初回 deploy する</span>
+      <code>nixos/modules/common.nix</code> の冒頭に <code>bootstrap</code> フラグがあります。
+      <strong>初回 deploy 時は必ず <code>bootstrap = true</code></strong> のままにすること
+      (デフォルトもtrueです)。<br />
+      true の間は sshd が <code>0.0.0.0:22</code> にバインドされ、firewall も 22 番だけ開きます。
+      これは <strong>Step 6 で age 公開鍵を取得 (<code>ssh-keyscan &lt;VPS_IP&gt;</code>) するために必須</strong>です。<br />
+      false にすると sshd は <code>127.0.0.1</code> 専用 + firewall 全閉となり、cloudflared 経由でしか到達できなくなります。
+      これは Step 9 の動作確認後、最後の Step 12 で行うロックダウン手順です。
+    </div>
+
+    <div class="callout info">
+      <span class="label">VPS は NixOS stable channel を使う</span>
+      oberon は <code>flake.nix</code> の <strong><code>nixpkgs-stable</code></strong> (現行 25.11) を参照しています。
+      <code>nixpkgs-unstable</code> は Hydra のビルドキャッシュが遅れることがあり、
+      ソースビルドフォールバックされると 2GB RAM の kexec installer (tmpfs) 上で OOM します
+      (典型例: <code>glibc-locales</code> 解凍中の <code>xz</code> が SIGKILL される)。<br />
+      また <strong><code>i18n.defaultLocale</code> を独自に変更しないこと</strong>。
+      <code>supportedLocales</code> が派生で変わると glibc-locales のキャッシュキーがズレて確実にソースビルドになります。
+      <code>time.timeZone</code> は無関係なので Asia/Tokyo にして OK。
+    </div>
+
+    <ol>
+      <li>
+        <strong>変更を git に staging する</strong>:
+        <pre><code>cd ~/.dotfiles
+git add nixos hosts/oberon flake.nix flake.lock \
+        home-manager/programs/ssh \
+        home-manager/programs/default.nix \
+        home-manager/modules/pkgs/common.nix
+
+# network.nix は gitignore 済みなので intent-to-add (force) で flake に見せる
+git add -fN hosts/oberon/network.nix</code></pre>
+        <p class="muted">Nix Flakes は git に追跡されていないファイルを認識しません。<code>git add</code> だけで OK (commit はまだしなくて良い)。<code>network.nix</code> だけは <code>.gitignore</code> 済みなので <code>-fN</code> (force + intent-to-add) が必須。</p>
+      </li>
+      <li>
+        <strong>nixos-anywhere を実行</strong>:
+        <pre><code>nix run github:nix-community/nixos-anywhere -- \
+  --flake .#oberon \
+  --generate-hardware-config nixos-generate-config \
+    ./hosts/oberon/hardware-configuration.nix \
+  --build-on remote \
+  --target-host ubuntu@&lt;VPS_IP&gt;</code></pre>
+        <p class="muted">
+          初期OS が root しか SSH 許可していない場合は <code>ubuntu@</code> を <code>root@</code> に置き換えてください。<br />
+          <code>--generate-hardware-config</code> で VPS 上の <code>nixos-generate-config</code> 出力が
+          <code>hosts/oberon/hardware-configuration.nix</code> に書き戻されます (<code>fileSystems</code>
+          は disko が別途設定するので、ここでは kernel modules / hostPlatform 等だけが入ります)。<br />
+          <code>--build-on remote</code> はビルドを VPS 上で行うフラグ (<code>--build-on-remote</code> は
+          deprecated エイリアス)。Mac の linux-builder 未整備でも通ります。
+        </p>
+      </li>
+      <li>
+        フローは <strong>kexec → disko (ディスクワイプ) → install → reboot</strong> の順で進みます。
+        所要時間はおおむね 15〜30 分。<code>Successfully installed NixOS</code> の表示で完了。
+      </li>
+      <li>
+        <strong>生成された hardware-configuration.nix を commit</strong>:
+        <pre><code>git add hosts/oberon/hardware-configuration.nix
+git diff --cached hosts/oberon/hardware-configuration.nix  # 実機の情報に置き換わっていることを確認</code></pre>
+      </li>
+    </ol>
+
+    <div class="callout warn">
+      <span class="label">再実行する場合 (失敗・やり直し時)</span>
+      <strong>ケース1: kexec installer にまだ繋がる</strong> (失敗が install 前のフェーズ):<br />
+      kexec 後は SSH ホスト鍵が変わっているため <code>ssh-keygen -R &lt;VPS_IP&gt;</code> して、
+      <code>--target-host root@&lt;VPS_IP&gt;</code> に切り替えて再実行すると kexec フェーズを
+      スキップして disko 以降から再開できます。<br /><br />
+      <strong>ケース2: install 完走後にやり直したい / 設定ミスでブリック</strong>
+      (例: bootstrap=false で初回 deploy してしまい外部 SSH 不可になった):<br />
+      cloudflared がまだ稼働していない段階では VPS は復旧不能なため、
+      <strong>さくらVPSコンパネ → OS インストール (Ubuntu 24.04)</strong> で
+      クリーンに戻し、契約時の SSH 公開鍵を再登録して、ここからやり直すのが最短です。
+      所要 5〜10 分 + nixos-anywhere ~30 分。
+    </div>
+
+    <hr />
+
+    <h2 id="step6"><span class="step">Step 6</span>VPS の age 公開鍵を取得して sops を有効化</h2>
+
+    <p>NixOS インストール直後、VPS は新しい SSH ホスト鍵を持っています。
+       この鍵から age 公開鍵を生成し、sops の暗号化対象に追加します。</p>
+
+    <ol>
+      <li>
+        <strong>VPS の SSH ホスト鍵から age 公開鍵を取得</strong>:
+        <pre><code>ssh-keyscan &lt;VPS_IP&gt; 2&gt;/dev/null \
+  | nix run nixpkgs#ssh-to-age</code></pre>
+        出力例: <code>age1abc...xyz</code>
+      </li>
+      <li>
+        <strong><span class="file">.sops.yaml</span> に追加</strong>:
+        <pre><code>keys:
+  - &admin age1r9r7z5crn6v77ye6psxvf24mdtmxgnng8xuvdryhckpjpmlyhdyqh8j2pc
+  - &sc age1hd03r99ut6kj64y9kxnekggxkzyzav985uzxes35v9e5cfjtp4fs6gelkf
+  - &mac age16hjw8qjvc0aakun7e4j9kfpzl787vqcvsfaqyr4u488vlyema5lsu95evr
++ # machines
++ - &oberon age1abc...xyz       # ← Step 6-1 で得た値
+creation_rules:
+  - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+      - age:
+          - *admin
+          - *sc
+          - *mac
++         - *oberon</code></pre>
+      </li>
+      <li>
+        <strong>既存の暗号化済みファイルを新しい鍵セットで再暗号化</strong>:
+        <pre><code>sops updatekeys secrets/default.yaml</code></pre>
+        <p class="muted">これで <code>secrets/default.yaml</code> も oberon の鍵で復号できるようになります (今回 oberon は <code>cloudflared.json</code> しか使いませんが、運用上 .sops.yaml は単一の真実なので統一しておきます)。</p>
+      </li>
+      <li>
+        <strong>VPS 側の sops 鍵設定について</strong>:<br />
+        sops-nix は <code>sops.age.sshKeyPaths</code> (デフォルト
+        <code>[/etc/ssh/ssh_host_ed25519_key]</code>) から age 鍵を <strong>毎回 on-the-fly に派生</strong>
+        して secret を復号します。永続的な age 鍵ファイル
+        (<code>/var/lib/sops-nix/key.txt</code>) は作成されません。<br />
+        <code>sops.age.keyFile</code> を明示設定するとそのパスに実体ファイルが必要になりエラーになるので、
+        <strong>明示設定しない (=デフォルトの sshKeyPaths 経由)</strong> のが正解。
+        <code>nixos/modules/sops.nix</code> は空の状態で OK で、利用側 (cloudflared.nix 等) が
+        <code>sops.secrets."&lt;name&gt;"</code> を宣言するだけで Step 8 の nixos-rebuild 時に
+        自動で復号 + 配置されます。
+      </li>
+    </ol>
+
+    <hr />
+
+    <h2 id="step7"><span class="step">Step 7</span>Credentials を暗号化し <code>cloudflared.nix</code> の sops 統合を有効化</h2>
+
+    <ol>
+      <li>
+        <strong>Step 2 で取得した Credentials JSON を sops で暗号化 (binary モード)</strong>:
+        <pre><code>cd ~/.dotfiles
+cp /tmp/cf-tunnel.json secrets/cloudflared.json
+sops encrypt --input-type binary --output-type binary -i secrets/cloudflared.json
+rm /tmp/cf-tunnel.json</code></pre>
+        <p class="muted">
+          <strong>binary 形式</strong>で暗号化する点が重要。<code>sops --encrypt</code> をデフォルト (json 形式)
+          で実行すると、JSON 内の各値が個別に暗号化されるが、sops-nix 側で <code>sops.secrets."cloudflared"</code>
+          としてアクセスすると「<code>cloudflared</code> という JSON キーを探す」挙動になり
+          <code>the key 'cloudflared' cannot be found</code> エラーになります。<br />
+          binary 形式は「ファイル全体を sops エンベロープで包む」だけなので、unwrap 後の
+          <code>/run/secrets/cloudflared</code> には元の JSON がそのまま入り、cloudflared が読めます。
+        </p>
+        中身が <code>"sops": {...}</code> を含む暗号化形式になっていることを確認:
+        <pre><code>head -5 secrets/cloudflared.json
+sops decrypt --input-type binary --output-type binary secrets/cloudflared.json | head -3
+# → 元の JSON {"AccountTag":"...","TunnelID":"...","TunnelSecret":"..."} が返る</code></pre>
+      </li>
+      <li>
+        <strong><span class="file">nixos/modules/cloudflared.nix</span> を編集</strong>:
+        <p>冒頭のコメントに従い、次の 2 箇所を変更します。</p>
+        <ul>
+          <li>
+            <code>sops.secrets."cloudflared"</code> ブロックのコメントを解除:
+            <pre><code>- # sops.secrets."cloudflared" = {
+- #   sopsFile = ../../secrets/cloudflared.json;
+- #   format = "json";
+- #   owner = config.services.cloudflared.user;
+- #   group = config.services.cloudflared.group;
+- # };
++ sops.secrets."cloudflared" = {
++   sopsFile = ../../secrets/cloudflared.json;
++   format = "binary";   # JSON ファイル全体を unwrap (特定キー抽出ではない)
++   mode = "0400";        # NixOS 25.11 で services.cloudflared が DynamicUser 化
++                         # → owner/group 指定不可。root:root 0400 で systemd LoadCredential 経由</code></pre>
+            ファイル冒頭の関数引数も <code>{ config, ... }:</code> に変更してください (現在は <code>{ ... }:</code>)。
+          </li>
+          <li>
+            <code>credentialsFile</code> をプレースホルダから sops の path に切り替え:
+            <pre><code>- # credentialsFile = config.sops.secrets."cloudflared".path;
+- credentialsFile = "/run/secrets/cloudflared"; # sops 統合後に上記行へ置換
++ credentialsFile = config.sops.secrets."cloudflared".path;</code></pre>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <strong>secrets ファイルも staging</strong>:
+        <pre><code>git add secrets/cloudflared.json .sops.yaml
+git add nixos/modules/cloudflared.nix
+git add secrets/default.yaml  # updatekeys で書き換わったため</code></pre>
+      </li>
+      <li>
+        <strong>Mac 側でeval が通ることを確認</strong>:
+        <pre><code>nix eval .#nixosConfigurations.oberon.config.system.build.toplevel.drvPath</code></pre>
+      </li>
+    </ol>
+
+    <hr />
+
+    <h2 id="step8"><span class="step">Step 8</span>最初の nixos-rebuild (cloudflared 起動)</h2>
+
+    <p>
+      この時点では cloudflared がまだ起動していないので、VPS の IP に直接 SSH してビルド・スイッチを行います。
+      クロスビルドを避けるため、<code>--build-host</code> も同じ VPS を指します。
+    </p>
+
+    <pre><code>nixos-rebuild switch \
+  --flake .#oberon \
+  --target-host thinceller@&lt;VPS_IP&gt; \
+  --build-host thinceller@&lt;VPS_IP&gt; \
+  --use-remote-sudo</code></pre>
+
+    <ol>
+      <li>SSH 接続で初回フィンガープリント確認 → yes。</li>
+      <li>VPS 側で nixpkgs を取得し、ビルドが走ります (~5〜15 分)。</li>
+      <li>
+        switch 完了後、VPS 上で各サービスの起動を確認:
+        <pre><code>ssh thinceller@&lt;VPS_IP&gt; systemctl status forgejo cloudflared postgresql</code></pre>
+        3 つすべて <code>active (running)</code> であれば成功。
+      </li>
+      <li>
+        Cloudflare ダッシュボード →
+        <strong>Zero Trust → Networks → Tunnels</strong> でトンネル <code>oberon</code> の Status が
+        <strong>HEALTHY</strong> になっていることを確認。
+      </li>
+    </ol>
+
+    <hr />
+
+    <h2 id="step9"><span class="step">Step 9</span>動作確認 (HTTPS / トンネル SSH)</h2>
+
+    <ol>
+      <li>
+        <strong>HTTPS Web UI 確認</strong>:<br />
+        ブラウザで <a href="https://forgejo.thinceller.dev">https://forgejo.thinceller.dev</a> を開く。
+        <strong>初回は Cloudflare Access の認証画面</strong>が出るので、メールアドレスを入力 → 届いた One-time PIN を入力。
+        通過後に Forgejo の初期セットアップ画面 (もしくは "Install Forgejo" ページ) が表示されれば、
+        Cloudflare Access → cloudflared → Forgejo の経路が正しく繋がっています。
+      </li>
+      <li>
+        <strong>トンネル経由 SSH を確認</strong>:
+        <pre><code>ssh oberon</code></pre>
+        <code>matchBlocks."oberon"</code> が ProxyCommand に <code>cloudflared access ssh</code> を仕込んでいるため、初回はブラウザが開いて Cloudflare Access の認証フロー (One-time PIN メール) が走ります。<br />
+        メールで届いた 6 桁コードを入力 → 認証完了後、自動で SSH が確立します。
+      </li>
+      <li>
+        <strong>2 回目以降は無認証で繋がる</strong>:<br />
+        Access のセッション (デフォルト 24h) が残っているため、しばらくは <code>ssh oberon</code> だけで入れます。
+      </li>
+      <li>
+        <strong>nixos-rebuild もトンネル経由に切り替える</strong>:
+        <pre><code>nixos-rebuild switch \
+  --flake .#oberon \
+  --target-host oberon \
+  --build-host oberon \
+  --use-remote-sudo</code></pre>
+        以降の運用では IP は触りません。
+      </li>
+    </ol>
+
+    <div class="callout ok">
+      <span class="label">ここまでで Web/SSH の Access 認証経路は完成</span>
+      「インバウンドポートゼロ + Cloudflare Access で自分のメールアドレスだけが Forgejo Web UI と SSH に到達できる」
+      設計が稼働しています。VPS の IP・ポート・秘密鍵はリポジトリにも公開ネットワークにも露出していません。<br />
+      ただし <code>git clone</code> / <code>git push</code> をコマンドラインから行うには Step 11 の Service Token 設定がまだ必要です。
+    </div>
+
+    <hr />
+
+    <h2 id="step10"><span class="step">Step 10</span>Forgejo の管理者ユーザ作成</h2>
+
+    <p>
+      <code>DISABLE_REGISTRATION = true</code> を設定しているため、Web UI からの自己登録はできません。
+      最初の管理者ユーザは VPS 上で CLI 経由で作成します。
+    </p>
+
+    <p>
+      <code>nixos/modules/forgejo.nix</code> で <code>forgejo-admin</code> ラッパー
+      (内部で <code>sudo -u forgejo forgejo --config /var/lib/forgejo/custom/conf/app.ini --work-path /var/lib/forgejo "$@"</code> に展開) を
+      環境に入れているので、<code>--config</code> や <code>sudo -u</code> を毎回書く必要はありません。
+    </p>
+
+    <pre><code>ssh oberon
+
+# VPS 上で実行
+forgejo-admin admin user create \
+  --admin \
+  --username thinceller \
+  --email thinceller@gmail.com \
+  --random-password \
+  --must-change-password</code></pre>
+
+    <p>
+      出力されたランダムパスワードを保存しておき、<a href="https://forgejo.thinceller.dev/user/login">https://forgejo.thinceller.dev/user/login</a> からログイン (Cloudflare Access 認証通過後) → 強制パスワード変更を行ってください。
+    </p>
+
+    <p class="muted">
+      他にも <code>forgejo-admin admin user list</code> / <code>forgejo-admin dump</code> /
+      <code>forgejo-admin migrate</code> などの運用コマンドがそのまま使えます。
+    </p>
+
+    <hr />
+
+    <h2 id="step11"><span class="step">Step 11</span>git CLI 用 Service Token を発行し Mac 側 git を設定</h2>
+
+    <p>
+      Forgejo Web アプリを Cloudflare Access で保護しているため、
+      <code>git clone https://forgejo.thinceller.dev/...</code> や <code>git push</code> はそのままでは
+      302 で Access のログイン画面にリダイレクトされて失敗します。
+      Step 3-2 で発行した <strong>Service Token</strong> の Client ID / Secret を
+      <code>http.https://forgejo.thinceller.dev/.extraHeader</code> で送るよう gitconfig を設定し、
+      機密は <strong>sops で暗号化して dotfiles で管理</strong>します。
+    </p>
+
+    <h3>11-1. include 用 gitconfig ファイルを作成して sops 暗号化</h3>
+
+    <p>
+      Service Token の Client ID / Secret は <strong>機密</strong>なので、
+      平文を dotfiles に commit しないよう sops 暗号化したファイルとして配置します。
+    </p>
+
+    <pre><code>cd ~/.dotfiles
+
+# (1) 一時的に平文で作成し、Service Token の値を埋める
+cat &gt; secrets/cloudflare-access.gitconfig &lt;&lt;'EOF'
+[http "https://forgejo.thinceller.dev/"]
+  extraHeader = CF-Access-Client-Id: PASTE_CLIENT_ID_HERE
+  extraHeader = CF-Access-Client-Secret: PASTE_CLIENT_SECRET_HERE
+EOF
+$EDITOR secrets/cloudflare-access.gitconfig   # PASTE_..._HERE を実値に置換
+
+# (2) sops binary 形式で暗号化 (ファイル全体を unwrap して home-manager 側で復号する形)
+sops encrypt --input-type binary --output-type binary -i secrets/cloudflare-access.gitconfig
+
+# (3) 暗号化されたことを確認
+head -5 secrets/cloudflare-access.gitconfig
+sops decrypt --input-type binary --output-type binary secrets/cloudflare-access.gitconfig
+# → 元の [http "..."] 構造が返れば成功</code></pre>
+
+    <p>
+      <code>.sops.yaml</code> には専用の creation_rule があり、この <code>cloudflare-access.gitconfig</code>
+      は <strong>oberon (VPS) を recipient に含めない</strong> 構成です — VPS 側で git CLI は使わないのでアクセス権を絞っています。
+    </p>
+
+    <h3>11-2. home-manager で復号 + git の include を有効化</h3>
+
+    <p>
+      <span class="file">home-manager/programs/git/default.nix</span> に既に組み込まれています:
+    </p>
+
+    <pre><code>sops.secrets."cloudflare-access.gitconfig" = {
+  sopsFile = ../../../secrets/cloudflare-access.gitconfig;
+  format = "binary";
+  path = "${config.home.homeDirectory}/.config/git/cloudflare-access.gitconfig";
+};
+
+programs.git.settings.includeIf."hasconfig:remote.*.url:https://forgejo.thinceller.dev/**".path =
+  "${config.home.homeDirectory}/.config/git/cloudflare-access.gitconfig";</code></pre>
+
+    <p>
+      activation 時に sops-nix が復号して <code>~/.config/git/cloudflare-access.gitconfig</code>
+      に symlink を作成、git は <code>hasconfig:remote.*.url:https://forgejo.thinceller.dev/**</code>
+      に該当するリポジトリでのみその設定を include します。
+    </p>
+
+    <pre><code>git add .sops.yaml secrets/cloudflare-access.gitconfig home-manager/programs/git/default.nix
+sudo darwin-rebuild switch --flake .#kohei-m4-mac-mini</code></pre>
+
+    <h3>11-3. 動作確認</h3>
+
+    <pre><code># symlink が貼られているか
+ls -la ~/.config/git/cloudflare-access.gitconfig
+# → ~/.config/sops-nix/secrets/cloudflare-access.gitconfig への symlink
+
+# 中身が復号されているか (extraHeader 行が見える)
+cat ~/.config/git/cloudflare-access.gitconfig
+
+# 実際に clone (空の Forgejo リポジトリを Web UI で作成しておく)
+cd /tmp &amp;&amp; git clone https://forgejo.thinceller.dev/thinceller/test.git
+cd test
+git config --get-all 'http.https://forgejo.thinceller.dev/.extraHeader'
+# → CF-Access-Client-Id / CF-Access-Client-Secret の 2 行が返れば include 経由で効いている</code></pre>
+
+    <p>
+      403 / "Access denied" の場合は Forgejo Web アプリの Service Auth ポリシーで
+      <code>forgejo-cli</code> Service Token が許可されているか再確認。
+      ブラウザの Cloudflare 認証画面が代わりに走る場合は extraHeader が送られていない (= sops 復号失敗 or include 条件不一致) ので
+      <code>git config --get-all 'http.https://forgejo.thinceller.dev/.extraHeader'</code> で確認。
+    </p>
+
+    <hr />
+
+    <h2 id="step12"><span class="step">Step 12</span>ロックダウン (sshd を 127.0.0.1 バインドに切替)</h2>
+
+    <p>
+      ここまでで Cloudflare Access 経由の SSH (<code>ssh oberon</code>) と Forgejo Web UI / git CLI
+      が全部動作しているはずです。最後に <code>common.nix</code> の <code>bootstrap</code> トグルを
+      <code>false</code> にして、外部から VPS の 22 番ポートに直接届かない状態 (= 公開ポートゼロ)
+      にロックダウンします。
+    </p>
+
+    <div class="callout warn">
+      <span class="label">注意</span>
+      この切替後は <strong>VPS IP に直接 SSH できなくなります</strong>。
+      cloudflared / Cloudflare Access が壊れると緊急アクセスは
+      <strong>さくらコンパネ → VNC コンソール</strong>
+      のみになります。Step 9 で <code>ssh oberon</code> が問題なく通ることを確認してから実行してください。
+    </div>
+
+    <ol>
+      <li>
+        <strong><span class="file">nixos/modules/common.nix</span> の <code>bootstrap = true;</code>
+        を <code>bootstrap = false;</code> に変更</strong>:
+        <pre><code>- bootstrap = true;
++ bootstrap = false;</code></pre>
+      </li>
+      <li>
+        <strong>cloudflared 越しで再 deploy</strong>:
+        <pre><code>git add nixos/modules/common.nix
+nixos-rebuild switch \
+  --flake .#oberon \
+  --target-host oberon \
+  --build-host oberon \
+  --use-remote-sudo</code></pre>
+        <p class="muted">
+          <code>--target-host oberon</code> (= <code>oberon.thinceller.dev</code> via cloudflared) を使うので、
+          ロックダウン適用後も既存セッションは維持されます。
+        </p>
+      </li>
+      <li>
+        <strong>ロックダウン確認</strong>:
+        <pre><code># 外部から直接届かないことを確認
+nmap -p 22 &lt;VPS_IP&gt; -Pn          # 22/tcp filtered または closed
+
+# cloudflared 経由は通ることを確認
+ssh oberon echo ok               # → ok
+curl -I https://forgejo.thinceller.dev   # → 200 OK (Access の認証付き)</code></pre>
+      </li>
+    </ol>
+
+    <div class="callout ok">
+      <span class="label">完成 (最終状態)</span>
+      <strong>インバウンドポートゼロ</strong>、<strong>Cloudflare Access で自分のメールアドレスのみが Forgejo Web UI と SSH に到達可能</strong>、
+      <strong>git CLI は Service Token 経由でアクセス可能</strong>。VPS の IP・ポート・秘密鍵はリポジトリにも公開ネットワークにも露出していません。
+    </div>
+
+    <hr />
+
+    <h2 id="ops">日常運用コマンド</h2>
+
+    <table>
+      <thead>
+        <tr><th>目的</th><th>コマンド</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>設定変更を反映</td>
+          <td><pre><code>git add -A &amp;&amp; git commit -m "..."
+nixos-rebuild switch --flake .#oberon \
+  --target-host oberon --build-host oberon \
+  --use-remote-sudo</code></pre></td>
+        </tr>
+        <tr>
+          <td>ロールバック (前世代へ)</td>
+          <td><code>ssh oberon sudo nixos-rebuild switch --rollback</code></td>
+        </tr>
+        <tr>
+          <td>nixpkgs アップデート</td>
+          <td><code>nix run .#update</code></td>
+        </tr>
+        <tr>
+          <td>Forgejo バックアップ (dump)</td>
+          <td><code>ssh oberon sudo -u forgejo forgejo admin dump</code></td>
+        </tr>
+        <tr>
+          <td>サービス状態確認</td>
+          <td><code>ssh oberon systemctl status forgejo cloudflared postgresql</code></td>
+        </tr>
+        <tr>
+          <td>ログ追跡</td>
+          <td><code>ssh oberon journalctl -u forgejo -f</code></td>
+        </tr>
+        <tr>
+          <td>緊急アクセス (トンネル障害時)</td>
+          <td>
+            さくらのVPS コントロールパネル → <strong>VNC コンソール</strong> でログイン。<br />
+            <code>sudo nixos-rebuild switch --rollback</code> または GRUB メニューで前世代を選択。
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr />
+
+    <h2 id="troubleshoot">トラブルシューティング</h2>
+
+    <table>
+      <thead>
+        <tr><th>症状</th><th>確認・対応</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>ssh oberon</code> でブラウザが開かない</td>
+          <td>Mac 側に <code>cloudflared</code> が入っているか確認: <code>which cloudflared</code>。無ければ <code>darwin-rebuild switch</code> 未適用。</td>
+        </tr>
+        <tr>
+          <td>Cloudflare 認証後も SSH できない</td>
+          <td>Zero Trust → Access → Applications → <code>Oberon SSH</code> のポリシーで自分のメールが許可されているか確認。</td>
+        </tr>
+        <tr>
+          <td>Forgejo Web UI が 502/504</td>
+          <td>
+            <code>ssh oberon systemctl status cloudflared forgejo</code>。
+            cloudflared が起動していない場合は <code>journalctl -u cloudflared -e</code> で原因 (大半は credentials JSON のフォーマット崩れ)。
+          </td>
+        </tr>
+        <tr>
+          <td><code>nixos-rebuild</code> が途中で固まる</td>
+          <td>Cloudflare Access セッション切れの可能性。一度 <code>ssh oberon</code> で再認証して再実行。</td>
+        </tr>
+        <tr>
+          <td>nixos-anywhere が <code>does not provide attribute ... diskoScript</code> で失敗</td>
+          <td>
+            disko モジュールが flake に取り込まれていない可能性。
+            <code>flake.nix</code> の inputs に <code>disko</code> があるか、<code>hosts/oberon/default.nix</code>
+            の <code>modules</code> に <code>disko.nixosModules.disko</code> と <code>./disko.nix</code> が並んでいるか確認。
+          </td>
+        </tr>
+        <tr>
+          <td>nixos-anywhere が <code>Required system: 'x86_64-linux'</code> で失敗</td>
+          <td>
+            Mac 側で x86_64-linux のクロージャを作ろうとして詰まっている。
+            <code>--build-on remote</code> を付けて VPS 側でビルドさせる。
+          </td>
+        </tr>
+        <tr>
+          <td>install 完了後 reboot は通り <code>oberon login:</code> プロンプトは出ているが、外部から ping / SSH 不能</td>
+          <td>
+            NIC に IP が割り当たっていない。Sakura は DHCP 提供していないので、
+            <code>hosts/oberon/network.nix</code> でコンパネに表示されている値
+            (IPv4 アドレス / ネットマスク / ゲートウェイ / DNS) を静的に宣言する必要あり。<br />
+            VNC で <code>init=/bin/sh</code> 経由で root shell に入り、
+            <code>ip a</code> で interface に IP が無いことが確認できれば確定。
+          </td>
+        </tr>
+        <tr>
+          <td>install 完了後 reboot しても VPS が起動しない / VNC で SeaBIOS の <code>Booting from Hard Disk...</code> から先に進まない</td>
+          <td>
+            UEFI 想定の bootloader (例: <code>systemd-boot</code>) を BIOS firmware の VPS に書いた症状。
+            <code>hosts/oberon/configuration.nix</code> を <code>boot.loader.grub.enable = true;</code> に切り替え、
+            <code>hosts/oberon/disko.nix</code> の最初のパーティションを <code>type = "EF02"; size = "1M";</code>
+            (BIOS boot partition) に変える。<br />
+            install 中の出力に <code>Not booted with EFI or running in a container</code>
+            の警告が出ていたら、ほぼ確定。VPS は OS 再インストールしてやり直す必要あり。
+          </td>
+        </tr>
+        <tr>
+          <td>install フェーズで <code>setup: ... Killed</code> / <code>tar: Unexpected EOF</code></td>
+          <td>
+            2GB RAM の kexec installer (tmpfs) 上で大きな derivation をソースビルドしようとして OOM。
+            該当パッケージ (例: <code>glibc-locales</code>) が Hydra のキャッシュにヒットしていない。
+            <ol style="margin: 0; padding-left: 1.2em;">
+              <li>VPS は stable channel (<code>nixpkgs-stable</code>) を使うこと</li>
+              <li><code>i18n.defaultLocale</code> をデフォルト (<code>en_US.UTF-8</code>) のままにする</li>
+              <li><code>i18n.supportedLocales</code> を独自に絞らない (キャッシュキーが変わる)</li>
+            </ol>
+            それでもダメなら Mac 側で <code>nix.linux-builder.enable = true;</code> を設定して Mac 上でビルドする手もある。
+          </td>
+        </tr>
+        <tr>
+          <td>再実行時 <code>WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!</code></td>
+          <td>
+            kexec で SSH ホスト鍵が切り替わっているため正常。
+            <code>ssh-keygen -R &lt;VPS_IP&gt;</code> で known_hosts から旧鍵を削除して再試行。
+          </td>
+        </tr>
+        <tr>
+          <td><code>sops</code> 復号エラー</td>
+          <td>
+            VPS の age 公開鍵が <code>.sops.yaml</code> の <code>creation_rules.key_groups[].age</code> に登録されているか確認。
+            登録後は <code>sops updatekeys secrets/cloudflared.json</code> で再暗号化が必要。
+          </td>
+        </tr>
+        <tr>
+          <td>ブラウザで <code>forgejo.thinceller.dev</code> を開いても Cloudflare の "Access denied"</td>
+          <td>
+            Zero Trust → Access → Applications → <code>Forgejo Web</code> の <code>allow-self-email</code> ポリシーで自分のメールが許可されているか確認。
+            ポリシー変更後、ブラウザの Cookie をクリアして再アクセス。
+          </td>
+        </tr>
+        <tr>
+          <td><code>git clone</code> が 403 / "Access denied" になる</td>
+          <td>
+            <ol style="margin: 0; padding-left: 1.2em;">
+              <li><code>git config --global --list | grep extraHeader</code> で 2 行 (Client-Id と Client-Secret) が出るか</li>
+              <li>Zero Trust → Access → Applications → <code>Forgejo Web</code> に <code>Service Auth</code> アクションのポリシーがあり、Service Token <code>forgejo-cli</code> が紐付いているか</li>
+              <li>Service Token の有効期限切れ → 新規発行して extraHeader を更新</li>
+            </ol>
+          </td>
+        </tr>
+        <tr>
+          <td><code>git clone</code> 時にブラウザの Cloudflare 認証画面が走る</td>
+          <td>
+            extraHeader が送られていない (= Service Auth ポリシーが効いていない)。
+            <code>~/.gitconfig</code> に <code>[http "https://forgejo.thinceller.dev/"]</code> セクションが含まれているか確認。
+            URL末尾の <code>/</code> も重要 (gitの section マッチング規則)。
+          </td>
+        </tr>
+        <tr>
+          <td>Forgejo へのログイン (Web UI 上の認証) で 401 / authentication failed</td>
+          <td>
+            Cloudflare Access は通っているが Forgejo 側の認証が失敗。
+            Forgejo の管理者ユーザでログインし、Settings → Applications → Generate Token でアクセストークンを発行。
+            <code>git clone https://thinceller:&lt;forgejo-token&gt;@forgejo.thinceller.dev/...</code> の形で使う (Cloudflare Access の extraHeader も併用)。
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr />
+
+    <p class="muted">
+      参考: 元のガイド <code>~/downloads/sakura-vps-nixos-forgejo-guide.md</code>、計画ファイル
+      <code>~/.claude/plans/prancy-giggling-pine.md</code>。
+    </p>
+  </body>
+</html>

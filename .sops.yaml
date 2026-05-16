@@ -4,10 +4,30 @@ keys:
   - &sc age1hd03r99ut6kj64y9kxnekggxkzyzav985uzxes35v9e5cfjtp4fs6gelkf
   # machines
   - &mac age16hjw8qjvc0aakun7e4j9kfpzl787vqcvsfaqyr4u488vlyema5lsu95evr
+  - &oberon age1sgdgpmndyyzz4zguf97uvppkprsfrklgn3t8cvdegtw8lh9h8fms7druqw
 creation_rules:
+  # Cloudflare Access (Forgejo CLI) の Service Token は Mac 側でしか使わない。
+  # oberon を recipient に含めない (= VPS 側からは復号できない)。
+  - path_regex: secrets/cloudflare-access\.gitconfig$
+    key_groups:
+      - age:
+          - *admin
+          - *sc
+          - *mac
+  # ホスト固有のネットワーク設定 (oberon)。
+  # 将来別 VPS を追加する場合は同じパターンで <hostname>-network.yaml 用の rule を足す。
+  - path_regex: secrets/oberon-network\.yaml$
+    key_groups:
+      - age:
+          - *admin
+          - *sc
+          - *mac
+          - *oberon
+  # その他の secrets は VPS (oberon) でも復号できるよう全鍵を recipient にする。
   - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
     key_groups:
       - age:
           - *admin
           - *sc
           - *mac
+          - *oberon

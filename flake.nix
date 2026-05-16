@@ -14,6 +14,10 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    # NixOS サーバ (oberon) 用は cache hit 率の高い stable channel を使う。
+    # unstable はビルドキャッシュが Hydra に追いつかないことがあり、
+    # 2GB RAM の kexec installer 上で大きな build が走ると OOM するため。
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.11";
     nix-darwin = {
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -36,6 +40,10 @@
     };
     sops-nix = {
       url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    disko = {
+      url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     edgepkgs = {
@@ -83,6 +91,9 @@
         darwinConfigurations = {
           "kohei-m4-mac-mini" = import ./hosts/kohei-m4-mac-mini { inherit inputs; };
           "SC-N-843" = import ./hosts/SC-N-843 { inherit inputs; };
+        };
+        nixosConfigurations = {
+          "oberon" = import ./hosts/oberon { inherit inputs; };
         };
       };
       perSystem =
