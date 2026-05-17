@@ -934,23 +934,66 @@ cd ~/.dotfiles
 sops -d secrets/oberon.yaml | head -5
 ```
 
-### 通常 deploy フロー
+### 通常 deploy フロー (経路系の変更を含む場合)
 
 ```bash
 # Mac で commit + push
 git push origin master
-
-# Oberon に SSH (or VNC) で入って
-ssh oberon
-cd ~/.dotfiles
-git pull
-sudo nixos-rebuild switch --flake .#oberon
 ```
 
-local deploy なので switch-to-configuration の親プロセスが local shell。
-cloudflared restart で SSH 経路が瞬断しても **switch-to-configuration 自体は
-local 完結**で死なない。SSH session は瞬断後に reconnect (`ServerAliveInterval`
-の挙動次第) されるか、再 ssh すればよい。
+**⚠️ SSH 経由の bare 実行は SIGHUP で死ぬ**:
+
+```bash
+# 危険: SSH 切断時に sshd が SIGHUP を子に送るため nixos-rebuild が中断する
+ssh oberon "cd ~/.dotfiles && sudo nixos-rebuild switch --flake .#oberon"
+```
+
+cloudflared restart 中に SSH が瞬断すると、`/run/current-system` 未更新の
+中途半端な状態で nixos-rebuild が kill されてしまう (2026-05-17 検証済み)。
+
+#### 安全策 A: VNC コンソールから実行 (最も確実)
+
+SSH を一切介在させない。Sakura パネルから VNC コンソールを開いて thinceller
+で login (= [§14](#14-vnc-fallback-とユーザー-password-の-declarative-管理)
+の password で) → そのままシェルで:
+
+```bash
+cd ~/.dotfiles && git pull && sudo nixos-rebuild switch --flake .#oberon
+```
+
+#### 安全策 B: tmux で session detach (SSH 経由でも OK)
+
+oberon の `environment.systemPackages` に `tmux` を含めておけば:
+
+```bash
+ssh oberon
+tmux new -s deploy
+cd ~/.dotfiles && git pull && sudo nixos-rebuild switch --flake .#oberon
+# SSH 落ちても tmux session 内のプロセスは生き残る
+# 再接続: ssh oberon → tmux attach -t deploy
+```
+
+#### 安全策 C: `systemd-run` で transient unit 化
+
+tmux が無い場合の代替。プロセスを systemd の管理下に置いて SSH session から
+切り離す:
+
+```bash
+ssh oberon
+sudo systemd-run --collect --unit=nixos-rebuild-deploy --pty --wait \
+  nixos-rebuild switch --flake /home/thinceller/.dotfiles#oberon
+
+# SSH 切れても unit は走り続ける。再接続後に状態確認:
+sudo systemctl status nixos-rebuild-deploy
+sudo journalctl -u nixos-rebuild-deploy -f
+```
+
+#### なぜ「on-server」だけでは不十分か
+
+`nixos-rebuild` 自体が oberon 上で実行されていても、それを起動した shell が
+sshd の子プロセスである場合、SSH disconnect → sshd → SIGHUP の連鎖で kill
+される。**「on-server で実行」だけでなく「session から detach 」する仕組み
+(VNC / tmux / systemd-run) が組で必要**。
 
 ### Build キャッシュとパフォーマンス
 
