@@ -14,9 +14,9 @@ creation_rules:
           - *admin
           - *sc
           - *mac
-  # ホスト固有のネットワーク設定 (oberon)。
-  # 将来別 VPS を追加する場合は同じパターンで <hostname>-network.yaml 用の rule を足す。
-  - path_regex: secrets/oberon-network\.yaml$
+  # ホスト固有 secret 集約ファイル (oberon)。network 設定 + user password hash 等を含む。
+  # 将来別 VPS を追加する場合は同じパターンで <hostname>.yaml 用の rule を足す。
+  - path_regex: secrets/oberon\.yaml$
     key_groups:
       - age:
           - *admin
