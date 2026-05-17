@@ -5,6 +5,7 @@ let
     sops-nix
     disko
     edgepkgs
+    nix-index-database
     ;
   # oberon は cache 安定性のため NixOS stable channel を使う (unstable ではない)。
   nixpkgs = inputs.nixpkgs-stable;
@@ -31,6 +32,7 @@ nixpkgs.lib.nixosSystem {
   modules = [
     sops-nix.nixosModules.sops
     disko.nixosModules.disko
+    nix-index-database.nixosModules.nix-index
     ./disko.nix
     ./configuration.nix
   ];
