@@ -17,17 +17,6 @@
     '')
   ];
 
-  services.postgresql = {
-    enable = true;
-    ensureDatabases = [ "forgejo" ];
-    ensureUsers = [
-      {
-        name = "forgejo";
-        ensureDBOwnership = true;
-      }
-    ];
-  };
-
   services.forgejo = {
     enable = true;
 
@@ -44,8 +33,15 @@
         ROOT_URL = "https://forgejo.thinceller.dev/";
         HTTP_ADDR = "127.0.0.1";
         HTTP_PORT = 3000;
-        # Forgejo 上の SSH 鍵設定 UI ごと無効化し、HTTPS clone のみとする。
-        DISABLE_SSH = true;
+        # built-in SSH server を 127.0.0.1:2222 で起動し、cloudflared tunnel
+        # (forgejo-ssh.thinceller.dev → ssh://localhost:2222) 経由で受ける。
+        # clone URL は git@forgejo.thinceller.dev:owner/repo.git (Web と同一ドメイン)。
+        START_SSH_SERVER = true;
+        BUILTIN_SSH_SERVER_USER = "git";
+        SSH_DOMAIN = "forgejo.thinceller.dev";
+        SSH_PORT = 22;
+        SSH_LISTEN_HOST = "127.0.0.1";
+        SSH_LISTEN_PORT = 2222;
       };
 
       service = {

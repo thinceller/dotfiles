@@ -21,6 +21,16 @@
         proxyCommand = "cloudflared access ssh --hostname %h";
         serverAliveInterval = 60;
       };
+      # Forgejo SSH clone: clone URL は git@forgejo.thinceller.dev だが
+      # tunnel ingress は forgejo-ssh.thinceller.dev に分かれているため、
+      # ProxyCommand で別 hostname に流す非対称構成。
+      "forgejo.thinceller.dev" = {
+        hostname = "forgejo.thinceller.dev";
+        user = "git";
+        identityFile = "~/.ssh/id_ed25519";
+        proxyCommand = "cloudflared access ssh --hostname forgejo-ssh.thinceller.dev";
+        serverAliveInterval = 60;
+      };
     }
     // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
       # macOS 限定: 1Password の SSH agent を全ホストに適用。
