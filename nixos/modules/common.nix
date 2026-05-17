@@ -54,6 +54,12 @@ in
     git
     vim
     htop
+    # tmux: VNC / SSH 経由 deploy 時の session 切断対策 (ssh が落ちても rebuild
+    # 継続できるよう、必ず tmux 内で nixos-rebuild を走らせる運用)。
+    tmux
+    # comma: `, <pkg> -- args` で nixpkgs パッケージを Mac と同様に ad-hoc 実行
+    # する (例: `, sops -- -d secrets/oberon.yaml`)。systemPackages を汚さない。
+    comma
   ];
 
   # sshd の到達経路は bootstrap トグルで切り替える (let 句参照)。
