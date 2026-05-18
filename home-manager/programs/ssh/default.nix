@@ -10,7 +10,11 @@
     enableDefaultConfig = false;
     # orbstack が `~/.orbstack/ssh/config` を動的に管理するため、それを include するだけにする。
     # orbstack は初回のみ ~/.ssh/config に追記するため、home-manager 生成後の再追記は発生しない。
-    includes = [ "~/.orbstack/ssh/config" ];
+    # `~/.ssh/conf.d/*` は Nix 管理外のホスト設定 (機密情報を含むものや一時的なもの) を置く場所。
+    includes = [
+      "~/.orbstack/ssh/config"
+      "~/.ssh/conf.d/*"
+    ];
 
     matchBlocks = {
       # VPS (cloudflared tunnel 経由)
@@ -39,4 +43,15 @@
         "\"~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock\"";
     };
   };
+
+  # `Include ~/.ssh/conf.d/*` の受け皿。ディレクトリが無いと毎回 ssh が
+  # `No such file or directory` を stderr に吐くため、activation で用意しておく。
+  # ssh は ~/.ssh とその配下を 700 でないと拒否するので、パーミッションも合わせる。
+  home.activation.sshConfDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    CONF_D="$HOME/.ssh/conf.d"
+    if [ ! -d "$CONF_D" ]; then
+      ${pkgs.coreutils}/bin/mkdir -p "$CONF_D"
+    fi
+    ${pkgs.coreutils}/bin/chmod 700 "$CONF_D"
+  '';
 }
