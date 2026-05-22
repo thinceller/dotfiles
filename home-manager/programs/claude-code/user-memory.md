@@ -57,7 +57,7 @@ Assess the scale of changes and select a tool based on the following criteria:
 - **Small changes** (3 files or fewer, roughly under 100 lines) → `code-simplifier:code-simplifier`
   - Focuses on code clarity, consistency, and maintainability, refining code to match project coding conventions
   - Token-efficient (single agent)
-- **Medium to large changes** (4+ files, or 100+ lines) → `/simplify`
+- **Medium to large changes** (4+ files, or 100+ lines) → `/code-review`
   - Performs parallel review across 3 axes: reusability, quality, and efficiency; detects duplication with existing utilities and structural issues like N+1 patterns
   - Higher token consumption due to 3 parallel agents, but prevents oversights in medium-to-large changes
 
@@ -68,7 +68,7 @@ Assess the scale of changes and select a tool based on the following criteria:
 
 ### How to Run
 - **code-simplifier**: Launch a subagent using the Agent tool (subagent_type: "code-simplifier:code-simplifier")
-- **/simplify**: Execute using the Skill tool
+- **/code-review**: Execute using the Skill tool
 - Target: recently changed code files
 
 ## Command Execution via Nix
