@@ -68,6 +68,7 @@ in
       effortLevel = "xhigh";
       voiceEnabled = true;
       skipAutoPermissionPrompt = true;
+      useAutoModeDuringPlan = true;
 
       # sandbox = {
       #   enabled = true;
