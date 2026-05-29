@@ -22,6 +22,8 @@ presets:
       - "$HOME/.npm"
       # bun キャッシュ (bunx for ccstatusline 等)
       - "$HOME/.bun"
+      # pnpm store (デフォルト: ~/Library/pnpm/store)
+      - "$HOME/Library/pnpm"
       # 各種キャッシュ
       - "$HOME/.cache"
       # ローカル state/bin (nvim, pnpm, mise 等)
