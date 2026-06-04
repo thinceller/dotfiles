@@ -6,6 +6,10 @@
       autoUpdate = true;
       upgrade = true;
       cleanup = "uninstall";
+      # Homebrew の変更により `brew bundle install --cleanup` には
+      # --force-cleanup 等の明示が必要になった
+      # https://github.com/nix-darwin/nix-darwin/issues/1787
+      extraFlags = [ "--force-cleanup" ];
     };
     taps = [
       "k1LoW/tap"
