@@ -16,6 +16,12 @@ builder イメージは完全に cache 済みで、Linux builder 無しでも起
 の 2 段階を踏む。リポジトリ上の `nix-linux-builder.nix` は **PHASE 2 (フル構成) の状態**で
 コミットしてある。新規マシンや作り直しのときだけ、いったん PHASE 1 状態に戻して進める。
 
+> **カスタム guest closure が Cachix に seed 済みなら 2 段階は不要**: 後述の
+> `thinceller-dotfiles` への seed が済んでいれば、新規マシンでも guest はそこから
+> substitute されるため、フル構成のまま `darwin-rebuild switch` するだけでよい
+> (`SC-N-843` への導入はこの方法で完了)。`config` を変更した直後など cache に無い
+> 状態のときだけ 2 段階手順が必要になる。
+
 ## 手順
 
 ### 1. stock builder を起動 (PHASE 1)

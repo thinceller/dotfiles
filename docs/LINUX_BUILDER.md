@@ -1,7 +1,7 @@
 # Linux Builder (nix-darwin)
 
 Apple Silicon の Mac (`aarch64-darwin`) で x86_64-linux 向けの OCI / Docker イメージを Nix で
-ビルドするための remote builder。個人機 `kohei-m4-mac-mini` で有効化済み
+ビルドするための remote builder。`kohei-m4-mac-mini` / `SC-N-843` で有効化済み
 ([`nix-darwin/modules/nix-linux-builder.nix`](../nix-darwin/modules/nix-linux-builder.nix))。
 
 > 初回セットアップ・guest 構成 (`config`) の変更手順・CI への Cachix seed は
