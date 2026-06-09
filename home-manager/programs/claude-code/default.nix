@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   lib,
   userConfig,
@@ -43,21 +42,13 @@ let
   });
 in
 {
-  # home-manager の programs.claude-code は enableMcpIntegration を有効にすると
-  # claude バイナリを `--plugin-dir <hm-plugin>` 付きで起動する bash wrapper で
-  # 包む。このフラグが Claude Code v2.1.139 の Agent View TUI を阻害して、
-  # 起動時に agent 定義の静的フォールバック表示に落ちる。
-  # 回避策として MCP 統合 wrapper を切り、user スコープ (~/.claude.json) に
-  # 下の home.activation で直接マージする。
   programs.claude-code = {
     enable = true;
     package = claudeCodePackage;
-    enableMcpIntegration = false;
 
     settings = {
       theme = "dark";
       autoCompactEnabled = false;
-      enableAllProjectMcpServers = true;
       alwaysThinkingEnabled = true;
       language = "japanese";
       autoMemoryEnabled = true;
@@ -117,7 +108,6 @@ in
         # ANTHROPIC_DEFAULT_OPUS_MODEL = "claude-opus-4-7[1m]";
 
         ENABLE_TOOL_SEARCH = true;
-        ENABLE_EXPERIMENTAL_MCP_CLI = false;
         CLAUDE_CODE_ENABLE_TASKS = true;
         CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1";
         CLAUDE_CODE_NEW_INIT = "1";
@@ -216,26 +206,4 @@ in
     skillsDir = ./skills;
     # hooksDir = ./hooks;
   };
-
-  # programs.claude-code.enableMcpIntegration を false にした代わりに、
-  # mcp-servers-nix が生成した programs.mcp.servers を user スコープ
-  # (~/.claude.json の mcpServers) にマージする。
-  # Claude Code は ~/.claude.json を稼働中の状態ファイルとして書き換えるため、
-  # 全置換は不可。jq でキー単位に merge する。
-  home.activation.claudeCodeMcpUserScope =
-    let
-      mcpJson = builtins.toJSON (config.programs.mcp.servers or { });
-    in
-    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      CLAUDE_JSON="$HOME/.claude.json"
-      if [ ! -f "$CLAUDE_JSON" ]; then
-        echo '{}' > "$CLAUDE_JSON"
-      fi
-      TMP="$(${pkgs.coreutils}/bin/mktemp)"
-      ${pkgs.jq}/bin/jq \
-        --argjson new ${lib.escapeShellArg mcpJson} \
-        '.mcpServers = ((.mcpServers // {}) * $new)' \
-        "$CLAUDE_JSON" > "$TMP"
-      ${pkgs.coreutils}/bin/mv "$TMP" "$CLAUDE_JSON"
-    '';
 }

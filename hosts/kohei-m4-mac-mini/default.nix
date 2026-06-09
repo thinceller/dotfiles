@@ -7,7 +7,6 @@ let
     home-manager
     sops-nix
     edgepkgs
-    mcp-servers-nix
     nix-index-database
     gh-prism
     cage
@@ -64,7 +63,6 @@ nix-darwin.lib.darwinSystem {
         sops-nix.homeManagerModules.sops
         nix-index-database.homeModules.nix-index
         gh-prism.homeManagerModules.default
-        mcp-servers-nix.homeManagerModules.default
       ];
       home-manager.extraSpecialArgs = {
         inherit

@@ -134,17 +134,14 @@ pkgs = import nixpkgs {
 # Then use: pkgs.edge.claude-code-bin
 ```
 
-#### 6. MCP Servers Configuration
-Claude Code MCP servers are configured using `mcp-servers-nix` in `home-manager/programs/claude-code/default.nix`. This includes NPM-based servers (context7) and HTTP-based servers (Figma).
-
-#### 7. Claude Code Global Skills and User Memory
+#### 6. Claude Code Global Skills and User Memory
 Global (user-level, not project-level) custom skills for Claude Code are managed under `home-manager/programs/claude-code/`:
 - `skills/`: Custom skills (e.g., `team-task`, `playwright-cli`)
 - `user-memory.md`: Global user memory for Claude Code (symlinked to `~/.claude/CLAUDE.md` via `memory.source`)
 
 Skills are symlinked into `~/.claude/` via the `skillsDir` option, making them available globally across all projects. The `playwright-cli` skill provides structured Playwright CLI (`@playwright/cli`) command documentation for browser automation via `npx`.
 
-#### 8. Homebrew Management
+#### 7. Homebrew Management
 Homebrew packages are declaratively managed in `nix-darwin/modules/homebrew.nix`:
 - `taps`: Third-party taps (e.g., `k1LoW/tap`, `manaflow-ai/cmux`)
 - `brews`: CLI tools (e.g., `k1LoW/tap/tcmux`)
