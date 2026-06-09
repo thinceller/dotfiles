@@ -12,7 +12,9 @@ return {
         "lua_ls",
         "nixd",
         "jsonls",
-        "ts_ls",
+        -- tsgo がプレビュー段階のため、問題があれば ts_ls に戻す
+        -- "ts_ls",
+        "tsgo",
         "html",
         "cssls",
         "tailwindcss",
