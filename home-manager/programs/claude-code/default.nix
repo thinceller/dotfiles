@@ -61,18 +61,63 @@ in
       skipAutoPermissionPrompt = true;
       useAutoModeDuringPlan = true;
 
-      # sandbox = {
-      #   enabled = true;
-      #   excludedCommands = [
-      #     "docker"
-      #     "git"
-      #     "gh"
-      #     "nix"
-      #   ];
-      #   network = {
-      #     allowLocalBinding = true;
-      #   };
-      # };
+      # Claude Code 組み込み sandbox (macOS: Seatbelt)。
+      # cage と二重に Seatbelt をネストすると失敗するため、これを使うときは
+      # `cage claude` ではなく素の `claude` で起動すること。cage 設定
+      # (configs/.config/cage/presets.yaml) は併用できるよう残してある。
+      sandbox = {
+        enabled = true;
+        # sandbox 内で完結する Bash コマンドは許可プロンプトなしで自動実行
+        autoAllowBashIfSandboxed = true;
+        # sandbox 起因で失敗したコマンドは dangerouslyDisableSandbox での
+        # unsandboxed 再実行を許す (escape hatch)。
+        # ただし勝手には解除されない: dangerouslyDisableSandbox 付きの実行は
+        # permissions.allow の明示ルールに一致する場合を除き、auto mode の
+        # 自動承認より優先して必ず "ask" (確認プロンプト) に強制される
+        # (バイナリ 2.1.170 の checkPermissions / sandboxOverride 実装で確認済み)。
+        allowUnsandboxedCommands = true;
+        excludedCommands = [
+          # sandbox 非対応 (公式ドキュメント記載)
+          "docker *"
+          # macOS Seatbelt 下では Go 製 CLI の TLS 検証が失敗する
+          "gh *"
+          # nix-daemon socket / store 書き込みが sandbox と相性が悪い
+          "nix *"
+          "darwin-rebuild *"
+        ];
+        network = {
+          # dev server 等の localhost バインドを許可
+          allowLocalBinding = true;
+          # 1Password SSH agent socket を許可し、sandbox 内の git commit でも
+          # op-ssh-sign (agent 経由の SSH 署名) が動くようにする
+          allowUnixSockets = [
+            "${userConfig.homeDir}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+          ];
+          # 未許可ドメインは初回にプロンプトが出て承認すると永続化されるので、
+          # ここには頻出のものだけ事前許可しておく
+          allowedDomains = [
+            "github.com"
+            "*.githubusercontent.com"
+            "registry.npmjs.org"
+          ];
+        };
+        filesystem = {
+          # Bash サブプロセスが書き込む実績のあるパス
+          # (cage preset の allow リストから、メインプロセスが書くものを除いて移植)
+          allowWrite = [
+            "/tmp"
+            "~/.claude"
+            "~/.npm"
+            "~/.bun"
+            "~/.cache"
+            "~/.config"
+            "~/.local"
+            "~/.codex"
+            "~/Library/pnpm"
+            "~/Library/Caches/ms-playwright"
+          ];
+        };
+      };
 
       permissions = {
         allow = [
