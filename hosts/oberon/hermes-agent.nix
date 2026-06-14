@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   sops.secrets."hermes-env" = {
     sopsFile = ../../secrets/hermes.env;
@@ -66,6 +71,48 @@
       ProtectHome = false;
       ReadWritePaths = [ "/var/lib/hermes" ];
       PrivateTmp = true;
+    };
+  };
+
+  # Slack Socket Mode の dead-session 無限リトライ検知 watchdog。
+  # ネットワーク瞬断で aiohttp ClientSession が close されると slack_sdk が
+  # 死んだセッションを掴んだまま `Session is closed` を10秒ごとに投げ続け、
+  # プロセスは active のまま無反応になる。hermes 内蔵 watchdog は「再接続
+  # タスクは生きているが永久に失敗する」この状態を検知できないため補う。
+  # 現プロセスの起動時刻 (ActiveEnterTimestamp) 以降のログでシグネチャが
+  # 連続したときだけ再起動する。再起動で起点がリセットされるので、直前世代の
+  # ログを数えて再起動ループに陥ることはない (健全時は0件で何もしない)。
+  systemd.services.hermes-agent-watchdog = {
+    description = "Restart hermes-agent when Slack Socket Mode is stuck in a dead-session reconnect loop";
+    after = [ "hermes-agent.service" ];
+    path = [
+      pkgs.systemd
+      pkgs.gnugrep
+    ];
+    serviceConfig.Type = "oneshot";
+    script = ''
+      if [ "$(systemctl is-active hermes-agent || true)" != "active" ]; then
+        exit 0
+      fi
+      start=$(systemctl show hermes-agent -p ActiveEnterTimestamp --value)
+      if [ -z "$start" ]; then
+        exit 0
+      fi
+      count=$(journalctl -u hermes-agent --since "$start" -q \
+              | grep -c "Failed to connect (error: Session is closed)" || true)
+      if [ "$count" -ge 3 ]; then
+        echo "Detected $count dead-session reconnect failures since $start; restarting hermes-agent"
+        systemctl restart hermes-agent
+      fi
+    '';
+  };
+
+  systemd.timers.hermes-agent-watchdog = {
+    description = "Periodic health check for hermes-agent Slack Socket Mode connection";
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnBootSec = "2min";
+      OnUnitActiveSec = "1min";
     };
   };
 }
