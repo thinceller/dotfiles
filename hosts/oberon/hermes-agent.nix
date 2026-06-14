@@ -6,15 +6,6 @@
     mode = "0400";
   };
 
-  # hermes-auth.json はファイル全体を復号して /run/secrets/hermes-auth に書き出す。
-  # format = "binary" でキー抽出なしにファイル全体を unwrap する。
-  # (format = "json" は JSON 内の特定キー ["hermes-auth"] を抽出するモードのため不適切。)
-  sops.secrets."hermes-auth" = {
-    sopsFile = ../../secrets/hermes-auth.json;
-    format = "binary";
-    mode = "0400";
-  };
-
   services.hermes-agent = {
     enable = true;
     addToSystemPackages = true;
@@ -24,11 +15,12 @@
     extraDependencyGroups = [ "messaging" ];
 
     settings = {
-      model.provider = "openai-codex";
+      # OpenCode Go ($10/月サブスク、オープンモデル)。
+      # 認証は OPENCODE_GO_API_KEY 環境変数のみ (OAuth 不要)。
+      model.provider = "opencode-go";
     };
 
     environmentFiles = [ config.sops.secrets."hermes-env".path ];
-    authFile = config.sops.secrets."hermes-auth".path;
   };
 
   # hermes gateway は native systemd mode でダッシュボードを自動起動しない。
