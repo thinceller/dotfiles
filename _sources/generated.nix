@@ -8,15 +8,15 @@
 {
   direnv-nvim = {
     pname = "direnv-nvim";
-    version = "564146278b3d5fe4ffa389cd103bab20f9b515d6";
+    version = "e623d3645152839cbe7e73e7b2aa6e31256020ea";
     src = fetchFromGitHub {
       owner = "NotAShelf";
       repo = "direnv.nvim";
-      rev = "564146278b3d5fe4ffa389cd103bab20f9b515d6";
+      rev = "e623d3645152839cbe7e73e7b2aa6e31256020ea";
       fetchSubmodules = false;
-      sha256 = "sha256-JbnGoZMApLtq4lSdGolcpKdsneolSOrzIi+O5yR2NDQ=";
+      sha256 = "sha256-Bwdkf1ZHPsR3BUxdsGBNNNbzJ/CPOIlqb5EcQUUPuAk=";
     };
-    date = "2026-03-28";
+    date = "2026-06-07";
   };
   fish-ghq = {
     pname = "fish-ghq";
@@ -32,13 +32,13 @@
   };
   tmux-agent-sidebar = {
     pname = "tmux-agent-sidebar";
-    version = "v0.9.1";
+    version = "v0.12.0";
     src = fetchFromGitHub {
       owner = "hiroppy";
       repo = "tmux-agent-sidebar";
-      rev = "v0.9.1";
+      rev = "v0.12.0";
       fetchSubmodules = false;
-      sha256 = "sha256-9y2Wc9NnHmita9/0NQ1kTpk1AZd8MA2TxI8Y+/Qy7Ng=";
+      sha256 = "sha256-ib/5WLL+6+4iXbttYBVUpuN1JkIPH4E+6YmD3CfjA5M=";
     };
   };
 }
