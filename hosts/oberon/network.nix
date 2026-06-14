@@ -8,16 +8,16 @@ let
   # ただし origin IP は cloudflared で隠蔽している前提なので、
   # public repo に平文で置かないよう sops で暗号化する。
   #
-  # 値は secrets/oberon-network.yaml に格納し、boot 時に sops-nix が復号、
+  # 値は secrets/oberon.yaml に格納し、boot 時に sops-nix が復号、
   # sops.templates が systemd-networkd 用の .network ファイルを生成して
   # /etc/systemd/network/10-oberon.network に symlink する。
   #
   # 将来別 VPS を追加する場合は:
-  #   1. secrets/<host>-network.yaml に同じ key 構成で値を入れて sops 暗号化
+  #   1. secrets/<host>.yaml に同じ key 構成で値を入れて sops 暗号化
   #   2. このファイルをコピーして sopsFile / template path / hostname を置換
   #   3. .sops.yaml に該当ホストの age 鍵を recipient として登録
   # ============================================================
-  netSecrets = ../../secrets/oberon-network.yaml;
+  netSecrets = ../../secrets/oberon.yaml;
 in
 {
   sops.secrets.ipv4_address = {

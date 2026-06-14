@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   lib,
   userConfig,
@@ -43,44 +42,82 @@ let
   });
 in
 {
-  # home-manager の programs.claude-code は enableMcpIntegration を有効にすると
-  # claude バイナリを `--plugin-dir <hm-plugin>` 付きで起動する bash wrapper で
-  # 包む。このフラグが Claude Code v2.1.139 の Agent View TUI を阻害して、
-  # 起動時に agent 定義の静的フォールバック表示に落ちる。
-  # 回避策として MCP 統合 wrapper を切り、user スコープ (~/.claude.json) に
-  # 下の home.activation で直接マージする。
   programs.claude-code = {
     enable = true;
     package = claudeCodePackage;
-    enableMcpIntegration = false;
 
     settings = {
       theme = "dark";
       autoCompactEnabled = false;
-      enableAllProjectMcpServers = true;
       alwaysThinkingEnabled = true;
       language = "japanese";
       autoMemoryEnabled = true;
       cleanupPeriodDays = 9999;
 
-      # model = "opus";
+      model = "fable";
       # advisorModel = "opus";
-      effortLevel = "xhigh";
+      # effortLevel = "xhigh";
       voiceEnabled = true;
       skipAutoPermissionPrompt = true;
+      useAutoModeDuringPlan = true;
 
-      # sandbox = {
-      #   enabled = true;
-      #   excludedCommands = [
-      #     "docker"
-      #     "git"
-      #     "gh"
-      #     "nix"
-      #   ];
-      #   network = {
-      #     allowLocalBinding = true;
-      #   };
-      # };
+      # Claude Code 組み込み sandbox (macOS: Seatbelt)。
+      # cage と二重に Seatbelt をネストすると失敗するため、これを使うときは
+      # `cage claude` ではなく素の `claude` で起動すること。cage 設定
+      # (configs/.config/cage/presets.yaml) は併用できるよう残してある。
+      sandbox = {
+        enabled = true;
+        # sandbox 内で完結する Bash コマンドは許可プロンプトなしで自動実行
+        autoAllowBashIfSandboxed = true;
+        # sandbox 起因で失敗したコマンドは dangerouslyDisableSandbox での
+        # unsandboxed 再実行を許す (escape hatch)。
+        # ただし勝手には解除されない: dangerouslyDisableSandbox 付きの実行は
+        # permissions.allow の明示ルールに一致する場合を除き、auto mode の
+        # 自動承認より優先して必ず "ask" (確認プロンプト) に強制される
+        # (バイナリ 2.1.170 の checkPermissions / sandboxOverride 実装で確認済み)。
+        allowUnsandboxedCommands = true;
+        excludedCommands = [
+          # sandbox 非対応 (公式ドキュメント記載)
+          "docker *"
+          # macOS Seatbelt 下では Go 製 CLI の TLS 検証が失敗する
+          "gh *"
+          # nix-daemon socket / store 書き込みが sandbox と相性が悪い
+          "nix *"
+          "darwin-rebuild *"
+        ];
+        network = {
+          # dev server 等の localhost バインドを許可
+          allowLocalBinding = true;
+          # 1Password SSH agent socket を許可し、sandbox 内の git commit でも
+          # op-ssh-sign (agent 経由の SSH 署名) が動くようにする
+          allowUnixSockets = [
+            "${userConfig.homeDir}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+          ];
+          # 未許可ドメインは初回にプロンプトが出て承認すると永続化されるので、
+          # ここには頻出のものだけ事前許可しておく
+          allowedDomains = [
+            "github.com"
+            "*.githubusercontent.com"
+            "registry.npmjs.org"
+          ];
+        };
+        filesystem = {
+          # Bash サブプロセスが書き込む実績のあるパス
+          # (cage preset の allow リストから、メインプロセスが書くものを除いて移植)
+          allowWrite = [
+            "/tmp"
+            "~/.claude"
+            "~/.npm"
+            "~/.bun"
+            "~/.cache"
+            "~/.config"
+            "~/.local"
+            "~/.codex"
+            "~/Library/pnpm"
+            "~/Library/Caches/ms-playwright"
+          ];
+        };
+      };
 
       permissions = {
         allow = [
@@ -113,10 +150,9 @@ in
         CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR = "1";
         USE_BUILTIN_RIPGREP = "1";
 
-        ANTHROPIC_DEFAULT_OPUS_MODEL = "claude-opus-4-7[1m]";
+        # ANTHROPIC_DEFAULT_OPUS_MODEL = "claude-opus-4-7[1m]";
 
         ENABLE_TOOL_SEARCH = true;
-        ENABLE_EXPERIMENTAL_MCP_CLI = false;
         CLAUDE_CODE_ENABLE_TASKS = true;
         CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1";
         CLAUDE_CODE_NEW_INIT = "1";
@@ -215,26 +251,4 @@ in
     skillsDir = ./skills;
     # hooksDir = ./hooks;
   };
-
-  # programs.claude-code.enableMcpIntegration を false にした代わりに、
-  # mcp-servers-nix が生成した programs.mcp.servers を user スコープ
-  # (~/.claude.json の mcpServers) にマージする。
-  # Claude Code は ~/.claude.json を稼働中の状態ファイルとして書き換えるため、
-  # 全置換は不可。jq でキー単位に merge する。
-  home.activation.claudeCodeMcpUserScope =
-    let
-      mcpJson = builtins.toJSON (config.programs.mcp.servers or { });
-    in
-    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      CLAUDE_JSON="$HOME/.claude.json"
-      if [ ! -f "$CLAUDE_JSON" ]; then
-        echo '{}' > "$CLAUDE_JSON"
-      fi
-      TMP="$(${pkgs.coreutils}/bin/mktemp)"
-      ${pkgs.jq}/bin/jq \
-        --argjson new ${lib.escapeShellArg mcpJson} \
-        '.mcpServers = ((.mcpServers // {}) * $new)' \
-        "$CLAUDE_JSON" > "$TMP"
-      ${pkgs.coreutils}/bin/mv "$TMP" "$CLAUDE_JSON"
-    '';
 }

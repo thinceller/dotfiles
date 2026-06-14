@@ -32,6 +32,7 @@ in
       stylelint-lsp
       tailwindcss-language-server
       terraform-ls
+      typescript-go
       typescript-language-server
       typos-lsp
       vscode-langservers-extracted

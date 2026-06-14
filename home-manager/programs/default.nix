@@ -18,7 +18,6 @@
     ./jq
     ./lazygit
     ./lsd
-    ./mcp-servers
     ./mise
     ./neovim
     ./nix-index

@@ -54,7 +54,17 @@ in
     git
     vim
     htop
+    # tmux: VNC / SSH 経由 deploy 時の session 切断対策 (ssh が落ちても rebuild
+    # 継続できるよう、必ず tmux 内で nixos-rebuild を走らせる運用)。
+    tmux
   ];
+
+  # comma (`,`) を pre-built nix-index DB と一緒に有効化する。
+  # `, htop` のように nixpkgs パッケージを ad-hoc 実行できる (Mac と同じ運用)。
+  # systemPackages に直接 comma を入れると DB が無くて起動失敗するため、
+  # nix-index-database flake のモジュール経由で導入するのが正解。
+  # (flake input の取り込みは hosts/oberon/default.nix の modules リスト側)
+  programs.nix-index-database.comma.enable = true;
 
   # sshd の到達経路は bootstrap トグルで切り替える (let 句参照)。
   # - bootstrap=true : 0.0.0.0 bind + openFirewall (22 番開放)

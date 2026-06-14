@@ -7,6 +7,7 @@
     ../../nix-darwin/modules/shells.nix
     ../../nix-darwin/modules/fonts.nix
     ../../nix-darwin/modules/nix.nix
+    ../../nix-darwin/modules/nix-linux-builder.nix
     ../../nix-darwin/modules/system.nix
     ../../nix-darwin/modules/homebrew.nix
     ../../nix-darwin/modules/services/aerospace.nix

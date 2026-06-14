@@ -3,6 +3,7 @@
   imports = [
     ./hardware-configuration.nix
     ./network.nix
+    ./users.nix
     ./forgejo.nix
     ./cloudflared.nix
     ./hermes-agent.nix

@@ -6,6 +6,7 @@
   home.packages = with pkgs; [
     age
     bun
+    cachix
     cage
     cloudflared
     container

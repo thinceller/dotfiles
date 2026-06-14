@@ -5,6 +5,8 @@ management dotfiles
 ## Documentation
 
 - [SOPS Manual](docs/SOPS.md) - Comprehensive guide for secrets management with SOPS
+- [Oberon deploy methods](docs/oberon-deploy.md) - 経路系変更・復旧時の deploy 方法 (on-server tmux / VNC / boot)
+- [Sakura VPS + NixOS + Forgejo lessons](docs/sakura-vps-nixos-lessons.md) - oberon 構築・運用で得た知見集 (deploy 戦略、復旧、cloudflared 挙動、VNC fallback など)
 
 ## Usage
 
@@ -25,21 +27,17 @@ $ sudo darwin-rebuild switch --flake .#SC-N-843
 
 ### Apply NixOS server configuration (oberon)
 
+通常運用 (アプリ層変更) は Mac から `--target-host` で deploy する:
+
 ```bash
-# 通常運用: cloudflared tunnel 経由でデプロイ
 $ nixos-rebuild switch \
     --flake .#oberon \
     --target-host oberon \
     --build-host oberon \
-    --sudo
-
-# 在線で activation したくない変更 (network / sshd / firewall など) は
-# 次回 boot に予約する `boot` で安全に切り替える
-$ nixos-rebuild boot \
-    --flake .#oberon \
-    --target-host oberon \
-    --build-host oberon \
-    --sudo
-$ ssh oberon sudo reboot
+    --sudo --ask-sudo-password
 ```
+
+cloudflared / sshd / firewall / network 等の経路系を触る変更や、SSH 不通時の
+復旧では別の方式を使う。詳細は [docs/oberon-deploy.md](docs/oberon-deploy.md)
+を参照。
 

@@ -6,6 +6,5 @@
 lib.mkIf userConfig.isPersonal {
   programs.codex = {
     enable = true;
-    # enableMcpIntegration = true;
   };
 }

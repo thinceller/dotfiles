@@ -95,6 +95,7 @@ input=$(cat)
 # Parse all fields from stdin JSON in a single jq call (one field per line)
 model="Unknown"; ctx_raw_pct=0; current_dir=""; worktree_name=""
 five_hour_pct=0; five_hour_reset=""; seven_day_pct=0; seven_day_reset=""
+effort=""
 
 if jq_output=$(printf '%s' "$input" | jq -r '
   (.model.display_name // "Unknown"),
@@ -104,7 +105,8 @@ if jq_output=$(printf '%s' "$input" | jq -r '
   ((.rate_limits.five_hour.used_percentage // 0) | floor),
   (.rate_limits.five_hour.resets_at // ""),
   ((.rate_limits.seven_day.used_percentage // 0) | floor),
-  (.rate_limits.seven_day.resets_at // "")
+  (.rate_limits.seven_day.resets_at // ""),
+  (.effort.level // "")
 ' 2>/dev/null); then
   {
     read -r model
@@ -115,6 +117,7 @@ if jq_output=$(printf '%s' "$input" | jq -r '
     read -r five_hour_reset
     read -r seven_day_pct
     read -r seven_day_reset
+    read -r effort
   } <<< "$jq_output" || true
 fi
 
@@ -180,7 +183,9 @@ fi
 ctx_color=$(color_for_pct "$ctx_pct")
 ctx_bar=$(render_bar "$ctx_pct" 20 "$ctx_color")
 
-line2="🤖 \033[35m${model}\033[0m | 📊 [${ctx_bar}] \033[${ctx_color}m${ctx_pct}%\033[0m (compact@${compact_threshold}%)"
+line2="🤖 \033[35m${model}\033[0m"
+if [[ -n "$effort" ]]; then line2+=" \033[36m⚡${effort}\033[0m"; fi
+line2+=" | 📊 [${ctx_bar}] \033[${ctx_color}m${ctx_pct}%\033[0m (compact@${compact_threshold}%)"
 
 # ── Lines 3-4: Usage (session / weekly) ─────────────────────────────
 

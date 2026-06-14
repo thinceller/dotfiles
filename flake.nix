@@ -50,10 +50,6 @@
       url = "github:natsukium/edgepkgs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    mcp-servers-nix = {
-      url = "github:natsukium/mcp-servers-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     cage = {
       url = "github:Warashi/cage";
       inputs.nixpkgs.follows = "nixpkgs";
