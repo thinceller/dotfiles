@@ -6,12 +6,12 @@
     mode = "0400";
   };
 
-  # hermes-auth.json は sops -e で per-field 暗号化された JSON。
-  # format = "json" で sops --input-type json -d を呼び出し復号 JSON を書き出す。
-  # (format = "binary" はファイル全体をバイナリ envelope として扱うため不適切。)
+  # hermes-auth.json はファイル全体を復号して /run/secrets/hermes-auth に書き出す。
+  # format = "binary" でキー抽出なしにファイル全体を unwrap する。
+  # (format = "json" は JSON 内の特定キー ["hermes-auth"] を抽出するモードのため不適切。)
   sops.secrets."hermes-auth" = {
     sopsFile = ../../secrets/hermes-auth.json;
-    format = "json";
+    format = "binary";
     mode = "0400";
   };
 
