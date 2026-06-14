@@ -70,6 +70,8 @@
     # cache.nixos.org にビルド済みの最新を選んでいる。
     # 通常の nixpkgs が追いついたら削除する。
     nixpkgs-codex.url = "github:NixOS/nixpkgs/0de8465d2b54";
+    # hermes-agent は nixos-unstable + uv2nix で独自ビルドするため nixpkgs follows は付けない。
+    hermes-agent.url = "github:NousResearch/hermes-agent";
   };
 
   outputs =

@@ -5,6 +5,7 @@ let
     sops-nix
     disko
     edgepkgs
+    hermes-agent
     ;
   # oberon は cache 安定性のため NixOS stable channel を使う (unstable ではない)。
   nixpkgs = inputs.nixpkgs-stable;
@@ -31,6 +32,7 @@ nixpkgs.lib.nixosSystem {
   modules = [
     sops-nix.nixosModules.sops
     disko.nixosModules.disko
+    hermes-agent.nixosModules.default
     ./disko.nix
     ./configuration.nix
   ];

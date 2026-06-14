@@ -16,12 +16,15 @@
     tunnels = {
       "998f8ee3-075b-44db-a2f1-88351b8c17cd" = {
         credentialsFile = config.sops.secrets."cloudflared".path;
-        ingress = {
-          # Forgejo Web UI / HTTPS clone
-          "forgejo.thinceller.dev" = "http://localhost:3000";
-          # 管理用 SSH (cloudflared access ssh 経由)
-          "oberon.thinceller.dev" = "ssh://localhost:22";
-        };
+        # ingress は Cloudflare ダッシュボード (edge config) で管理する。
+        # ここに書いても起動時に remote config で上書きされるため dead code になる。
+        # 参照: docs/sakura-vps-nixos-lessons.md §5
+        #
+        # 現在の Public Hostnames (メモ):
+        #   forgejo.thinceller.dev → http://localhost:3000
+        #   hermes.thinceller.dev  → http://localhost:9119  (要ダッシュボード追加)
+        #   oberon.thinceller.dev  → ssh://localhost:22
+        ingress = { };
         default = "http_status:404";
       };
     };
