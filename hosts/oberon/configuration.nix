@@ -6,6 +6,7 @@
     ./users.nix
     ./forgejo.nix
     ./cloudflared.nix
+    ./hermes-agent.nix
     ../../nixos/modules/common.nix
   ];
 
