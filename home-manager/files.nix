@@ -18,6 +18,19 @@ in
     ".bash_profile" = {
       source = symlink /${rootDir}/.bash_profile;
     };
+    # Homebrew 6.0+ は brew bundle 実行時に非公式 tap の trust を要求する。
+    # darwin-rebuild の activation は XDG_CONFIG_HOME を引き継がず HOME のみ設定するため、
+    # Homebrew は ~/.homebrew/trust.json を参照する。taps は nix-darwin/modules/homebrew.nix と一致させる。
+    ".homebrew/trust.json" = {
+      force = true;
+      text = builtins.toJSON {
+        trustedtaps = [
+          "k1low/tap"
+          "manaflow-ai/cmux"
+          "nikitabobko/tap"
+        ];
+      };
+    };
   };
 
   xdg.configFile = {
@@ -41,8 +54,9 @@ in
       source = symlink /${rootDir}/.config/karabiner;
     };
     # Neovim
-    "nvim" = {
-      source = symlink /${rootDir}/.config/nvim;
+    # init.lua は programs.neovim が生成するため、lua/ 配下のみを symlink する。
+    "nvim/lua" = {
+      source = symlink /${rootDir}/.config/nvim/lua;
       recursive = true;
     };
     # 1Password CLI

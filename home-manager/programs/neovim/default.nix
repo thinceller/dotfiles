@@ -17,6 +17,13 @@ in
     vimAlias = true;
     vimdiffAlias = true;
     withPython3 = false;
+    # init.lua は home-manager に生成させ、lua/ 配下のモジュールをここから読み込む。
+    # configs/.config/nvim/lua/ は files.nix で out-of-store symlink され live-edit 可能。
+    initLua = ''
+      require("base")
+      require("keymaps")
+      require("lz.n").load("plugins")
+    '';
     extraPackages = with pkgs; [
       # language servers
       biome
