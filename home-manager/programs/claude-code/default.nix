@@ -245,10 +245,10 @@ in
       };
     };
 
-    memory.source = ./user-memory.md;
+    context = ./user-memory.md;
 
     # agentsDir = ./agents;
-    skillsDir = ./skills;
+    skills = ./skills;
     # hooksDir = ./hooks;
   };
 }
