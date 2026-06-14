@@ -29,14 +29,15 @@
 
   # nixosModule が systemd Environment= に MESSAGING_CWD をセットするため、
   # プロセス環境から削除して deprecated 警告を解消する。
+  # environment 全体を lib.mkForce で置換すると、nixosModule が `path`
+  # オプション経由で注入する PATH キー (environment.PATH へ展開される) ごと
+  # 消えてしまい、cat/rm 等の基本コマンドが見つからなくなる。そのため
+  # MESSAGING_CWD キーだけを null 上書きして除外する (null のキーは
+  # systemd unit 生成時に出力されない)。
   # TimeoutStopSec も drain_timeout (180s) + 30s バッファに合わせて延長する。
   systemd.services.hermes-agent = {
     serviceConfig.TimeoutStopSec = lib.mkForce 210;
-    environment = lib.mkForce {
-      HOME = config.services.hermes-agent.stateDir;
-      HERMES_HOME = "${config.services.hermes-agent.stateDir}/.hermes";
-      HERMES_MANAGED = "true";
-    };
+    environment.MESSAGING_CWD = lib.mkForce null;
   };
 
   # hermes gateway は native systemd mode でダッシュボードを自動起動しない。
