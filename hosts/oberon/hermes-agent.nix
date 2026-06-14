@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 {
   sops.secrets."hermes-env" = {
     sopsFile = ../../secrets/hermes.env;
@@ -18,9 +18,25 @@
       # OpenCode Go ($10/月サブスク、オープンモデル)。
       # 認証は OPENCODE_GO_API_KEY 環境変数のみ (OAuth 不要)。
       model.provider = "opencode-go";
+      # MESSAGING_CWD 環境変数の代替。nixosModule は systemd Environment= に
+      # MESSAGING_CWD をセットするが、hermes v0.16.0 でこの変数は deprecated。
+      # settings 経由で config.yaml に書き出すことで警告を解消する。
+      terminal.cwd = config.services.hermes-agent.workingDirectory;
     };
 
     environmentFiles = [ config.sops.secrets."hermes-env".path ];
+  };
+
+  # nixosModule が systemd Environment= に MESSAGING_CWD をセットするため、
+  # プロセス環境から削除して deprecated 警告を解消する。
+  # TimeoutStopSec も drain_timeout (180s) + 30s バッファに合わせて延長する。
+  systemd.services.hermes-agent = {
+    serviceConfig.TimeoutStopSec = lib.mkForce 210;
+    environment = lib.mkForce {
+      HOME = config.services.hermes-agent.stateDir;
+      HERMES_HOME = "${config.services.hermes-agent.stateDir}/.hermes";
+      HERMES_MANAGED = "true";
+    };
   };
 
   # hermes gateway は native systemd mode でダッシュボードを自動起動しない。
