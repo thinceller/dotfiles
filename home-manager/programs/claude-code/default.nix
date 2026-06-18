@@ -51,7 +51,7 @@ in
       autoCompactEnabled = false;
       alwaysThinkingEnabled = true;
       language = "japanese";
-      autoMemoryEnabled = true;
+      autoMemoryEnabled = false;
       cleanupPeriodDays = 9999;
 
       model = "opus";
@@ -102,6 +102,12 @@ in
           ];
         };
         filesystem = {
+          # デフォルトで denyRead される ~/.ssh のうち known_hosts だけ read 再許可。
+          # SSH 越しの git push でホスト鍵検証 (known_hosts 読み取り) が
+          # sandbox にブロックされて失敗するのを防ぐ。秘密鍵は引き続き読めない。
+          allowRead = [
+            "~/.ssh/known_hosts"
+          ];
           # Bash サブプロセスが書き込む実績のあるパス
           # (cage preset の allow リストから、メインプロセスが書くものを除いて移植)
           allowWrite = [
@@ -150,7 +156,7 @@ in
         CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR = "1";
         USE_BUILTIN_RIPGREP = "1";
 
-        # ANTHROPIC_DEFAULT_OPUS_MODEL = "claude-opus-4-7[1m]";
+        ANTHROPIC_DEFAULT_OPUS_MODEL = "claude-opus-4-7[1m]";
 
         ENABLE_TOOL_SEARCH = true;
         CLAUDE_CODE_ENABLE_TASKS = true;
