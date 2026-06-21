@@ -12,6 +12,22 @@ let
     builtins.readFile ./statusline-command.sh
   );
 
+  # Otty (https://otty.app) のエージェント状態連携 hook。
+  # Otty.app に同梱されたスクリプトを呼び出して、pane に processing / idle /
+  # awaiting バッジを表示するための IPC を投げる。Otty.app 側でスクリプトが
+  # 更新されたら追従が必要 (パスが変わったら build が壊れて気付ける)。
+  ottyCli = "/Applications/Otty.app/Contents/MacOS/otty-cli";
+  ottyHookScript = "/Applications/Otty.app/Contents/Resources/agent-integration/claude/otty-hook.sh";
+  mkOttyHook = args: {
+    _otty = true;
+    hooks = [
+      {
+        type = "command";
+        command = "OTTY_CLI='${ottyCli}' '${ottyHookScript}' ${args}";
+      }
+    ];
+  };
+
   # Override edgepkgs' wrapProgram to place the binary in libexec/ instead of
   # renaming it to .claude-wrapped. This preserves the process name as "claude"
   # (via p_comm), which tools like tcmux rely on for session detection.
@@ -185,6 +201,24 @@ in
               }
             ];
           }
+          (mkOttyHook ''processing "$PPID"'')
+        ];
+        PostToolUse = [
+          (mkOttyHook ''processing "$PPID"'')
+        ];
+        UserPromptSubmit = [
+          (mkOttyHook ''processing "$PPID"'')
+        ];
+        SessionStart = [
+          (mkOttyHook ''idle "$PPID"'')
+        ];
+        Stop = [
+          (mkOttyHook ''idle "$PPID"'')
+        ];
+        # PermissionRequest だけは stdin (hook payload JSON) を base64 で
+        # 渡して、Otty 側で auto-approve 判定の文脈に使えるようにする。
+        PermissionRequest = [
+          (mkOttyHook ''awaiting "$PPID" ctx'')
         ];
       };
 
