@@ -77,6 +77,15 @@ in
       if set -q NVIM; and set -q DIRENV_DIR
         direnv reload 2>/dev/null
       end
+
+      # Otty (https://otty.app) shell integration。OTTY_SHELL_INTEGRATION は
+      # Otty が pane 起動時に注入する environment 変数。Otty 配下でないときは
+      # 何もしないので tmux / 素の terminal 起動でも無害。OSC 133 prompt
+      # marker / OSC 7 CWD 報告 / edit/jump/watch/learn ラッパー / SSH
+      # integration を提供する。
+      if test -n "$OTTY_SHELL_INTEGRATION" -a -r "$OTTY_SHELL_INTEGRATION/otty-integration.fish"
+        source "$OTTY_SHELL_INTEGRATION/otty-integration.fish"
+      end
     '';
   };
 }
