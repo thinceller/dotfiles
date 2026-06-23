@@ -11,25 +11,16 @@ let
 in
 {
   # ホームディレクトリ直下のファイル
+  # NOTE: ~/.homebrew/trust.json は nix-darwin/modules/homebrew.nix の preActivation で
+  # 管理する (home.file 経由だと trust.json が Nix store への symlink になり、Homebrew 6.x が
+  # brew bundle 後に trust store を書き戻そうとして "Refusing to write insecure trust store" で
+  # 停止するため)。
   home.file = {
     ".bashrc" = {
       source = symlink /${rootDir}/.bashrc;
     };
     ".bash_profile" = {
       source = symlink /${rootDir}/.bash_profile;
-    };
-    # Homebrew 6.0+ は brew bundle 実行時に非公式 tap の trust を要求する。
-    # darwin-rebuild の activation は XDG_CONFIG_HOME を引き継がず HOME のみ設定するため、
-    # Homebrew は ~/.homebrew/trust.json を参照する。taps は nix-darwin/modules/homebrew.nix と一致させる。
-    ".homebrew/trust.json" = {
-      force = true;
-      text = builtins.toJSON {
-        trustedtaps = [
-          "k1low/tap"
-          "manaflow-ai/cmux"
-          "nikitabobko/tap"
-        ];
-      };
     };
   };
 
