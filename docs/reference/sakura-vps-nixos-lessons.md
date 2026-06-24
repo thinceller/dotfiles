@@ -3,7 +3,7 @@
 `oberon` (Sakura VPS) 上に NixOS + Forgejo を構築し、Cloudflare Tunnel 越しに
 公開する一連の作業で得た、ハマりやすいポイントと回避策のまとめ。
 
-> 同じ構成を再現する場合は `docs/oberon-setup.html` (手順書) と併読してください。
+> 同じ構成を再現する場合は [`docs/plans/oberon-setup.html`](../plans/oberon-setup.html) (手順書) と併読してください。
 > このドキュメントは「なぜそうするか」「何にハマるか」を中心に解説します。
 
 ## 目次
@@ -422,6 +422,16 @@ cloudflared / sshd を restart する変更で `--target-host` deploy が exit 2
 **現実的な対処**: 経路系の変更は (a) **`boot` + reboot** か (b) **on-server
 deploy ([§15](#15-on-server-deploy-workflow-経路系の変更用))** を使う。`switch`
 で `--target-host` は避ける。
+
+> **2026-06-24 追記 (Tailscale 導入後)**: admin SSH を Tailscale 経路に分離した
+> ([plans/oberon-tailscale-plan.md](../plans/oberon-tailscale-plan.md))。
+> Tailscale (WireGuard) は cloudflared / sshd / firewall の restart の影響を受けず、
+> Mac 側 SSH session が切断されないため、cloudflared / sshd を触る変更でも
+> `--target-host` deploy が安全に通るようになった。本節の SIGPIPE メカニズム自体は
+> 健在だが、**経路系 = cloudflared/sshd/firewall** の場合は `--target-host` で良い。
+> 引き続き要注意なのは (a) network interface 変更 (tailnet0 を含む経路全体の停止)、
+> (b) Tailscale 自体の変更 (Tailscale 経由で deploy すると自己切断する可能性) の 2 つ。
+> deploy 方式の最新版は [`oberon-deploy.md`](oberon-deploy.md) を参照。
 
 ---
 
@@ -920,6 +930,14 @@ Mac deploy と用途で使い分け:
 | forgejo, postgres, アプリ層の変更 | Mac から `--target-host` で `switch` (高速、SSH 切れない) |
 | network, sshd, cloudflared, firewall の変更 | on-server `nixos-rebuild switch` (本セクション) または `--target-host` で `boot` + reboot |
 | 初回 deploy / 復旧時 | nixos-anywhere もしくは on-server |
+
+> **2026-06-24 追記 (Tailscale 導入後)**: `ssh oberon` は Tailscale 経路に切り替わったため、
+> cloudflared / sshd / firewall を触る変更でも Mac SSH session は影響を受けず、
+> Mac から `--target-host` で `switch` が安全に通る ([§6 の追記](#6-nixos-deployment-戦略-switch-vs-boot) 参照)。
+> 本セクションの on-server tmux 方式が必須なのは:
+> - **Tailscale 自体** (`hosts/oberon/tailscale.nix`) を触る変更 → `ssh oberon-cf` (cloudflared fallback) で接続して on-server tmux
+> - **network interface** を直接触る変更 → `boot` + reboot か VNC
+> 後者以外は Mac から `--target-host` でデフォルト OK。
 
 ### 初回セットアップ (on-server)
 

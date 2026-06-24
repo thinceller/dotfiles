@@ -31,7 +31,7 @@
         # 現在の Public Hostnames (バックアップ目的の記録):
         #   - forgejo.thinceller.dev     → http://localhost:3000  (Forgejo Web/HTTPS clone)
         #   - forgejo-ssh.thinceller.dev → ssh://localhost:2222   (Forgejo built-in SSH)
-        #   - oberon.thinceller.dev      → ssh://localhost:22     (管理 SSH)
+        #   - oberon.thinceller.dev      → ssh://localhost:22     (管理 SSH の fallback。主経路は Tailscale)
         #   - hermes.thinceller.dev      → http://localhost:9119  (hermes-agent dashboard)
         #
         # default は cloudflared が ingress 配列に必ず要求する catch-all。

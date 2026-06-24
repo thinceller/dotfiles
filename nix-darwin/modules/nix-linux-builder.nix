@@ -13,7 +13,7 @@
 #
 # binfmt 入りのカスタム guest は cache に無く、ビルドに linux-builder 自身が要る
 # (chicken-and-egg)。新規マシン導入や config 変更時の 2 段階手順・CI への Cachix
-# seed は docs/linux-builder-bootstrap.md を参照。日常利用は docs/LINUX_BUILDER.md。
+# seed は docs/reference/linux-builder-bootstrap.md を参照。日常利用は docs/reference/LINUX_BUILDER.md。
 {
   ...
 }:

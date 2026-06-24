@@ -40,7 +40,7 @@ age-keygen -y ~/.config/sops/age/keys.txt
 sops -r secrets/default.yaml
 ```
 
-See `docs/SOPS.md` for comprehensive secrets management documentation.
+See `docs/reference/SOPS.md` for comprehensive secrets management documentation.
 
 ### Verification (for coding agents)
 ```bash

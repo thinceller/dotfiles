@@ -1,7 +1,10 @@
 # Oberon Deploy Methods
 
-oberon は cloudflared tunnel 経由でのみ外部到達可能で、network / cloudflared を
-触る変更は SSH 経路自身を巻き込むため deploy 方法を使い分ける必要がある。
+oberon の admin SSH は **Tailscale (WireGuard) が主経路**、cloudflared SSH ingress が
+fallback。[`oberon-tailscale-plan.md`](../plans/oberon-tailscale-plan.md) を参照。
+Tailscale が独立した経路として常時通っているため、cloudflared / sshd / firewall を
+触る変更でも Mac 側 SSH session は切れず、`--target-host` deploy が安全に通る。
+network interface を直接触る変更だけが引き続き要注意。
 
 詳しい背景は以下を参照:
 
@@ -11,18 +14,20 @@ oberon は cloudflared tunnel 経由でのみ外部到達可能で、network / c
 
 ## 使い分けマトリクス
 
-| 変更内容 | 推奨方式 |
-|---|---|
-| forgejo / postgres / アプリ層 | **A** (Mac から `--target-host`) |
-| cloudflared / sshd / firewall | **B** (on-server tmux) または **C** (VNC) |
-| network (interface, gateway, DNS) | **D** (`boot` + reboot) または **C** (VNC) |
-| 初回 deploy / 完全復旧 | nixos-anywhere または **C** (VNC で `nixos-rebuild`) |
+| 変更内容 | 推奨方式 | 備考 |
+|---|---|---|
+| forgejo / postgres / アプリ層 | **A** (`--target-host`) | 経路に影響なし |
+| cloudflared / sshd / firewall | **A** (`--target-host`) | Tailscale 経路は cloudflared/sshd restart の影響を受けない |
+| Tailscale 自体 (`hosts/oberon/tailscale.nix`) | **B** (on-server tmux, `ssh oberon-cf`) | Tailscale 経由で deploy すると自己切断する可能性 |
+| network (interface, gateway, DNS) | **D** (`boot` + reboot) または **C** (VNC) | tailnet0 共々巻き込まれるため安全側に倒す |
+| 初回 deploy / 完全復旧 | nixos-anywhere または **C** (VNC で `nixos-rebuild`) | |
 
 ---
 
-## 方式 A: Mac から `--target-host` (アプリ層の変更用)
+## 方式 A: Mac から `--target-host` (デフォルト)
 
-経路サービス (cloudflared, sshd) を restart しない変更で最も速い。
+Tailscale 経路は cloudflared / sshd の restart の影響を受けないため、
+ほぼ全ての変更でこの方式が使える (Tailscale 自体と network interface 変更を除く)。
 
 ```bash
 nixos-rebuild switch \
@@ -36,17 +41,18 @@ nixos-rebuild switch \
 (`wheelNeedsPassword = true` 環境では必須)。oberon は `wheelNeedsPassword = false`
 にしているので不要だが、互換のため付けても害は無い。
 
-## 方式 B: on-server で tmux (経路系の変更用、推奨)
+## 方式 B: on-server で tmux (Tailscale / network 変更用)
 
-cloudflared / sshd / firewall / network を触る場合。SSH 切断 → SIGHUP で
-nixos-rebuild が中断する事故を避けるため、必ず tmux 内で実行する。
+Tailscale 自体や network interface 設定など、SSH 経路自身を巻き込み得る変更を行う場合。
+Tailscale を触るので主経路 (`ssh oberon`) は使わず **cloudflared 経由 (`ssh oberon-cf`)** で接続し、
+SSH 切断 → SIGHUP で nixos-rebuild が中断する事故を避けるため必ず tmux 内で実行する。
 
 ```bash
 # Mac で変更を push
 git push origin master
 
-# oberon に SSH
-ssh oberon
+# oberon に SSH (Tailscale 変更時は fallback の cloudflared 経由を使う)
+ssh oberon-cf      # 通常変更なら ssh oberon でも可
 tmux new -s deploy
 cd ~/.dotfiles && git pull && sudo nixos-rebuild switch --flake .#oberon
 
