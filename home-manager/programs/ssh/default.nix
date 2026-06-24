@@ -18,8 +18,15 @@
 
     # settings は freeform で OpenSSH のディレクティブ名を直接キーに使う (旧 matchBlocks)。
     settings = {
-      # VPS (cloudflared tunnel 経由)
+      # admin 主経路: Tailscale (MagicDNS で tailnet IP に解決)。
+      # Tailscale SSH なので鍵認証は tailscaled が処理 (IdentityFile 不要)。
       "oberon" = {
+        HostName = "oberon";
+        User = "thinceller";
+        ServerAliveInterval = 60;
+      };
+      # fallback: cloudflared 経由 (Tailscale 故障時 / 経路系 deploy 時)。
+      "oberon-cf" = {
         HostName = "oberon.thinceller.dev";
         User = "thinceller";
         IdentityFile = "~/.ssh/id_ed25519";

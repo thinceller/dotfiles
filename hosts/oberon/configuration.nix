@@ -7,6 +7,7 @@
     ./forgejo.nix
     ./cloudflared.nix
     ./hermes-agent.nix
+    ./tailscale.nix
     ../../nixos/modules/common.nix
   ];
 

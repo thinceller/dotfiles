@@ -83,6 +83,7 @@ in
       "orbstack"
       "raycast"
       "shottr"
+      "tailscale"
       "thebrowsercompany-dia"
       "visual-studio-code"
       "wezterm"
