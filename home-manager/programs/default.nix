@@ -21,6 +21,7 @@
     ./mise
     ./neovim
     ./nix-index
+    ./opencode
     ./ripgrep
     ./ssh
     ./starship
