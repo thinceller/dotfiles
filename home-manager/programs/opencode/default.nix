@@ -17,7 +17,7 @@ lib.mkIf userConfig.isPersonal {
     ];
 
     settings = {
-      model = "opencode-go/kimi-k2.7-code";
+      model = "opencode-go/glm-5.2";
       autoupdate = false;
       share = "manual";
       snapshot = true;
