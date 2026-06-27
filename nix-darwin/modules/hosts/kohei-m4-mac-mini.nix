@@ -19,7 +19,7 @@
     "readdle-spark"
     "slack"
     "steam"
-    "tailscale"
+    "tailscale-app"
     "zoom"
   ];
 }
