@@ -48,10 +48,12 @@ in
       extraFlags = [ "--force-cleanup" ];
     };
     taps = [
+      "acsandmann/tap"
       "k1LoW/tap"
       "nikitabobko/tap"
     ];
     brews = [
+      "acsandmann/tap/rift"
       "k1LoW/tap/mo"
       "k1LoW/tap/tcmux"
       "pinentry-mac"
