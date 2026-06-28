@@ -79,3 +79,17 @@ nix run nixpkgs#jq -- '.key' file.json
 ## Language
 
 Please answer in Japanese.
+
+## Obsidian Vault (共有メモリ・Karpathy LLM Wiki パターン)
+
+`obsidian_search` ツールが利用可能な場合 (personal machines のみ):
+
+- vault は「育つ知識ベース」(LLM Wiki)。RAG のように毎回ゼロから再計算するのではなく、
+  知識が一度コンパイルされ最新に保たれる
+- 質問が自分のノート、決定事項、プロジェクト、調査内容に関わる場合、**最初に `obsidian_search` で vault を検索**すること
+- 汎用的な知識や調べた内容は `vault-capture` skill を使って vault に記録（複利ループ）
+- セッションの重要な知見は `vault-session-log` skill で記録
+- 各ノートには `[[wikilink]]` で関連ノートをリンクし、ネットワークを構築
+- 引用時はソースノートのパスを明記
+- vault に未発見の知識は「見つからなかった」と明言し、推測しない
+- vault 内で起動した時は vault の CLAUDE.md と research-note スキルも参照すること

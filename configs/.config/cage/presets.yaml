@@ -35,6 +35,8 @@ presets:
       - "$HOME/Library/Application Support/obsidian"
       # Codex CLI (auth.json, config.toml, sessions 等)
       - "$HOME/.codex"
+      # Obsidian Vault (enquire-mcp + agent file access)
+      - "$HOME/src/github.com/thinceller/knowledge-base"
     allow-keychain: true
     allow-git: true
 

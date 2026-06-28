@@ -107,6 +107,9 @@ in
           # sandbox にブロックされて失敗するのを防ぐ。秘密鍵は引き続き読めない。
           allowRead = [
             "~/.ssh/known_hosts"
+          ]
+          ++ lib.optionals isPersonal [
+            "${userConfig.homeDir}/src/github.com/thinceller/knowledge-base"
           ];
           # Bash サブプロセスが書き込む実績のあるパス
           # (cage preset の allow リストから、メインプロセスが書くものを除いて移植)
@@ -121,6 +124,9 @@ in
             "~/.codex"
             "~/Library/pnpm"
             "~/Library/Caches/ms-playwright"
+          ]
+          ++ lib.optionals isPersonal [
+            "${userConfig.homeDir}/src/github.com/thinceller/knowledge-base"
           ];
         };
       };
@@ -256,5 +262,13 @@ in
     # agentsDir = ./agents;
     skills = ./skills;
     # hooksDir = ./hooks;
+  }
+  // lib.optionalAttrs isPersonal {
+    # programs.mcp.servers (obsidian-vault) を Claude Code に統合。
+    # 過去に --plugin-dir wrapper が Agent View TUI を破壊した経緯がある
+    # (commit 726976b, Claude Code v2.1.139)。v2.1.195 で再試行し、
+    # 再発したら enableMcpIntegration=false + home.activation jq マージに切り替える。
+    # 既存の codex plugin 有効化 (extraKnownMarketplaces) と同じゲート体制。
+    enableMcpIntegration = true;
   };
 }

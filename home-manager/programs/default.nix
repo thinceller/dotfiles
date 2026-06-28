@@ -21,6 +21,7 @@
     ./mise
     ./neovim
     ./nix-index
+    ./obsidian-vault
     ./opencode
     ./ripgrep
     ./ssh

@@ -1,0 +1,198 @@
+# Mnemos — Obsidian Vault 共有エージェントメモリ
+
+> Karpathy LLM Wiki パターンを採用した、複数 AI エージェント（Claude Code / OpenCode / 将来的に Hermes Agent）の **共有長期記憶** システム。`knowledge-base` Obsidian vault を substrate として、セッションを跨いで知識を積み上げる。
+
+ギリシャ神話の記憶の女神 Mnemosyne（ムネモシュネ、ムーサの母）に由来。記憶が創造を生む構造を体現する。
+
+---
+
+## 1. このシステムが解決すること
+
+LLM エージェントとの対話は通常、**毎セッションで揮発する**。Web を毎回検索し直し、過去の決定を覚えておらず、調べた内容も次回に活きない。
+
+Mnemos は、
+
+- セッションで得た知見・決定・調査結果を Obsidian vault に**ファイルし直す**
+- 次回以降は vault を検索すればその知見が再利用できる
+- 質問・調査自体が複利で積み上がっていく（compounding loop）
+
+という運用で、これを反転させる。Karpathy の表現を借りれば「The Obsidian vault is the IDE. The LLM is the programmer. The wiki is the codebase.」。
+
+## 2. 構成
+
+### 3 層アーキテクチャ
+
+| 層 | ディレクトリ | 役割 | 編集者 |
+|---|---|---|---|
+| **Layer 1: Raw sources** | `Clippings/` | Web Clipper で保存した元記事。不変・参照用 | 人間（Clipper 経由） |
+| **Layer 2: The wiki** | `Notes/`、`Agents/`、`Shared/`、`log.md` | LLM が所有・生成・維持するアトミックノート群 | LLM 主導 |
+| **Layer 3: The schema** | vault の `CLAUDE.md` + `.claude/skills/`、dotfiles の skills | ディレクトリ規約・ワークフロー定義 | 人間 |
+
+`index.md` は Obsidian Dataview プラグインが frontmatter から自動生成するため手動メンテ不要。`log.md` は時系列の append-only ジャーナル。
+
+### 2 つのアクセス経路
+
+| 経路 | 起動 | 主用ツール | 用途 |
+|---|---|---|---|
+| **A: vault 内** | `cd ~/src/github.com/thinceller/knowledge-base && claude` | Grep / Glob / Read / Edit / Write | **Ingest**（Clippings → Notes 化）・**Lint**（健全性診断）・git 同期 |
+| **B: 外部から** | 他プロジェクトで `claude` | `enquire-mcp` の `obsidian_*` ツール | **Query**（vault 検索）・**Capture**（軽量記録）・**Session log**（セッション要約） |
+
+経路A は vault が CWD にある状態。標準ツールで直接編集できる。
+経路B は vault が CWD 外。MCP サーバ `enquire-mcp` を経由してハイブリッド検索（BM25 + TF-IDF + 埋め込み + wikilink graph-boost）で参照する。
+
+### 4 つの操作
+
+```
+Ingest  : Clippings/ → Notes/ (research-note skill, 経路A)
+Query   : vault 検索 → 出典付き回答 (vault-memory skill, 経路B)
+Capture : 知見を Notes/ や Shared/ に記録 (vault-capture skill, 経路B)
+Lint    : 矛盾・stale・orphan・未ページ化概念の検出 (vault-lint skill, 経路A)
+```
+
+このうち **Query で得た良い回答を Capture で wiki に戻す** のが complexity loop の核心。
+
+## 3. 使い方
+
+### 3.1 普段の開発セッション（経路B）
+
+`~/some-project` で開発中、過去の決定や調査内容を参照したい時。
+
+```
+ユーザー: 「Criteo 広告の単価ってどれくらいだっけ？」
+   ↓
+vault-memory skill が自動起動
+   ↓ obsidian_search で vault 検索
+   ↓ Notes/Criteo広告.md がヒット → 出典付き回答
+   ↓
+ユーザー: 「ありがとう。今回 React Compiler で対応する方針に決めた」
+   ↓
+vault-capture skill で Shared/decisions/react-compiler-adoption.md を作成
+   ↓ 既存の Notes/React Compiler系ノートに [[wikilink]] で接続
+   ↓ log.md に append: ## [2026-06-28] capture | react-compiler-adoption
+```
+
+**判断基準**: 質問が「自分のノート・決定事項・プロジェクト文脈・調査内容」に関わるなら、まず vault-memory を起動する。
+
+### 3.2 知見を残したい時
+
+- **使い分け**:
+  - 「これ覚えておいて」「メモして」「決まったことを残したい」→ **vault-capture**
+  - セッション全体の要約・変更履歴・学び → **vault-session-log**
+  - Web で調査して裏取りしたコンセプトページを作りたい → **research-note**（経路A、vault 内で起動）
+
+| 種類 | スキル | 保存先 |
+|---|---|---|
+| 汎用概念ノート | research-note または vault-capture | `Notes/<topic>.md` |
+| エージェント固有の学び | vault-capture | `Agents/<agent>/learnings/<topic>.md` |
+| 技術的決定事項 | vault-capture | `Shared/decisions/<topic>.md` |
+| 調査結果（軽量） | vault-capture | `Shared/research/<topic>.md` |
+| コードパターン | vault-capture | `Shared/patterns/<topic>.md` |
+| セッション要約 | vault-session-log | `Agents/<agent>/sessions/YYYY-MM-DD_HH-MM_<desc>.md` |
+
+### 3.3 vault 内で集中的に作業する時（経路A）
+
+新規記事を Notes 化したい、links を整理したい、健全性チェックしたい時。
+
+```bash
+cd ~/src/github.com/thinceller/knowledge-base
+claude
+```
+
+ここでは **enquire-mcp は使わず Grep/Glob で直接操作する** のが基本（vault 内 CLAUDE.md に明記）。利用可能なスキル:
+
+- `research-note`: Web 調査つき本格 ingest。信頼ソース優先順位（公式 docs > Wikipedia > 個人ブログ）、Sources セクション必須、2 ソース以上の裏取り
+- `vault-lint`: 6 種類の健全性チェック（矛盾・stale・orphan・未ページ化概念・不足相互参照・thin notes）
+- `obsidian-git`: vault のコミット・push・obsidian-git プラグインとの協調
+
+### 3.4 複利ループ（compounding loop）
+
+セッションで得た良い回答を**チャット履歴に消さず wiki に戻す**ことで、知識が雪だるま式に増える。
+
+評価基準（vault-memory に明記、いずれか1つ満たせばファイル化）:
+
+- **2 つ以上のソースを統合した** 回答
+- **固有名詞・数字・コード ID** など再導出が面倒な事実を含む
+- **将来また聞かれそう** な問い
+- **非自明な繋がりを発見した** （ノート同士を新しくリンクできた）
+
+これらに該当しない一過性の Q&A はファイルしない。判断はエージェントが自動で行う。
+
+## 4. 自動化（Routine）
+
+クラウドで動くスケジュールエージェント。人間がいない時間帯に vault を育てる。
+
+### 設定済み Routine
+
+| ID | 名前 | スケジュール | 動作 |
+|---|---|---|---|
+| `trig_019mwkWyhury7fyWzkG5SSZW` | vault-weekly-lint | 毎週月曜 08:00 JST | vault-lint 相当を実行 → `Shared/research/weekly-lint-<date>.md` 生成 → commit & push |
+| `trig_01JX9GaBNesWQdwnc5aLwqRn` | vault-daily-inbox-triage | 毎日 07:00 JST | 直近 24h の新規 Clippings を triage → `Shared/research/inbox-<YYYY-MM>.md` 追記 → commit & push |
+
+両方とも **append-only** で動作する（既存 Notes は書き換えない）。Routine 管理は https://claude.ai/code/routines、編集は `/schedule` skill 経由。
+
+### Routine の特徴
+
+- クラウドで実行されるため `enquire-mcp` は使えない。代わりに git 経由でクローン → Grep/Glob/Read/Edit/Write で操作する（経路A の cloud 版）
+- 失敗時の安全策: git push 失敗時は force push しない指示にしてある
+- 提案は report ファイルに集約。実際の Notes/ への取り込み判断は人間が行う
+
+### 将来追加候補（Tier 2 以降）
+
+- 週次 synthesis（過去 1 週間の追加を集約してハイライト）
+- 月次 stale notes refresh（90 日以上更新のない Notes を新しい Clippings の情報と照合）
+- 自動 Ingest（Clippings → Notes/ を draft branch で PR 化）
+
+## 5. ファイル配置リファレンス
+
+### dotfiles 側
+
+| パス | 内容 |
+|---|---|
+| `home-manager/programs/obsidian-vault/default.nix` | enquire-mcp サーバ定義（`programs.mcp`） |
+| `home-manager/programs/claude-code/skills/vault-memory/SKILL.md` | Query + 複利ループ |
+| `home-manager/programs/claude-code/skills/vault-capture/SKILL.md` | 軽量記録 |
+| `home-manager/programs/claude-code/skills/vault-session-log/SKILL.md` | セッション要約記録 |
+| `home-manager/programs/claude-code/user-memory.md` | `## Obsidian Vault` セクション（経路B からの利用ルール） |
+| `home-manager/programs/opencode/AGENTS.md` | 同上の OpenCode 版 |
+| `configs/.config/cage/presets.yaml` | vault パスを sandbox の allow list に追加 |
+
+### vault 側（`knowledge-base` リポジトリ）
+
+| パス | 内容 |
+|---|---|
+| `CLAUDE.md` | vault スキーマ・3 層構造・経路A 運用ルール |
+| `.claude/skills/research-note/SKILL.md` | Web 調査つき ingest |
+| `.claude/skills/vault-lint/SKILL.md` | 健全性診断 |
+| `.claude/skills/obsidian-git/SKILL.md` | git 運用 |
+| `index.md` | Dataview 自動生成カタログ |
+| `log.md` | append-only 時系列ジャーナル |
+| `Notes/`, `Clippings/`, `Shared/`, `Agents/` | 3 層のデータディレクトリ |
+
+## 6. 設計の経緯
+
+詳細な設計判断・代替案検討・採用理由は `docs/plans/2026-06-28-obsidian-vault-agent-memory-plan.md` を参照。主な選択:
+
+- **enquire-mcp 採用**: ローカルファースト・wikilink graph-boost・MCP ネイティブ・Karpathy パターン親和性
+- **経路A と経路B の分離**: vault 内では標準ツール直接、外部からは MCP のみ
+- **Hooks ではなく Skills 中心**: 自動セッションログ等は Skills で能動的に呼ぶ。書き忘れは運用でカバー
+- **Routine は append-only から**: 既存 Notes の自動書き換えは破壊リスクが高い。判断は人間に残す
+
+## 7. トラブルシュート
+
+| 症状 | 確認・対処 |
+|---|---|
+| `obsidian_search` が見えない | personal マシンか確認（work では無効）。`claude` 再起動。`programs.mcp.enable = true` のビルドが適用されているか |
+| Claude Code Agent View TUI が崩れる | `enableMcpIntegration = true` の `--plugin-dir` wrapper が原因の可能性。フォールバック手順（`home.activation` jq マージ）に切り替え。詳細は plan の「リスクとフォールバック」 |
+| Routine が失敗する | https://claude.ai/code/routines/<trigger_id> でログ確認。git push 権限と認証を確認 |
+| `vault-capture` と `research-note` の使い分けが不明 | Web 調査が必要なら research-note（経路A）、不要なら vault-capture（経路B）。境界は両 skill の description に明記 |
+
+## 8. 用語集
+
+| 用語 | 意味 |
+|---|---|
+| **Mnemos** | このシステム全体の呼称 |
+| **LLM Wiki パターン** | Karpathy 提唱の compounding 知識ベース運用。RAG ではなく LLM が wiki を維持する |
+| **複利ループ** | Query 結果を wiki にファイルし直すことで知識が積み上がる効果 |
+| **Ingest / Query / Capture / Lint** | 4 つの基本操作 |
+| **経路A / 経路B** | vault 内起動 / 外部から MCP 経由 |
+| **アトミックノート** | 1 ページ 1 トピックの概念ノート。`Notes/` 配下にフラットに配置 |
