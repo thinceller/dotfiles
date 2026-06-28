@@ -22,6 +22,10 @@ lib.mkIf userConfig.isPersonal {
       share = "manual";
       snapshot = true;
 
+      plugin = [
+        "superpowers@git+https://github.com/obra/superpowers.git"
+      ];
+
       compaction = {
         auto = false;
         prune = false;
