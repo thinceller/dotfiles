@@ -75,7 +75,7 @@ hot_reload = true
 # This is the default layout mode if there is nothing else configured
 # in the `workspace_rules` section below.
 # You can set different layouts per workspace using `workspace_rules`.
-mode = "traditional"
+mode = "scrolling"
 
 # these settings only apply when layout mode == "master_stack"
 [settings.layout.master_stack]
@@ -107,10 +107,11 @@ alignment = "center"
 # - "niri": reveal columns only when needed based on navigation direction
 # 			(disrespects alignment setting above)
 # - "anchored": always align focused column according to `alignment`
-focus_navigation_style = "niri"
+# マルチモニター時に niri reveal だとストリップが隣モニターへ漏れるため anchored を使用
+focus_navigation_style = "anchored"
 # the scrolling layout tends to function better without animations,
 # so you can disable them if you like
-# animate = false
+animate = false
 
 [settings.layout.scrolling.gestures]
 # Enable horizontal scroll gestures to switch columns
@@ -167,17 +168,17 @@ vertical = 0
 # vertical = 8
 [settings.ui.menu_bar]
 # enable menu bar workspace indicators
-enabled = false
+enabled = true
 # if enabled, it will show all workspaces including empty ones. disabled because this
 # tends to take up too much room in the menubar and then is auto hidden by macos
 show_empty = false
 # choose between drawing every workspace or only the active workspace
 mode = "all"
 # when showing workspaces as labels ("index" or "name"), choose which label to render
-active_label = "index"
+active_label = "name"
 # when displaying workspaces, choose whether to draw the layout preview or a set of labels
 # options are "layout" or "label"
-display_style = "layout"
+display_style = "label"
 
 [settings.ui.stack_line]
 # experimental stack line indicator (defaults to off)
@@ -264,9 +265,15 @@ workspace_rules = []
 # Workspace names (indexed order). If fewer than default_workspace_count are provided,
 # remaining workspaces are named "Workspace X".
 # Do not provide more names than default_workspace_count.
+# 命名は意味付け (main=メインモニター主、sub=サブモニター主、*-sub=各サブ)。
+# workspace_names は新規生成時にしか反映されないので、既存ランタイムでは
+# 元の "first" / "second" / "Workspace 3" / "Workspace 4" のまま残る。
+# 名称を反映したい場合は `rift service restart`。
 workspace_names = [
-	"first",
-	"second"
+	"main",
+	"sub",
+	"main-sub",
+	"sub-sub"
 ]
 
 # App rules (automatic assignment)
@@ -332,7 +339,40 @@ workspace_names = [
 #       ]
 #
 # By default there are no app rules; add or uncomment rules below as needed.
-app_rules = []
+# aerospace の振り分けを参考に、メイン系を "main" / サブ系を "sub" に集約。
+# rift では workspace を特定モニターに固定できないため、最初に開いた macOS space
+# (= モニター) 上の同名 workspace に入る点に注意。
+app_rules = [
+	# --- main monitor apps (workspace 0: main) ---
+	# browsers
+	{ app_id = "company.thebrowser.Browser",           workspace = 0 },
+	{ app_id = "company.thebrowser.dia",               workspace = 0 },
+	{ app_id = "org.mozilla.firefox",                  workspace = 0 },
+	{ app_id = "com.google.Chrome",                    workspace = 0 },
+	{ app_id = "com.apple.Safari",                     workspace = 0 },
+	{ app_id = "com.gather.Gather",                    workspace = 0 },
+	{ app_id = "com.gather.GatherV2",                  workspace = 0 },
+	# AI / editor / docs
+	{ app_id = "com.anthropic.claudefordesktop",       workspace = 0 },
+	{ app_id = "com.microsoft.VSCode",                 workspace = 0 },
+	{ app_id = "com.todesktop.230313mzl4w4u92",        workspace = 0 }, # Cursor
+	{ app_id = "com.linear",                           workspace = 0 },
+	{ app_id = "md.obsidian",                          workspace = 0 },
+	# terminals
+	{ app_id = "com.github.wez.wezterm",               workspace = 0 },
+	{ app_id = "com.apple.Terminal",                   workspace = 0 },
+	{ app_id = "org.alacritty",                        workspace = 0 },
+	{ app_id = "com.mitchellh.ghostty",                workspace = 0, floating = true },
+
+	# --- sub monitor apps (workspace 1: sub) ---
+	{ app_id = "com.tinyspeck.slackmacgap",            workspace = 1 },
+	{ app_id = "com.hnc.Discord",                      workspace = 1 },
+	{ app_id = "com.apple.Music",                      workspace = 1 },
+	{ app_id = "com.lukilabs.lukiapp",                 workspace = 1 },
+	{ app_id = "com.apple.ActivityMonitor",            workspace = 1 },
+	{ app_id = "org.pqrs.Karabiner-Elements.Settings", workspace = 1 },
+	{ app_id = "us.zoom.xos",                          workspace = 1 },
+]
 
 # Modifier combinations that can be reused in key bindings
 # Define common modifier combinations to avoid repetition.
@@ -430,6 +470,9 @@ comb1 = "Alt + Shift"
 # smartly resize windows
 "Alt + Shift + Equal" = "resize_window_grow"
 "Alt + Shift + Minus" = "resize_window_shrink"
+
+# scrolling layout: center the focused column (niri-style Mod+C)
+"Alt + C" = "center_selection"
 
 # Move mouse cursor to display by index (0-based) or UUID
 # Examples:
