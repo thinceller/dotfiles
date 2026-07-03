@@ -54,7 +54,7 @@ in
       autoMemoryEnabled = false;
       cleanupPeriodDays = 9999;
 
-      model = "opus";
+      model = "fable";
       # advisorModel = "opus";
       # effortLevel = "xhigh";
       voiceEnabled = true;
@@ -169,6 +169,7 @@ in
         CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1";
         CLAUDE_CODE_NEW_INIT = "1";
         CLAUDE_CODE_NO_FLICKER = "1";
+        CLAUDE_AFK_TIMEOUT_MS = "86400000";
 
         # codex-plugin-cc が thread/start に sandbox: "read-only" 等を強制送信し、
         # cage の中で codex 内部の Seatbelt をネストしようとして失敗するため、
