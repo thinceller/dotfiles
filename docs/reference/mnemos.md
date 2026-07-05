@@ -68,7 +68,7 @@ flowchart LR
 
 | 層 | ディレクトリ | 役割 | 編集者 |
 |---|---|---|---|
-| **Layer 1: Raw sources** | `Clippings/` | Web Clipper で保存した元記事。不変・参照用 | 人間（Clipper 経由） |
+| **Layer 1: Raw sources** | `Clippings/` | Web Clipper またはエージェント経由で保存した元記事。不変・参照用 | 人間（Clipper）+ エージェント（vault-clip skill、`clipped_by: agent` 付き） |
 | **Layer 2: The wiki** | `Notes/`、`Agents/`、`Shared/`、`log.md`(`Inbox/` は未整理メモの作業場サブレイヤ) | LLM が所有・生成・維持するアトミックノート群 | LLM 主導 |
 | **Layer 3: The schema** | vault の `CLAUDE.md` + `.claude/skills/`、dotfiles の skills | ディレクトリ規約・ワークフロー定義 | 人間 |
 
@@ -123,11 +123,13 @@ vault-capture skill で Shared/decisions/react-compiler-adoption.md を作成
 
 - **使い分け**:
   - 「これ覚えておいて」「メモして」「決まったことを残したい」→ **vault-capture**
+  - 「この記事クリップして」「この URL 取っておいて」（原文保存）→ **vault-clip**
   - セッション全体の要約・変更履歴・学び → **vault-session-log**
   - Web で調査して裏取りしたコンセプトページを作りたい → **research-note**（経路A、vault 内で起動）
 
 | 種類 | スキル | 保存先 |
 |---|---|---|
+| Web 記事の原文保存 | vault-clip | `Clippings/<記事タイトル>.md`（翌朝の triage に乗る） |
 | 汎用概念ノート | research-note または vault-capture | `Notes/<topic>.md` |
 | エージェント固有の学び | vault-capture | `Agents/<agent>/learnings/<topic>.md` |
 | 技術的決定事項 | vault-capture | `Shared/decisions/<topic>.md` |
@@ -229,6 +231,7 @@ claude
 | `home-manager/programs/claude-code/skills/vault-memory/SKILL.md` | Query + 複利ループ |
 | `home-manager/programs/claude-code/skills/vault-capture/SKILL.md` | 軽量記録 |
 | `home-manager/programs/claude-code/skills/vault-session-log/SKILL.md` | セッション要約記録 |
+| `home-manager/programs/claude-code/skills/vault-clip/SKILL.md` | Web 記事の Clippings/ 保存（エージェント経由クリップ） |
 | `home-manager/programs/claude-code/user-memory.md` | `## Obsidian Vault` セクション（経路B からの利用ルール） |
 | `home-manager/programs/opencode/AGENTS.md` | 同上の OpenCode 版 |
 | `configs/.config/cage/presets.yaml` | vault パスを sandbox の allow list に追加 |
