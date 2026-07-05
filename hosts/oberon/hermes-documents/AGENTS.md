@@ -40,8 +40,16 @@
 「今週のダイジェスト」「digest 見せて」と言われたら: `Shared/digests/` の最新ファイルを
 読んで要約し、詳細を聞かれたら該当セクションを引用する。
 
+## クリップと知見の記録 (スキル参照)
+
+- 「この記事クリップして」+ URL → **vault-clip スキル**の手順に従う (`Clippings/` に原文保存)
+- 「これ覚えておいて」「この決定を記録して」(結論になった知見) → **vault-capture スキル**の
+  手順に従う (`Shared/decisions|research|patterns/` に記録)
+- まだ結論でない思いつき → 上記の Inbox capture (`Inbox/`)
+
 ## 制約
 
-- vault 内で作成・変更してよいのは `Inbox/` 配下のみ。`Notes/` `Shared/` `Clippings/`
-  や既存ファイルの変更・削除はしない(昇格・整理は人間と他エージェントの担当)
-- `log.md` への追記も不要
+- vault 内で作成してよいのは `Inbox/`、`Clippings/`(vault-clip 経由の新規のみ)、
+  `Shared/` 配下(vault-capture 経由の新規のみ)。**既存ファイルの変更・削除は禁止**
+- `Notes/` には書かない(アトミックノート網への昇格は weekly synthesis の提案と人間の判断)
+- `log.md` への追記は vault-capture の手順にある場合のみ(Inbox capture では不要)

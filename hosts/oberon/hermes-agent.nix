@@ -44,6 +44,9 @@
       terminal.cwd = config.services.hermes-agent.workingDirectory;
       # standalone kind のプラグインは既定 opt-in のため、明示的に有効化する。
       plugins.enabled = [ "session-vault-export" ];
+      # Mnemos の vault 系スキル (経路C 版: terminal + git、MCP なし)。
+      # external_dirs は読み取り専用の共有スキルディレクトリ。
+      skills.external_dirs = [ "${./hermes-skills}" ];
     };
 
     # セッション終了時に knowledge-base vault へ Markdown を書き出して push する

@@ -80,7 +80,7 @@ flowchart LR
 |---|---|---|---|
 | **A: vault 内** | `cd ~/src/github.com/thinceller/knowledge-base && claude` | Grep / Glob / Read / Edit / Write | **Ingest**（Clippings → Notes 化）・**Lint**（健全性診断）・git 同期 |
 | **B: 外部から** | 他プロジェクトで `claude` | `enquire-mcp` の `obsidian_*` ツール | **Query**（vault 検索）・**Capture**（軽量記録）・**Session log**（セッション要約） |
-| **C: リモートエージェント** | クラウド Routine / oberon の Hermes (Slack) | git + Grep/ファイル直接操作 | **Inbox capture**(どこからでも)・**Query**・Routine 実行 |
+| **C: リモートエージェント** | クラウド Routine / oberon の Hermes (Slack) | git + Grep/ファイル直接操作 | **Inbox capture**(どこからでも)・**Clip / Capture**(hermes-skills 版 vault-clip / vault-capture)・**Query**・Routine 実行 |
 
 経路A は vault が CWD にある状態。標準ツールで直接編集できる。
 経路B は vault が CWD 外。MCP サーバ `enquire-mcp` を経由してハイブリッド検索（BM25 + TF-IDF + 埋め込み + wikilink graph-boost）で参照する。
@@ -240,6 +240,7 @@ claude
 | `home-manager/programs/claude-code/scripts/vault-session-log-worker.sh` | 自動セッションログ共用 worker(haiku 要約) |
 | `home-manager/programs/opencode/plugins/vault-session-log.ts` | OpenCode plugin(自動セッションログ) |
 | `hosts/oberon/hermes-plugins/session-vault-export/` | Hermes plugin(セッションの vault エクスポート) |
+| `hosts/oberon/hermes-skills/` | Hermes 用 vault スキル(経路C 版 vault-clip / vault-capture、`skills.external_dirs` で配置) |
 
 ### vault 側（`knowledge-base` リポジトリ）
 
