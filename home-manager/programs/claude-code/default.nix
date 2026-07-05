@@ -164,6 +164,12 @@ in
 
         ANTHROPIC_DEFAULT_OPUS_MODEL = "claude-opus-4-7[1m]";
 
+        # wrapper の --set DISABLE_AUTOUPDATER は wrapper 経由の起動しか守れない。
+        # native binary (chrome-native-host 等) も settings.json の env は読むため、
+        # ここで無効化しないと updater が ~/.local/bin/claude を再生成し
+        # Nix wrapper を PATH shadow する (2026-06-28, 2026-07-05 に再発)。
+        DISABLE_AUTOUPDATER = "1";
+
         ENABLE_TOOL_SEARCH = true;
         CLAUDE_CODE_ENABLE_TASKS = true;
         CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1";
