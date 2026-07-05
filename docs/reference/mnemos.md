@@ -161,7 +161,7 @@ claude
 - **Obsidian mobile(任意)**: `Inbox/` に直接書く(同じ triage に乗る)
 
 取り出しも個人 Mac 不要:
-- 週次ダイジェストは synthesis Routine が Slack に直接配信する
+- 週次ダイジェストは synthesis Routine が Slack の #mnemos-notification チャンネルに配信する
 - 深掘り・単発の Query は Slack で Hermes に聞く(「vault に〜のメモある?」
   「今週のダイジェスト見せて」)。Grep ベースで出典付き回答が返る
 
@@ -186,9 +186,9 @@ claude
 
 | ID | 名前 | スケジュール | 動作 |
 |---|---|---|---|
-| `trig_019mwkWyhury7fyWzkG5SSZW` | vault-weekly-lint | 毎週月曜 08:00 JST | vault-lint 相当を実行 → `Shared/research/weekly-lint-<date>.md` 生成 → commit & push + Mnemos health check(Routine の実行痕跡・Inbox の raw 滞留・log.md の停滞を検査し、異常時のみ Slack 通知) |
+| `trig_019mwkWyhury7fyWzkG5SSZW` | vault-weekly-lint | 毎週月曜 08:00 JST | vault-lint 相当を実行 → `Shared/research/weekly-lint-<date>.md` 生成 → commit & push + Mnemos health check(Routine の実行痕跡・Inbox の raw 滞留・log.md の停滞を検査し、異常時のみ #mnemos-notification に通知) |
 | `trig_01JX9GaBNesWQdwnc5aLwqRn` | vault-daily-clippings-triage | 毎日 07:00 JST | 直近 24h の新規 Clippings を triage → `Shared/research/clippings-triage-<YYYY-MM>.md` 追記 → commit & push |
-| `trig_017htqXEN9vAxDJgcveytyDY` | vault-weekly-synthesis | 毎週日曜 08:00 JST | Inbox/ の raw メモを triage → Notes 昇格候補・今週の追加サマリ・休眠ノート再サーフェスを `Shared/digests/<YYYY>-W<ww>-digest.md` に生成 → status: triaged 更新 → commit & push → Slack コネクタでダイジェスト配信 |
+| `trig_017htqXEN9vAxDJgcveytyDY` | vault-weekly-synthesis | 毎週日曜 08:00 JST | Inbox/ の raw メモを triage → Notes 昇格候補・今週の追加サマリ・休眠ノート再サーフェスを `Shared/digests/<YYYY>-W<ww>-digest.md` に生成 → status: triaged 更新 → commit & push → Slack コネクタで #mnemos-notification にダイジェスト配信 |
 
 いずれも **append-only** で動作する（既存 Notes は書き換えない。synthesis のみ Inbox frontmatter の status 更新を行う）。Routine 管理は https://claude.ai/code/routines、編集は `/schedule` skill 経由。
 
