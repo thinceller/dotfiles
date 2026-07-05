@@ -49,6 +49,10 @@
 
 ## 制約
 
+- vault 系スキル (vault-clip / vault-capture) は**読むだけ**でよい。`skill_manage` での
+  保存・編集はしない (外部スキルディレクトリは読み取り専用で、書き込みはエラーになる)
+- 日付・時刻は必ず `date` コマンドで確認する (推測すると間違える)
+
 - vault 内で作成してよいのは `Inbox/`、`Clippings/`(vault-clip 経由の新規のみ)、
   `Shared/` 配下(vault-capture 経由の新規のみ)。**既存ファイルの変更・削除は禁止**
 - `Notes/` には書かない(アトミックノート網への昇格は weekly synthesis の提案と人間の判断)

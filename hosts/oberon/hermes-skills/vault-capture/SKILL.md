@@ -34,7 +34,7 @@ metadata:
 
    ```markdown
    ---
-   created: '<ISO8601 JST>'
+   created: '<ISO8601 JST。必ず `date -Iseconds` を実行して確認する。推測しない>'
    tags:
      - <内容に合うタグ 1-3 個>
    type: decision | research | pattern
