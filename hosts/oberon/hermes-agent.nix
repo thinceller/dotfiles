@@ -60,10 +60,12 @@
         config.sops.secrets."hermes-vault-deploy-key".path
       } -o IdentitiesOnly=yes";
       # hermes user は ~/.gitconfig を持たないため commit 時の identity を env で供給する。
+      # ドメインは保持している thinceller.dev (Cloudflare Email Routing 利用可)。
+      # 将来 machine user 化する場合はこのアドレスを GitHub で検証すればよい。
       GIT_AUTHOR_NAME = "Hermes Agent";
-      GIT_AUTHOR_EMAIL = "hermes@oberon";
+      GIT_AUTHOR_EMAIL = "hermes@thinceller.dev";
       GIT_COMMITTER_NAME = "Hermes Agent";
-      GIT_COMMITTER_EMAIL = "hermes@oberon";
+      GIT_COMMITTER_EMAIL = "hermes@thinceller.dev";
     };
   };
 
