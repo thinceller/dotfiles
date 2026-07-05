@@ -135,6 +135,22 @@ vault-capture skill で Shared/decisions/react-compiler-adoption.md を作成
 | コードパターン | vault-capture | `Shared/patterns/<topic>.md` |
 | セッション要約 | vault-session-log | `Agents/<agent>/sessions/YYYY-MM-DD_HH-MM_<desc>.md` |
 
+#### 自動セッションログ（2026-07-06〜）
+
+手動の vault-session-log スキルとは別に、各エージェントの停止時に**自動で**セッションログが
+`Agents/<agent>/sessions/*_auto-*.md`（frontmatter `auto: true`）として記録・更新される:
+
+| エージェント | 仕組み | タイミング |
+|---|---|---|
+| Claude Code | Stop / SessionEnd hook → 共用 worker | Stop はデバウンス 30 分、SessionEnd で最終更新 |
+| OpenCode | plugin（`session.idle` / `server.instance.disposed`）→ 共用 worker | 同上（worker 側で共通制御） |
+| Hermes | hermes plugin（`on_session_finalize`）が oberon 上で直接 vault に push | セッション期限切れ・shutdown・/new 時 |
+
+- 共用 worker（`vault-session-log-worker`、PATH 上）は headless claude (haiku) で transcript を
+  要約し、1 セッション 1 ファイルを上書き更新する。20KB 未満の小さいセッションはスキップ
+- Hermes は要約なしの機械的エクスポート（Slack 会話の Markdown 化 + 秘密情報の redact）
+- 手動スキルは「人間が意図的に濃いログを残したい時」用として併存する
+
 ### 3.3 vault 内で集中的に作業する時（経路A）
 
 新規記事を Notes 化したい、links を整理したい、健全性チェックしたい時。
@@ -217,6 +233,10 @@ claude
 | `home-manager/programs/opencode/AGENTS.md` | 同上の OpenCode 版 |
 | `configs/.config/cage/presets.yaml` | vault パスを sandbox の allow list に追加 |
 | `hosts/oberon/hermes-agent.nix` | Hermes Agent(経路C)の vault 連携(deploy key・instruction) |
+| `home-manager/programs/claude-code/hooks/vault-session-log.sh` | Stop/SessionEnd hook(自動セッションログの入口) |
+| `home-manager/programs/claude-code/scripts/vault-session-log-worker.sh` | 自動セッションログ共用 worker(haiku 要約) |
+| `home-manager/programs/opencode/plugins/vault-session-log.ts` | OpenCode plugin(自動セッションログ) |
+| `hosts/oberon/hermes-plugins/session-vault-export/` | Hermes plugin(セッションの vault エクスポート) |
 
 ### vault 側（`knowledge-base` リポジトリ）
 
@@ -236,7 +256,9 @@ claude
 
 - **enquire-mcp 採用**: ローカルファースト・wikilink graph-boost・MCP ネイティブ・Karpathy パターン親和性
 - **経路A と経路B の分離**: vault 内では標準ツール直接、外部からは MCP のみ
-- **Hooks ではなく Skills 中心**: 自動セッションログ等は Skills で能動的に呼ぶ。書き忘れは運用でカバー
+- **Hooks ではなく Skills 中心**（初期設計）→ **2026-07-06 に更新**: 稼働 1 週目に「書き忘れは
+  運用でカバー」が機能しなかった(capture ゼロ)ため、セッションログは hook/plugin による
+  自動記録に移行(§3.2「自動セッションログ」)。手動スキルは濃いログ用に併存
 - **Routine は append-only から**: 既存 Notes の自動書き換えは破壊リスクが高い。判断は人間に残す
 
 ## 7. トラブルシュート
