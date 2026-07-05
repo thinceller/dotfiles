@@ -256,5 +256,5 @@ claude
 | **LLM Wiki パターン** | Karpathy 提唱の compounding 知識ベース運用。RAG ではなく LLM が wiki を維持する |
 | **複利ループ** | Query 結果を wiki にファイルし直すことで知識が積み上がる効果 |
 | **Ingest / Query / Capture / Lint** | 4 つの基本操作 |
-| **経路A / 経路B** | vault 内起動 / 外部から MCP 経由 |
+| **経路A / 経路B / 経路C** | vault 内起動 / 外部から MCP 経由 / リモートエージェント（クラウド Routine・Hermes） |
 | **アトミックノート** | 1 ページ 1 トピックの概念ノート。`Notes/` 配下にフラットに配置 |
