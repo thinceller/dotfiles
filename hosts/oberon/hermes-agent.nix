@@ -11,6 +11,20 @@
     mode = "0400";
   };
 
+  # knowledge-base vault (Mnemos) 用 deploy key (write 権限)。Inbox capture の
+  # git push に使う。GIT_SSH_COMMAND 経由で ssh が直接読むため、エージェントの
+  # コンテキストに秘密鍵が乗ることはない。
+  sops.secrets."hermes-vault-deploy-key" = {
+    sopsFile = ../../secrets/oberon.yaml;
+    owner = "hermes";
+    mode = "0400";
+    restartUnits = [ "hermes-agent.service" ];
+  };
+
+  # hermes user の git-over-ssh 用に GitHub のホスト鍵をシステム known_hosts へ供給。
+  programs.ssh.knownHosts."github.com".publicKey =
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl";
+
   services.hermes-agent = {
     enable = true;
     addToSystemPackages = true;
@@ -31,6 +45,21 @@
     };
 
     environmentFiles = [ config.sops.secrets."hermes-env".path ];
+
+    # knowledge-base vault 連携 (Mnemos 経路C)。
+    # AGENTS.md は workingDirectory に配置され、system prompt に自動注入される
+    # (agent/prompt_builder.py の context files 機構、cwd 直下のみ読む)。
+    documents."AGENTS.md" = ./hermes-documents/AGENTS.md;
+
+    # service path には git はあるが ssh がないため openssh を追加。
+    extraPackages = [ pkgs.openssh ];
+
+    environment = {
+      # vault clone/push 用。ホスト鍵検証は programs.ssh.knownHosts (上記) が担う。
+      GIT_SSH_COMMAND = "ssh -i ${
+        config.sops.secrets."hermes-vault-deploy-key".path
+      } -o IdentitiesOnly=yes";
+    };
   };
 
   # nixosModule が systemd Environment= に MESSAGING_CWD をセットするため、
