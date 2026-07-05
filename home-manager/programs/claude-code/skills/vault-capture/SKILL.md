@@ -1,6 +1,6 @@
 ---
 name: vault-capture
-description: Record knowledge into the Obsidian vault without full web research. Only invoke when the `obsidian_search` MCP tool is available (personal machines). Use for session discoveries, decisions, patterns, or insights worth keeping. Lightweight companion to the vault-internal research-note skill (which does full source-verified web research).
+description: Record knowledge into the Obsidian vault without full web research. Only invoke when the `obsidian_search` MCP tool is available (personal machines). Use for session discoveries, decisions, patterns, or insights worth keeping. Lightweight companion to the vault-internal research-note skill (which does full source-verified web research). Unrefined ideas go to Inbox/ (no filing-criteria check needed).
 ---
 
 # Vault Capture (Lightweight Record)
@@ -56,9 +56,17 @@ Choose the right location for the note:
 | Technical decisions | `Shared/decisions/<topic>.md` |
 | Research results (session-discovered) | `Shared/research/<topic>.md` |
 | Code patterns / solutions | `Shared/patterns/<topic>.md` |
+| 未整理の思いつき・生煮えの思考 | `Inbox/YYYY-MM-DD-<slug>.md` |
 
 > **Note**: `Notes/` follows the vault's existing atomic note convention (1 page 1 topic,
 > flat structure, `[[wikilink]]` links). See the vault's `CLAUDE.md` for details.
+
+## Inbox への振り分け
+
+ファイル化基準(2 ソース統合・固有名詞・再質問可能性・非自明な接続)を**満たさない**が、
+ユーザーが「残したい」「あとで考えたい」と言った内容は `Inbox/` に保存する。
+frontmatter は `type: inbox` / `created` / `source: session` / `status: raw`。
+`log.md` への追記は不要。基準を満たす結論は従来通り `Notes/` / `Shared/` へ。
 
 ## Frontmatter
 
