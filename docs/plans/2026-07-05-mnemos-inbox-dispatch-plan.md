@@ -1,5 +1,10 @@
 # Mnemos Inbox 層 + リモート入口/出口 (Hermes / Routine) 導入計画
 
+> **Status**: 実装完了 (2026-07-06)。E2E 検証済み (Slack→Hermes capture / 経路B capture /
+> synthesis の digest 生成と Slack 配信)。本計画実施後に追加された機能 — 自動セッションログ
+> (hook/plugin)、vault-clip (エージェント経由クリップ)、hermes-skills (経路C 版 vault スキル)、
+> 配信先の #mnemos-notification 化 — は `docs/reference/mnemos.md` を正とする。
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** 個人 Mac のセッション内にしか存在しない Mnemos の「入口」と「出口」を、どこからでも(スマホ・会社 Mac・移動中)使えるようにする。

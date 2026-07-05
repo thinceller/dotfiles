@@ -1,6 +1,6 @@
 # Mnemos — Obsidian Vault 共有エージェントメモリ
 
-> Karpathy LLM Wiki パターンを採用した、複数 AI エージェント（Claude Code / OpenCode / 将来的に Hermes Agent）の **共有長期記憶** システム。`knowledge-base` Obsidian vault を substrate として、セッションを跨いで知識を積み上げる。
+> Karpathy LLM Wiki パターンを採用した、複数 AI エージェント（Claude Code / OpenCode / Hermes Agent）の **共有長期記憶** システム。`knowledge-base` Obsidian vault を substrate として、セッションを跨いで知識を積み上げる。
 
 ギリシャ神話の記憶の女神 Mnemosyne（ムネモシュネ、ムーサの母）に由来。記憶が創造を生む構造を体現する。
 
@@ -47,18 +47,23 @@ flowchart LR
         LI["weekly<br/>lint + health check"]
     end
 
+    AG["Agents/*/sessions/<br/>自動セッションログ"]
+
     SL --> HE
     DP --> LS
     OM --> IB
     WC --> CL
     HE -->|"Inbox capture (push)"| IB
-    LS -->|inbox-capture / vault-capture| IB
+    HE -->|"vault-clip / vault-capture"| CL
+    LS -->|inbox-capture / vault-capture / vault-clip| IB
+    LS -.->|"Stop/SessionEnd hook (自動)"| AG
+    HE -.->|"on_session_finalize plugin (自動)"| AG
 
     CL --> TR
     IB --> SY
     SY -->|"digest 生成<br/>status: triaged 更新"| DG
-    SY -->|"Slack コネクタで配信"| SL
-    LI -->|"異常時のみ Slack 通知"| SL
+    SY -->|"#mnemos-notification に配信"| SL
+    LI -->|"異常時のみ #mnemos-notification に通知"| SL
 
     HE -->|"Query / digest 深掘り (grep + read)"| vault
     DG -.->|"昇格は人間が判断"| NT
@@ -86,16 +91,18 @@ flowchart LR
 経路B は vault が CWD 外。MCP サーバ `enquire-mcp` を経由してハイブリッド検索（BM25 + TF-IDF + 埋め込み + wikilink graph-boost）で参照する。
 Dispatch は個人 Mac 上のセッションをリモート起動する仕組みであり、経路A/B がそのまま適用される(Mac 起動 + Claude アプリが必要)。
 
-### 4 つの操作
+### 5 つの操作
 
 ```
+Clip    : Web 記事を原文のまま Clippings/ に保存 (vault-clip skill, 経路A/B/C)
 Ingest  : Clippings/ → Notes/ (research-note skill, 経路A)
-Query   : vault 検索 → 出典付き回答 (vault-memory skill, 経路B)
-Capture : 知見を Notes/ や Shared/ に記録 (vault-capture skill, 経路B)。未整理なら Inbox/ (inbox-capture / vault-capture skill)
-Lint    : 矛盾・stale・orphan・未ページ化概念の検出 (vault-lint skill, 経路A)
+Query   : vault 検索 → 出典付き回答 (vault-memory skill, 経路B / Grep, 経路C)
+Capture : 知見を Notes/ や Shared/ に記録 (vault-capture skill, 経路B/C)。未整理なら Inbox/ (inbox-capture skill)
+Lint    : 矛盾・stale・orphan・未ページ化概念の検出 (vault-lint skill, 経路A / weekly Routine)
 ```
 
 このうち **Query で得た良い回答を Capture で wiki に戻す** のが complexity loop の核心。
+セッションログは各エージェントの hook/plugin が自動記録する（§3.2）。
 
 ## 3. 使い方
 
@@ -173,7 +180,10 @@ claude
 スマホ・会社 Mac・移動中など、個人 Mac のセッションがない場所からの capture:
 
 - **Slack(主)**: Hermes に「これ Inbox に: <内容>」と送る。oberon 上の Hermes が
-  `Inbox/YYYY-MM-DD-<slug>.md`(source: hermes)を作成して push する。個人 Mac 不要
+  `Inbox/YYYY-MM-DD-<slug>.md`(source: hermes)を作成して push する。個人 Mac 不要。
+  **チャンネルではメンション必須**(`@Hermes これ Inbox に: ...`)。
+  「この記事クリップして <URL>」(→ Clippings/)や「これ覚えておいて」(→ Shared/)も
+  hermes-skills 版 vault-clip / vault-capture で同様に使える
 - **Dispatch(副)**: claude.ai から個人 Mac のセッションをリモート起動して同様に指示
   (Mac 起動 + Claude アプリが必要)
 - **Obsidian mobile(任意)**: `Inbox/` に直接書く(同じ triage に乗る)
@@ -256,10 +266,16 @@ claude
 
 ## 6. 設計の経緯
 
-詳細な設計判断・代替案検討・採用理由は `docs/plans/2026-06-28-obsidian-vault-agent-memory-plan.md` を参照。主な選択:
+詳細な設計判断・代替案検討・採用理由は `docs/plans/2026-06-28-obsidian-vault-agent-memory-plan.md`(初期設計)と
+`docs/plans/2026-07-05-mnemos-inbox-dispatch-plan.md`(Inbox 層・リモート入口/出口)を参照。主な選択:
 
 - **enquire-mcp 採用**: ローカルファースト・wikilink graph-boost・MCP ネイティブ・Karpathy パターン親和性
 - **経路A と経路B の分離**: vault 内では標準ツール直接、外部からは MCP のみ
+- **リモート入口は Dispatch/Discord ではなく Hermes (Slack)**(2026-07-05): Dispatch は個人 Mac の
+  リモート起動でスリープ依存、Discord はローカル常駐が必要。VPC の Hermes は Mac 非依存で
+  Slack の一行摩擦。Hermes の書き込みは「新規追加のみ・Notes/ 禁止」に制限して品質リスクを抑制
+- **通知の設計原則**: 生成系 Routine の出力は「Slack (#mnemos-notification) に届く」か
+  「人間のレビューに乗る」かに必ず接続する。commit されるだけのレポートは複利にならない
 - **Hooks ではなく Skills 中心**（初期設計）→ **2026-07-06 に更新**: 稼働 1 週目に「書き忘れは
   運用でカバー」が機能しなかった(capture ゼロ)ため、セッションログは hook/plugin による
   自動記録に移行(§3.2「自動セッションログ」)。手動スキルは濃いログ用に併存
@@ -269,7 +285,9 @@ claude
 
 | 症状 | 確認・対処 |
 |---|---|
-| `obsidian_search` が見えない | personal マシンか確認（work では無効）。`claude` 再起動。`programs.mcp.enable = true` のビルドが適用されているか |
+| `obsidian_search` が見えない | personal マシンか確認（work では無効）。`claude` 再起動。`programs.mcp.enable = true` のビルドが適用されているか。**`which claude` が `~/.local/bin/claude` を返すなら native install の PATH shadow**（vault の `Agents/Claude-Code/learnings/claude-code-native-install-path-shadow.md` 参照。Chrome extension 経由で再発しうる） |
+| Slack で Hermes が反応しない | チャンネルでは**メンション必須**（`@Hermes ...`）。oberon で `systemctl status hermes-agent` とジャーナル確認 |
+| 自動セッションログが生成されない | darwin-rebuild 済みか（hook/worker は rebuild で有効化）。デバウンス 30 分・transcript 20KB 未満はスキップされる仕様。state は `~/.claude/vault-session-log/` |
 | Claude Code Agent View TUI が崩れる | `enableMcpIntegration = true` の `--plugin-dir` wrapper が原因の可能性。フォールバック手順（`home.activation` jq マージ）に切り替え。詳細は plan の「リスクとフォールバック」 |
 | Routine が失敗する | https://claude.ai/code/routines/<trigger_id> でログ確認。git push 権限と認証を確認 |
 | `vault-capture` と `research-note` の使い分けが不明 | Web 調査が必要なら research-note（経路A）、不要なら vault-capture（経路B）。境界は両 skill の description に明記 |
@@ -281,6 +299,8 @@ claude
 | **Mnemos** | このシステム全体の呼称 |
 | **LLM Wiki パターン** | Karpathy 提唱の compounding 知識ベース運用。RAG ではなく LLM が wiki を維持する |
 | **複利ループ** | Query 結果を wiki にファイルし直すことで知識が積み上がる効果 |
-| **Ingest / Query / Capture / Lint** | 4 つの基本操作 |
+| **Clip / Ingest / Query / Capture / Lint** | 5 つの基本操作 |
+| **Mnemos health check** | weekly-lint Routine に統合された自己監視。Routine の実行痕跡・Inbox 滞留・log.md 停滞を検査し異常時のみ通知 |
+| **自動セッションログ** | 各エージェントの hook/plugin による `*_auto-*.md` の自動記録（§3.2） |
 | **経路A / 経路B / 経路C** | vault 内起動 / 外部から MCP 経由 / リモートエージェント（クラウド Routine・Hermes） |
 | **アトミックノート** | 1 ページ 1 トピックの概念ノート。`Notes/` 配下にフラットに配置 |
