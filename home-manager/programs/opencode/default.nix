@@ -103,4 +103,9 @@ lib.mkIf userConfig.isPersonal {
   xdg.configFile."opencode/plugins/tmux-agent-sidebar.js" = {
     source = "${sources.tmux-agent-sidebar.src}/.opencode/plugins/tmux-agent-sidebar.js";
   };
+
+  # Mnemos: セッションログ自動記録 (共用 worker vault-session-log-worker を呼ぶ)
+  xdg.configFile."opencode/plugins/vault-session-log.ts" = {
+    source = ./plugins/vault-session-log.ts;
+  };
 }
