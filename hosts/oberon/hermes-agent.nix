@@ -42,7 +42,18 @@
       # MESSAGING_CWD をセットするが、hermes v0.16.0 でこの変数は deprecated。
       # settings 経由で config.yaml に書き出すことで警告を解消する。
       terminal.cwd = config.services.hermes-agent.workingDirectory;
+      # standalone kind のプラグインは既定 opt-in のため、明示的に有効化する。
+      plugins.enabled = [ "session-vault-export" ];
     };
+
+    # セッション終了時に knowledge-base vault へ Markdown を書き出して push する
+    # プラグイン。~/.hermes/plugins/nix-managed-session-vault-export へ symlink される。
+    extraPlugins = [
+      (pkgs.runCommand "session-vault-export" { } ''
+        mkdir -p $out
+        cp -r ${./hermes-plugins/session-vault-export}/. $out/
+      '')
+    ];
 
     environmentFiles = [ config.sops.secrets."hermes-env".path ];
 

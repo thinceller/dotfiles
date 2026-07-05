@@ -1,0 +1,6 @@
+name: session-vault-export
+version: 1.0.0
+description: "Export finished Hermes sessions as Markdown into the knowledge-base vault (Agents/Hermes-Agent/sessions/) and push via git."
+author: "thinceller"
+hooks:
+  - on_session_finalize
