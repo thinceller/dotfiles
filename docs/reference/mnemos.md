@@ -188,9 +188,9 @@ claude
 |---|---|---|---|
 | `trig_019mwkWyhury7fyWzkG5SSZW` | vault-weekly-lint | 毎週月曜 08:00 JST | vault-lint 相当を実行 → `Shared/research/weekly-lint-<date>.md` 生成 → commit & push + Mnemos health check(Routine の実行痕跡・Inbox の raw 滞留・log.md の停滞を検査し、異常時のみ Slack 通知) |
 | `trig_01JX9GaBNesWQdwnc5aLwqRn` | vault-daily-clippings-triage | 毎日 07:00 JST | 直近 24h の新規 Clippings を triage → `Shared/research/clippings-triage-<YYYY-MM>.md` 追記 → commit & push |
-| (作成後に ID 記入) | vault-weekly-synthesis | 毎週日曜 08:00 JST | Inbox/ の raw メモを triage → Notes 昇格候補・今週の追加サマリ・休眠ノート再サーフェスを `Shared/digests/<YYYY>-W<ww>-digest.md` に生成 → status: triaged 更新 → commit & push → Slack コネクタでダイジェスト配信 |
+| `trig_017htqXEN9vAxDJgcveytyDY` | vault-weekly-synthesis | 毎週日曜 08:00 JST | Inbox/ の raw メモを triage → Notes 昇格候補・今週の追加サマリ・休眠ノート再サーフェスを `Shared/digests/<YYYY>-W<ww>-digest.md` に生成 → status: triaged 更新 → commit & push → Slack コネクタでダイジェスト配信 |
 
-両方とも **append-only** で動作する（既存 Notes は書き換えない）。Routine 管理は https://claude.ai/code/routines、編集は `/schedule` skill 経由。
+いずれも **append-only** で動作する（既存 Notes は書き換えない。synthesis のみ Inbox frontmatter の status 更新を行う）。Routine 管理は https://claude.ai/code/routines、編集は `/schedule` skill 経由。
 
 ### Routine の特徴
 
