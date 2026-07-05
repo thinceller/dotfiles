@@ -8,6 +8,15 @@ let
   inherit (userConfig) isPersonal;
 
   openPlanScript = pkgs.writeShellScript "claude-open-plan" (builtins.readFile ./hooks/open-plan.sh);
+  vaultSessionLogScript = pkgs.writeShellScript "claude-vault-session-log" (
+    builtins.readFile ./hooks/vault-session-log.sh
+  );
+  # Mnemos: セッションログ自動記録の共用 worker。Claude Code の hook と
+  # OpenCode の plugin (home-manager/programs/opencode/) の両方から
+  # PATH 上の `vault-session-log-worker` として呼ばれる。
+  vaultSessionLogWorker = pkgs.writeShellScriptBin "vault-session-log-worker" (
+    builtins.readFile ./scripts/vault-session-log-worker.sh
+  );
   statuslineScript = pkgs.writeShellScript "claude-statusline" (
     builtins.readFile ./statusline-command.sh
   );
@@ -42,6 +51,8 @@ let
   });
 in
 {
+  home.packages = lib.optionals isPersonal [ vaultSessionLogWorker ];
+
   programs.claude-code = {
     enable = true;
     package = claudeCodePackage;
@@ -195,6 +206,32 @@ in
               {
                 type = "command";
                 command = openPlanScript;
+              }
+            ];
+          }
+        ];
+      }
+      // lib.optionalAttrs isPersonal {
+        # Mnemos: vault へのセッションログ自動記録。
+        # Stop はデバウンス付き (30 分に 1 回まで)、SessionEnd で最終更新。
+        # 実処理は detach した worker が headless claude (haiku) で行うため
+        # セッションをブロックしない。詳細は hooks/vault-session-log.sh 冒頭。
+        Stop = [
+          {
+            hooks = [
+              {
+                type = "command";
+                command = vaultSessionLogScript;
+              }
+            ];
+          }
+        ];
+        SessionEnd = [
+          {
+            hooks = [
+              {
+                type = "command";
+                command = vaultSessionLogScript;
               }
             ];
           }
