@@ -20,32 +20,78 @@ Mnemos は、
 
 ## 2. 構成
 
+### 全体像
+
+```mermaid
+flowchart LR
+    subgraph entry["入口 (どこからでも)"]
+        SL[Slack]
+        DP["Dispatch<br/>(claude.ai → 個人Mac)"]
+        OM[Obsidian mobile]
+        WC[Web Clipper]
+    end
+
+    HE["Hermes Agent<br/>(oberon VPC / glm-5.2)"]
+    LS["経路A/B セッション<br/>(個人Mac / Claude Code)"]
+
+    subgraph vault["knowledge-base vault (GitHub)"]
+        IB["Inbox/<br/>未整理メモ (status: raw)"]
+        CL[Clippings/]
+        NT["Notes/<br/>アトミックノート"]
+        DG[Shared/digests/]
+    end
+
+    subgraph routines["クラウド Routines"]
+        TR["daily<br/>clippings-triage"]
+        SY["weekly<br/>synthesis"]
+        LI["weekly<br/>lint + health check"]
+    end
+
+    SL --> HE
+    DP --> LS
+    OM --> IB
+    WC --> CL
+    HE -->|"Inbox capture (push)"| IB
+    LS -->|inbox-capture / vault-capture| IB
+
+    CL --> TR
+    IB --> SY
+    SY -->|"digest 生成<br/>status: triaged 更新"| DG
+    SY -->|"Slack コネクタで配信"| SL
+    LI -->|"異常時のみ Slack 通知"| SL
+
+    HE -->|"Query / digest 深掘り (grep + read)"| vault
+    DG -.->|"昇格は人間が判断"| NT
+```
+
 ### 3 層アーキテクチャ
 
 | 層 | ディレクトリ | 役割 | 編集者 |
 |---|---|---|---|
 | **Layer 1: Raw sources** | `Clippings/` | Web Clipper で保存した元記事。不変・参照用 | 人間（Clipper 経由） |
-| **Layer 2: The wiki** | `Notes/`、`Agents/`、`Shared/`、`log.md` | LLM が所有・生成・維持するアトミックノート群 | LLM 主導 |
+| **Layer 2: The wiki** | `Notes/`、`Agents/`、`Shared/`、`log.md`(`Inbox/` は未整理メモの作業場サブレイヤ) | LLM が所有・生成・維持するアトミックノート群 | LLM 主導 |
 | **Layer 3: The schema** | vault の `CLAUDE.md` + `.claude/skills/`、dotfiles の skills | ディレクトリ規約・ワークフロー定義 | 人間 |
 
 `index.md` は Obsidian Dataview プラグインが frontmatter から自動生成するため手動メンテ不要。`log.md` は時系列の append-only ジャーナル。
 
-### 2 つのアクセス経路
+### 3 つのアクセス経路
 
 | 経路 | 起動 | 主用ツール | 用途 |
 |---|---|---|---|
 | **A: vault 内** | `cd ~/src/github.com/thinceller/knowledge-base && claude` | Grep / Glob / Read / Edit / Write | **Ingest**（Clippings → Notes 化）・**Lint**（健全性診断）・git 同期 |
 | **B: 外部から** | 他プロジェクトで `claude` | `enquire-mcp` の `obsidian_*` ツール | **Query**（vault 検索）・**Capture**（軽量記録）・**Session log**（セッション要約） |
+| **C: リモートエージェント** | クラウド Routine / oberon の Hermes (Slack) | git + Grep/ファイル直接操作 | **Inbox capture**(どこからでも)・**Query**・Routine 実行 |
 
 経路A は vault が CWD にある状態。標準ツールで直接編集できる。
 経路B は vault が CWD 外。MCP サーバ `enquire-mcp` を経由してハイブリッド検索（BM25 + TF-IDF + 埋め込み + wikilink graph-boost）で参照する。
+Dispatch は個人 Mac 上のセッションをリモート起動する仕組みであり、経路A/B がそのまま適用される(Mac 起動 + Claude アプリが必要)。
 
 ### 4 つの操作
 
 ```
 Ingest  : Clippings/ → Notes/ (research-note skill, 経路A)
 Query   : vault 検索 → 出典付き回答 (vault-memory skill, 経路B)
-Capture : 知見を Notes/ や Shared/ に記録 (vault-capture skill, 経路B)
+Capture : 知見を Notes/ や Shared/ に記録 (vault-capture skill, 経路B)。未整理なら Inbox/ (inbox-capture / vault-capture skill)
 Lint    : 矛盾・stale・orphan・未ページ化概念の検出 (vault-lint skill, 経路A)
 ```
 
@@ -104,7 +150,22 @@ claude
 - `vault-lint`: 6 種類の健全性チェック（矛盾・stale・orphan・未ページ化概念・不足相互参照・thin notes）
 - `obsidian-git`: vault のコミット・push・obsidian-git プラグインとの協調
 
-### 3.4 複利ループ（compounding loop）
+### 3.4 思いつきを投げる(どこからでも)
+
+スマホ・会社 Mac・移動中など、個人 Mac のセッションがない場所からの capture:
+
+- **Slack(主)**: Hermes に「これ Inbox に: <内容>」と送る。oberon 上の Hermes が
+  `Inbox/YYYY-MM-DD-<slug>.md`(source: hermes)を作成して push する。個人 Mac 不要
+- **Dispatch(副)**: claude.ai から個人 Mac のセッションをリモート起動して同様に指示
+  (Mac 起動 + Claude アプリが必要)
+- **Obsidian mobile(任意)**: `Inbox/` に直接書く(同じ triage に乗る)
+
+取り出しも個人 Mac 不要:
+- 週次ダイジェストは synthesis Routine が Slack に直接配信する
+- 深掘り・単発の Query は Slack で Hermes に聞く(「vault に〜のメモある?」
+  「今週のダイジェスト見せて」)。Grep ベースで出典付き回答が返る
+
+### 3.5 複利ループ（compounding loop）
 
 セッションで得た良い回答を**チャット履歴に消さず wiki に戻す**ことで、知識が雪だるま式に増える。
 
@@ -125,8 +186,9 @@ claude
 
 | ID | 名前 | スケジュール | 動作 |
 |---|---|---|---|
-| `trig_019mwkWyhury7fyWzkG5SSZW` | vault-weekly-lint | 毎週月曜 08:00 JST | vault-lint 相当を実行 → `Shared/research/weekly-lint-<date>.md` 生成 → commit & push |
-| `trig_01JX9GaBNesWQdwnc5aLwqRn` | vault-daily-inbox-triage | 毎日 07:00 JST | 直近 24h の新規 Clippings を triage → `Shared/research/inbox-<YYYY-MM>.md` 追記 → commit & push |
+| `trig_019mwkWyhury7fyWzkG5SSZW` | vault-weekly-lint | 毎週月曜 08:00 JST | vault-lint 相当を実行 → `Shared/research/weekly-lint-<date>.md` 生成 → commit & push + Mnemos health check(Routine の実行痕跡・Inbox の raw 滞留・log.md の停滞を検査し、異常時のみ Slack 通知) |
+| `trig_01JX9GaBNesWQdwnc5aLwqRn` | vault-daily-clippings-triage | 毎日 07:00 JST | 直近 24h の新規 Clippings を triage → `Shared/research/clippings-triage-<YYYY-MM>.md` 追記 → commit & push |
+| (作成後に ID 記入) | vault-weekly-synthesis | 毎週日曜 08:00 JST | Inbox/ の raw メモを triage → Notes 昇格候補・今週の追加サマリ・休眠ノート再サーフェスを `Shared/digests/<YYYY>-W<ww>-digest.md` に生成 → status: triaged 更新 → commit & push → Slack コネクタでダイジェスト配信 |
 
 両方とも **append-only** で動作する（既存 Notes は書き換えない）。Routine 管理は https://claude.ai/code/routines、編集は `/schedule` skill 経由。
 
@@ -138,7 +200,6 @@ claude
 
 ### 将来追加候補（Tier 2 以降）
 
-- 週次 synthesis（過去 1 週間の追加を集約してハイライト）
 - 月次 stale notes refresh（90 日以上更新のない Notes を新しい Clippings の情報と照合）
 - 自動 Ingest（Clippings → Notes/ を draft branch で PR 化）
 
@@ -155,6 +216,7 @@ claude
 | `home-manager/programs/claude-code/user-memory.md` | `## Obsidian Vault` セクション（経路B からの利用ルール） |
 | `home-manager/programs/opencode/AGENTS.md` | 同上の OpenCode 版 |
 | `configs/.config/cage/presets.yaml` | vault パスを sandbox の allow list に追加 |
+| `hosts/oberon/hermes-agent.nix` | Hermes Agent(経路C)の vault 連携(deploy key・instruction) |
 
 ### vault 側（`knowledge-base` リポジトリ）
 
