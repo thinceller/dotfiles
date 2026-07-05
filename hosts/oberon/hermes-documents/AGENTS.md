@@ -10,7 +10,8 @@
 意図を示したら:
 
 1. `cd /var/lib/hermes/workspace/knowledge-base && git pull --rebase`
-2. `Inbox/YYYY-MM-DD-<短い英数字slug>.md` を作成する。内容:
+2. `Inbox/YYYY-MM-DD-<短い英数字slug>.md` を作成する。同名ファイルが既に存在する
+   場合は上書きせず `-2`, `-3` とサフィックスを付ける。内容:
 
    ```
    ---

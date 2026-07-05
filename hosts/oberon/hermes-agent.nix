@@ -59,6 +59,11 @@
       GIT_SSH_COMMAND = "ssh -i ${
         config.sops.secrets."hermes-vault-deploy-key".path
       } -o IdentitiesOnly=yes";
+      # hermes user は ~/.gitconfig を持たないため commit 時の identity を env で供給する。
+      GIT_AUTHOR_NAME = "Hermes Agent";
+      GIT_AUTHOR_EMAIL = "hermes@oberon";
+      GIT_COMMITTER_NAME = "Hermes Agent";
+      GIT_COMMITTER_EMAIL = "hermes@oberon";
     };
   };
 
