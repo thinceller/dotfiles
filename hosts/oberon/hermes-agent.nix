@@ -11,18 +11,8 @@
     mode = "0400";
   };
 
-  # knowledge-base vault (Mnemos) 用 deploy key (write 権限)。Inbox capture の
-  # git push に使う。GIT_SSH_COMMAND 経由で ssh が直接読むため、エージェントの
-  # コンテキストに秘密鍵が乗ることはない。
-  sops.secrets."hermes-vault-deploy-key" = {
-    sopsFile = ../../secrets/oberon.yaml;
-    owner = "hermes";
-    mode = "0400";
-    restartUnits = [ "hermes-agent.service" ];
-  };
-
-  # thinceller-hermes (GitHub machine account) の SSH 秘密鍵。招待済み repo への
-  # git push に使う。vault deploy key と同じく GIT_SSH_COMMAND 経由で ssh が直接
+  # thinceller-hermes (GitHub machine account) の SSH 秘密鍵。vault (knowledge-base)
+  # を含む招待済み repo への git push に使う。GIT_SSH_COMMAND 経由で ssh が直接
   # 読むため、エージェントのコンテキストに秘密鍵が乗ることはない。
   sops.secrets."hermes-github-ssh-key" = {
     sopsFile = ../../secrets/oberon.yaml;
