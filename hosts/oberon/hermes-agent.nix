@@ -21,6 +21,25 @@
     restartUnits = [ "hermes-agent.service" ];
   };
 
+  # thinceller-hermes (GitHub machine account) の SSH 秘密鍵。招待済み repo への
+  # git push に使う。vault deploy key と同じく GIT_SSH_COMMAND 経由で ssh が直接
+  # 読むため、エージェントのコンテキストに秘密鍵が乗ることはない。
+  sops.secrets."hermes-github-ssh-key" = {
+    sopsFile = ../../secrets/oberon.yaml;
+    owner = "hermes";
+    mode = "0400";
+    restartUnits = [ "hermes-agent.service" ];
+  };
+
+  # thinceller-hermes の PAT (PR 作成用)。gh wrapper (extraPackages) が実行時に
+  # 読むため、systemd の Environment= には載せない。
+  sops.secrets."hermes-github-pat" = {
+    sopsFile = ../../secrets/oberon.yaml;
+    owner = "hermes";
+    mode = "0400";
+    restartUnits = [ "hermes-agent.service" ];
+  };
+
   # hermes user の git-over-ssh 用に GitHub のホスト鍵をシステム known_hosts へ供給。
   programs.ssh.knownHosts."github.com".publicKey =
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl";
@@ -66,12 +85,21 @@
     documents."AGENTS.md" = ./hermes-documents/AGENTS.md;
 
     # service path には git はあるが ssh がないため openssh を追加。
-    extraPackages = [ pkgs.openssh ];
+    # gh は PAT を実行時に sops path から読む wrapper として提供する
+    # (トークンを systemd Environment= に載せない)。
+    extraPackages = [
+      pkgs.openssh
+      (pkgs.writeShellScriptBin "gh" ''
+        GH_TOKEN="$(cat ${config.sops.secrets."hermes-github-pat".path})" \
+          exec ${pkgs.gh}/bin/gh "$@"
+      '')
+    ];
 
     environment = {
-      # vault clone/push 用。ホスト鍵検証は programs.ssh.knownHosts (上記) が担う。
+      # git push 用 (machine user thinceller-hermes の鍵。招待済み repo すべてに届く)。
+      # ホスト鍵検証は programs.ssh.knownHosts (上記) が担う。
       GIT_SSH_COMMAND = "ssh -i ${
-        config.sops.secrets."hermes-vault-deploy-key".path
+        config.sops.secrets."hermes-github-ssh-key".path
       } -o IdentitiesOnly=yes";
       # hermes user は ~/.gitconfig を持たないため commit 時の identity を env で供給する。
       # ドメインは保持している thinceller.dev (Cloudflare Email Routing 利用可)。
