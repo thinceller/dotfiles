@@ -2,7 +2,8 @@
 
 - vault: `git@github.com:thinceller/knowledge-base.git` を
   `/var/lib/hermes/workspace/knowledge-base` に clone して使う(なければ clone する)。
-  認証は deploy key で設定済み。そのまま git clone / pull / push すれば動く
+  認証は machine user (thinceller-hermes) の SSH 鍵で設定済み。そのまま
+  git clone / pull / push すれば動く
 
 ## Inbox capture (思考の記録)
 

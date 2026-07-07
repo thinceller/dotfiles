@@ -245,7 +245,7 @@ claude
 | `home-manager/programs/claude-code/user-memory.md` | `## Obsidian Vault` セクション（経路B からの利用ルール） |
 | `home-manager/programs/opencode/AGENTS.md` | 同上の OpenCode 版 |
 | `configs/.config/cage/presets.yaml` | vault パスを sandbox の allow list に追加 |
-| `hosts/oberon/hermes-agent.nix` | Hermes Agent(経路C)の vault 連携(deploy key・instruction) |
+| `hosts/oberon/hermes-agent.nix` | Hermes Agent(経路C)の vault 連携(machine user 鍵・instruction) |
 | `home-manager/programs/claude-code/hooks/vault-session-log.sh` | Stop/SessionEnd hook(自動セッションログの入口) |
 | `home-manager/programs/claude-code/scripts/vault-session-log-worker.sh` | 自動セッションログ共用 worker(haiku 要約) |
 | `home-manager/programs/opencode/plugins/vault-session-log.ts` | OpenCode plugin(自動セッションログ) |
