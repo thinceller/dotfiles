@@ -2,6 +2,8 @@
 
 management dotfiles
 
+<!-- Hermes Agent e2e test: this line is added by an automated push/PR workflow test. -->
+
 ## Documentation
 
 ドキュメントは `docs/reference/` (ストック: 継続参照) と `docs/plans/` (フロー: 実装計画の履歴) に分けて管理している。
