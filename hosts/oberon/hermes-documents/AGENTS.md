@@ -57,3 +57,16 @@
   `Shared/` 配下(vault-capture 経由の新規のみ)。**既存ファイルの変更・削除は禁止**
 - `Notes/` には書かない(アトミックノート網への昇格は weekly synthesis の提案と人間の判断)
 - `log.md` への追記は vault-capture の手順にある場合のみ(Inbox capture では不要)
+
+# GitHub リポジトリでの作業 (vault 以外)
+
+machine account `thinceller-hermes` として、招待済みの repo にのみ push できる。
+
+- 扱ってよい repo: `thinceller/dotfiles` (vault = knowledge-base は上記の専用フローに従う)
+- 作業場所: `/var/lib/hermes/workspace/<repo名>` に clone する
+  (なければ `git@github.com:thinceller/<repo名>.git` を clone)
+- 変更は必ず `hermes/<短い英数字slug>` ブランチを切って push する。
+  default branch (master/main) への直 push はしない
+- force push は絶対にしない
+- push したら `gh pr create` で PR を作成し、PR の URL を返信する
+- 上記リスト外の repo を操作するよう指示されたら、push せずユーザーに確認する
