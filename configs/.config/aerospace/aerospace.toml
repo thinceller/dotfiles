@@ -190,7 +190,7 @@ run = "move-node-to-workspace I"
 
 [[on-window-detected]]
 if.app-id = "md.obsidian"
-run = "move-node-to-workspace O"
+run = "move-node-to-workspace S"
 
 # secondary monitor apps
 [[on-window-detected]]
