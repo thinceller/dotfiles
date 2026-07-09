@@ -173,7 +173,7 @@ in
         CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR = "1";
         USE_BUILTIN_RIPGREP = "1";
 
-        # ANTHROPIC_DEFAULT_OPUS_MODEL = "claude-opus-4-7[1m]";
+        ANTHROPIC_DEFAULT_OPUS_MODEL = "claude-opus-4-7[1m]";
 
         # wrapper の --set DISABLE_AUTOUPDATER は wrapper 経由の起動しか守れない。
         # native binary (chrome-native-host 等) も settings.json の env は読むため、
