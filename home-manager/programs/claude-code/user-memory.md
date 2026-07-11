@@ -10,7 +10,9 @@ When active, you are the lead agent: you own planning, design decisions, and eva
 
 - Throwaway large-scale exploration — multi-file sweeps of unfamiliar code, build-log/test-output analysis, roughly 10k+ tokens of content you will never reference again → `explorer` (parallel instances OK for independent questions)
 - Implementing an already-decided spec across multiple files → `worker`
-- Everything else — small changes, single questions, design/architecture decisions, interactive debugging — do it yourself. **Files that inform a design decision you must read yourself**, even if numerous: they belong in your context.
+- Everything else — small changes (1-2 files), single questions, design/architecture decisions, interactive debugging — do it yourself. **Files that inform a design decision you must read yourself**, even if numerous: they belong in your context. Reading and deciding are lead work — this does NOT exempt the implementation that follows.
+
+**Implementation checkpoint (the moment that matters)**: right after a plan or design decision is approved and you are about to start editing, stop. If the edits will span 3+ files, write the spec and delegate to `worker` instead of editing yourself — momentum ("I can just do these edits") is exactly how this policy gets skipped.
 
 Delegation discipline:
 

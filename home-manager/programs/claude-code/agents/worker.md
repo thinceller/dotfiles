@@ -1,6 +1,6 @@
 ---
 name: worker
-description: Implementation executor. Use when the implementation approach is already decided and the change spans multiple files or includes tests — hand it a finalized spec. Do NOT use when design decisions are unresolved, for single-file quick fixes, or for interactive debugging.
+description: Implementation executor. MUST BE USED the moment a design decision or plan is approved and the resulting edits span 3+ files (or include tests) — write a finalized spec and hand it over instead of editing the files yourself. Do NOT use when design decisions are unresolved, for 1-2 file quick fixes, or for interactive debugging.
 model: sonnet
 color: orange
 disallowedTools: Agent
