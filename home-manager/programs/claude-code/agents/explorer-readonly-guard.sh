@@ -24,7 +24,8 @@ case "$scrubbed" in
   *'>'*) deny "output redirection" ;;
 esac
 
-allowed='rg grep egrep fgrep ls find fd cat head tail wc file stat tree du df which type env printenv echo printf awk sort uniq cut tr column diff comm jq yq basename dirname realpath readlink date'
+# Note: no 'env' (env VAR=x cmd runs arbitrary commands); printenv covers reads.
+allowed='rg grep egrep fgrep ls find fd cat head tail wc file stat tree du df which type printenv echo printf awk sort uniq cut tr column diff comm jq yq basename dirname realpath readlink date'
 git_allowed='log show diff status blame branch remote ls-files grep rev-parse describe shortlog tag reflog'
 
 # Check the first word of each pipeline/sequence segment. Splitting on |;& is
