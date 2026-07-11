@@ -46,7 +46,7 @@
       # OpenCode Go ($10/月サブスク、オープンモデル)。
       # 認証は OPENCODE_GO_API_KEY 環境変数のみ (OAuth 不要)。
       model.provider = "opencode-go";
-      model.default = "glm-5.2";
+      model.default = "kimi-k2.7-code";
       # MESSAGING_CWD 環境変数の代替。nixosModule は systemd Environment= に
       # MESSAGING_CWD をセットするが、hermes v0.16.0 でこの変数は deprecated。
       # settings 経由で config.yaml に書き出すことで警告を解消する。
