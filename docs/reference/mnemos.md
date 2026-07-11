@@ -74,10 +74,10 @@ flowchart LR
 | 層 | ディレクトリ | 役割 | 編集者 |
 |---|---|---|---|
 | **Layer 1: Raw sources** | `Clippings/` | Web Clipper またはエージェント経由で保存した元記事。不変・参照用 | 人間（Clipper）+ エージェント（vault-clip skill、`clipped_by: agent` 付き） |
-| **Layer 2: The wiki** | `Notes/`、`Agents/`、`Shared/`、`log.md`(`Inbox/` は未整理メモの作業場サブレイヤ) | LLM が所有・生成・維持するアトミックノート群 | LLM 主導 |
+| **Layer 2: The wiki** | `Notes/`、`Agents/`、`Shared/`(`Inbox/` は未整理メモの作業場サブレイヤ) | LLM が所有・生成・維持するアトミックノート群 | LLM 主導 |
 | **Layer 3: The schema** | vault の `CLAUDE.md` + `.claude/skills/`、dotfiles の skills | ディレクトリ規約・ワークフロー定義 | 人間 |
 
-`index.md` は Obsidian Dataview プラグインが frontmatter から自動生成するため手動メンテ不要。`log.md` は時系列の append-only ジャーナル。
+`index.md` は Obsidian Dataview プラグインが frontmatter から自動生成するため手動メンテ不要。時系列ジャーナルは vault の git 履歴そのもの（`git log --format='%ad %s' --date=short`）。かつて `log.md` が担っていたが、マルチライターの追記でコンフリクト源になったため 2026-07-12 に廃止（§6）。
 
 ### 3 つのアクセス経路
 
@@ -121,7 +121,6 @@ vault-memory skill が自動起動
    ↓
 vault-capture skill で Shared/decisions/react-compiler-adoption.md を作成
    ↓ 既存の Notes/React Compiler系ノートに [[wikilink]] で接続
-   ↓ log.md に append: ## [2026-06-28] capture | react-compiler-adoption
 ```
 
 **判断基準**: 質問が「自分のノート・決定事項・プロジェクト文脈・調査内容」に関わるなら、まず vault-memory を起動する。
@@ -214,7 +213,7 @@ claude
 
 | ID | 名前 | スケジュール | 動作 |
 |---|---|---|---|
-| `trig_019mwkWyhury7fyWzkG5SSZW` | vault-weekly-lint | 毎週月曜 08:00 JST | vault-lint 相当を実行 → `Shared/research/weekly-lint-<date>.md` 生成 → commit & push + Mnemos health check(Routine の実行痕跡・Inbox の raw 滞留・log.md の停滞を検査し、異常時のみ #mnemos-notification に通知) |
+| `trig_019mwkWyhury7fyWzkG5SSZW` | vault-weekly-lint | 毎週月曜 08:00 JST | vault-lint 相当を実行 → `Shared/research/weekly-lint-<date>.md` 生成 → commit & push + Mnemos health check(Routine の実行痕跡・Inbox の raw 滞留・git 履歴の停滞を検査し、異常時のみ #mnemos-notification に通知) |
 | `trig_01JX9GaBNesWQdwnc5aLwqRn` | vault-daily-clippings-triage | 毎日 07:00 JST | 直近 24h の新規 Clippings を triage → `Shared/research/clippings-triage-<YYYY-MM>.md` 追記 → commit & push |
 | `trig_017htqXEN9vAxDJgcveytyDY` | vault-weekly-synthesis | 毎週日曜 08:00 JST | Inbox/ の raw メモを triage → Notes 昇格候補・今週の追加サマリ・休眠ノート再サーフェスを `Shared/digests/<YYYY>-W<ww>-digest.md` に生成 → status: triaged 更新 → commit & push → Slack コネクタで #mnemos-notification にダイジェスト配信 |
 
@@ -261,7 +260,6 @@ claude
 | `.claude/skills/vault-lint/SKILL.md` | 健全性診断 |
 | `.claude/skills/obsidian-git/SKILL.md` | git 運用 |
 | `index.md` | Dataview 自動生成カタログ |
-| `log.md` | append-only 時系列ジャーナル |
 | `Notes/`, `Clippings/`, `Shared/`, `Agents/` | 3 層のデータディレクトリ |
 
 ## 6. 設計の経緯
@@ -280,6 +278,10 @@ claude
   運用でカバー」が機能しなかった(capture ゼロ)ため、セッションログは hook/plugin による
   自動記録に移行(§3.2「自動セッションログ」)。手動スキルは濃いログ用に併存
 - **Routine は append-only から**: 既存 Notes の自動書き換えは破壊リスクが高い。判断は人間に残す
+- **log.md 廃止**(2026-07-12): 追記専用ジャーナルは初期設計で「Karpathy パターンの核」としたが、
+  マルチライター(自動セッションログ・Routine・Hermes・手動スキル)が異なるマシンから同一ファイル
+  末尾に追記する構造のため git/stash コンフリクトが頻発。全エントリが commit と 1:1 対応しており
+  git log で完全に代替できるため廃止。health check の鮮度検査も git 履歴ベースに変更
 
 ## 7. トラブルシュート
 
@@ -300,7 +302,7 @@ claude
 | **LLM Wiki パターン** | Karpathy 提唱の compounding 知識ベース運用。RAG ではなく LLM が wiki を維持する |
 | **複利ループ** | Query 結果を wiki にファイルし直すことで知識が積み上がる効果 |
 | **Clip / Ingest / Query / Capture / Lint** | 5 つの基本操作 |
-| **Mnemos health check** | weekly-lint Routine に統合された自己監視。Routine の実行痕跡・Inbox 滞留・log.md 停滞を検査し異常時のみ通知 |
+| **Mnemos health check** | weekly-lint Routine に統合された自己監視。Routine の実行痕跡・Inbox 滞留・git 履歴の停滞を検査し異常時のみ通知 |
 | **自動セッションログ** | 各エージェントの hook/plugin による `*_auto-*.md` の自動記録（§3.2） |
 | **経路A / 経路B / 経路C** | vault 内起動 / 外部から MCP 経由 / リモートエージェント（クラウド Routine・Hermes） |
 | **アトミックノート** | 1 ページ 1 トピックの概念ノート。`Notes/` 配下にフラットに配置 |

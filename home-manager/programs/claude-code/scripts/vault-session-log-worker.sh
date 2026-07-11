@@ -79,7 +79,7 @@ auto: true
 <未完了の作業・次にやること。なければ「なし」>
 
 ルール:
-- 書いてよいのは $notefile のみ。他のファイル (Notes/ や log.md 等) には触らない
+- 書いてよいのは $notefile のみ。他のファイル (Notes/ 等) には触らない
 - 意味のある作業 (コード変更・調査・決定・学び) が無い雑談だけのセッションなら、
   ファイルを書かずに SKIP とだけ出力する
 - 履歴に含まれる秘密情報 (トークン・鍵・パスワード) はログに書かない"
@@ -95,17 +95,12 @@ auto: true
     --add-dir "$(dirname "$transcript")" \
     >/dev/null 2>&1
 
-  # 成功していたら state 更新 + log.md 追記 (初回のみ)
+  # 成功していたら state 更新
   if [ -f "$VAULT/$notefile" ]; then
-    logged=$(sed -n '3p' "$state" 2>/dev/null || true)
     {
       date +%s
       echo "$notefile"
-      echo "logged"
     } > "$state"
-    if [ "$logged" != "logged" ]; then
-      printf '\n## [%s] session | auto: %s\n' "$(date +%Y-%m-%d)" "$(basename "$notefile" .md)" >> "$VAULT/log.md"
-    fi
   fi
   exit 0
 fi

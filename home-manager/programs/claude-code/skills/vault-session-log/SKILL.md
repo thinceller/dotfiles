@@ -82,5 +82,4 @@ agent: Claude-Code
 2. For each Decision and Learning, if it's reusable beyond this session, create a
    separate note in the appropriate directory and link to it with `[[wikilink]]`
    (use `vault-capture` skill for the independent notes)
-3. Append to `log.md`: `## [YYYY-MM-DD] session | <short description>`
-4. Confirm the session log path to the user
+3. Confirm the session log path to the user

@@ -57,7 +57,6 @@
 - vault 内で作成してよいのは `Inbox/`、`Clippings/`(vault-clip 経由の新規のみ)、
   `Shared/` 配下(vault-capture 経由の新規のみ)。**既存ファイルの変更・削除は禁止**
 - `Notes/` には書かない(アトミックノート網への昇格は weekly synthesis の提案と人間の判断)
-- `log.md` への追記は vault-capture の手順にある場合のみ(Inbox capture では不要)
 
 # GitHub リポジトリでの作業 (vault 以外)
 

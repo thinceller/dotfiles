@@ -49,10 +49,9 @@ metadata:
    <grep -ri で Notes/ から関連しそうなページを探し、[[ページ名]] を 1-2 個。無ければ「なし」>
    ```
 
-4. `log.md` の末尾に追記: `## [YYYY-MM-DD] capture | <topic>`
-5. `git add Shared/ log.md && git commit -m "capture: <topic>" && git push`
+4. `git add Shared/ && git commit -m "capture: <topic>" && git push`
    (push 失敗時は `git pull --rebase` して 1 回だけ再試行。force push は絶対にしない)
-6. 保存パスを Slack で返信する
+5. 保存パスを Slack で返信する
 
 ## 禁止事項
 

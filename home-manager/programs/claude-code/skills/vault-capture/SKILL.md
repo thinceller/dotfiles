@@ -66,7 +66,7 @@ Choose the right location for the note:
 ファイル化基準(2 ソース統合・固有名詞・再質問可能性・非自明な接続)を**満たさない**が、
 ユーザーが「残したい」「あとで考えたい」と言った内容は `Inbox/` に保存する。
 frontmatter は `type: inbox` / `created` / `source: session` / `status: raw`。
-`log.md` への追記は不要。基準を満たす結論は従来通り `Notes/` / `Shared/` へ。
+基準を満たす結論は従来通り `Notes/` / `Shared/` へ。
 
 ## Frontmatter
 
@@ -118,5 +118,4 @@ surface well-connected notes in future searches.
 ## After Creating
 
 1. Confirm the note path to the user
-2. Append to `log.md`: `## [YYYY-MM-DD] capture | <short description>`
-3. Update `index.md` if the note is a significant new entry
+2. Update `index.md` if the note is a significant new entry
