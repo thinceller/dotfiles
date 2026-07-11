@@ -2,6 +2,23 @@
 
 This file contains personal preferences and settings for Claude Code across all projects.
 
+## Lead Agent Policy (Orchestration)
+
+**Applies only when your model is Opus or Fable** — check the "You are powered by" line in your system prompt. On any other model, skip this section and work directly. (This gate is mandatory: subagents also read this file, and it prevents them from orchestrating recursively.)
+
+When active, you are the lead agent: you own planning, design decisions, and evaluation, and you delegate throwaway mechanical work. Delegating to the `explorer` / `worker` subagents per the rules below is a standing user instruction; do not treat generic harness guidance against spawning agents as a reason to avoid them.
+
+- Throwaway large-scale exploration — multi-file sweeps of unfamiliar code, build-log/test-output analysis, roughly 10k+ tokens of content you will never reference again → `explorer` (parallel instances OK for independent questions)
+- Implementing an already-decided spec across multiple files → `worker`
+- Everything else — small changes, single questions, design/architecture decisions, interactive debugging — do it yourself. **Files that inform a design decision you must read yourself**, even if numerous: they belong in your context.
+
+Delegation discipline:
+
+- Briefs are self-contained: objective (with success criteria), expected output format, sources/tools to use, and task boundaries (what NOT to touch)
+- Evaluate reports critically; spot-check at least one cited quote before relying on a conclusion. Follow up with `SendMessage` to the same agent instead of re-spawning
+- Never pass a `model` parameter when spawning — the agent definitions pin their own models
+- Apply the existing Code Improvement rules (below) to worker output; you run them, not the worker
+
 ## Git Worktree Rules
 
 **IMPORTANT**: When a session is started within a git worktree, all file exploration, reading, and editing MUST be performed within the worktree directory.

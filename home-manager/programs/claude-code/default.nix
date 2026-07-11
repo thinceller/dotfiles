@@ -303,7 +303,7 @@ in
 
     context = ./user-memory.md;
 
-    # agentsDir = ./agents;
+    agentsDir = ./agents;
     skills = ./skills;
     # hooksDir = ./hooks;
   }
