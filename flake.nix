@@ -19,7 +19,10 @@
     # 2GB RAM の kexec installer 上で大きな build が走ると OOM するため。
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.11";
     nix-darwin = {
-      url = "github:LnL7/nix-darwin";
+      # d5bd9cd (2026-07-07) 以降は本 flake の nixpkgs より新しい nixos-render-docs を要求し
+      # `--sidebar-depth` 未対応で darwin-manual-html のビルドが失敗するため、trusted オプションが
+      # 入った最初の commit 群のうち、その手前で pin する。
+      url = "github:LnL7/nix-darwin/d8a6661f78281431f182f222c7df96e2c9480fc5";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
