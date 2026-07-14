@@ -59,6 +59,12 @@ in
     tmux
   ];
 
+  # Hermes のブラウザ自動操作やスクショで日本語が正しく表示されるように、
+  # システム全体に CJK フォントを配備する。
+  fonts.packages = with pkgs; [
+    noto-fonts-cjk-sans
+  ];
+
   # comma (`,`) を pre-built nix-index DB と一緒に有効化する。
   # `, htop` のように nixpkgs パッケージを ad-hoc 実行できる (Mac と同じ運用)。
   # systemPackages に直接 comma を入れると DB が無くて起動失敗するため、
