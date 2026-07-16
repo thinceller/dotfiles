@@ -104,6 +104,13 @@ lib.mkIf userConfig.isPersonal {
     source = "${sources.tmux-agent-sidebar.src}/.opencode/plugins/tmux-agent-sidebar.js";
   };
 
+  # herdr integration (opencode 側): `herdr integration install opencode` が
+  # 書き出す ~/.config/opencode/plugins/herdr-agent-state.js と等価。
+  # HERDR_INTEGRATION_VERSION=8, 上流で version が bump されたらファイルを更新する。
+  xdg.configFile."opencode/plugins/herdr-agent-state.js" = {
+    source = ./plugins/herdr-agent-state.js;
+  };
+
   # Mnemos: セッションログ自動記録 (共用 worker vault-session-log-worker を呼ぶ)
   xdg.configFile."opencode/plugins/vault-session-log.ts" = {
     source = ./plugins/vault-session-log.ts;

@@ -39,6 +39,13 @@ in
     "ghostty/config" = {
       source = symlink /${rootDir}/.config/ghostty/config;
     };
+    # herdr
+    # 単一ファイル symlink にする理由: herdr は ~/.config/herdr/ 配下に
+    # herdr.log / herdr-server.log / agent-detection/ ローカル override を
+    # 書くため、ディレクトリごと symlink すると書き込みが弾かれる。
+    "herdr/config.toml" = {
+      source = symlink /${rootDir}/.config/herdr/config.toml;
+    };
     # karabiner
     # https://github.com/pqrs-org/Karabiner-Elements/issues/3248
     "karabiner" = {

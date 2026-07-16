@@ -21,6 +21,38 @@ let
     builtins.readFile ./statusline-command.sh
   );
 
+  # herdr integration (Claude Code): `herdr integration install claude` が
+  # 書き出す ~/.claude/hooks/herdr-agent-state.sh と等価。上流 (ogulcancelik/herdr,
+  # src/integration/assets/claude/herdr-agent-state.sh) を vendor しており、
+  # HERDR_INTEGRATION_VERSION=7。上流で version が bump されたらファイルごと更新する。
+  herdrAgentStateScript = pkgs.writeShellScript "claude-herdr-agent-state" (
+    builtins.readFile ./hooks/herdr-agent-state.sh
+  );
+
+  # `herdr integration install claude` が settings.json に登録する hook 群
+  # (src/integration/targets.rs::install_claude と一致)。
+  # 引数はエージェント状態のヒントで、SessionStart 以外の呼び出しは script 内で
+  # 早期 exit するが、上流と同じ登録セットを再現しておく。
+  herdrClaudeHook = arg: {
+    matcher = "*";
+    hooks = [
+      {
+        type = "command";
+        command = "${herdrAgentStateScript} ${arg}";
+        timeout = 10;
+      }
+    ];
+  };
+  herdrClaudeHooks = {
+    SessionStart = [ (herdrClaudeHook "session") ];
+    Stop = [ (herdrClaudeHook "idle") ];
+    SubagentStop = [ (herdrClaudeHook "working") ];
+    SessionEnd = [ (herdrClaudeHook "release") ];
+    UserPromptSubmit = [ (herdrClaudeHook "working") ];
+    PreToolUse = [ (herdrClaudeHook "working") ];
+    PostToolUse = [ (herdrClaudeHook "working") ];
+  };
+
   # Override edgepkgs' wrapProgram to place the binary in libexec/ instead of
   # renaming it to .claude-wrapped. This preserves the process name as "claude"
   # (via p_comm), which tools like tcmux rely on for session detection.
@@ -198,45 +230,48 @@ in
         CODEX_COMPANION_SANDBOX_MODE = "danger-full-access";
       };
 
-      hooks = {
-        PreToolUse = [
-          {
-            matcher = "ExitPlanMode";
-            hooks = [
-              {
-                type = "command";
-                command = openPlanScript;
-              }
-            ];
-          }
-        ];
-      }
-      // lib.optionalAttrs isPersonal {
-        # Mnemos: vault へのセッションログ自動記録。
-        # Stop はデバウンス付き (30 分に 1 回まで)、SessionEnd で最終更新。
-        # 実処理は detach した worker が headless claude (haiku) で行うため
-        # セッションをブロックしない。詳細は hooks/vault-session-log.sh 冒頭。
-        Stop = [
-          {
-            hooks = [
-              {
-                type = "command";
-                command = vaultSessionLogScript;
-              }
-            ];
-          }
-        ];
-        SessionEnd = [
-          {
-            hooks = [
-              {
-                type = "command";
-                command = vaultSessionLogScript;
-              }
-            ];
-          }
-        ];
-      };
+      hooks =
+        herdrClaudeHooks
+        // {
+          # herdr の汎用 PreToolUse エントリと、既存の ExitPlanMode 用エントリを共存させる。
+          PreToolUse = herdrClaudeHooks.PreToolUse ++ [
+            {
+              matcher = "ExitPlanMode";
+              hooks = [
+                {
+                  type = "command";
+                  command = openPlanScript;
+                }
+              ];
+            }
+          ];
+        }
+        // lib.optionalAttrs isPersonal {
+          # Mnemos: vault へのセッションログ自動記録。
+          # Stop はデバウンス付き (30 分に 1 回まで)、SessionEnd で最終更新。
+          # 実処理は detach した worker が headless claude (haiku) で行うため
+          # セッションをブロックしない。詳細は hooks/vault-session-log.sh 冒頭。
+          Stop = herdrClaudeHooks.Stop ++ [
+            {
+              hooks = [
+                {
+                  type = "command";
+                  command = vaultSessionLogScript;
+                }
+              ];
+            }
+          ];
+          SessionEnd = herdrClaudeHooks.SessionEnd ++ [
+            {
+              hooks = [
+                {
+                  type = "command";
+                  command = vaultSessionLogScript;
+                }
+              ];
+            }
+          ];
+        };
 
       statusLine = {
         type = "command";
