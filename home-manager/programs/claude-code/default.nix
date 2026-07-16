@@ -127,6 +127,14 @@ in
           # nix-daemon socket / store 書き込みが sandbox と相性が悪い
           "nix *"
           "darwin-rebuild *"
+          # pre-commit の unstaged-stash が Read(.env*) / Claude Code の built-in
+          # deny (`./secrets`, `**/*.key` 等) に阻まれて "unable to create file
+          # ...: File exists" で ロールバックする。
+          # git commit -> pre-commit -> git stash が .envrc / secrets/*.yaml を
+          # 読み書きできず、hook 完走後の git checkout でツリーを復元できない
+          # (2026-07-16 実測)。git commit の deny (Bash(git commit --no-gpg-sign:*))
+          # は残っているので、GPG 署名バイパスなどの経路は引き続き遮断される。
+          "git commit *"
         ];
         network = {
           # dev server 等の localhost バインドを許可
