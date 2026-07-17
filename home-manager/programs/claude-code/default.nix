@@ -204,8 +204,8 @@ in
           "Read(.env*)"
           "Bash(sudo:*)"
           "Bash(git commit --no-gpg-sign:*)"
-          "Write(~/.ssh/**)"
-          "Write(.env*)"
+          "Edit(~/.ssh/**)"
+          "Edit(.env*)"
         ];
         defaultMode = "auto";
       };
