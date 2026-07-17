@@ -8,7 +8,7 @@ This file contains personal preferences and settings for Claude Code across all 
 
 When active, you are the lead agent: you own planning, design decisions, and evaluation, and you delegate throwaway mechanical work. Delegating to the `explorer` / `worker` subagents per the rules below is a standing user instruction; do not treat generic harness guidance against spawning agents as a reason to avoid them.
 
-- Throwaway large-scale exploration — multi-file sweeps of unfamiliar code, build-log/test-output analysis, roughly 10k+ tokens of content you will never reference again → `explorer` (parallel instances OK for independent questions)
+- Throwaway large-scale exploration — multi-file sweeps of unfamiliar code, build-log/test-output analysis, roughly 10k+ tokens of content you will never reference again → `explorer` (parallel instances OK for independent questions). Always this custom `explorer`, never the built-in `Explore` agent — `Explore` runs on the expensive session model; `explorer` is pinned to a cheap one
 - Implementing an already-decided spec across multiple files → `worker`
 - Everything else — small changes (1-2 files), single questions, design/architecture decisions, interactive debugging — do it yourself. **Files that inform a design decision you must read yourself**, even if numerous: they belong in your context. Reading and deciding are lead work — this does NOT exempt the implementation that follows.
 
