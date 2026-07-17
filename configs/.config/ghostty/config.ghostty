@@ -13,7 +13,11 @@ quick-terminal-size = 40%
 
 window-save-state = always
 macos-option-as-alt = true
-macos-titlebar-style = tabs
+
+# herdr がウィンドウタイトル (OSC 2) を独占して "herdr <workspace>" 固定になり
+# 情報密度がゼロなので、titlebar 自体を隠して垂直領域を稼ぐ。
+# 副作用: traffic light が消える / ドラッグは option+click。
+macos-titlebar-style = hidden
 
 keybind = clear
 
@@ -37,17 +41,4 @@ keybind = copy=copy_to_clipboard
 keybind = super+v=paste_from_clipboard
 keybind = paste=paste_from_clipboard
 
-# split
-keybind = super+j>minus=new_split:down
-keybind = super+j>backslash=new_split:right
-keybind = super+j>h=goto_split:left
-keybind = super+j>j=goto_split:down
-keybind = super+j>k=goto_split:up
-keybind = super+j>l=goto_split:right
-keybind = super+j>shift+period=resize_split:up,10
-keybind = super+j>shift+comma=resize_split:down,10
-keybind = super+j>z=toggle_split_zoom
-
-# tab
-keybind = super+t=new_tab
-keybind = ctrl+tab=next_tab
+# split / tab は herdr (prefix=ctrl+j) が管轄するため ghostty 側では持たない。

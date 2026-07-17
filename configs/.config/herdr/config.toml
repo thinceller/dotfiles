@@ -17,30 +17,10 @@ resume_agents_on_restore = true
 # tmux の `prefix = "C-j"` を継承。
 prefix = "ctrl+j"
 
-# tmux `bind | split-window -h` — 縦分割 (画面を左右に割る) を `|` に。
-# herdr の key parser には `bar` alias が無く、`|` は Shift+`\` として渡す必要が
-# ある (src/config/keybinds.rs の parse_key_combo 参照)。配列でデフォルトの
-# `prefix+v` も残す。
-split_vertical = ["prefix+shift+backslash", "prefix+v"]
-
 # tmux `bind -r C-h select-window -t :-` / `C-l` -> 次の window。
 # herdr のタブ = tmux の window。
 previous_tab = "prefix+ctrl+h"
 next_tab = "prefix+ctrl+l"
-
-# tmux `bind s` (tcmux switch-session) に相当する workspace 選択。
-# 純正の choose-tree ではなく fuzzy picker が開く。
-workspace_picker = "prefix+s"
-
-# tmux `bind C new-session` — workspace = herdr の session 概念。
-new_workspace = "prefix+shift+c"
-
-# tmux `bind r source-file ~/.config/tmux/tmux.conf` の herdr 版。
-[[keys.command]]
-key = "prefix+r"
-type = "shell"
-command = "herdr server reload-config"
-description = "reload herdr config"
 
 [ui]
 # tmux-agent-sidebar の情報密度を herdr で再現するため、
