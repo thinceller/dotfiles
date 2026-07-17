@@ -36,8 +36,8 @@ in
       recursive = true;
     };
     # Ghostty
-    "ghostty/config" = {
-      source = symlink /${rootDir}/.config/ghostty/config;
+    "ghostty/config.ghostty" = {
+      source = symlink /${rootDir}/.config/ghostty/config.ghostty;
     };
     # herdr
     # 単一ファイル symlink にする理由: herdr は ~/.config/herdr/ 配下に
