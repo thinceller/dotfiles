@@ -20,6 +20,9 @@ let
   statuslineScript = pkgs.writeShellScript "claude-statusline" (
     builtins.readFile ./statusline-command.sh
   );
+  checkUserMemoryScript = pkgs.writeShellScript "claude-check-user-memory" (
+    builtins.readFile ./hooks/check-user-memory.sh
+  );
 
   # herdr integration (Claude Code): `herdr integration install claude` が
   # 書き出す ~/.claude/hooks/herdr-agent-state.sh と等価。上流 (ogulcancelik/herdr,
@@ -241,6 +244,17 @@ in
       hooks =
         herdrClaudeHooks
         // {
+          # user memory (~/.claude/CLAUDE.md) の消失検知。詳細は hooks/check-user-memory.sh 冒頭。
+          SessionStart = herdrClaudeHooks.SessionStart ++ [
+            {
+              hooks = [
+                {
+                  type = "command";
+                  command = checkUserMemoryScript;
+                }
+              ];
+            }
+          ];
           # herdr の汎用 PreToolUse エントリと、既存の ExitPlanMode 用エントリを共存させる。
           PreToolUse = herdrClaudeHooks.PreToolUse ++ [
             {
