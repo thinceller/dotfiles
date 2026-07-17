@@ -15,6 +15,7 @@
     ./gh
     ./git
     ./htop
+    ./hunk
     ./jq
     ./lazygit
     ./lsd

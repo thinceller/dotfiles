@@ -11,6 +11,7 @@ let
     gh-prism
     cage
     nixpkgs-codex
+    hunk
     ;
   system = "aarch64-darwin";
   userConfig =
@@ -63,6 +64,7 @@ nix-darwin.lib.darwinSystem {
         sops-nix.homeManagerModules.sops
         nix-index-database.homeModules.nix-index
         gh-prism.homeManagerModules.default
+        hunk.homeManagerModules.default
       ];
       home-manager.extraSpecialArgs = {
         inherit
