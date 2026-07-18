@@ -9,6 +9,9 @@ window-padding-x = 8
 window-padding-y = 8
 theme = tokyonight
 
+background-opacity = 0.9
+background-blur = 20
+
 quick-terminal-size = 40%
 
 window-save-state = always
