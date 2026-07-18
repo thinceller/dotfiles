@@ -1,11 +1,20 @@
 {
   pkgs,
   lib,
+  config,
   userConfig,
   ...
 }:
 let
   inherit (userConfig) isPersonal;
+
+  # ローカル ./skills 配下の各 skill ディレクトリを attrset として展開し、
+  # hunk パッケージ同梱の agent skill (hunk-review) をマージする。
+  # 上流の home-manager モジュールは `skills` を attrs か path の
+  # いずれでも受けるので、attrs 形式に統一して両立させている。
+  localSkills = lib.mapAttrs (name: _type: ./skills + "/${name}") (
+    lib.filterAttrs (_name: type: type == "directory") (builtins.readDir ./skills)
+  );
 
   openPlanScript = pkgs.writeShellScript "claude-open-plan" (builtins.readFile ./hooks/open-plan.sh);
   vaultSessionLogScript = pkgs.writeShellScript "claude-vault-session-log" (
@@ -360,7 +369,9 @@ in
     context = ./user-memory.md;
 
     agentsDir = ./agents;
-    skills = ./skills;
+    skills = localSkills // {
+      hunk-review = "${config.programs.hunk.package}/skills/hunk-review";
+    };
     # hooksDir = ./hooks;
   }
   // lib.optionalAttrs isPersonal {

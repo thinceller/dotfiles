@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  config,
   sources,
   userConfig,
   ...
@@ -98,6 +99,11 @@ lib.mkIf userConfig.isPersonal {
     };
 
     context = ./AGENTS.md;
+
+    # hunk 同梱の agent skill を opencode にも展開する。
+    skills = {
+      hunk-review = "${config.programs.hunk.package}/skills/hunk-review";
+    };
   };
 
   xdg.configFile."opencode/plugins/tmux-agent-sidebar.js" = {
