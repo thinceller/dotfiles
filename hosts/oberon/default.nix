@@ -7,7 +7,7 @@ let
     edgepkgs
     hermes-agent
     nix-index-database
-    home-manager
+    home-manager-stable
     ;
   # oberon は cache 安定性のため NixOS stable channel を使う (unstable ではない)。
   nixpkgs = inputs.nixpkgs-stable;
@@ -41,7 +41,9 @@ nixpkgs.lib.nixosSystem {
     disko.nixosModules.disko
     hermes-agent.nixosModules.default
     nix-index-database.nixosModules.nix-index
-    home-manager.nixosModules.home-manager
+    # unstable HM は nixpkgs-stable と組み合わせると eval が壊れるため release branch を使う
+    # (flake.nix の home-manager-stable コメント参照)。
+    home-manager-stable.nixosModules.home-manager
     {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;

@@ -125,7 +125,8 @@ in
     };
 
     # user memory と skills は darwin と共有 (herdr スキル等をそのまま使う)。
-    context = shared + "/user-memory.md";
-    skills = shared + "/skills";
+    # option 名は HM release-25.11 のもの (darwin の unstable HM では context / skills)。
+    memory.source = shared + "/user-memory.md";
+    skillsDir = shared + "/skills";
   };
 }

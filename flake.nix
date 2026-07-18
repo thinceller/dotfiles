@@ -29,6 +29,13 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # oberon (nixpkgs-stable) 用。unstable の home-manager は stable に無い
+    # nixpkgs パス (lib/services/lib.nix 等) を参照して eval が壊れるため、
+    # NixOS 側は release branch を stable nixpkgs とペアで使う。
+    home-manager-stable = {
+      url = "github:nix-community/home-manager/release-25.11";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+    };
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";

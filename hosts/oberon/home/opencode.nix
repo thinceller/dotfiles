@@ -15,15 +15,13 @@
     # nixos-25.11 の opencode (Mac の unstable 版よりバージョンが古い可能性あり)。
     # settings のキーが古い版に拒否されたらそのキーを外す方針。unstable からの
     # 取り込みは eval RAM コストがあるため最終手段。
+    # NOTE: HM release-25.11 の opencode モジュールには extraPackages / tui
+    # option が無いため、依存ツールは home.packages で供給し、theme は
+    # settings (opencode config) 直下に書く。
     package = pkgs.opencode;
 
-    extraPackages = with pkgs; [
-      git
-      gh
-      ripgrep
-    ];
-
     settings = {
+      theme = "tokyonight";
       model = "opencode-go/glm-5.2";
       small_model = "opencode-go/minimax-m3";
       autoupdate = false;
@@ -69,12 +67,13 @@
         ];
       };
     };
-
-    tui = {
-      theme = "tokyonight";
-      mouse = true;
-    };
   };
+
+  # extraPackages option が 25.11 HM に無いため、opencode が呼ぶツールを直接供給する。
+  home.packages = with pkgs; [
+    git
+    gh
+  ];
 
   # herdr integration (darwin と同一ファイルを共有。HERDR_INTEGRATION_VERSION=8)。
   xdg.configFile."opencode/plugins/herdr-agent-state.js".source =
