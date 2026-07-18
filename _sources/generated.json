@@ -41,6 +41,27 @@
         },
         "version": "cafaaabe63c124bf0714f89ec715cfe9ece87fa2"
     },
+    "hydro": {
+        "cargoLock": null,
+        "date": "2026-02-24",
+        "extract": null,
+        "name": "hydro",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "jorgebucaran",
+            "repo": "hydro",
+            "rev": "f130b55ee3eaf099eccf588e2a62e5447068d120",
+            "sha256": "sha256-Dfq974KpD1mtQKznIlkXfZfDnSF/4MfLTA18Ak0LADE=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "f130b55ee3eaf099eccf588e2a62e5447068d120"
+    },
     "tmux-agent-sidebar": {
         "cargoLock": null,
         "date": null,

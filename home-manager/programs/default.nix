@@ -26,7 +26,6 @@
     ./opencode
     ./ripgrep
     ./ssh
-    ./starship
     ./tmux
   ];
 }

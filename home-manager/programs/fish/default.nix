@@ -58,6 +58,10 @@ in
         name = sources.fish-ghq.pname;
         src = sources.fish-ghq.src;
       }
+      {
+        name = sources.hydro.pname;
+        src = sources.hydro.src;
+      }
     ];
     interactiveShellInit = ''
       if test -f "${dotfilesDir}/env.fish"
@@ -72,6 +76,23 @@ in
       op completion fish | source
       export TEST=$(cat ${config.sops.secrets.test.path})
       export DISCORD_BOT_TOKEN=$(cat ${config.sops.secrets.discord-bot-token.path})
+
+      # hydro prompt (tokyonight palette)
+      set -g hydro_color_pwd 7dcfff
+      set -g hydro_color_git bb9af7
+      set -g hydro_color_prompt 7aa2f7
+      set -g hydro_color_error f7768e
+      set -g hydro_color_duration e0af68
+      set -g hydro_multiline true
+
+      # starship の add_newline 相当: prompt の前に空行を挟む
+      if not functions -q _hydro_original_prompt
+        functions -c fish_prompt _hydro_original_prompt
+        function fish_prompt
+          echo
+          _hydro_original_prompt
+        end
+      end
 
       # nvim の :terminal から起動された fish では direnv state が継承されるが
       # fish_add_path / mise activate に PATH を上書きされる。reload で復元する。
