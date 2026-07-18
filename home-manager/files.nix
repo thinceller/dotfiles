@@ -22,6 +22,10 @@ in
     ".bash_profile" = {
       source = symlink /${rootDir}/.bash_profile;
     };
+    # herdr プロジェクトランチャー (configs/bin/herdr-launch)。
+    ".local/bin/herdr-launch" = {
+      source = symlink /${rootDir}/bin/herdr-launch;
+    };
   };
 
   xdg.configFile = {

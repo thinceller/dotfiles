@@ -1,0 +1,106 @@
+#!/usr/bin/env fish
+# herdr-launch — ghq リポジトリを herdr workspace として定型レイアウトで開く。
+# herdr の popup keybind (prefix+ctrl+o) から起動する前提。
+#
+# モード:
+#   open      リポジトリ本体を workspace として開く
+#   worktree  新規ブランチの git worktree を作って開く (自分の作業用)
+#   pr-review PR ブランチの worktree を作り、hunk レビュー + claude /code-review
+#
+# リポジトリルートに実行可能な .herdr-setup.fish があれば、レイアウト構築後に
+# HERDR_LAUNCH_WORKSPACE_ID / HERDR_LAUNCH_MODE を渡して実行する。
+
+# --- リポジトリ選択 ---
+set -l ghq_root (ghq root); or exit 1
+set -l repo (ghq list | fzf --prompt='repo> ')
+test -n "$repo"; or exit 0
+set -l repo_path $ghq_root/$repo
+set -l repo_name (basename $repo)
+
+# --- モード選択 ---
+set -l mode (printf '%s\n' open worktree pr-review | fzf --prompt='mode> ')
+test -n "$mode"; or exit 0
+
+set -l created # workspace 作成系コマンドの JSON レスポンス
+set -l default_branch
+
+switch $mode
+    case open
+        set created (herdr workspace create --cwd $repo_path --label $repo_name --focus)
+        or exit 1
+
+    case worktree
+        read -l -P 'branch> ' branch; or exit 0
+        test -n "$branch"; or exit 0
+        set created (herdr worktree create --cwd $repo_path --branch $branch --focus --json)
+        or exit 1
+
+    case pr-review
+        cd $repo_path # gh はカレントディレクトリのリポジトリを対象にする
+        # 自分宛てにレビュー依頼された PR を優先表示し、0 件なら全 open PR に
+        # フォールバックする (どちらのモードかは fzf のプロンプトで分かる)。
+        set -l pr_jq '.[] | "\(.number)\t\(.title)\t\(.author.login)"'
+        set -l pr_prompt 'pr (review-requested)> '
+        set -l pr_lines (gh pr list --limit 50 --search 'review-requested:@me' \
+            --json number,title,author --jq $pr_jq)
+        if test -z "$pr_lines"
+            set pr_prompt 'pr (all)> '
+            set pr_lines (gh pr list --limit 50 --json number,title,author --jq $pr_jq)
+        end
+        set -l pr_number (printf '%s\n' $pr_lines | fzf --prompt=$pr_prompt | cut -f1)
+        test -n "$pr_number"; or exit 0
+
+        # デフォルトブランチを検出 (/code-review の引数と hunk diff の基準に使う)。
+        # origin/HEAD が未設定のリポジトリでは gh にフォールバックする。
+        set default_branch (git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null \
+            | string replace 'origin/' '')
+        if test -z "$default_branch"
+            set default_branch (gh repo view --json defaultBranchRef --jq .defaultBranchRef.name)
+        end
+
+        # detached worktree に PR を checkout する。--detach なのでローカルブランチを
+        # 作らず、fork からの PR でも動く。再実行時は既存 worktree を使い回す。
+        set -l wt_path ~/.herdr/worktrees/$repo_name/pr-$pr_number
+        if not test -d $wt_path
+            git worktree add --detach $wt_path; or exit 1
+        end
+        cd $wt_path
+        gh pr checkout $pr_number --detach; or exit 1
+        git fetch origin $default_branch
+        set created (herdr worktree open --cwd $repo_path --path $wt_path --label pr-$pr_number --focus --json)
+        or exit 1
+end
+
+# --- workspace / 初期タブ / 初期ペインを JSON レスポンスから解決 ---
+set -l ws (echo $created | jq -r '.result.workspace.workspace_id')
+set -l agent_tab (echo $created | jq -r '.result.tab.tab_id')
+set -l agent_pane (echo $created | jq -r '.result.root_pane.pane_id')
+set -l work_path (echo $created | jq -r '.result.root_pane.cwd')
+
+# --- 共通レイアウト: agent タブ (claude) + editor タブ (nvim) ---
+herdr tab rename $agent_tab agent
+if test $mode = pr-review
+    herdr pane run $agent_pane "claude \"/code-review xhigh $default_branch\""
+else
+    herdr pane run $agent_pane claude
+end
+
+set -l editor (herdr tab create --workspace $ws --cwd $work_path --label editor --no-focus)
+herdr pane run (echo $editor | jq -r '.result.root_pane.pane_id') nvim
+
+# --- pr-review: デフォルトブランチとの diff を hunk で開く review タブ ---
+if test $mode = pr-review
+    set -l review (herdr tab create --workspace $ws --cwd $work_path --label review --no-focus)
+    # hunk diff <ref> は working tree と <ref> の直接比較。デフォルトブランチ側の
+    # 先行コミットを差分に混ぜないよう merge-base を基準にする。
+    set -l diff_base (git -C $work_path merge-base origin/$default_branch HEAD)
+    herdr pane run (echo $review | jq -r '.result.root_pane.pane_id') "hunk diff $diff_base"
+end
+
+herdr tab focus $agent_tab
+
+# --- プロジェクト固有セットアップ (規約ファイル) ---
+if test -x $work_path/.herdr-setup.fish
+    env HERDR_LAUNCH_WORKSPACE_ID=$ws HERDR_LAUNCH_MODE=$mode \
+        fish -c "cd $work_path; and ./.herdr-setup.fish"
+end

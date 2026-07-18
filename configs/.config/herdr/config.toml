@@ -71,6 +71,18 @@ description = "open scratch fish shell in popup"
 width = "80%"
 height = "80%"
 
+# プロジェクトランチャー — ghq+fzf でリポジトリを選び、定型レイアウト
+# (agent / editor タブ) の workspace を開く。configs/bin/herdr-launch 参照。
+# popup command は /bin/sh -c で実行され ~/.local/bin が PATH にない場合が
+# あるため、login fish 経由で起動する。
+[[keys.command]]
+key = "prefix+ctrl+o"
+type = "popup"
+command = "fish -l -c herdr-launch"
+description = "open project launcher (ghq + fzf)"
+width = "80%"
+height = "60%"
+
 [ui]
 # tmux-agent-sidebar の情報密度を herdr で再現するため、
 # ペイン境界に検出したエージェント名を出す。
