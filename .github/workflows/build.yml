@@ -38,6 +38,31 @@ jobs:
         run: |
           nix build .#darwinConfigurations.${{ matrix.host }}.system --show-trace
 
+  # oberon (NixOS) は eval チェックのみ:
+  # - HM モジュール互換・オプション typo・構文エラーという主要リグレッションは eval で捕捉できる
+  # - フルビルドは herdr-bin など fetchurl 資材と Cachix の linux seed が前提になるため、
+  #   linux 向け Cachix 運用 (docs/reference/LINUX_BUILDER.md) が安定したら昇格を検討する
+  eval-oberon:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v17
+        with:
+          name: thinceller-dotfiles
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          extraPullNames: nix-community
+
+      - name: Evaluate NixOS configuration
+        run: |
+          nix eval .#nixosConfigurations.oberon.config.system.build.toplevel.drvPath --show-trace
+
   diff:
     if: github.event_name == 'pull_request'
     runs-on: macos-latest

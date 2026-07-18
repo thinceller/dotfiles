@@ -19,6 +19,7 @@
     git-wt
     google-cloud-sdk
     graphviz
+    mosh
     nix-search-cli
     nixfmt
     nodejs_24

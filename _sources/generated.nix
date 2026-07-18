@@ -30,6 +30,14 @@
     };
     date = "2021-07-16";
   };
+  herdr-bin = {
+    pname = "herdr-bin";
+    version = "v0.7.4";
+    src = fetchurl {
+      url = "https://github.com/ogulcancelik/herdr/releases/download/v0.7.4/herdr-linux-x86_64";
+      sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    };
+  };
   hydro = {
     pname = "hydro";
     version = "f130b55ee3eaf099eccf588e2a62e5447068d120";

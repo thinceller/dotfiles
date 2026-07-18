@@ -20,4 +20,18 @@
       "--accept-dns=true"
     ];
   };
+
+  # mosh: Tailscale (UDP が通る) 上で回線切替・スリープに強い接続を提供する。
+  # スマホ (Blink Shell 等) からのモバイル接続で SSH 断の概念をほぼ消す。
+  # UDP は tailscale0 インターフェイス限定で開け、firewall 全閉ポリシーを維持する。
+  programs.mosh = {
+    enable = true;
+    openFirewall = false;
+  };
+  networking.firewall.interfaces."tailscale0".allowedUDPPortRanges = [
+    {
+      from = 60000;
+      to = 61000;
+    }
+  ];
 }
