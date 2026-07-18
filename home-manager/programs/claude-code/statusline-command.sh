@@ -206,3 +206,23 @@ line4="📅 7d [${seven_bar}] \033[${seven_color}m${seven_pct_str}\033[0m  🔄 
 
 printf '%b\n%b\n%b\n%b' "$line1" "$line2" "$line3" "$line4"
 _output_done=1
+
+# ── herdr sidebar metadata ───────────────────────────────────────────
+# herdr pane 内なら model / effort / ctx をカスタムトークンとして報告し、
+# サイドバーの Claude エントリ (configs/.config/herdr/config.toml の
+# rows_by_agent.claude) に表示させる。best-effort: 失敗しても statusline
+# 本体には影響させず、描画を遅らせないようバックグラウンドで実行する。
+if [[ "${HERDR_ENV:-}" == "1" && -n "${HERDR_PANE_ID:-}" ]] && command -v herdr >/dev/null 2>&1; then
+  herdr_args=(
+    pane report-metadata "$HERDR_PANE_ID"
+    --source custom:claude-statusline
+    --token "model=${model}"
+    --token "ctx=ctx ${ctx_pct}%"
+  )
+  if [[ -n "$effort" ]]; then
+    herdr_args+=(--token "effort=⚡${effort}")
+  else
+    herdr_args+=(--clear-token effort)
+  fi
+  herdr "${herdr_args[@]}" >/dev/null 2>&1 &
+fi

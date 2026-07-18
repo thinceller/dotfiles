@@ -94,6 +94,33 @@ show_agent_labels_on_pane_borders = true
 pane_gaps = false
 
 agent_panel_sort = "spaces"
+
+# 展開時サイドバーの最大幅。デフォルト 36 だとタスク要約 (terminal_title) や
+# メタデータ行が切れがちなので 1.5 倍に広げる。
+sidebar_width = 54
+sidebar_max_width = 54
+
+# 0.7.4 で packed layout がデフォルトになったので、旧来の間隔 (エントリ間 1 行) に戻す。
+[ui.sidebar.agents]
+row_gap = 1
+
+# Claude Code の agent エントリにセッション詳細を表示する。
+# 1 行目: tab 名の代わりに、Claude Code がターミナルタイトルに出す
+# 現在のタスク要約 (terminal_title_stripped) を出す。
+# 2 行目: 検出された agent 名 ("claude")。
+# 3 行目: statusline スクリプト (home-manager/programs/claude-code/
+# statusline-command.sh) が `herdr pane report-metadata` で報告する
+# カスタムトークン ($model / $effort / $ctx)。
+[ui.sidebar.agents.rows_by_agent]
+claude = [
+  ["state_icon", "workspace", "terminal_title_stripped"],
+  ["agent"],
+  ["$model", "$effort", "$ctx"],
+]
+
+[ui.sidebar.spaces]
+row_gap = 1
+
 [ui.toast]
 # エージェントが blocked / done になった時などに herdr 上で通知する。
 # terminal / system 通知は好みで切り替える。

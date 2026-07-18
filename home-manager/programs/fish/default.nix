@@ -74,6 +74,7 @@ in
       fish_add_path /Applications/Ghostty.app/Contents/MacOS
       git wt --init fish | source
       op completion fish | source
+      herdr completion fish | source
       export TEST=$(cat ${config.sops.secrets.test.path})
       export DISCORD_BOT_TOKEN=$(cat ${config.sops.secrets.discord-bot-token.path})
 
