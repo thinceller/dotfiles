@@ -56,6 +56,13 @@
       # Mnemos の vault 系スキル (経路C 版: terminal + git、MCP なし)。
       # external_dirs は読み取り専用の共有スキルディレクトリ。
       skills.external_dirs = [ "${./hermes-skills}" ];
+      # 秘書的な運用のため、セッションをまたいだ記憶を upstream default に従って明示化。
+      memory.memory_enabled = true;
+      memory.user_profile_enabled = true;
+      # 低リスクなコマンドは自動承認し、高リスクな操作は確認を取る。
+      approvals.mode = "smart";
+      # ユーザー ID や電話番号などの個人識別情報をモデルに渡す前にハッシュ化。
+      privacy.redact_pii = true;
     };
 
     # セッション終了時に knowledge-base vault へ Markdown を書き出して push する
