@@ -67,18 +67,10 @@ When improving code, always verify the following:
 
 ## Code Improvement
 
-**IMPORTANT**: After completing code implementation, select the appropriate tool based on the scale of changes to improve the code.
+**IMPORTANT**: After completing code implementation, run the `simplify` skill to improve the code.
 
-### Tool Selection Criteria
-
-Assess the scale of changes and select a tool based on the following criteria:
-
-- **Small changes** (3 files or fewer, roughly under 100 lines) → `code-simplifier:code-simplifier`
-  - Focuses on code clarity, consistency, and maintainability, refining code to match project coding conventions
-  - Token-efficient (single agent)
-- **Medium to large changes** (4+ files, or 100+ lines) → `/code-review`
-  - Performs parallel review across 3 axes: reusability, quality, and efficiency; detects duplication with existing utilities and structural issues like N+1 patterns
-  - Higher token consumption due to 3 parallel agents, but prevents oversights in medium-to-large changes
+- `simplify` reviews the changed code for reuse, simplification, efficiency, and altitude cleanups, then applies the fixes
+- It targets quality only — it does not hunt for bugs; use `/code-review` when a bug-focused review is needed
 
 ### When to Run
 - After completing code edits, before verification
@@ -86,8 +78,7 @@ Assess the scale of changes and select a tool based on the following criteria:
 - When creating a Todo list, always add a code improvement task
 
 ### How to Run
-- **code-simplifier**: Launch a subagent using the Agent tool (subagent_type: "code-simplifier:code-simplifier")
-- **/code-review**: Execute using the Skill tool
+- Execute the `simplify` skill using the Skill tool
 - Target: recently changed code files
 
 ## Command Execution via Nix

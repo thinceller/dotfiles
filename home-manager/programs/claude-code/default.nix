@@ -339,7 +339,6 @@ in
         "skill-creator@claude-plugins-official" = true;
         "frontend-design@claude-plugins-official" = true;
         "ralph-loop@claude-plugins-official" = true;
-        "code-simplifier@claude-plugins-official" = true;
         # "code-review@claude-plugins-official" = true;
         # "pr-review-toolkit@claude-plugins-official" = true;
         "discord@claude-plugins-official" = true;
