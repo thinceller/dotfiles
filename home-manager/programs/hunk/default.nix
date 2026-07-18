@@ -9,6 +9,7 @@
       theme = "github-dark-default";
       mode = "auto";
       line_numbers = true;
+      wrap = true;
     };
   };
 }
