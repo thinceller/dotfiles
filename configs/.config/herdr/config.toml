@@ -22,6 +22,55 @@ prefix = "ctrl+j"
 previous_tab = "prefix+ctrl+h"
 next_tab = "prefix+ctrl+l"
 
+# popup 系: セッションモーダルで開いて、コマンド終了で自動的に閉じる。
+# tmux の `display-popup` 相当。ペイン構成を汚さずに一時的な TUI を差し込める。
+
+# lazygit — tmux の `bind g run-shell "tmux popup lazygit"` 相当。
+[[keys.command]]
+key = "prefix+ctrl+g"
+type = "popup"
+command = "lazygit"
+description = "open lazygit in popup"
+width = "90%"
+height = "90%"
+
+# hunk — 作業ツリーの差分ビューア。単独起動だと help が出て即 exit するので `diff` を明示。
+[[keys.command]]
+key = "prefix+ctrl+d"
+type = "popup"
+command = "hunk diff"
+description = "open hunk diff (working tree) in popup"
+width = "90%"
+height = "90%"
+
+# btm — CPU / メモリを一瞬チラ見して閉じる用途。
+[[keys.command]]
+key = "prefix+ctrl+t"
+type = "popup"
+command = "btm"
+description = "open bottom (resource monitor) in popup"
+width = "90%"
+height = "90%"
+
+# gh dash — PR / issue の一覧を差し込みで開く。
+[[keys.command]]
+key = "prefix+ctrl+p"
+type = "popup"
+command = "gh dash"
+description = "open gh dash in popup"
+width = "90%"
+height = "90%"
+
+# scratch fish shell — 今のペインを汚さず 1 発コマンドを叩く用。
+# exit で popup が閉じる。
+[[keys.command]]
+key = "prefix+ctrl+enter"
+type = "popup"
+command = "fish -l"
+description = "open scratch fish shell in popup"
+width = "80%"
+height = "80%"
+
 [ui]
 # tmux-agent-sidebar の情報密度を herdr で再現するため、
 # ペイン境界に検出したエージェント名を出す。
