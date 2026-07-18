@@ -71,8 +71,12 @@ nix build .#darwinConfigurations.kohei-m4-mac-mini.system --no-link --print-out-
   | cachix push thinceller-dotfiles
 ```
 
-**`config` 配下を変更してコミットするたびに、この seed をやり直してから push すること。**
-さもないと CI の `kohei-m4-mac-mini` build job が失敗する。
+**`config` 配下の変更だけでなく、flake.lock の更新 (`nix run .#update`) でも guest closure の
+hash は変わる。guest 由来の derivation が変わるコミットを push する前に、この seed をやり直すこと。**
+さもないと CI の build job が `qemu-x86_64-binfmt-P.drv` の platform mismatch
+(aarch64-linux を macos-latest でビルドできない) で失敗する。両ホストとも同じ guest を
+参照しているので、seed は片方の host の closure を push すれば足りるが、darwin 側の差分も
+cache に載るよう両方 push しておくとよい。
 
 ## ホスト鍵について
 
