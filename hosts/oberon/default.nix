@@ -7,6 +7,7 @@ let
     edgepkgs
     hermes-agent
     nix-index-database
+    home-manager-stable
     ;
   # oberon は cache 安定性のため NixOS stable channel を使う (unstable ではない)。
   nixpkgs = inputs.nixpkgs-stable;
@@ -15,6 +16,9 @@ let
     username = "thinceller";
     hostname = "oberon";
     inherit system;
+    homeDir = "/home/thinceller";
+    dotfilesDir = "/home/thinceller/.dotfiles";
+    isPersonal = true;
   };
 
   pkgs = import nixpkgs {
@@ -24,6 +28,8 @@ let
       edgepkgs.overlays.default
     ];
   };
+
+  sources = pkgs.callPackage ../../_sources/generated.nix { };
 in
 nixpkgs.lib.nixosSystem {
   inherit pkgs;
@@ -35,6 +41,18 @@ nixpkgs.lib.nixosSystem {
     disko.nixosModules.disko
     hermes-agent.nixosModules.default
     nix-index-database.nixosModules.nix-index
+    # unstable HM は nixpkgs-stable と組み合わせると eval が壊れるため release branch を使う
+    # (flake.nix の home-manager-stable コメント参照)。
+    home-manager-stable.nixosModules.home-manager
+    {
+      home-manager.useGlobalPkgs = true;
+      home-manager.useUserPackages = true;
+      home-manager.backupFileExtension = "backup";
+      # HM-sops モジュールは入れない: oberon は system-level sops (/run/secrets/...)
+      # で完結させ、user-scope の age 鍵を増やさない。
+      home-manager.extraSpecialArgs = { inherit userConfig sources; };
+      home-manager.users.${userConfig.username} = import ./home;
+    }
     ./disko.nix
     ./configuration.nix
   ];

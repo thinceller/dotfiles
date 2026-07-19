@@ -22,6 +22,15 @@
     }
   ];
 
+  # claude / opencode は重い Node/Bun プロセスで、forgejo + hermes-agent 常駐の
+  # 2GB RAM では逼迫する。zram はディスク swap より桁違いに速く、swapfile に
+  # 落ちる前の圧縮バッファとしてスパイクを吸収する (zram が優先され、溢れた分
+  # だけ swapfile に行く)。
+  zramSwap = {
+    enable = true;
+    memoryPercent = 50;
+  };
+
   # さくらのVPS は SeaBIOS (legacy BIOS) なので、UEFI 系の systemd-boot ではなく
   # GRUB を BIOS モードで使う。
   # 書き込み先 device は disko 側で EF02 partition から自動設定されるため、

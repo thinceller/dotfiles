@@ -1,5 +1,6 @@
 {
   config,
+  pkgs,
   userConfig,
   ...
 }:
@@ -30,7 +31,25 @@ in
     neededForUsers = true;
   };
 
-  users.users.${userConfig.username}.hashedPasswordFile = config.sops.secrets.${secretName}.path;
+  users.users.${userConfig.username} = {
+    hashedPasswordFile = config.sops.secrets.${secretName}.path;
+    # herdr の default_shell = "fish" と揃え、SSH ログイン直後から同じ環境にする。
+    shell = pkgs.fish;
+  };
+
+  # login shell に使うため /etc/shells 登録 + system 側の vendor 初期化を有効化。
+  # ユーザー設定 (shellInit 等) は home-manager 側 (hosts/oberon/home/) が持つ。
+  programs.fish.enable = true;
+
+  # opencode (interactive 利用) の OpenCode Go トークン。hermes と同じ値だが、
+  # secrets/hermes.env は dotenv 全体が 1 secret (Slack token / GitHub PAT を含む)
+  # のため thinceller には読ませず、トークン単体を secrets/oberon.yaml に複製して
+  # 供給する。ローテーション時は hermes.env と oberon.yaml の両方を更新すること。
+  sops.secrets."opencode-go-api-key" = {
+    sopsFile = ../../secrets/oberon.yaml;
+    owner = userConfig.username;
+    mode = "0400";
+  };
 
   # users / groups を Nix 設定と厳密一致させる (完全 declarative)。
   # mutableUsers = true のままだと nixpkgs update-users-groups.pl の

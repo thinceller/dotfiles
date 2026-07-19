@@ -240,4 +240,4 @@ Mac には `mosh` を入れて `mosh oberon` で接続。
 - [x] Mac を `darwin-rebuild switch`
 - [x] Mac で Tailscale.app ログイン
 - [x] `ssh oberon` が Tailscale 経由で繋がることを検証
-- [ ] (任意) mosh 追加 — 必要になったら検討
+- [x] (任意) mosh 追加 — `hosts/oberon/tailscale.nix` で実装済み (スマホからの利用は [`oberon-mobile-agents.md`](../reference/oberon-mobile-agents.md) 参照)

@@ -3,6 +3,15 @@ src.git = "https://github.com/decors/fish-ghq"
 src.branch = "master"
 fetch.github = "decors/fish-ghq"
 
+# herdr: agent-aware terminal multiplexer (oberon 用)。
+# nixos-25.11 / lock 済み unstable に未収載のため、上流 release の
+# static musl binary を取得する (2GB VPS で rust ソースビルドを避ける)。
+# nixpkgs master には収載済み: locked nixpkgs が追いついたら pkgs.herdr へ移行し
+# このエントリを削除する。
+[herdr-bin]
+src.github = "ogulcancelik/herdr"
+fetch.url = "https://github.com/ogulcancelik/herdr/releases/download/$ver/herdr-linux-x86_64"
+
 [hydro]
 src.git = "https://github.com/jorgebucaran/hydro"
 src.branch = "main"
