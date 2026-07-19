@@ -147,6 +147,16 @@ in
           # (2026-07-16 実測)。git commit の deny (Bash(git commit --no-gpg-sign:*))
           # は残っているので、GPG 署名バイパスなどの経路は引き続き遮断される。
           "git commit *"
+          # sandbox は SSH を SOCKS5 proxy 経由にする GIT_SSH_COMMAND
+          # (ProxyCommand: nc -X 5) を注入するが、proxy は認証必須で macOS の
+          # nc は SOCKS5 認証非対応のため、SSH 越しの git 操作は許可ドメイン
+          # 宛でも "nc: authentication method negotiation failed" で必ず失敗
+          # する (2026-07-19 実測)。HTTPS remote は HTTP proxy 経由で動くので
+          # 対象は SSH transport を使いうるコマンドのみ。
+          "git push *"
+          "git fetch *"
+          "git pull *"
+          "ssh *"
         ];
         network = {
           # dev server 等の localhost バインドを許可
