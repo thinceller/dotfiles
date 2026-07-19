@@ -11,11 +11,11 @@
 # HERDR_LAUNCH_WORKSPACE_ID / HERDR_LAUNCH_MODE を渡して実行する。
 
 # --- リポジトリ選択 ---
-set -l ghq_root (ghq root); or exit 1
-set -l repo (ghq list | fzf --prompt='repo> ')
-test -n "$repo"; or exit 0
-set -l repo_path $ghq_root/$repo
-set -l repo_name (basename $repo)
+# ghq root は複数 (~/src, ~/.dotfiles) あるため、primary root との結合ではなく
+# --full-path でフルパスを直接受け取る。
+set -l repo_path (ghq list --full-path | fzf --prompt='repo> ')
+test -n "$repo_path"; or exit 0
+set -l repo_name (basename $repo_path)
 
 # --- モード選択 ---
 set -l mode (printf '%s\n' open worktree pr-review | fzf --prompt='mode> ')

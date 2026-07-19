@@ -30,7 +30,13 @@
         editor = "vim";
       };
       ghq = {
-        root = "~/src";
+        # dotfiles (~/.dotfiles) も ghq list に載せるため root を複数指定する。
+        # ghq 1.9.4 では git config の解決順 (last wins) で最後のエントリが
+        # primary root (ghq get の clone 先) になるため ~/src を末尾に置く。
+        root = [
+          "~/.dotfiles"
+          "~/src"
+        ];
         # Cloudflare Access で保護された Forgejo は ghq の go-import 検出が通らない
         # (auth せずに HTTP GET すると Access のログイン HTML が返ってきて
         # <meta name="go-import"> が見えないため "unsupported VCS" エラーになる)。
