@@ -80,6 +80,8 @@ herdr agent explain w1:p1                      # why herdr labeled this state
 
 Agent commands accept a unique live agent name or the pane ID hosting it.
 Names are cleared when the occupant exits or is replaced.
+Name rules (strict): start with a lowercase letter; only `[a-z0-9_-]`;
+1-32 chars. Uppercase or leading symbols fail with `invalid_agent_name`.
 
 ## Prompting agents
 
