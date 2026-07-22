@@ -116,16 +116,22 @@ row_gap = 1
 # 2 行目: 検出された agent 名 ("claude")。
 # 3 行目: statusline スクリプト (home-manager/programs/claude-code/
 # statusline-command.sh) が `herdr pane report-metadata` で報告する
-# カスタムトークン ($model / $effort / $ctx)。dim でメタデータらしく落とす。
+# カスタムトークン ($model / $effort / $ctx)。
+# dim だと idle 時のコンテキスト減光と重なって沈みすぎるため、
+# fg 固定 (catppuccin subtext0) で常に読める明るさに保つ。
 # per-token styling は 0.7.5 から。
 [ui.sidebar.agents.rows_by_agent]
 claude = [
-  ["state_icon", "workspace", { token = "terminal_title_stripped", bold = true }],
+  [
+    "state_icon",
+    "workspace",
+    { token = "terminal_title_stripped", bold = true, fg = "#a6adc8" },
+  ],
   ["agent"],
   [
-    { token = "$model", dim = true },
-    { token = "$effort", dim = true },
-    { token = "$ctx", dim = true },
+    { token = "$model", fg = "#a6adc8" },
+    { token = "$effort", fg = "#a6adc8" },
+    { token = "$ctx", fg = "#a6adc8" },
   ],
 ]
 
