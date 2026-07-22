@@ -118,8 +118,8 @@ row_gap = 1
 # statusline-command.sh) が `herdr pane report-metadata` で報告する
 # カスタムトークン ($model / $effort / $ctx)。
 # dim だと idle 時のコンテキスト減光と重なって沈みすぎるため、
-# fg 固定 (catppuccin subtext0) で常に読める明るさに保つ。
-# per-token styling は 0.7.5 から。
+# fg 固定 (catppuccin mocha パレット) で常に読める明るさに保ちつつ
+# 要素ごとに色分けする。per-token styling は 0.7.5 から。
 [ui.sidebar.agents.rows_by_agent]
 claude = [
   [
@@ -129,9 +129,9 @@ claude = [
   ],
   ["agent"],
   [
-    { token = "$model", fg = "#a6adc8" },
-    { token = "$effort", fg = "#a6adc8" },
-    { token = "$ctx", fg = "#a6adc8" },
+    { token = "$model", fg = "#cba6f7" }, # mauve
+    { token = "$effort", fg = "#fab387" }, # peach
+    { token = "$ctx", fg = "#94e2d5" }, # teal
   ],
 ]
 
