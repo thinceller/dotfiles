@@ -17,7 +17,7 @@ trap '
 ICON_REPO=$(printf '\xef\x90\x81')        # nf-oct-repo U+F401
 ICON_FOLDER=$(printf '\xee\xaa\x83')      # nf-cod-folder U+EA83
 ICON_BRANCH=$(printf '\xee\x9c\xa5')      # nf-dev-git_branch U+E725
-ICON_WORKTREE=$(printf '\xee\xa9\xa8')    # nf-cod-source_control U+EA68
+ICON_WORKTREE=$(printf '\xf3\xb0\x99\x85') # nf-md-file_tree U+F0645
 ICON_STAGED=$(printf '\xee\xab\x9c')      # nf-cod-diff_added U+EADC
 ICON_MODIFIED=$(printf '\xee\xab\x9e')    # nf-cod-diff_modified U+EADE
 ICON_UNTRACKED=$(printf '\xee\xa9\xb6')   # nf-cod-question U+EA76
