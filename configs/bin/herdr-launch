@@ -79,11 +79,6 @@ set -l work_path (echo $created | jq -r '.result.root_pane.cwd')
 
 # --- 共通レイアウト: agent タブ (claude) + editor タブ (nvim) ---
 herdr tab rename $agent_tab agent
-if test $mode = pr-review
-    herdr pane run $agent_pane "claude \"/code-review xhigh $default_branch\""
-else
-    herdr pane run $agent_pane claude
-end
 
 set -l editor (herdr tab create --workspace $ws --cwd $work_path --label editor --no-focus)
 herdr pane run (echo $editor | jq -r '.result.root_pane.pane_id') nvim
@@ -98,6 +93,18 @@ if test $mode = pr-review
 end
 
 herdr tab focus $agent_tab
+
+# --- claude を名前付きエージェントとして起動 (0.7.5 の agent start) ---
+# pane run と違い agent 検出・入力可能になるまでブロックするので、
+# レイアウト構築を済ませた最後に実行する。名前を付けておくと以後
+# `herdr agent prompt/wait/read <name>` で操作できる。
+# 名前は live agent 間で一意である必要があるため workspace id を添える。
+set -l agent_name (string replace -ra '[^a-zA-Z0-9_-]' '-' -- "$repo_name-$ws")
+if test $mode = pr-review
+    herdr agent start $agent_name --kind claude --pane $agent_pane -- "/code-review xhigh $default_branch"
+else
+    herdr agent start $agent_name --kind claude --pane $agent_pane
+end
 
 # --- プロジェクト固有セットアップ (規約ファイル) ---
 if test -x $work_path/.herdr-setup.fish

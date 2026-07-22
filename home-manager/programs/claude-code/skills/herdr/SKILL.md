@@ -61,16 +61,46 @@ herdr pane run w1:p2 "claude"
 
 Default to `--no-focus` for background helpers — grabbing focus interrupts the user.
 
-Herdr also has a higher-level `agent` verb that combines split + rename + launch + status wait:
+Herdr also has a higher-level `agent` verb (0.7.5+). `agent start` launches a
+named agent into an EXISTING pane sitting at an interactive shell prompt, and
+returns only after the agent is detected and ready (default timeout 30000ms):
 
 ```bash
-herdr agent start reviewer --cwd ~/project --split right -- pi
-herdr agent start docs --workspace w1 --tab w1:t1 -- claude
+# split first, then start a named agent in the new pane
+new_pane=$(herdr pane split --current --direction right --no-focus | jq -r '.result.pane.pane_id')
+herdr agent start reviewer --kind claude --pane $new_pane
+herdr agent start reviewer --kind codex --pane $new_pane -- <agent-args...>
+
+herdr agent list                               # named/live agents
+herdr agent get reviewer                       # state + metadata
 herdr agent attach reviewer                    # jump to it interactively
-herdr agent attach reviewer --takeover         # take control from another client
 herdr agent rename w1:p1 reviewer
 herdr agent explain w1:p1                      # why herdr labeled this state
 ```
+
+Agent commands accept a unique live agent name or the pane ID hosting it.
+Names are cleared when the occupant exits or is replaced.
+
+## Prompting agents
+
+`agent prompt` submits a prompt and can atomically wait for the outcome —
+prefer this over hand-rolled send-keys + wait loops:
+
+```bash
+# submit and wait until the agent settles (idle / done / blocked)
+herdr agent prompt reviewer "Review the current diff and report only actionable findings." --wait --timeout 120000
+
+# match a specific state instead of the settled default (repeat --until to allow more)
+herdr agent prompt reviewer "run the tests" --wait --until idle --timeout 300000
+
+# interactive controls
+herdr agent send-keys reviewer esc
+herdr agent send-keys reviewer ctrl+c
+```
+
+`--wait` requires an observed state change within 5000ms of submission,
+otherwise it returns `agent_prompt_stalled`. It does not track turns: if the
+agent was already working, that active turn's completion may match.
 
 ## Reading pane output
 
@@ -83,6 +113,9 @@ herdr pane read w1:p2 --source visible
 
 # bottom-buffer snapshot used by state detection
 herdr pane read w1:p2 --source detection
+
+# same, addressed by agent name
+herdr agent read reviewer --source recent-unwrapped --lines 120
 ```
 
 Pass `--format ansi` when styling matters; otherwise omit for plain text.
@@ -90,16 +123,20 @@ Pass `--format ansi` when styling matters; otherwise omit for plain text.
 ## Waiting
 
 ```bash
-# wait until the agent in this pane reaches a state
-herdr wait agent-status w1:p2 --status idle    --timeout 60000
-herdr wait agent-status w1:p2 --status blocked --timeout 300000
-herdr wait agent-status w1:p2 --status done    --timeout 600000
+# wait until an agent (by name or pane ID) reaches a state
+herdr agent wait reviewer --until idle    --timeout 60000
+herdr agent wait w1:p2    --until blocked --timeout 300000
+# without --until: settled-state default (idle / done / blocked)
+herdr agent wait reviewer --timeout 600000
 
 # wait until specific text appears in a pane
-herdr wait output w1:p2 --match "listening on" --timeout 30000
+herdr pane wait-output w1:p2 --match "listening on" --timeout 30000
+herdr pane wait-output w1:p2 --regex "tests? passed" --timeout 120000
 ```
 
 Timeouts are in milliseconds. Always set one — infinite waits deadlock the session.
+(0.7.4 以前の `herdr wait agent-status` / `herdr wait output` / `herdr agent send` は
+0.7.5 で削除された。それぞれ `agent wait` / `pane wait-output` / `agent send-keys` を使う。)
 
 ## Custom status reporting (integrations)
 

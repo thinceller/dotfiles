@@ -13,6 +13,12 @@ default_shell = "fish"
 # detach / 再ログイン後もエージェントを状態ごと復元する。
 resume_agents_on_restore = true
 
+[update]
+# herdr は Nix flake 管理 (nix run .#update で更新) なので、
+# herdr 自身のバックグラウンド更新チェック通知は不要。
+# manifest_check (agent 検出マニフェスト) はデフォルトの有効のまま。
+version_check = false
+
 [keys]
 # tmux の `prefix = "C-j"` を継承。
 prefix = "ctrl+j"
@@ -106,16 +112,21 @@ row_gap = 1
 
 # Claude Code の agent エントリにセッション詳細を表示する。
 # 1 行目: tab 名の代わりに、Claude Code がターミナルタイトルに出す
-# 現在のタスク要約 (terminal_title_stripped) を出す。
+# 現在のタスク要約 (terminal_title_stripped) を出す。bold で目立たせる。
 # 2 行目: 検出された agent 名 ("claude")。
 # 3 行目: statusline スクリプト (home-manager/programs/claude-code/
 # statusline-command.sh) が `herdr pane report-metadata` で報告する
-# カスタムトークン ($model / $effort / $ctx)。
+# カスタムトークン ($model / $effort / $ctx)。dim でメタデータらしく落とす。
+# per-token styling は 0.7.5 から。
 [ui.sidebar.agents.rows_by_agent]
 claude = [
-  ["state_icon", "workspace", "terminal_title_stripped"],
+  ["state_icon", "workspace", { token = "terminal_title_stripped", bold = true }],
   ["agent"],
-  ["$model", "$effort", "$ctx"],
+  [
+    { token = "$model", dim = true },
+    { token = "$effort", dim = true },
+    { token = "$ctx", dim = true },
+  ],
 ]
 
 [ui.sidebar.spaces]
