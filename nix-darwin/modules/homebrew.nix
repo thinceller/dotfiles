@@ -30,7 +30,6 @@
       "acsandmann/tap/rift"
       "k1LoW/tap/mo"
       "k1LoW/tap/tcmux"
-      "herdr"
       "pinentry-mac"
       "vite-plus"
       {

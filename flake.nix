@@ -69,6 +69,11 @@
       url = "github:modem-dev/hunk";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # master 追従 (preview 相当)。`nix run .#update` で最新化される。
+    herdr = {
+      url = "github:ogulcancelik/herdr";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # codex 0.125.0 (gpt-5.5 サポート: 0.123 以降) を含む nixpkgs リビジョン。
     # cache.nixos.org にビルド済みの最新を選んでいる。
     # 通常の nixpkgs が追いついたら削除する。

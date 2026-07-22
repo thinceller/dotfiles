@@ -12,6 +12,7 @@ let
     cage
     nixpkgs-codex
     hunk
+    herdr
     ;
   system = "aarch64-darwin";
   userConfig =
@@ -38,6 +39,7 @@ let
       edgepkgs.overlays.default
       (_final: _prev: {
         cage = cage.packages.${system}.default;
+        herdr = herdr.packages.${system}.default;
         # gpt-5.5 サポート (codex 0.123+) のため、locked nixpkgs が
         # 追いつくまで nixpkgs-codex から codex を上書き取得する。
         codex = pkgs-codex.codex;
