@@ -116,12 +116,6 @@ in
       cleanupPeriodDays = 9999;
 
       model = "fable";
-      # 主モデルが overloaded / unavailable のときに順に試すチェーン (そのターン限り)。
-      # "opus" alias は env の ANTHROPIC_DEFAULT_OPUS_MODEL ピンに解決される。
-      fallbackModel = [
-        "opus"
-        "claude-sonnet-5"
-      ];
       # advisorModel = "opus";
       # effortLevel = "xhigh";
       voiceEnabled = true;
