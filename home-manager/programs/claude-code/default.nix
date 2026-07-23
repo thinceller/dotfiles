@@ -41,6 +41,12 @@ let
     builtins.readFile ./hooks/herdr-agent-state.sh
   );
 
+  # herdr sidebar に直近使用した tool 名 + 短い要約を表示するための PreToolUse hook。
+  # configs/.config/herdr/config.toml の rows_by_agent.claude 4 行目 ($tool) と対応する。
+  herdrToolMetadataScript = pkgs.writeShellScript "claude-herdr-tool-metadata" (
+    builtins.readFile ./hooks/herdr-tool-metadata.sh
+  );
+
   # `herdr integration install claude` が settings.json に登録する hook 群
   # (src/integration/targets.rs::install_claude と一致)。
   # 引数はエージェント状態のヒントで、SessionStart 以外の呼び出しは script 内で
@@ -285,6 +291,16 @@ in
                 {
                   type = "command";
                   command = openPlanScript;
+                }
+              ];
+            }
+            {
+              matcher = "*";
+              hooks = [
+                {
+                  type = "command";
+                  command = herdrToolMetadataScript;
+                  timeout = 10;
                 }
               ];
             }
