@@ -110,11 +110,19 @@ in
       cleanupPeriodDays = 9999;
 
       model = "fable";
+      # 主モデルが overloaded / unavailable のときに順に試すチェーン (そのターン限り)。
+      # "opus" alias は env の ANTHROPIC_DEFAULT_OPUS_MODEL ピンに解決される。
+      fallbackModel = [
+        "opus"
+        "claude-sonnet-5"
+      ];
       # advisorModel = "opus";
       # effortLevel = "xhigh";
       voiceEnabled = true;
       skipAutoPermissionPrompt = true;
       useAutoModeDuringPlan = true;
+      # fullscreen (alt-screen) レンダラー。旧 env CLAUDE_CODE_NO_FLICKER=1 と等価。
+      tui = "fullscreen";
 
       # Claude Code 組み込み sandbox (macOS: Seatbelt)。
       # cage と二重に Seatbelt をネストすると失敗するため、これを使うときは
@@ -233,7 +241,6 @@ in
         BASH_DEFAULT_TIMEOUT_MS = "60000";
         BASH_MAX_TIMEOUT_MS = "180000";
         CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR = "1";
-        USE_BUILTIN_RIPGREP = "1";
 
         ANTHROPIC_DEFAULT_OPUS_MODEL = "claude-opus-4-7[1m]";
 
@@ -243,12 +250,8 @@ in
         # Nix wrapper を PATH shadow する (2026-06-28, 2026-07-05 に再発)。
         DISABLE_AUTOUPDATER = "1";
 
-        ENABLE_TOOL_SEARCH = true;
-        CLAUDE_CODE_ENABLE_TASKS = true;
         CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1";
         CLAUDE_CODE_NEW_INIT = "1";
-        CLAUDE_CODE_NO_FLICKER = "1";
-        CLAUDE_AFK_TIMEOUT_MS = "86400000";
 
         # codex-plugin-cc が thread/start に sandbox: "read-only" 等を強制送信し、
         # cage の中で codex 内部の Seatbelt をネストしようとして失敗するため、
