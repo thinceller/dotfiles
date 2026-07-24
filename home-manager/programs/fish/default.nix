@@ -43,8 +43,6 @@ in
       };
       gca = "git commit --amend --no-edit";
       gd = "git diff --no-index";
-      gw = "git wt";
-      cgw = "cd (git-wt | fzf | awk '{print $1}')";
       null = {
         position = "anywhere";
         expansion = ">/dev/null 2>&1";
@@ -72,7 +70,7 @@ in
       fish_add_path ${homeDir}/.local/bin
       fish_add_path /Applications/Obsidian.app/Contents/MacOS
       fish_add_path /Applications/Ghostty.app/Contents/MacOS
-      git wt --init fish | source
+      wt config shell init fish | source
       op completion fish | source
       herdr completion fish | source
       export TEST=$(cat ${config.sops.secrets.test.path})

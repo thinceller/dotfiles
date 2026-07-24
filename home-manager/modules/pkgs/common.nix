@@ -16,7 +16,6 @@
     docker-credential-helpers
     dotenvx
     ghq
-    git-wt
     google-cloud-sdk
     graphviz
     herdr
@@ -32,5 +31,6 @@
     tig
     uv
     wget
+    worktrunk
   ];
 }
