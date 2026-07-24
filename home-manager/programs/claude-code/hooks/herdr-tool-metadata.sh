@@ -42,7 +42,7 @@ tool_name=""; agent_id=""; detail=""
 [ -z "$agent_id" ] || exit 0
 
 if [ -n "$detail" ]; then
-  token="${tool_name}: ${detail}"
+  token="${tool_name}(${detail})"
 else
   token="$tool_name"
 fi
