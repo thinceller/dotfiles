@@ -70,11 +70,6 @@ in
       source = symlink /${rootDir}/.config/pnpm;
       recursive = true;
     };
-    # rift
-    "rift" = {
-      source = symlink /${rootDir}/.config/rift;
-      recursive = true;
-    };
     "cage" = {
       source = symlink /${rootDir}/.config/cage;
       recursive = true;

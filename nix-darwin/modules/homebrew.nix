@@ -14,10 +14,6 @@
     # (内部で brew cleanup を呼ぶ) が UntrustedTapError で exit 1 になる。
     taps = [
       {
-        name = "acsandmann/tap";
-        trusted = true;
-      }
-      {
         name = "k1LoW/tap";
         trusted = true;
       }
@@ -27,7 +23,6 @@
       }
     ];
     brews = [
-      "acsandmann/tap/rift"
       "k1LoW/tap/mo"
       "k1LoW/tap/tcmux"
       "pinentry-mac"
