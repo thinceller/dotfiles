@@ -2,7 +2,6 @@
 # vault (references / Mnemos) / tmux-agent-sidebar を除いたもの。
 {
   pkgs,
-  config,
   ...
 }:
 {

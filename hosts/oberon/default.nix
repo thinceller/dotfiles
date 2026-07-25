@@ -15,14 +15,17 @@ let
   # oberon は cache 安定性のため NixOS stable channel を使う (unstable ではない)。
   nixpkgs = inputs.nixpkgs-stable;
   system = "x86_64-linux";
-  userConfig = rec {
-    username = "thinceller";
-    hostname = "oberon";
-    homeDir = "/home/${username}";
-    dotfilesDir = homeDir + "/.dotfiles";
-    isPersonal = false;
-    inherit system;
-  };
+  userConfig =
+    let
+      username = "thinceller";
+      homeDir = "/home/${username}";
+    in
+    {
+      inherit username homeDir system;
+      hostname = "oberon";
+      dotfilesDir = homeDir + "/.dotfiles";
+      isPersonal = false;
+    };
 
   pkgs = import nixpkgs {
     inherit system;
