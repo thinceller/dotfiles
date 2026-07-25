@@ -105,11 +105,16 @@ in
       };
     };
 
-    context = ./user-memory.md;
+    memory.source = ./user-memory.md;
 
     skills = {
       herdr = ./skills/herdr;
-      hunk-review = "${config.programs.hunk.package}/skills/hunk-review";
     };
   };
+
+  # release-25.11 の claude-code module は skills 値が「文字列」だと inline
+  # content として .md ファイル化してしまう (lib.isPath 判定)。hunk package の
+  # store path 文字列はディレクトリなので、home.file で直接 symlink する。
+  home.file.".claude/skills/hunk-review".source =
+    "${config.programs.hunk.package}/skills/hunk-review";
 }

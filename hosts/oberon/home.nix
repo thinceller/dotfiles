@@ -44,10 +44,7 @@ in
     XDG_CACHE_HOME = "$HOME/.cache";
   };
 
-  # HM input は master (nixpkgs unstable 追従) だが oberon の pkgs は
-  # nixpkgs-stable。programs.claude-code / opencode の最新オプションを
-  # Mac と揃えるために master を使うので、バージョン不一致警告を止める。
-  home.enableNixpkgsReleaseCheck = false;
+  # HM は home-manager-stable (release-25.11) を使うので nixpkgs との世代ズレは無い。
 
   home.packages = with pkgs; [
     ghq

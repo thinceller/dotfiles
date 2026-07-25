@@ -10,15 +10,10 @@
     enable = true;
     package = pkgs.opencode;
 
-    extraPackages = with pkgs; [
-      git
-      gh
-      ripgrep
-    ];
-
     settings = {
       model = "opencode-go/glm-5.2";
       small_model = "opencode-go/minimax-m3";
+      theme = "tokyonight";
       autoupdate = false;
       share = "manual";
       snapshot = true;
@@ -72,19 +67,9 @@
       };
     };
 
-    tui = {
-      theme = "tokyonight";
-      mouse = true;
-      attention = {
-        enabled = false;
-      };
-    };
+    rules = ./AGENTS.md;
 
-    context = ./AGENTS.md;
-
-    skills = {
-      hunk-review = "${config.programs.hunk.package}/skills/hunk-review";
-    };
+    # release-25.11 の opencode module に skills オプションが無いため見送り。
   };
 
   # herdr integration (opencode 側): `herdr integration install opencode` が
