@@ -107,6 +107,10 @@ in
 
     memory.source = ./user-memory.md;
 
+    # user-memory.md の Lead Agent Policy が explorer / worker への委譲を
+    # 指示するため、agent 定義 (guard スクリプト込み) をサーバーにも配る。
+    agentsDir = ./agents;
+
     skills = {
       herdr = ./skills/herdr;
     };
