@@ -13,6 +13,7 @@ let
     nixpkgs-codex
     hunk
     herdr
+    opencode
     ;
   system = "aarch64-darwin";
   userConfig =
@@ -40,6 +41,8 @@ let
       (_final: _prev: {
         cage = cage.packages.${system}.default;
         herdr = herdr.packages.${system}.default;
+        # opencode は上流 (anomalyco/opencode) HEAD をビルドして使う。
+        opencode = opencode.packages.${system}.opencode;
         # gpt-5.5 サポート (codex 0.123+) のため、locked nixpkgs が
         # 追いつくまで nixpkgs-codex から codex を上書き取得する。
         codex = pkgs-codex.codex;
