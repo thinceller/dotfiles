@@ -115,8 +115,8 @@ in
       autoMemoryEnabled = true;
       cleanupPeriodDays = 9999;
 
-      model = "fable";
-      # advisorModel = "opus";
+      model = "opus";
+      # advisorModel = "fable";
       # effortLevel = "xhigh";
       voiceEnabled = true;
       skipAutoPermissionPrompt = true;
