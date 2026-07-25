@@ -33,72 +33,9 @@ let
     builtins.readFile ./hooks/check-user-memory.sh
   );
 
-  # herdr integration (Claude Code): `herdr integration install claude` が
-  # 書き出す ~/.claude/hooks/herdr-agent-state.sh と等価。上流 (ogulcancelik/herdr,
-  # src/integration/assets/claude/herdr-agent-state.sh) を vendor しており、
-  # HERDR_INTEGRATION_VERSION=7。上流で version が bump されたらファイルごと更新する。
-  herdrAgentStateScript = pkgs.writeShellScript "claude-herdr-agent-state" (
-    builtins.readFile ./hooks/herdr-agent-state.sh
-  );
-
-  # herdr sidebar に直近使用した tool 名 + 短い要約を表示するための PreToolUse hook。
-  # configs/.config/herdr/config.toml の rows_by_agent.claude 4 行目 ($tool) と対応する。
-  herdrToolMetadataScript = pkgs.writeShellScript "claude-herdr-tool-metadata" (
-    builtins.readFile ./hooks/herdr-tool-metadata.sh
-  );
-
-  # `herdr integration install claude` が settings.json に登録する hook 群
-  # (src/integration/targets.rs::install_claude と一致)。
-  # 引数はエージェント状態のヒントで、SessionStart 以外の呼び出しは script 内で
-  # 早期 exit するが、上流と同じ登録セットを再現しておく。
-  herdrClaudeHook = arg: {
-    matcher = "*";
-    hooks = [
-      {
-        type = "command";
-        command = "${herdrAgentStateScript} ${arg}";
-        timeout = 10;
-      }
-    ];
-  };
-  herdrClaudeHooks = {
-    SessionStart = [ (herdrClaudeHook "session") ];
-    Stop = [ (herdrClaudeHook "idle") ];
-    SubagentStop = [ (herdrClaudeHook "working") ];
-    SessionEnd = [ (herdrClaudeHook "release") ];
-    UserPromptSubmit = [ (herdrClaudeHook "working") ];
-    PreToolUse = [ (herdrClaudeHook "working") ];
-    PostToolUse = [ (herdrClaudeHook "working") ];
-  };
-
-  # Override edgepkgs' wrapProgram to place the binary in libexec/ instead of
-  # renaming it to .claude-wrapped. This preserves the process name as "claude"
-  # (via p_comm), which tools like tcmux rely on for session detection.
-  claudeCodePackage = pkgs.edge.claude-code-bin.overrideAttrs (_old: {
-    installPhase = ''
-      runHook preInstall
-
-      mkdir -p $out/libexec $out/bin
-      install -m755 $src $out/libexec/claude
-
-      makeBinaryWrapper $out/libexec/claude $out/bin/claude \
-        --inherit-argv0 \
-        --set DISABLE_AUTOUPDATER 1 \
-        --set USE_BUILTIN_RIPGREP 0 \
-        --set DISABLE_INSTALLATION_CHECKS 1 \
-        --prefix PATH : ${
-          pkgs.lib.makeBinPath (
-            with pkgs;
-            [
-              procps
-              ripgrep
-            ]
-          )
-        }
-
-      runHook postInstall
-    '';
-  });
+  claudeCodePackage = import ./package.nix { inherit pkgs; };
+  herdrIntegration = import ./herdr-hooks.nix { inherit pkgs; };
+  herdrClaudeHooks = herdrIntegration.hooks;
 in
 {
   home.packages = lib.optionals isPersonal [ vaultSessionLogWorker ];
@@ -291,7 +228,7 @@ in
               hooks = [
                 {
                   type = "command";
-                  command = herdrToolMetadataScript;
+                  command = herdrIntegration.toolMetadataScript;
                   timeout = 10;
                 }
               ];
