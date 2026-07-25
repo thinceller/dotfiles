@@ -1,6 +1,7 @@
 # darwin 専用の fish 設定。portable 部分は common.nix にある。
 {
   config,
+  lib,
   ...
 }:
 {
@@ -28,7 +29,9 @@
     shellAbbrs = {
       ccc = "cage claude";
     };
-    interactiveShellInit = ''
+    # common.nix の fish_add_path ~/.local/bin より先に homebrew PATH を積み、
+    # 分割前の PATH 優先順位 (~/.local/bin 優先) を保つため mkBefore にする。
+    interactiveShellInit = lib.mkBefore ''
       fish_add_path /opt/homebrew/bin
       fish_add_path /Applications/Obsidian.app/Contents/MacOS
       fish_add_path /Applications/Ghostty.app/Contents/MacOS
