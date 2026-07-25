@@ -1,6 +1,13 @@
 # oberon リモートエージェントコーディング環境 実装プラン
 
-> **Status**: 未実装 (2026-07-26 設計完了)
+> **Status**: Task 1〜7 実装完了 (2026-07-26, feat/oberon-remote-agent)。Task 8〜9 (デプロイ / スマホ設定) は未実施。
+> 実装時の逸脱: HM master は nixpkgs unstable の lib/services/lib.nix を要求し stable pkgs で評価不能だったため、
+> oberon 専用の `home-manager-stable` input (release-25.11, nixpkgs-stable follows) を追加。それに伴い
+> claude-code/server.nix は `context` → `memory.source` + hunk-review skill を home.file 化、opencode/server.nix は
+> `tui`/`context`/`skills`/`extraPackages` → `settings.theme`/`rules`/skill 見送りに変更。simplify で git も common.nix
+> 分割に統一。最終レビューで agentsDir (explorer/worker) を server にも配備。
+> デプロイ注意: oberon 初回 rebuild は herdr/hunk/gh-prism のソースビルドが走る (x86_64-linux の prebuild キャッシュ無し)。
+> cloud session での事前 build か、時間がかかる前提での tmux 内実行を推奨。
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
