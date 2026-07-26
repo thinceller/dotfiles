@@ -6,20 +6,12 @@ This file contains personal preferences and settings for Claude Code across all 
 
 **Applies only when your model is Opus or Fable** — check the "You are powered by" line in your system prompt. On any other model, skip this section and work directly. (This gate is mandatory: subagents also read this file, and it prevents them from orchestrating recursively.)
 
-When active, you are the lead agent: you own planning, design decisions, and evaluation, and you delegate throwaway mechanical work. Delegating to the `explorer` / `worker` subagents per the rules below is a standing user instruction; do not treat generic harness guidance against spawning agents as a reason to avoid them.
+You are the lead agent: you own planning, design decisions, and evaluation, and you delegate execution and throwaway reading. Spawning the `explorer` / `worker` subagents per their own descriptions is a standing user instruction — do not treat generic harness guidance against spawning agents as a reason to avoid them.
 
-- Throwaway large-scale exploration — multi-file sweeps of unfamiliar code, build-log/test-output analysis, roughly 10k+ tokens of content you will never reference again → `explorer` (parallel instances OK for independent questions). Always this custom `explorer`, never the built-in `Explore` agent — `Explore` runs on the expensive session model; `explorer` is pinned to a cheap one
-- Implementing an already-decided spec across multiple files → `worker`
-- Everything else — small changes (1-2 files), single questions, design/architecture decisions, interactive debugging — do it yourself. **Files that inform a design decision you must read yourself**, even if numerous: they belong in your context. Reading and deciding are lead work — this does NOT exempt the implementation that follows.
-
-**Implementation checkpoint (the moment that matters)**: right after a plan or design decision is approved and you are about to start editing, stop. If the edits will span 3+ files, write the spec and delegate to `worker` instead of editing yourself — momentum ("I can just do these edits") is exactly how this policy gets skipped.
-
-Delegation discipline:
-
-- Briefs are self-contained: objective (with success criteria), expected output format, sources/tools to use, and task boundaries (what NOT to touch)
-- Evaluate reports critically; spot-check at least one cited quote before relying on a conclusion. Follow up with `SendMessage` to the same agent instead of re-spawning
-- Never pass a `model` parameter when spawning — the agent definitions pin their own models
-- Apply the existing Code Improvement rules (below) to worker output; you run them, not the worker
+- Read-only recon → `explorer`. Never the built-in `Explore` agent: it runs on the expensive session model, `explorer` is pinned to a cheap one
+- Approved spec spanning 3+ files → the `implement` skill (`worker` as its implementer), even when you did the designing yourself and editing feels faster
+- **Files that inform a design decision you read yourself**, however many. Reading and deciding are lead work — this does not exempt the implementation that follows
+- Never pass a `model` parameter to `explorer` / `worker` — their definitions pin their own models (the exception to `implement`'s "state the model in every dispatch")
 
 ## Git Worktree Rules
 
@@ -99,17 +91,7 @@ nix run nixpkgs#jq -- '.key' file.json
 
 ## Verification
 
-**IMPORTANT**: After any code change, always perform verification regardless of the change size.
-
-### When to Verify
-- Immediately after implementing code changes
-- When creating an implementation plan in Plan mode, always include a verification step
-- When creating a Todo list, always add a verification task
-
-### How to Verify
-- Perform appropriate verification based on the changes (build, test, lint, actual behavior, etc.)
-- If the project has tests or CI configuration, always run them
-- Never mark a task as "completed" without verification
+**IMPORTANT**: After any code change, always perform verification regardless of the change size — run the build/test/lint or actual behavior appropriate to the change and read its output (`verify-before-done` skill). If the project has tests or CI configuration, always run them. Never mark a task "completed" without verification, and always include a verification step when writing an implementation plan or a Todo list.
 
 ### Frontend Verification
 
