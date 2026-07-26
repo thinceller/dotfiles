@@ -56,6 +56,11 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # oberon を pull 型 GitOps でデプロイするためのツール。
+    comin = {
+      url = "github:nlewo/comin";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+    };
     edgepkgs = {
       url = "github:natsukium/edgepkgs";
       inputs.nixpkgs.follows = "nixpkgs";

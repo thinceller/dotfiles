@@ -433,6 +433,13 @@ deploy ([§15](#15-on-server-deploy-workflow-経路系の変更用))** を使う
 > (b) Tailscale 自体の変更 (Tailscale 経由で deploy すると自己切断する可能性) の 2 つ。
 > deploy 方式の最新版は [`oberon-deploy.md`](oberon-deploy.md) を参照。
 
+> **2026-07-26 追記 (comin 導入後)**: deploy のデフォルトは comin による pull 型
+> GitOps になった (master へ push → oberon 上で 60 秒間隔 polling → on-server
+> build → 自動 switch)。switch が SSH を介さず systemd service としてローカル
+> 実行されるため、本節の SIGPIPE 問題は通常運用では発生しない。手動 deploy
+> (`--target-host` / on-server tmux) は network 大変更・復旧時の fallback。
+> 最新の使い分けは [`oberon-deploy.md`](oberon-deploy.md) を参照。
+
 ---
 
 ## 7. ブートローダーと disko

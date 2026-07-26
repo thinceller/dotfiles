@@ -4,6 +4,7 @@ let
     self
     sops-nix
     disko
+    comin
     edgepkgs
     hermes-agent
     nix-index-database
@@ -52,6 +53,7 @@ nixpkgs.lib.nixosSystem {
   modules = [
     sops-nix.nixosModules.sops
     disko.nixosModules.disko
+    comin.nixosModules.comin
     hermes-agent.nixosModules.default
     nix-index-database.nixosModules.nix-index
     ./disko.nix

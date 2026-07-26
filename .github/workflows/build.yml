@@ -1,4 +1,4 @@
-name: Build nix-darwin
+name: Build nix configurations
 
 on:
   push:
@@ -37,6 +37,31 @@ jobs:
       - name: Build nix-darwin configuration
         run: |
           nix build .#darwinConfigurations.${{ matrix.host }}.system --show-trace
+
+  # oberon は comin による pull 型 deploy (master を polling して on-server build
+  # → 自動 switch) なので、master が壊れていると自動デプロイが黙って失敗する。
+  # それを CI で検知しつつ、closure を cachix に push して oberon 上のビルドを
+  # substitute で済ませる (2GB RAM でのローカルビルドを避ける)。
+  build-nixos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v17
+        with:
+          name: thinceller-dotfiles
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          extraPullNames: nix-community
+
+      - name: Build oberon configuration
+        run: |
+          nix build .#nixosConfigurations.oberon.config.system.build.toplevel --show-trace
 
   diff:
     if: github.event_name == 'pull_request'
