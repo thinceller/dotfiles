@@ -25,8 +25,8 @@ lib.mkIf userConfig.isPersonal {
     ];
 
     settings = {
-      model = "opencode-go/glm-5.2";
-      small_model = "opencode-go/minimax-m3";
+      model = "opencode-go/kimi-k2.7-code";
+      small_model = "opencode-go/deepseek-v4-flash";
       autoupdate = false;
       share = "manual";
       snapshot = true;
