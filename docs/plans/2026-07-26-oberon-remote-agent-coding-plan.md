@@ -1,6 +1,7 @@
 # oberon リモートエージェントコーディング環境 実装プラン
 
-> **Status**: Task 1〜7 実装完了 (2026-07-26, feat/oberon-remote-agent)。Task 8〜9 (デプロイ / スマホ設定) は未実施。
+> **Status**: 完了 (2026-07-26)。Task 1〜7 実装 (PR #42)、Task 8 デプロイ (rebuild EXIT=0、キャッシュヒットで短時間)、
+> Task 9 スマホ設定まで実施済み。iPhone/iPad から herdr 起動・claude/opencode セッション開始を実機確認済み。
 > 実装時の逸脱: HM master は nixpkgs unstable の lib/services/lib.nix を要求し stable pkgs で評価不能だったため、
 > oberon 専用の `home-manager-stable` input (release-25.11, nixpkgs-stable follows) を追加。それに伴い
 > claude-code/server.nix は `context` → `memory.source` + hunk-review skill を home.file 化、opencode/server.nix は
