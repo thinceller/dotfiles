@@ -53,6 +53,10 @@ in
       cleanupPeriodDays = 9999;
 
       model = "opus";
+      # 明示的なフォールバックチェーンを無効化 (空配列 = 指定なしと等価)。
+      # 設定キーは単数形 `fallbackModel` だが型は string 配列
+      # (CLI の --fallback-model はカンマ区切り)。
+      fallbackModel = [ ];
       # advisorModel = "fable";
       # effortLevel = "xhigh";
       voiceEnabled = true;
@@ -184,6 +188,15 @@ in
         # ここで無効化しないと updater が ~/.local/bin/claude を再生成し
         # Nix wrapper を PATH shadow する (2026-06-28, 2026-07-05 に再発)。
         DISABLE_AUTOUPDATER = "1";
+
+        # API がリクエストにフラグを立てた (refusal) ときの自動モデル切り替えを禁止。
+        # バイナリ 2.1.220 では refusal fallback の可否が
+        # `!CLAUDE_CODE_DISABLE_REFUSAL_FALLBACK && !CLAUDE_CODE_NO_MODEL_FALLBACK`
+        # かつ gate `switchModelsOnFlag` (デフォルト true) で決まる。gate は
+        # サーバー側なのでユーザーが触れるのはこの env のみ。
+        # なお CLAUDE_CODE_NO_MODEL_FALLBACK=1 はこれを含む上位互換で、
+        # モデル不可用時の availability fallback まで潰す (= 黙って降格せずエラーになる)。
+        CLAUDE_CODE_DISABLE_REFUSAL_FALLBACK = "1";
 
         CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1";
         CLAUDE_CODE_NEW_INIT = "1";
