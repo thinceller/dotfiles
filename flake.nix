@@ -29,6 +29,13 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # oberon (NixOS stable) 用。HM master は nixpkgs unstable の
+    # lib/services/lib.nix を要求し stable pkgs では評価できないため、
+    # stable と同世代の release branch を別 input で持つ。
+    home-manager-stable = {
+      url = "github:nix-community/home-manager/release-25.11";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+    };
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
