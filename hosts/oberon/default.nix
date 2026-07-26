@@ -11,6 +11,7 @@ let
     gh-prism
     hunk
     herdr
+    opencode
     ;
   # oberon は cache 安定性のため NixOS stable channel を使う (unstable ではない)。
   nixpkgs = inputs.nixpkgs-stable;
@@ -34,6 +35,8 @@ let
       edgepkgs.overlays.default
       (_final: _prev: {
         herdr = herdr.packages.${system}.default;
+        # opencode は上流 (anomalyco/opencode) HEAD をビルドして使う。
+        opencode = opencode.packages.${system}.opencode;
       })
     ];
   };
