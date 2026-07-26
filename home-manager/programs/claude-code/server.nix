@@ -91,17 +91,11 @@ in
             repo = "thinceller/claude-plugins";
           };
         };
-        "superpowers-dev" = {
-          source = {
-            source = "github";
-            repo = "obra/superpowers";
-          };
-        };
       };
 
       enabledPlugins = {
-        "superpowers@superpowers-dev" = true;
         "git-toolkit@thinceller-claude-plugins" = true;
+        "engineering@thinceller-claude-plugins" = true;
       };
     };
 

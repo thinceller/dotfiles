@@ -274,12 +274,6 @@ in
             repo = "thinceller/claude-plugins";
           };
         };
-        "superpowers-dev" = {
-          source = {
-            source = "github";
-            repo = "obra/superpowers";
-          };
-        };
         "hiroppy" = {
           source = {
             source = "github";
@@ -310,11 +304,9 @@ in
         # "pr-review-toolkit@claude-plugins-official" = true;
         "discord@claude-plugins-official" = true;
 
-        # superpowers-dev
-        "superpowers@superpowers-dev" = true;
-
         # thinceller-claude-plugins
         "git-toolkit@thinceller-claude-plugins" = true;
+        "engineering@thinceller-claude-plugins" = true;
 
         # hiroppy
         "tmux-agent-sidebar@hiroppy" = true;
