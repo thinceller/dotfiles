@@ -63,6 +63,9 @@
       approvals.mode = "smart";
       # ユーザー ID や電話番号などの個人識別情報をモデルに渡す前にハッシュ化。
       privacy.redact_pii = true;
+      # 2026-07-01 マージの Block Kit リッチレンダリングを有効化。
+      # フォールバック平文は従来の mrkdwn のままなので、標準 Markdown を書くプラクティスは維持される。
+      platforms.slack.extra.rich_blocks = true;
     };
 
     # セッション終了時に knowledge-base vault へ Markdown を書き出して push する
