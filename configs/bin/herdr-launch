@@ -4,11 +4,19 @@
 #
 # モード:
 #   open      リポジトリ本体を workspace として開く
-#   worktree  新規ブランチの git worktree を作って開く (自分の作業用)
-#   pr-review PR ブランチの worktree を作り、hunk レビュー + claude /code-review
+#   worktree  worktrunk で新規ブランチの worktree を作って開く (自分の作業用)
+#   pr-review worktrunk で PR ブランチの worktree を作り、hunk レビュー + claude /code-review
 #
+# worktree の作成は worktrunk (wt) に委譲する。作成時のプロジェクト固有
+# セットアップ (依存インストール等) は各リポジトリの .config/wt.toml の hook に置く。
 # リポジトリルートに実行可能な .herdr-setup.fish があれば、レイアウト構築後に
 # HERDR_LAUNCH_WORKSPACE_ID / HERDR_LAUNCH_MODE を渡して実行する。
+
+# 失敗時に popup が即閉じてエラーが読めなくなるのを防ぐ。
+function fail_pause
+    read -P 'error: press enter to close> '
+    exit 1
+end
 
 # --- リポジトリ選択 ---
 # ghq root は複数 (~/src, ~/.dotfiles) あるため、primary root との結合ではなく
@@ -27,13 +35,30 @@ set -l default_branch
 switch $mode
     case open
         set created (herdr workspace create --cwd $repo_path --label $repo_name --focus)
-        or exit 1
+        or fail_pause
 
     case worktree
-        read -l -P 'branch> ' branch; or exit 0
-        test -n "$branch"; or exit 0
-        set created (herdr worktree create --cwd $repo_path --branch $branch --focus --json)
-        or exit 1
+        # 既存 branch (local/remote、更新順) を選ぶか、新規 branch を作るかを選択する。
+        # 既存 branch への --create は「already exists」で失敗するため、選択結果で出し分ける。
+        set -l branches (git -C $repo_path for-each-ref --format='%(refname:short)' \
+            --sort=-committerdate refs/heads refs/remotes/origin \
+            | string replace -r '^origin/' '' | grep -vx origin | awk '!seen[$0]++')
+        set -l new_label '+ create new branch'
+        set -l choice (printf '%s\n' $new_label $branches | fzf --prompt='branch> ')
+        test -n "$choice"; or exit 0
+        set -l create_flag
+        set -l branch $choice
+        if test "$choice" = "$new_label"
+            # read -l だと if ブロックローカルになり外側の branch を隠すので付けない。
+            read -P 'new branch> ' branch; or exit 0
+            test -n "$branch"; or exit 0
+            set create_flag --create
+        end
+        # -x echo で worktree パスだけを stdout から受け取る (進捗表示は stderr)。
+        set -l wt_path (wt -C $repo_path switch $create_flag $branch --no-cd -x echo -- '{{ worktree_path }}')
+        or fail_pause
+        set created (herdr worktree open --cwd $repo_path --path $wt_path --label $branch --focus --json)
+        or fail_pause
 
     case pr-review
         cd $repo_path # gh はカレントディレクトリのリポジトリを対象にする
@@ -51,24 +76,17 @@ switch $mode
         test -n "$pr_number"; or exit 0
 
         # デフォルトブランチを検出 (/code-review の引数と hunk diff の基準に使う)。
-        # origin/HEAD が未設定のリポジトリでは gh にフォールバックする。
-        set default_branch (git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null \
-            | string replace 'origin/' '')
-        if test -z "$default_branch"
-            set default_branch (gh repo view --json defaultBranchRef --jq .defaultBranchRef.name)
-        end
+        set default_branch (wt config state default-branch)
+        or fail_pause
 
-        # detached worktree に PR を checkout する。--detach なのでローカルブランチを
-        # 作らず、fork からの PR でも動く。再実行時は既存 worktree を使い回す。
-        set -l wt_path ~/.herdr/worktrees/$repo_name/pr-$pr_number
-        if not test -d $wt_path
-            git worktree add --detach $wt_path; or exit 1
-        end
-        cd $wt_path
-        gh pr checkout $pr_number --detach; or exit 1
-        git fetch origin $default_branch
+        # PR ブランチの worktree を worktrunk で作成する。fork PR は refs/pull/N/head
+        # を fetch し pushRemote を fork に向けてくれる。再実行時は既存 worktree を
+        # 使い回すが、PR ブランチは fetch されないので最新化は手動で行う。
+        set -l wt_path (wt -C $repo_path switch pr:$pr_number --no-cd -x echo -- '{{ worktree_path }}')
+        or fail_pause
+        git -C $wt_path fetch origin $default_branch
         set created (herdr worktree open --cwd $repo_path --path $wt_path --label pr-$pr_number --focus --json)
-        or exit 1
+        or fail_pause
 end
 
 # --- workspace / 初期タブ / 初期ペインを JSON レスポンスから解決 ---
@@ -103,10 +121,31 @@ herdr tab focus $agent_tab
 # workspace id は大文字を含む (wF 等) ので小文字化が必須。
 set -l agent_name (string lower -- "$repo_name-$ws" | string replace -ra '[^a-z0-9_-]' '-' | string replace -r '^[^a-z]+' '' | string sub -l 32)
 test -n "$agent_name"; or set agent_name claude
+set -l agent_args $agent_name --kind claude --pane $agent_pane
 if test $mode = pr-review
-    herdr agent start $agent_name --kind claude --pane $agent_pane -- "/code-review xhigh $default_branch"
-else
-    herdr agent start $agent_name --kind claude --pane $agent_pane
+    set -a agent_args -- "/code-review xhigh $default_branch"
+end
+# shell の初期化が済むまで herdr 0.7.5 の agent start は agent_pane_busy で即時失敗する
+# (内部リトライなし)。大きなリポジトリでは worktree 作成や wt hook の負荷で shell の
+# 準備に数秒かかることがあるため、busy の間は最大 30 秒リトライで待つ。
+# claude 側の起動検出も重いリポジトリでは 30 秒 (デフォルト) を超え得るので延長する。
+set -l started false
+for _retry in (seq 60)
+    set -l err (herdr agent start $agent_args --timeout 120000 2>&1)
+    if test $status -eq 0
+        set started true
+        break
+    end
+    # busy 以外のエラー (名前衝突など) はリトライしても解決しない
+    if not string match -qr 'busy|available shell' -- "$err"
+        echo $err >&2
+        fail_pause
+    end
+    sleep 0.5
+end
+if test $started != true
+    echo 'herdr agent start: retry exhausted (pane busy)' >&2
+    fail_pause
 end
 
 # --- プロジェクト固有セットアップ (規約ファイル) ---
