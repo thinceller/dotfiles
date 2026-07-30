@@ -121,9 +121,11 @@ herdr tab focus $agent_tab
 # workspace id は大文字を含む (wF 等) ので小文字化が必須。
 set -l agent_name (string lower -- "$repo_name-$ws" | string replace -ra '[^a-z0-9_-]' '-' | string replace -r '^[^a-z]+' '' | string sub -l 32)
 test -n "$agent_name"; or set agent_name claude
-set -l agent_args $agent_name --kind claude --pane $agent_pane
+# `--` 以降は AGENT_ARG として claude にそのまま渡るため、herdr 自身のオプションは
+# すべて `--` より前に置く (後ろに回ると claude が unknown option で即死する)。
+set -l agent_prompt # `--` を含む。pr-review 以外は空配列のまま展開されない
 if test $mode = pr-review
-    set -a agent_args -- "/code-review xhigh $default_branch"
+    set agent_prompt -- "/code-review xhigh $default_branch"
 end
 # shell の初期化が済むまで herdr 0.7.5 の agent start は agent_pane_busy で即時失敗する
 # (内部リトライなし)。大きなリポジトリでは worktree 作成や wt hook の負荷で shell の
@@ -131,7 +133,8 @@ end
 # claude 側の起動検出も重いリポジトリでは 30 秒 (デフォルト) を超え得るので延長する。
 set -l started false
 for _retry in (seq 60)
-    set -l err (herdr agent start $agent_args --timeout 120000 2>&1)
+    set -l err (herdr agent start $agent_name --kind claude --pane $agent_pane \
+        --timeout 120000 $agent_prompt 2>&1)
     if test $status -eq 0
         set started true
         break
