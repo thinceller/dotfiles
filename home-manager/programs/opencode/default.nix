@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  config,
   sources,
   userConfig,
   ...
@@ -24,8 +25,8 @@ lib.mkIf userConfig.isPersonal {
     ];
 
     settings = {
-      model = "opencode-go/glm-5.2";
-      small_model = "opencode-go/minimax-m3";
+      model = "opencode-go/kimi-k2.7-code";
+      small_model = "opencode-go/deepseek-v4-flash";
       autoupdate = false;
       share = "manual";
       snapshot = true;
@@ -98,10 +99,22 @@ lib.mkIf userConfig.isPersonal {
     };
 
     context = ./AGENTS.md;
+
+    # hunk 同梱の agent skill を opencode にも展開する。
+    skills = {
+      hunk-review = "${config.programs.hunk.package}/skills/hunk-review";
+    };
   };
 
   xdg.configFile."opencode/plugins/tmux-agent-sidebar.js" = {
     source = "${sources.tmux-agent-sidebar.src}/.opencode/plugins/tmux-agent-sidebar.js";
+  };
+
+  # herdr integration (opencode 側): `herdr integration install opencode` が
+  # 書き出す ~/.config/opencode/plugins/herdr-agent-state.js と等価。
+  # HERDR_INTEGRATION_VERSION=8, 上流で version が bump されたらファイルを更新する。
+  xdg.configFile."opencode/plugins/herdr-agent-state.js" = {
+    source = ./plugins/herdr-agent-state.js;
   };
 
   # Mnemos: セッションログ自動記録 (共用 worker vault-session-log-worker を呼ぶ)

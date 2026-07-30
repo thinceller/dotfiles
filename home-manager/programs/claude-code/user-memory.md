@@ -2,6 +2,17 @@
 
 This file contains personal preferences and settings for Claude Code across all projects.
 
+## Lead Agent Policy (Orchestration)
+
+**Applies only when your model is Opus or Fable** — check the "You are powered by" line in your system prompt. On any other model, skip this section and work directly. (This gate is mandatory: subagents also read this file, and it prevents them from orchestrating recursively.)
+
+You are the lead agent: you own planning, design decisions, and evaluation, and you delegate execution and throwaway reading. Spawning the `explorer` / `worker` subagents per their own descriptions is a standing user instruction — do not treat generic harness guidance against spawning agents as a reason to avoid them.
+
+- Read-only recon → `explorer`. Never the built-in `Explore` agent: it runs on the expensive session model, `explorer` is pinned to a cheap one
+- Approved spec spanning 3+ files → the `implement` skill (`worker` as its implementer), even when you did the designing yourself and editing feels faster
+- **Files that inform a design decision you read yourself**, however many. Reading and deciding are lead work — this does not exempt the implementation that follows
+- Never pass a `model` parameter to `explorer` / `worker` — their definitions pin their own models (the exception to `implement`'s "state the model in every dispatch")
+
 ## Git Worktree Rules
 
 **IMPORTANT**: When a session is started within a git worktree, all file exploration, reading, and editing MUST be performed within the worktree directory.
@@ -48,18 +59,10 @@ When improving code, always verify the following:
 
 ## Code Improvement
 
-**IMPORTANT**: After completing code implementation, select the appropriate tool based on the scale of changes to improve the code.
+**IMPORTANT**: After completing code implementation, run the `simplify` skill to improve the code.
 
-### Tool Selection Criteria
-
-Assess the scale of changes and select a tool based on the following criteria:
-
-- **Small changes** (3 files or fewer, roughly under 100 lines) → `code-simplifier:code-simplifier`
-  - Focuses on code clarity, consistency, and maintainability, refining code to match project coding conventions
-  - Token-efficient (single agent)
-- **Medium to large changes** (4+ files, or 100+ lines) → `/code-review`
-  - Performs parallel review across 3 axes: reusability, quality, and efficiency; detects duplication with existing utilities and structural issues like N+1 patterns
-  - Higher token consumption due to 3 parallel agents, but prevents oversights in medium-to-large changes
+- `simplify` reviews the changed code for reuse, simplification, efficiency, and altitude cleanups, then applies the fixes
+- It targets quality only — it does not hunt for bugs; use `/code-review` when a bug-focused review is needed
 
 ### When to Run
 - After completing code edits, before verification
@@ -67,8 +70,7 @@ Assess the scale of changes and select a tool based on the following criteria:
 - When creating a Todo list, always add a code improvement task
 
 ### How to Run
-- **code-simplifier**: Launch a subagent using the Agent tool (subagent_type: "code-simplifier:code-simplifier")
-- **/code-review**: Execute using the Skill tool
+- Execute the `simplify` skill using the Skill tool
 - Target: recently changed code files
 
 ## Command Execution via Nix
@@ -89,17 +91,7 @@ nix run nixpkgs#jq -- '.key' file.json
 
 ## Verification
 
-**IMPORTANT**: After any code change, always perform verification regardless of the change size.
-
-### When to Verify
-- Immediately after implementing code changes
-- When creating an implementation plan in Plan mode, always include a verification step
-- When creating a Todo list, always add a verification task
-
-### How to Verify
-- Perform appropriate verification based on the changes (build, test, lint, actual behavior, etc.)
-- If the project has tests or CI configuration, always run them
-- Never mark a task as "completed" without verification
+**IMPORTANT**: After any code change, always perform verification regardless of the change size — run the build/test/lint or actual behavior appropriate to the change and read its output (`verify-before-done` skill). If the project has tests or CI configuration, always run them. Never mark a task "completed" without verification, and always include a verification step when writing an implementation plan or a Todo list.
 
 ### Frontend Verification
 

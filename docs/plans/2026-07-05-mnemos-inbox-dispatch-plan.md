@@ -4,6 +4,9 @@
 > synthesis の digest 生成と Slack 配信)。本計画実施後に追加された機能 — 自動セッションログ
 > (hook/plugin)、vault-clip (エージェント経由クリップ)、hermes-skills (経路C 版 vault スキル)、
 > 配信先の #mnemos-notification 化 — は `docs/reference/mnemos.md` を正とする。
+> 本計画で採用した vault deploy key は 2026-07-08 に廃止し、machine user
+> (thinceller-hermes) の SSH 鍵に統合した
+> ([`2026-07-06-hermes-github-push-design.md`](2026-07-06-hermes-github-push-design.md) 参照)。
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 

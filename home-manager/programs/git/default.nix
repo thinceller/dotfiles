@@ -1,5 +1,8 @@
-{ config, pkgs, ... }:
+# darwin 専用の git 設定。portable 部分は common.nix にある。
+{ config, ... }:
 {
+  imports = [ ./common.nix ];
+
   programs.gpg.enable = true;
 
   # Cloudflare Access (Forgejo CLI) の Service Token を含む git の include ファイルを
@@ -12,25 +15,13 @@
   };
 
   programs.git = {
-    enable = true;
     signing = {
       format = "ssh";
       key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILQwsbXl/1tHIdW/f+fZE7TJArqzvmbbaUsdKRFPoyZB";
       signByDefault = true;
     };
     settings = {
-      alias = {
-        pushf = "push --force-with-lease --force-if-includes";
-      };
-      user = {
-        email = "thinceller@gmail.com";
-        name = "thinceller";
-      };
-      core = {
-        editor = "vim";
-      };
       ghq = {
-        root = "~/src";
         # Cloudflare Access で保護された Forgejo は ghq の go-import 検出が通らない
         # (auth せずに HTTP GET すると Access のログイン HTML が返ってきて
         # <meta name="go-import"> が見えないため "unsupported VCS" エラーになる)。
@@ -48,19 +39,6 @@
           program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
         };
       };
-      rebase = {
-        autostash = true;
-        autosquash = true;
-      };
-      pull = {
-        rebase = true;
-      };
-      merge = {
-        ff = false;
-      };
-      init = {
-        defaultBranch = "main";
-      };
       # forgejo.thinceller.dev (Forgejo) は Cloudflare Access で保護されているので、
       # 該当ドメインを remote に持つリポジトリでのみ Service Token 用の
       # extraHeader を含むローカル設定ファイルを include する。
@@ -71,7 +49,6 @@
     };
     ignores = [
       ".DS_Store"
-      ".claude/worktrees"
     ];
   };
 }

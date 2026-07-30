@@ -15,6 +15,7 @@
     ./gh
     ./git
     ./htop
+    ./hunk
     ./jq
     ./lazygit
     ./lsd
@@ -25,7 +26,6 @@
     ./opencode
     ./ripgrep
     ./ssh
-    ./starship
     ./tmux
   ];
 }

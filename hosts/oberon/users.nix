@@ -1,5 +1,6 @@
 {
   config,
+  pkgs,
   userConfig,
   ...
 }:
@@ -30,7 +31,13 @@ in
     neededForUsers = true;
   };
 
-  users.users.${userConfig.username}.hashedPasswordFile = config.sops.secrets.${secretName}.path;
+  users.users.${userConfig.username} = {
+    hashedPasswordFile = config.sops.secrets.${secretName}.path;
+
+    # Tailscale SSH / mosh でログインした時のシェル。herdr・home-manager の
+    # fish 設定 (abbr / prompt / completion) をそのまま使えるようにする。
+    shell = pkgs.fish;
+  };
 
   # users / groups を Nix 設定と厳密一致させる (完全 declarative)。
   # mutableUsers = true のままだと nixpkgs update-users-groups.pl の

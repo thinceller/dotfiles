@@ -11,18 +11,8 @@
     mode = "0400";
   };
 
-  # knowledge-base vault (Mnemos) 用 deploy key (write 権限)。Inbox capture の
-  # git push に使う。GIT_SSH_COMMAND 経由で ssh が直接読むため、エージェントの
-  # コンテキストに秘密鍵が乗ることはない。
-  sops.secrets."hermes-vault-deploy-key" = {
-    sopsFile = ../../secrets/oberon.yaml;
-    owner = "hermes";
-    mode = "0400";
-    restartUnits = [ "hermes-agent.service" ];
-  };
-
-  # thinceller-hermes (GitHub machine account) の SSH 秘密鍵。招待済み repo への
-  # git push に使う。vault deploy key と同じく GIT_SSH_COMMAND 経由で ssh が直接
+  # thinceller-hermes (GitHub machine account) の SSH 秘密鍵。vault (knowledge-base)
+  # を含む招待済み repo への git push に使う。GIT_SSH_COMMAND 経由で ssh が直接
   # 読むため、エージェントのコンテキストに秘密鍵が乗ることはない。
   sops.secrets."hermes-github-ssh-key" = {
     sopsFile = ../../secrets/oberon.yaml;
@@ -56,7 +46,7 @@
       # OpenCode Go ($10/月サブスク、オープンモデル)。
       # 認証は OPENCODE_GO_API_KEY 環境変数のみ (OAuth 不要)。
       model.provider = "opencode-go";
-      model.default = "glm-5.2";
+      model.default = "kimi-k2.7-code";
       # MESSAGING_CWD 環境変数の代替。nixosModule は systemd Environment= に
       # MESSAGING_CWD をセットするが、hermes v0.16.0 でこの変数は deprecated。
       # settings 経由で config.yaml に書き出すことで警告を解消する。
@@ -66,6 +56,16 @@
       # Mnemos の vault 系スキル (経路C 版: terminal + git、MCP なし)。
       # external_dirs は読み取り専用の共有スキルディレクトリ。
       skills.external_dirs = [ "${./hermes-skills}" ];
+      # 秘書的な運用のため、セッションをまたいだ記憶を upstream default に従って明示化。
+      memory.memory_enabled = true;
+      memory.user_profile_enabled = true;
+      # 低リスクなコマンドは自動承認し、高リスクな操作は確認を取る。
+      approvals.mode = "smart";
+      # ユーザー ID や電話番号などの個人識別情報をモデルに渡す前にハッシュ化。
+      privacy.redact_pii = true;
+      # 2026-07-01 マージの Block Kit リッチレンダリングを有効化。
+      # フォールバック平文は従来の mrkdwn のままなので、標準 Markdown を書くプラクティスは維持される。
+      platforms.slack.extra.rich_blocks = true;
     };
 
     # セッション終了時に knowledge-base vault へ Markdown を書き出して push する

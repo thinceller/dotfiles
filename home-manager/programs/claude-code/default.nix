@@ -1,11 +1,20 @@
 {
   pkgs,
   lib,
+  config,
   userConfig,
   ...
 }:
 let
   inherit (userConfig) isPersonal;
+
+  # ローカル ./skills 配下の各 skill ディレクトリを attrset として展開し、
+  # hunk パッケージ同梱の agent skill (hunk-review) をマージする。
+  # 上流の home-manager モジュールは `skills` を attrs か path の
+  # いずれでも受けるので、attrs 形式に統一して両立させている。
+  localSkills = lib.mapAttrs (name: _type: ./skills + "/${name}") (
+    lib.filterAttrs (_name: type: type == "directory") (builtins.readDir ./skills)
+  );
 
   openPlanScript = pkgs.writeShellScript "claude-open-plan" (builtins.readFile ./hooks/open-plan.sh);
   vaultSessionLogScript = pkgs.writeShellScript "claude-vault-session-log" (
@@ -20,35 +29,13 @@ let
   statuslineScript = pkgs.writeShellScript "claude-statusline" (
     builtins.readFile ./statusline-command.sh
   );
+  checkUserMemoryScript = pkgs.writeShellScript "claude-check-user-memory" (
+    builtins.readFile ./hooks/check-user-memory.sh
+  );
 
-  # Override edgepkgs' wrapProgram to place the binary in libexec/ instead of
-  # renaming it to .claude-wrapped. This preserves the process name as "claude"
-  # (via p_comm), which tools like tcmux rely on for session detection.
-  claudeCodePackage = pkgs.edge.claude-code-bin.overrideAttrs (_old: {
-    installPhase = ''
-      runHook preInstall
-
-      mkdir -p $out/libexec $out/bin
-      install -m755 $src $out/libexec/claude
-
-      makeBinaryWrapper $out/libexec/claude $out/bin/claude \
-        --inherit-argv0 \
-        --set DISABLE_AUTOUPDATER 1 \
-        --set USE_BUILTIN_RIPGREP 0 \
-        --set DISABLE_INSTALLATION_CHECKS 1 \
-        --prefix PATH : ${
-          pkgs.lib.makeBinPath (
-            with pkgs;
-            [
-              procps
-              ripgrep
-            ]
-          )
-        }
-
-      runHook postInstall
-    '';
-  });
+  claudeCodePackage = import ./package.nix { inherit pkgs; };
+  herdrIntegration = import ./herdr-hooks.nix { inherit pkgs; };
+  herdrClaudeHooks = herdrIntegration.hooks;
 in
 {
   home.packages = lib.optionals isPersonal [ vaultSessionLogWorker ];
@@ -66,11 +53,17 @@ in
       cleanupPeriodDays = 9999;
 
       model = "opus";
-      # advisorModel = "opus";
+      # 明示的なフォールバックチェーンを無効化 (空配列 = 指定なしと等価)。
+      # 設定キーは単数形 `fallbackModel` だが型は string 配列
+      # (CLI の --fallback-model はカンマ区切り)。
+      fallbackModel = [ ];
+      # advisorModel = "fable";
       # effortLevel = "xhigh";
       voiceEnabled = true;
       skipAutoPermissionPrompt = true;
       useAutoModeDuringPlan = true;
+      # fullscreen (alt-screen) レンダラー。旧 env CLAUDE_CODE_NO_FLICKER=1 と等価。
+      tui = "fullscreen";
 
       # Claude Code 組み込み sandbox (macOS: Seatbelt)。
       # cage と二重に Seatbelt をネストすると失敗するため、これを使うときは
@@ -95,6 +88,24 @@ in
           # nix-daemon socket / store 書き込みが sandbox と相性が悪い
           "nix *"
           "darwin-rebuild *"
+          # pre-commit の unstaged-stash が Read(.env*) / Claude Code の built-in
+          # deny (`./secrets`, `**/*.key` 等) に阻まれて "unable to create file
+          # ...: File exists" で ロールバックする。
+          # git commit -> pre-commit -> git stash が .envrc / secrets/*.yaml を
+          # 読み書きできず、hook 完走後の git checkout でツリーを復元できない
+          # (2026-07-16 実測)。git commit の deny (Bash(git commit --no-gpg-sign:*))
+          # は残っているので、GPG 署名バイパスなどの経路は引き続き遮断される。
+          "git commit *"
+          # sandbox は SSH を SOCKS5 proxy 経由にする GIT_SSH_COMMAND
+          # (ProxyCommand: nc -X 5) を注入するが、proxy は認証必須で macOS の
+          # nc は SOCKS5 認証非対応のため、SSH 越しの git 操作は許可ドメイン
+          # 宛でも "nc: authentication method negotiation failed" で必ず失敗
+          # する (2026-07-19 実測)。HTTPS remote は HTTP proxy 経由で動くので
+          # 対象は SSH transport を使いうるコマンドのみ。
+          "git push *"
+          "git fetch *"
+          "git pull *"
+          "ssh *"
         ];
         network = {
           # dev server 等の localhost バインドを許可
@@ -161,8 +172,8 @@ in
           "Read(.env*)"
           "Bash(sudo:*)"
           "Bash(git commit --no-gpg-sign:*)"
-          "Write(~/.ssh/**)"
-          "Write(.env*)"
+          "Edit(~/.ssh/**)"
+          "Edit(.env*)"
         ];
         defaultMode = "auto";
       };
@@ -171,9 +182,6 @@ in
         BASH_DEFAULT_TIMEOUT_MS = "60000";
         BASH_MAX_TIMEOUT_MS = "180000";
         CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR = "1";
-        USE_BUILTIN_RIPGREP = "1";
-
-        # ANTHROPIC_DEFAULT_OPUS_MODEL = "claude-opus-4-7[1m]";
 
         # wrapper の --set DISABLE_AUTOUPDATER は wrapper 経由の起動しか守れない。
         # native binary (chrome-native-host 等) も settings.json の env は読むため、
@@ -181,12 +189,17 @@ in
         # Nix wrapper を PATH shadow する (2026-06-28, 2026-07-05 に再発)。
         DISABLE_AUTOUPDATER = "1";
 
-        ENABLE_TOOL_SEARCH = true;
-        CLAUDE_CODE_ENABLE_TASKS = true;
+        # API がリクエストにフラグを立てた (refusal) ときの自動モデル切り替えを禁止。
+        # バイナリ 2.1.220 では refusal fallback の可否が
+        # `!CLAUDE_CODE_DISABLE_REFUSAL_FALLBACK && !CLAUDE_CODE_NO_MODEL_FALLBACK`
+        # かつ gate `switchModelsOnFlag` (デフォルト true) で決まる。gate は
+        # サーバー側なのでユーザーが触れるのはこの env のみ。
+        # なお CLAUDE_CODE_NO_MODEL_FALLBACK=1 はこれを含む上位互換で、
+        # モデル不可用時の availability fallback まで潰す (= 黙って降格せずエラーになる)。
+        CLAUDE_CODE_DISABLE_REFUSAL_FALLBACK = "1";
+
         CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1";
         CLAUDE_CODE_NEW_INIT = "1";
-        CLAUDE_CODE_NO_FLICKER = "1";
-        CLAUDE_AFK_TIMEOUT_MS = "86400000";
 
         # codex-plugin-cc が thread/start に sandbox: "read-only" 等を強制送信し、
         # cage の中で codex 内部の Seatbelt をネストしようとして失敗するため、
@@ -198,45 +211,69 @@ in
         CODEX_COMPANION_SANDBOX_MODE = "danger-full-access";
       };
 
-      hooks = {
-        PreToolUse = [
-          {
-            matcher = "ExitPlanMode";
-            hooks = [
-              {
-                type = "command";
-                command = openPlanScript;
-              }
-            ];
-          }
-        ];
-      }
-      // lib.optionalAttrs isPersonal {
-        # Mnemos: vault へのセッションログ自動記録。
-        # Stop はデバウンス付き (30 分に 1 回まで)、SessionEnd で最終更新。
-        # 実処理は detach した worker が headless claude (haiku) で行うため
-        # セッションをブロックしない。詳細は hooks/vault-session-log.sh 冒頭。
-        Stop = [
-          {
-            hooks = [
-              {
-                type = "command";
-                command = vaultSessionLogScript;
-              }
-            ];
-          }
-        ];
-        SessionEnd = [
-          {
-            hooks = [
-              {
-                type = "command";
-                command = vaultSessionLogScript;
-              }
-            ];
-          }
-        ];
-      };
+      hooks =
+        herdrClaudeHooks
+        // {
+          # user memory (~/.claude/CLAUDE.md) の消失検知。詳細は hooks/check-user-memory.sh 冒頭。
+          SessionStart = herdrClaudeHooks.SessionStart ++ [
+            {
+              hooks = [
+                {
+                  type = "command";
+                  command = checkUserMemoryScript;
+                }
+              ];
+            }
+          ];
+          # herdr の汎用 PreToolUse エントリと、既存の ExitPlanMode 用エントリを共存させる。
+          PreToolUse = herdrClaudeHooks.PreToolUse ++ [
+            {
+              matcher = "ExitPlanMode";
+              hooks = [
+                {
+                  type = "command";
+                  command = openPlanScript;
+                }
+              ];
+            }
+            {
+              matcher = "*";
+              hooks = [
+                {
+                  type = "command";
+                  command = herdrIntegration.toolMetadataScript;
+                  timeout = 10;
+                }
+              ];
+            }
+          ];
+        }
+        // lib.optionalAttrs isPersonal {
+          # Mnemos: vault へのセッションログ自動記録。
+          # Stop はデバウンス付き (30 分に 1 回まで)、SessionEnd で最終更新。
+          # 実処理は detach した worker が headless claude (haiku) で行うため
+          # セッションをブロックしない。詳細は hooks/vault-session-log.sh 冒頭。
+          Stop = herdrClaudeHooks.Stop ++ [
+            {
+              hooks = [
+                {
+                  type = "command";
+                  command = vaultSessionLogScript;
+                }
+              ];
+            }
+          ];
+          SessionEnd = herdrClaudeHooks.SessionEnd ++ [
+            {
+              hooks = [
+                {
+                  type = "command";
+                  command = vaultSessionLogScript;
+                }
+              ];
+            }
+          ];
+        };
 
       statusLine = {
         type = "command";
@@ -248,12 +285,6 @@ in
           source = {
             source = "github";
             repo = "thinceller/claude-plugins";
-          };
-        };
-        "superpowers-dev" = {
-          source = {
-            source = "github";
-            repo = "obra/superpowers";
           };
         };
         "hiroppy" = {
@@ -282,16 +313,13 @@ in
         "skill-creator@claude-plugins-official" = true;
         "frontend-design@claude-plugins-official" = true;
         "ralph-loop@claude-plugins-official" = true;
-        "code-simplifier@claude-plugins-official" = true;
         # "code-review@claude-plugins-official" = true;
         # "pr-review-toolkit@claude-plugins-official" = true;
         "discord@claude-plugins-official" = true;
 
-        # superpowers-dev
-        "superpowers@superpowers-dev" = true;
-
         # thinceller-claude-plugins
         "git-toolkit@thinceller-claude-plugins" = true;
+        "engineering@thinceller-claude-plugins" = true;
 
         # hiroppy
         "tmux-agent-sidebar@hiroppy" = true;
@@ -303,8 +331,10 @@ in
 
     context = ./user-memory.md;
 
-    # agentsDir = ./agents;
-    skills = ./skills;
+    agentsDir = ./agents;
+    skills = localSkills // {
+      hunk-review = "${config.programs.hunk.package}/skills/hunk-review";
+    };
     # hooksDir = ./hooks;
   }
   // lib.optionalAttrs isPersonal {

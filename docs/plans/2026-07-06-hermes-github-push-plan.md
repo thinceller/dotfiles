@@ -1,5 +1,9 @@
 # Hermes への thinceller リポジトリ push 権限付与 実装プラン
 
+> **Status**: 実装完了 (2026-07-08)。E2E 検証済み (ブランチ push + PR 作成 / master
+> 直 push 拒否 / vault Inbox capture)。knowledge-base の deploy key は廃止し、
+> machine user (thinceller-hermes) の鍵に統合済み。
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** oberon 上の Hermes Agent が machine account `thinceller-hermes` として、招待された thinceller 個人リポジトリへブランチ push + PR 作成できるようにする。

@@ -20,4 +20,9 @@
       "--accept-dns=true"
     ];
   };
+
+  # tailnet 内からの通信 (mosh の UDP 60000-61000 等) を無条件で許可する。
+  # 到達できるのは tailnet に参加した自分のデバイスのみなので、
+  # グローバル firewall は閉じたまま個別ポート開放が不要になる。
+  networking.firewall.trustedInterfaces = [ "tailscale0" ];
 }

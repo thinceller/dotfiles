@@ -1,0 +1,149 @@
+# herdr config — tmux 設定 (home-manager/programs/tmux/) の主要要素を移植したもの。
+# 上書きした項目のみ列挙し、それ以外は herdr のデフォルト
+# (https://herdr.dev/docs/configuration/) をそのまま使う。
+
+onboarding = false
+
+[terminal]
+# 現状の login shell と揃える。shell_mode はデフォルトの "auto" のまま。
+default_shell = "fish"
+
+[session]
+# tmux-continuum の `set -g @continuum-restore 'on'` に相当。
+# detach / 再ログイン後もエージェントを状態ごと復元する。
+resume_agents_on_restore = true
+
+[update]
+# herdr は Nix flake 管理 (nix run .#update で更新) なので、
+# herdr 自身のバックグラウンド更新チェック通知は不要。
+# manifest_check (agent 検出マニフェスト) はデフォルトの有効のまま。
+version_check = false
+
+[keys]
+# tmux の `prefix = "C-j"` を継承。
+prefix = "ctrl+j"
+
+# tmux `bind -r C-h select-window -t :-` / `C-l` -> 次の window。
+# herdr のタブ = tmux の window。
+previous_tab = "prefix+ctrl+h"
+next_tab = "prefix+ctrl+l"
+
+# popup 系: セッションモーダルで開いて、コマンド終了で自動的に閉じる。
+# tmux の `display-popup` 相当。ペイン構成を汚さずに一時的な TUI を差し込める。
+
+# lazygit — tmux の `bind g run-shell "tmux popup lazygit"` 相当。
+[[keys.command]]
+key = "prefix+ctrl+g"
+type = "popup"
+command = "lazygit"
+description = "open lazygit in popup"
+width = "90%"
+height = "90%"
+
+# hunk — 作業ツリーの差分ビューア。単独起動だと help が出て即 exit するので `diff` を明示。
+[[keys.command]]
+key = "prefix+ctrl+d"
+type = "popup"
+command = "hunk diff"
+description = "open hunk diff (working tree) in popup"
+width = "90%"
+height = "90%"
+
+# btm — CPU / メモリを一瞬チラ見して閉じる用途。
+[[keys.command]]
+key = "prefix+ctrl+t"
+type = "popup"
+command = "btm"
+description = "open bottom (resource monitor) in popup"
+width = "90%"
+height = "90%"
+
+# gh dash — PR / issue の一覧を差し込みで開く。
+[[keys.command]]
+key = "prefix+ctrl+p"
+type = "popup"
+command = "gh dash"
+description = "open gh dash in popup"
+width = "90%"
+height = "90%"
+
+# scratch fish shell — 今のペインを汚さず 1 発コマンドを叩く用。
+# exit で popup が閉じる。
+[[keys.command]]
+key = "prefix+ctrl+enter"
+type = "popup"
+command = "fish -l"
+description = "open scratch fish shell in popup"
+width = "80%"
+height = "80%"
+
+# プロジェクトランチャー — ghq+fzf でリポジトリを選び、定型レイアウト
+# (agent / editor タブ) の workspace を開く。configs/bin/herdr-launch 参照。
+# popup command は /bin/sh -c で実行され ~/.local/bin が PATH にない場合が
+# あるため、login fish 経由で起動する。
+[[keys.command]]
+key = "prefix+ctrl+o"
+type = "popup"
+command = "fish -l -c herdr-launch"
+description = "open project launcher (ghq + fzf)"
+width = "80%"
+height = "60%"
+
+[ui]
+# tmux-agent-sidebar の情報密度を herdr で再現するため、
+# ペイン境界に検出したエージェント名を出す。
+show_agent_labels_on_pane_borders = true
+
+# gap を切って compact divider にする。デフォルトの `true` はペイン間に空セルの
+# gap + 各ペインの薄い枠、という構成でボーダー位置が視覚的にぼやけるため、
+# 単一の divider だけにする。
+pane_gaps = false
+
+agent_panel_sort = "spaces"
+
+# 展開時サイドバーの最大幅。デフォルト 36 だとタスク要約 (terminal_title) や
+# メタデータ行が切れがちなので 1.5 倍に広げる。
+sidebar_width = 54
+sidebar_max_width = 54
+
+# 0.7.4 で packed layout がデフォルトになったので、旧来の間隔 (エントリ間 1 行) に戻す。
+[ui.sidebar.agents]
+row_gap = 1
+
+# Claude Code の agent エントリにセッション詳細を表示する。
+# 1 行目: tab 名の代わりに、Claude Code がターミナルタイトルに出す
+# 現在のタスク要約 (terminal_title_stripped) を出す。bold で目立たせる。
+# 2 行目: 検出された agent 名 ("claude")。
+# 3 行目: statusline スクリプト (home-manager/programs/claude-code/
+# statusline-command.sh) が `herdr pane report-metadata` で報告する
+# カスタムトークン ($model / $effort / $ctx)。
+# 4 行目: PreToolUse hook (hooks/herdr-tool-metadata.sh) が報告する
+# 直近の tool 利用 ($tool)。subagent の tool 使用は表示しない。
+# dim だと idle 時のコンテキスト減光と重なって沈みすぎるため、
+# fg 固定 (catppuccin mocha パレット) で常に読める明るさに保ちつつ
+# 要素ごとに色分けする。per-token styling は 0.7.5 から。
+[ui.sidebar.agents.rows_by_agent]
+claude = [
+  [
+    "state_icon",
+    "workspace",
+    { token = "terminal_title_stripped", bold = true, fg = "#a6adc8" },
+  ],
+  ["agent"],
+  [
+    { token = "$model", fg = "#cba6f7" }, # mauve
+    { token = "$effort", fg = "#fab387" }, # peach
+    { token = "$ctx", fg = "#94e2d5" }, # teal
+  ],
+  [
+    { token = "$tool", fg = "#a6e3a1" }, # green
+  ],
+]
+
+[ui.sidebar.spaces]
+row_gap = 1
+
+[ui.toast]
+# エージェントが blocked / done になった時などに herdr 上で通知する。
+# terminal / system 通知は好みで切り替える。
+delivery = "herdr"

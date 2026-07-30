@@ -6,6 +6,7 @@
     ./users.nix
     ./forgejo.nix
     ./cloudflared.nix
+    ./comin.nix
     ./hermes-agent.nix
     ./tailscale.nix
     ../../nixos/modules/common.nix
@@ -21,6 +22,23 @@
       size = 4096; # MiB
     }
   ];
+
+  # zram: 2GB RAM でエージェント (claude/opencode) を回すための圧縮スワップ。
+  # 既存の /swapfile (4GiB, ディスク) より優先度が高く、先に zram が使われる。
+  zramSwap.enable = true;
+
+  # mosh: スマホ (Moshi アプリ) からの接続でモバイル回線の切断・ローミングを
+  # 吸収する。UDP 60000-61000 のグローバル開放はせず、tailscale0 を
+  # trustedInterfaces に入れることで tailnet 内からのみ到達可能にする
+  # (tailscale.nix 参照)。
+  programs.mosh = {
+    enable = true;
+    openFirewall = false;
+  };
+
+  # herdr / home-manager のユーザー環境は fish 前提 (herdr config の
+  # default_shell = "fish")。login shell 登録のため system 側でも有効化する。
+  programs.fish.enable = true;
 
   # さくらのVPS は SeaBIOS (legacy BIOS) なので、UEFI 系の systemd-boot ではなく
   # GRUB を BIOS モードで使う。

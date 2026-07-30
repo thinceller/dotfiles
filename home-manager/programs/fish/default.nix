@@ -1,16 +1,13 @@
+# darwin 専用の fish 設定。portable 部分は common.nix にある。
 {
-  pkgs,
   config,
-  sources,
-  userConfig,
+  lib,
   ...
 }:
-let
-  inherit (userConfig) homeDir dotfilesDir;
-in
 {
+  imports = [ ./common.nix ];
+
   programs.fish = {
-    enable = true;
     functions = {
       scc = {
         body = ''
@@ -30,53 +27,18 @@ in
       };
     };
     shellAbbrs = {
-      gs = "git status --short --branch";
-      gcim = {
-        setCursor = true;
-        expansion = "git commit -m '%'";
-      };
-      gcf = "git commit --fixup";
-      gri = "git rebase -i";
-      gsw = {
-        setCursor = true;
-        expansion = "git switch -c '%'";
-      };
-      gca = "git commit --amend --no-edit";
-      gd = "git diff --no-index";
-      gw = "git wt";
-      cgw = "cd (git-wt | fzf | awk '{print $1}')";
-      null = {
-        position = "anywhere";
-        expansion = ">/dev/null 2>&1";
-      };
-      fbr = "git branch --list | fzf --preview \"git log --pretty=format:'%h %cd %s' --date=format:'%Y-%m-%d %H:%M' {}\" | xargs git switch";
-      dc = "docker compose";
       ccc = "cage claude";
     };
-    plugins = [
-      {
-        name = sources.fish-ghq.pname;
-        src = sources.fish-ghq.src;
-      }
-    ];
-    interactiveShellInit = ''
-      if test -f "${dotfilesDir}/env.fish"
-        source "${dotfilesDir}/env.fish"
-      end
-
+    # common.nix の fish_add_path ~/.local/bin より先に homebrew PATH を積み、
+    # 分割前の PATH 優先順位 (~/.local/bin 優先) を保つため mkBefore にする。
+    interactiveShellInit = lib.mkBefore ''
       fish_add_path /opt/homebrew/bin
-      fish_add_path ${homeDir}/.local/bin
       fish_add_path /Applications/Obsidian.app/Contents/MacOS
-      git wt --init fish | source
+      fish_add_path /Applications/Ghostty.app/Contents/MacOS
+      wt config shell init fish | source
       op completion fish | source
       export TEST=$(cat ${config.sops.secrets.test.path})
       export DISCORD_BOT_TOKEN=$(cat ${config.sops.secrets.discord-bot-token.path})
-
-      # nvim の :terminal から起動された fish では direnv state が継承されるが
-      # fish_add_path / mise activate に PATH を上書きされる。reload で復元する。
-      if set -q NVIM; and set -q DIRENV_DIR
-        direnv reload 2>/dev/null
-      end
     '';
   };
 }

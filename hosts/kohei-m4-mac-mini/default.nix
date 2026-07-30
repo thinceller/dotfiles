@@ -11,6 +11,9 @@ let
     gh-prism
     cage
     nixpkgs-codex
+    hunk
+    herdr
+    opencode
     ;
   system = "aarch64-darwin";
   userConfig =
@@ -37,6 +40,9 @@ let
       edgepkgs.overlays.default
       (_final: _prev: {
         cage = cage.packages.${system}.default;
+        herdr = herdr.packages.${system}.default;
+        # opencode は上流 (anomalyco/opencode) HEAD をビルドして使う。
+        opencode = opencode.packages.${system}.opencode;
         # gpt-5.5 サポート (codex 0.123+) のため、locked nixpkgs が
         # 追いつくまで nixpkgs-codex から codex を上書き取得する。
         codex = pkgs-codex.codex;
@@ -63,6 +69,7 @@ nix-darwin.lib.darwinSystem {
         sops-nix.homeManagerModules.sops
         nix-index-database.homeModules.nix-index
         gh-prism.homeManagerModules.default
+        hunk.homeManagerModules.default
       ];
       home-manager.extraSpecialArgs = {
         inherit

@@ -17,7 +17,7 @@ trap '
 ICON_REPO=$(printf '\xef\x90\x81')        # nf-oct-repo U+F401
 ICON_FOLDER=$(printf '\xee\xaa\x83')      # nf-cod-folder U+EA83
 ICON_BRANCH=$(printf '\xee\x9c\xa5')      # nf-dev-git_branch U+E725
-ICON_WORKTREE=$(printf '\xee\xa9\xa8')    # nf-cod-source_control U+EA68
+ICON_WORKTREE=$(printf '\xf3\xb0\x99\x85') # nf-md-file_tree U+F0645
 ICON_STAGED=$(printf '\xee\xab\x9c')      # nf-cod-diff_added U+EADC
 ICON_MODIFIED=$(printf '\xee\xab\x9e')    # nf-cod-diff_modified U+EADE
 ICON_UNTRACKED=$(printf '\xee\xa9\xb6')   # nf-cod-question U+EA76
@@ -206,3 +206,23 @@ line4="📅 7d [${seven_bar}] \033[${seven_color}m${seven_pct_str}\033[0m  🔄 
 
 printf '%b\n%b\n%b\n%b' "$line1" "$line2" "$line3" "$line4"
 _output_done=1
+
+# ── herdr sidebar metadata ───────────────────────────────────────────
+# herdr pane 内なら model / effort / ctx をカスタムトークンとして報告し、
+# サイドバーの Claude エントリ (configs/.config/herdr/config.toml の
+# rows_by_agent.claude) に表示させる。best-effort: 失敗しても statusline
+# 本体には影響させず、描画を遅らせないようバックグラウンドで実行する。
+if [[ "${HERDR_ENV:-}" == "1" && -n "${HERDR_PANE_ID:-}" ]] && command -v herdr >/dev/null 2>&1; then
+  herdr_args=(
+    pane report-metadata "$HERDR_PANE_ID"
+    --source custom:claude-statusline
+    --token "model=${model}"
+    --token "ctx=ctx ${ctx_pct}%"
+  )
+  if [[ -n "$effort" ]]; then
+    herdr_args+=(--token "effort=⚡${effort}")
+  else
+    herdr_args+=(--clear-token effort)
+  fi
+  herdr "${herdr_args[@]}" >/dev/null 2>&1 &
+fi

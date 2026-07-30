@@ -19,12 +19,22 @@
     # 2GB RAM の kexec installer 上で大きな build が走ると OOM するため。
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.11";
     nix-darwin = {
-      url = "github:LnL7/nix-darwin";
+      # d5bd9cd (2026-07-07) 以降は本 flake の nixpkgs より新しい nixos-render-docs を要求し
+      # `--sidebar-depth` 未対応で darwin-manual-html のビルドが失敗するため、trusted オプションが
+      # 入った最初の commit 群のうち、その手前で pin する。
+      url = "github:LnL7/nix-darwin/d8a6661f78281431f182f222c7df96e2c9480fc5";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # oberon (NixOS stable) 用。HM master は nixpkgs unstable の
+    # lib/services/lib.nix を要求し stable pkgs では評価できないため、
+    # stable と同世代の release branch を別 input で持つ。
+    home-manager-stable = {
+      url = "github:nix-community/home-manager/release-25.11";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
     };
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
@@ -46,6 +56,11 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # oberon を pull 型 GitOps でデプロイするためのツール。
+    comin = {
+      url = "github:nlewo/comin";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+    };
     edgepkgs = {
       url = "github:natsukium/edgepkgs";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -60,6 +75,21 @@
     };
     gh-prism = {
       url = "github:kawarimidoll/gh-prism";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hunk = {
+      url = "github:modem-dev/hunk";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # master 追従 (preview 相当)。`nix run .#update` で最新化される。
+    herdr = {
+      url = "github:ogulcancelik/herdr";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # opencode は上流 (anomalyco/opencode) の HEAD を追従してビルドする。
+    # nixpkgs の opencode ではなく上流最新を使う。`nix run .#update` で最新化される。
+    opencode = {
+      url = "github:anomalyco/opencode";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # codex 0.125.0 (gpt-5.5 サポート: 0.123 以降) を含む nixpkgs リビジョン。
@@ -80,6 +110,7 @@
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [
         "aarch64-darwin"
+        "x86_64-linux"
       ];
       imports = [
         git-hooks-nix.flakeModule
