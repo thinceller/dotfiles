@@ -16,9 +16,9 @@
     docker-credential-helpers
     dotenvx
     ghq
-    git-wt
     google-cloud-sdk
     graphviz
+    herdr
     nix-search-cli
     nixfmt
     nodejs_24
@@ -31,5 +31,6 @@
     tig
     uv
     wget
+    worktrunk
   ];
 }

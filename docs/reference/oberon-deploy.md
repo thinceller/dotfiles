@@ -1,5 +1,10 @@
 # Oberon Deploy Methods
 
+**デフォルトは comin による pull 型 GitOps** (2026-07-26 導入)。master へ push
+するだけで oberon 上の comin が 60 秒間隔 polling で検知し on-server build →
+自動 switch する。以下の手動方式 A〜D は fallback (network 系の大変更や
+comin 自体の障害時など) として残す。
+
 oberon の admin SSH は **Tailscale (WireGuard) が主経路**、cloudflared SSH ingress が
 fallback。[`oberon-tailscale-plan.md`](../plans/oberon-tailscale-plan.md) を参照。
 Tailscale が独立した経路として常時通っているため、cloudflared / sshd / firewall を
@@ -16,15 +21,44 @@ network interface を直接触る変更だけが引き続き要注意。
 
 | 変更内容 | 推奨方式 | 備考 |
 |---|---|---|
-| forgejo / postgres / アプリ層 | **A** (`--target-host`) | 経路に影響なし |
-| cloudflared / sshd / firewall | **A** (`--target-host`) | Tailscale 経路は cloudflared/sshd restart の影響を受けない |
-| Tailscale 自体 (`hosts/oberon/tailscale.nix`) | **B** (on-server tmux, `ssh oberon-cf`) | Tailscale 経由で deploy すると自己切断する可能性 |
-| network (interface, gateway, DNS) | **D** (`boot` + reboot) または **C** (VNC) | tailnet0 共々巻き込まれるため安全側に倒す |
-| 初回 deploy / 完全復旧 | nixos-anywhere または **C** (VNC で `nixos-rebuild`) | |
+| forgejo / postgres / アプリ層 | **0** (comin: master へ push) | SSH 不要、60 秒 polling で自動 switch |
+| cloudflared / sshd / firewall / Tailscale | **0** (comin: master へ push) | on-server local 実行なので経路系変更でも安全 |
+| network (interface, gateway, DNS) | **D** (`boot` + reboot、merge 前に手動適用) | 誤設定が自動 switch されるとロックアウトの恐れがあるため comin を経由させない |
+| 初回 deploy / 完全復旧 / comin 自体の障害 | nixos-anywhere または **C** (VNC で `nixos-rebuild`) | |
 
 ---
 
-## 方式 A: Mac から `--target-host` (デフォルト)
+## 方式 0: comin による自動 deploy (デフォルト)
+
+設定は [`hosts/oberon/comin.nix`](../../hosts/oberon/comin.nix)。master へ push
+するだけで、手元での操作は一切不要。
+
+- GitHub の master を 60 秒間隔で polling し、新しい commit を検知すると
+  oberon 上で `nixosConfigurations.oberon` をビルドして自動 **switch** する
+- switch は SSH を介さず systemd service としてローカル実行されるため、
+  従来の「SSH 切断 → SIGPIPE で switch-to-configuration が死ぬ」問題
+  ([lessons doc §6](sakura-vps-nixos-lessons.md#6-nixos-deployment-戦略-switch-vs-boot))
+  とは無縁。cloudflared / sshd / firewall / Tailscale の変更も安全に適用される
+- `testing-oberon` ブランチへの push は **test** (再起動で消える一時適用) になる
+
+状態確認:
+
+```bash
+ssh oberon systemctl status comin
+ssh oberon journalctl -u comin -f
+```
+
+**注意 1**: CI の `build-nixos` job ([`.github/workflows/build.yml`](../../.github/workflows/build.yml))
+が master の eval/build を検証するが、失敗する commit を push しても comin は
+その commit を単に skip するだけで気づきにくい。push 後は CI の結果を確認すること。
+
+**注意 2**: network 設定の誤りも自動 switch されてしまう。interface / gateway /
+DNS のような大きな network 変更は、master へ merge する前に方式 D
+(`boot` + reboot) 等で慎重に検証するか、VNC コンソールを確保した状態で行うこと。
+
+## 方式 A: Mac から `--target-host` (comin 導入前のデフォルト、現在は fallback)
+
+comin 導入前のデフォルト方式。comin を使わず手動で当てたい場合の fallback として残す。
 
 Tailscale 経路は cloudflared / sshd の restart の影響を受けないため、
 ほぼ全ての変更でこの方式が使える (Tailscale 自体と network interface 変更を除く)。

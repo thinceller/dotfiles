@@ -22,6 +22,10 @@ in
     ".bash_profile" = {
       source = symlink /${rootDir}/.bash_profile;
     };
+    # herdr プロジェクトランチャー (configs/bin/herdr-launch)。
+    ".local/bin/herdr-launch" = {
+      source = symlink /${rootDir}/bin/herdr-launch;
+    };
   };
 
   xdg.configFile = {
@@ -36,8 +40,15 @@ in
       recursive = true;
     };
     # Ghostty
-    "ghostty/config" = {
-      source = symlink /${rootDir}/.config/ghostty/config;
+    "ghostty/config.ghostty" = {
+      source = symlink /${rootDir}/.config/ghostty/config.ghostty;
+    };
+    # herdr
+    # 単一ファイル symlink にする理由: herdr は ~/.config/herdr/ 配下に
+    # herdr.log / herdr-server.log / agent-detection/ ローカル override を
+    # 書くため、ディレクトリごと symlink すると書き込みが弾かれる。
+    "herdr/config.toml" = {
+      source = symlink /${rootDir}/.config/herdr/config.toml;
     };
     # karabiner
     # https://github.com/pqrs-org/Karabiner-Elements/issues/3248
@@ -57,11 +68,6 @@ in
     # pnpm
     "pnpm" = {
       source = symlink /${rootDir}/.config/pnpm;
-      recursive = true;
-    };
-    # rift
-    "rift" = {
-      source = symlink /${rootDir}/.config/rift;
       recursive = true;
     };
     "cage" = {

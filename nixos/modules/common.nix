@@ -50,6 +50,19 @@ in
     "flakes"
   ];
 
+  # CI が master push ごとに oberon の closure を thinceller-dotfiles cachix へ
+  # push するため、comin の on-server build はほぼ substitute で済む
+  # (2GB RAM でのローカルビルド回避)。デフォルトの cache.nixos.org を潰さないよう
+  # `extra-` プレフィックス必須。公開鍵は flake.nix の nixConfig と同一値。
+  nix.settings.extra-substituters = [
+    "https://nix-community.cachix.org"
+    "https://thinceller-dotfiles.cachix.org"
+  ];
+  nix.settings.extra-trusted-public-keys = [
+    "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    "thinceller-dotfiles.cachix.org-1:ygv46mR2J9KTVXN+c13mtokug8dwhYmuYdoXaAGKIBY="
+  ];
+
   environment.systemPackages = with pkgs; [
     git
     vim

@@ -54,6 +54,24 @@ nix fmt
 
 **Important**: When creating new files, you must stage them with `git add` before running `nix build`, as Nix Flakes only sees files tracked by git.
 
+### Verification on Claude Code on the web (cloud sessions)
+
+Cloud sessions run on x86_64-linux, so darwin configurations cannot be **built** there. Use these instead:
+
+```bash
+# Evaluate darwin configurations (catches most configuration errors)
+nix eval --raw .#darwinConfigurations.kohei-m4-mac-mini.system.drvPath
+nix eval --raw .#darwinConfigurations.SC-N-843.system.drvPath
+
+# oberon is x86_64-linux and can be built
+nix build .#nixosConfigurations.oberon.config.system.build.toplevel --no-link
+
+# Format check
+nix fmt
+```
+
+Nix is installed automatically by the SessionStart hook (`scripts/claude-cloud-session-start.sh`) on cloud sessions. To speed up session startup, configure the cloud environment's setup script — see `docs/reference/CLAUDE_CODE_WEB.md`.
+
 ## Architecture
 
 ### Directory Structure

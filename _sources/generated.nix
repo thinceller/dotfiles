@@ -30,6 +30,18 @@
     };
     date = "2021-07-16";
   };
+  hydro = {
+    pname = "hydro";
+    version = "f130b55ee3eaf099eccf588e2a62e5447068d120";
+    src = fetchFromGitHub {
+      owner = "jorgebucaran";
+      repo = "hydro";
+      rev = "f130b55ee3eaf099eccf588e2a62e5447068d120";
+      fetchSubmodules = false;
+      sha256 = "sha256-Dfq974KpD1mtQKznIlkXfZfDnSF/4MfLTA18Ak0LADE=";
+    };
+    date = "2026-02-24";
+  };
   tmux-agent-sidebar = {
     pname = "tmux-agent-sidebar";
     version = "v0.12.0";
