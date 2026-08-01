@@ -4,6 +4,16 @@
   pkgs,
   ...
 }:
+let
+  # Declarative settings のハッシュを systemd restart trigger に使い、
+  # settings 変更時に hermes-agent サービスを自動再起動させる。
+  # 特に Block Kit rich rendering のように、config.yaml は更新されても
+  # 動作中プロセスが起動時設定を使い続ける場合があるため、
+  # この trigger で再起動を促す。
+  hermesConfigHash = pkgs.writeText "hermes-config-hash.json" (
+    builtins.toJSON config.services.hermes-agent.settings
+  );
+in
 {
   sops.secrets."hermes-env" = {
     sopsFile = ../../secrets/hermes.env;
@@ -122,6 +132,7 @@
   systemd.services.hermes-agent = {
     serviceConfig.TimeoutStopSec = lib.mkForce 210;
     environment.MESSAGING_CWD = lib.mkForce null;
+    restartTriggers = [ hermesConfigHash ];
   };
 
   # hermes gateway は native systemd mode でダッシュボードを自動起動しない。
