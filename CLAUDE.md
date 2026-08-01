@@ -235,3 +235,43 @@ When adding a CLI tool that writes outside the project directory (caches, daemon
 2. Add secret value in the editor
 3. Define in module: `sops.secrets.my-secret = { };`
 4. Use: `config.sops.secrets.my-secret.path`
+
+## Hermes Implementation Worker
+
+このセクションは、Hermes kanban から spawn された worker プロファイルが `dotfiles` リポジトリで実装作業を行う際の補足規約です。
+
+### ブランチ
+
+- 形式: `feat/<task-id>-<slug>` または `fix/<task-id>-<slug>`
+- 例: `feat/t_abc123-update-hermes-settings`
+
+### 検証
+
+コード変更後は必ず以下を実行し、すべてパスすることを確認してから PR を作成する。
+
+```bash
+nix fmt
+nix eval --raw .#darwinConfigurations.kohei-m4-mac-mini.system.drvPath
+nix eval --raw .#darwinConfigurations.SC-N-843.system.drvPath
+nix build .#nixosConfigurations.oberon.config.system.build.toplevel --no-link
+```
+
+`nix build` を実行する前には、新規作成したファイルを `git add` しておく。
+
+### コミット
+
+- Conventional Commits: `feat:`, `fix:`, `chore:`, `docs:`, `refactor:`, `test:`
+- 複数の小さなコミットに分けて進める
+
+### PR 作成
+
+- `gh pr create --draft` で Draft PR を作成
+- タイトルは Conventional Commits 形式
+- 本文に実装概要と検証結果を記載
+
+### 禁止事項
+
+- ユーザー承認なしのマージ
+- 検証未完了での PR 作成
+- タスク範囲外の勝手な修正
+- 新規 secret の追加など、安全に関わる変更を独自に決めない

@@ -26,6 +26,18 @@ in
     ".local/bin/herdr-launch" = {
       source = symlink /${rootDir}/bin/herdr-launch;
     };
+    # Hermes worker profile for kanban auto-implementation.
+    # The default profile SOUL.md is managed via the NixOS module's documents option.
+    ".hermes/profiles/worker/SOUL.md" = {
+      source = symlink /${rootDir}/hermes/profiles/worker/SOUL.md;
+    };
+    ".hermes/profiles/worker/config.yaml" = {
+      source = symlink /${rootDir}/hermes/profiles/worker/config.yaml;
+    };
+    ".hermes/scripts/to-kanban.py" = {
+      source = symlink /${rootDir}/hermes/scripts/to-kanban.py;
+      executable = true;
+    };
   };
 
   xdg.configFile = {

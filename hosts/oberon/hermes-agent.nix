@@ -90,9 +90,12 @@ in
     environmentFiles = [ config.sops.secrets."hermes-env".path ];
 
     # knowledge-base vault 連携 (Mnemos 経路C)。
-    # AGENTS.md は workingDirectory に配置され、system prompt に自動注入される
+    # AGENTS.md / SOUL.md は workingDirectory に配置され、system prompt に自動注入される
     # (agent/prompt_builder.py の context files 機構、cwd 直下のみ読む)。
-    documents."AGENTS.md" = ./hermes-documents/AGENTS.md;
+    documents = {
+      "AGENTS.md" = ./hermes-documents/AGENTS.md;
+      "SOUL.md" = ./hermes-documents/SOUL.md;
+    };
 
     # service path には git はあるが ssh がないため openssh を追加。
     # gh は PAT を実行時に sops path から読む wrapper として提供する
