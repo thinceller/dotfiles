@@ -10,7 +10,7 @@
     package = pkgs.opencode;
 
     settings = {
-      model = "opencode-go/kimi-k2.7-code";
+      model = "opencode-go/gpt-5.6-luna";
       small_model = "opencode-go/deepseek-v4-flash";
       theme = "tokyonight";
       autoupdate = false;
