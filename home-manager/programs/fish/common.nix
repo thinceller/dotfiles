@@ -59,6 +59,13 @@ in
       set -g hydro_color_duration e0af68
       set -g hydro_multiline true
 
+      # SSH 接続中は prompt 先頭にホスト名を出す。
+      # ローカルとリモートで shell 設定が同一なため、接続の成否が prompt から判別できない。
+      if set -q SSH_CONNECTION
+        set -g hydro_color_start 9ece6a
+        set -g hydro_symbol_start (prompt_hostname)" "
+      end
+
       # starship の add_newline 相当: prompt の前に空行を挟む
       if not functions -q _hydro_original_prompt
         functions -c fish_prompt _hydro_original_prompt
