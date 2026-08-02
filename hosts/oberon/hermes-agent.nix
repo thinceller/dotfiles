@@ -295,4 +295,47 @@ in
       OnUnitActiveSec = "1min";
     };
   };
+
+  # kanban board はランタイム状態 (kanban.db) なので NixOS モジュールの管理外だが、
+  # 別マシンへ復元したときに手動作成が要らないよう、宣言した board を冪等に用意する。
+  # 既存 board があれば `boards create` は非ゼロで終わるので、その場合は何もしない。
+  systemd.services.hermes-kanban-boards =
+    let
+      workspace = config.services.hermes-agent.workingDirectory;
+      boards = [
+        {
+          slug = "thinceller-net";
+          name = "thinceller.net";
+          workdir = "${workspace}/thinceller.net";
+        }
+        {
+          slug = "dotfiles";
+          name = "dotfiles";
+          workdir = "${workspace}/dotfiles";
+        }
+      ];
+    in
+    {
+      description = "Ensure Hermes kanban boards exist";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "hermes-agent.service" ];
+
+      environment = {
+        HOME = config.services.hermes-agent.stateDir;
+        HERMES_HOME = "${config.services.hermes-agent.stateDir}/.hermes";
+        HERMES_MANAGED = "true";
+      };
+
+      serviceConfig = {
+        Type = "oneshot";
+        User = config.services.hermes-agent.user;
+        Group = config.services.hermes-agent.group;
+      };
+
+      script = lib.concatMapStringsSep "\n" (b: ''
+        ${config.services.hermes-agent.package}/bin/hermes kanban boards create ${b.slug} \
+          --name ${lib.escapeShellArg b.name} \
+          --default-workdir ${b.workdir} || true
+      '') boards;
+    };
 }
