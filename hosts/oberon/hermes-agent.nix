@@ -204,11 +204,20 @@ in
           ${./hermes-documents/SOUL.md} ${stateDir}/.hermes/SOUL.md
 
         # profile の起動には profiles/<name>/ が実在する必要がある。
-        # hermes が profile 内に期待するサブディレクトリも先に作っておく。
-        install -d -o ${user} -g ${group} -m 2770 ${workerProfileDir}
-        for _d in memories sessions skills skins logs plans workspace cron home plugins; do
-          install -d -o ${user} -g ${group} -m 2770 "${workerProfileDir}/$_d"
-        done
+        # サブディレクトリの一覧は hermes_cli/profiles.py の _PROFILE_DIRS
+        # (profile 作成時に bootstrap されるもの) に合わせている。
+        install -o ${user} -g ${group} -m 2770 -d \
+          ${workerProfileDir} \
+          ${workerProfileDir}/memories \
+          ${workerProfileDir}/sessions \
+          ${workerProfileDir}/skills \
+          ${workerProfileDir}/skins \
+          ${workerProfileDir}/logs \
+          ${workerProfileDir}/plans \
+          ${workerProfileDir}/workspace \
+          ${workerProfileDir}/cron \
+          ${workerProfileDir}/home \
+          ${workerProfileDir}/plugins
 
         install -o ${user} -g ${group} -m 0660 \
           ${./hermes-profiles/worker/SOUL.md} ${workerProfileDir}/SOUL.md
@@ -217,8 +226,14 @@ in
 
         # plugins は HERMES_HOME/plugins/ から解決されるため、worker プロファイルにも
         # default プロファイルと同じ nix-managed symlink を張る。
+        # hermes-agent の nix/nixosModules.nix にある default プロファイル向けの
+        # 同じ処理を写したもの。input を更新したときは向こうの変更を確認すること。
         find ${workerProfileDir}/plugins -maxdepth 1 -type l -name 'nix-managed-*' -delete 2>/dev/null || true
         ${lib.concatMapStringsSep "\n" (plugin: ''
+          if [ ! -f "${plugin}/plugin.yaml" ]; then
+            echo "ERROR: extraPlugins entry '${plugin}' has no plugin.yaml" >&2
+            exit 1
+          fi
           ln -sfn ${plugin} ${workerProfileDir}/plugins/nix-managed-${lib.getName plugin}
           chown -h ${user}:${group} ${workerProfileDir}/plugins/nix-managed-${lib.getName plugin}
         '') config.services.hermes-agent.extraPlugins}
