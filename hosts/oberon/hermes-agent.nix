@@ -298,7 +298,7 @@ in
 
   # kanban board はランタイム状態 (kanban.db) なので NixOS モジュールの管理外だが、
   # 別マシンへ復元したときに手動作成が要らないよう、宣言した board を冪等に用意する。
-  # 既存 board があれば `boards create` は非ゼロで終わるので、その場合は何もしない。
+  # `boards create` は `mkdir -p` 相当で冪等なので、毎回実行して構わない。
   systemd.services.hermes-kanban-boards =
     let
       workspace = config.services.hermes-agent.workingDirectory;
@@ -318,7 +318,7 @@ in
     {
       description = "Ensure Hermes kanban boards exist";
       wantedBy = [ "multi-user.target" ];
-      after = [ "hermes-agent.service" ];
+      before = [ "hermes-agent.service" ];
 
       environment = {
         HOME = config.services.hermes-agent.stateDir;
@@ -335,7 +335,7 @@ in
       script = lib.concatMapStringsSep "\n" (b: ''
         ${config.services.hermes-agent.package}/bin/hermes kanban boards create ${b.slug} \
           --name ${lib.escapeShellArg b.name} \
-          --default-workdir ${b.workdir} || true
+          --default-workdir ${lib.escapeShellArg b.workdir}
       '') boards;
     };
 }
