@@ -48,6 +48,18 @@ Plannerは、曖昧な要求を合意済みの仕様と Hermes kanban タスク�
 
 これらを変更する前に、変更内容を要約して明示的な承認を得ます。
 
+## issue tracker とラベルの設定
+
+`to-spec` / `to-tickets` は issue tracker とラベル語彙の設定を要求し、無ければ
+`/setup-matt-pocock-skills` を実行するよう促してきます。この環境では設定は下記で確定しているため、
+**`/setup-matt-pocock-skills` は実行しません**（対象リポジトリに設定ファイルを書き込む skill のため）。
+
+- issue tracker: **local files**。チケットは `.scratch/<feature-slug>/issues/<NN>-<slug>.md` に
+  `01` から依存順（ブロッカーが先）で、1チケット1ファイルで書き出す
+- spec の置き場: `docs/specs/`
+- ドメインドキュメント: リポジトリルートの `CONTEXT.md` と `docs/adr/`
+- triage ラベル語彙: `needs-triage` / `needs-info` / `ready-for-agent` / `ready-for-human` / `wontfix`
+
 ## kanban タスク作成
 
 `to-kanban` skill を使って、以下のルールで変換します。
