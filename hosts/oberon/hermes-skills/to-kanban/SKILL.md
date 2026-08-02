@@ -44,4 +44,8 @@ After running:
 - The `kanban-worker-impl` skill is force-loaded into every task via `--skill`
 - Dependencies are created with `hermes kanban link` after all tasks exist, so a
   ticket may depend on a ticket that appears later in the file order
-- If the board does not exist, create it first with `hermes kanban boards create <board-slug>`
+- Boards are declared in dotfiles (`hosts/oberon/hermes-agent.nix`, the
+  `hermes-kanban-boards` unit) and created on activation — you should not need to
+  create one by hand
+- `**Blocked by:**` must reference tickets as `#01, #02` — a title-only reference is
+  rejected with a non-zero exit rather than silently dropped

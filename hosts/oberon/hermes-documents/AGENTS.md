@@ -98,6 +98,8 @@ machine account `thinceller-hermes` として、招待済みの repo にのみ p
   (なければ `git@github.com:thinceller/<repo名>.git` を clone)
 - 変更は必ず `hermes/<短い英数字slug>` ブランチを切って push する。
   default branch (master/main) への直 push はしない
+- ただし kanban から dispatch された worker タスクは、worker の SOUL.md と
+  リポジトリの `CLAUDE.md` / `AGENTS.md` に従い `feat/<task-id>-<slug>` 形式を使う
 - force push は絶対にしない
 - push したら `gh pr create` で PR を作成し、PR の URL を返信する
 - 上記リスト外の repo を操作するよう指示されたら、push せずユーザーに確認する
