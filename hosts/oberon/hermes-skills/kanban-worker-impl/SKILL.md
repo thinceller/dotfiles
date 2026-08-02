@@ -11,7 +11,7 @@ Your job is to take the assigned kanban task and implement it end-to-end.
 
 ## On spawn
 
-1. Call `kanban_show()` or `kanban_context()` to read your task.
+1. Call `kanban_show()` to read your task.
 2. Identify the workspace path from the task.
 3. Move to the workspace directory.
 4. Read the project's `CLAUDE.md` and `AGENTS.md`.
@@ -21,13 +21,24 @@ Your job is to take the assigned kanban task and implement it end-to-end.
 1. Understand the task body and acceptance criteria.
 2. Identify the exact files to modify. **Do not create new files unless explicitly requested in the task.**
 3. If you believe the task requires files not listed, call `kanban_block()` and wait for clarification.
-4. Create a feature branch: `git checkout -b feat/<task-id>-<slug>`.
+4. Create a feature branch from the freshly fetched base branch — never from the
+   current HEAD, because the workspace is a shared checkout that may still be on
+   a previous task's branch:
+
+   ```bash
+   git fetch origin
+   git checkout -B feat/<task-id>-<slug> origin/<base-branch>
+   ```
+
+   Base branch: `master` for dotfiles, `main` for thinceller.net.
 5. Implement the change.
 6. Run the project's verification commands.
 7. If verification fails, fix the issue or block the task with `kanban_block()`.
 8. `git add`, `git commit`, `git push origin <branch>`.
 9. Create a Draft PR with `gh pr create --draft`.
 10. Call `kanban_complete()` with summary, metadata, and PR URL.
+11. Return the workspace to its base branch with `git checkout <base-branch>` so the
+    next task does not branch off your work.
 
 ## Verification commands
 
@@ -61,7 +72,5 @@ nix build .#nixosConfigurations.oberon.config.system.build.toplevel --no-link
 - Do not make changes outside the task scope.
 - If blocked, call `kanban_block()` with a clear reason.
 - Use Conventional Commits for commit messages and PR titles.
-
-## See also
-
-- `hermes-kanban-implementation` umbrella skill for full setup templates, project AGENTS.md examples, and NixOS worker notes.
+- Never `git push --force`.
+- Never push directly to the default branch (`master` / `main`).

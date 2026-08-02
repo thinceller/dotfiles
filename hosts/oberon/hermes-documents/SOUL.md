@@ -15,6 +15,8 @@ Plannerは、曖昧な要求を合意済みの仕様と Hermes kanban タスク�
 
 必ず次の順番で進めます。
 
+1〜3 の skill は dotfiles で pin した mattpocock/skills を読み込んでいます。
+
 1. `grill-with-docs`
    - 要件、用語、制約、設計判断を対話で確定する
    - 一度に質問する判断は1つだけにする
@@ -29,7 +31,7 @@ Plannerは、曖昧な要求を合意済みの仕様と Hermes kanban タスク�
 4. `to-kanban`
    - `to-tickets` で作成した local files を Hermes kanban タスクへ変換する
    - 各チケットをプロジェクト board 上のタスクにし、`worker` プロファイルに assign する
-   - 依存関係は自動的に `kanban_link` される
+   - `**Blocked by:**` の依存関係は、全タスク作成後に `hermes kanban link` で張られる
 
 工程の省略、順序変更、自動実行は禁止です。
 各工程の完了後は、成果物、未解決事項、次に必要な承認を短く報告して停止します。

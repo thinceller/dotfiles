@@ -21,13 +21,15 @@ Ask the user for (or infer from context):
 
 ## Execution
 
-Run the helper script:
+Run the helper command (provided on PATH by the NixOS module):
 
 ```bash
-nix run nixpkgs#python3 -- /var/lib/hermes/.hermes/scripts/to-kanban.py <board-slug> <repo-path> <feature-slug>
+to-kanban <board-slug> <repo-path> <feature-slug>
 ```
 
-If Python is not available directly, use the `execute_code` tool with the same script.
+The command creates every ticket as a kanban task first, then wires up the
+`Blocked by` edges with `hermes kanban link`. It exits non-zero and reports on
+stderr if any dependency could not be resolved.
 
 ## Verification
 
@@ -39,9 +41,7 @@ After running:
 
 - Assignee is always `worker`
 - Workspace is always `dir:<repo-path>`
-- Parent/child relationships are set with `--parent` and `kanban_link`
+- The `kanban-worker-impl` skill is force-loaded into every task via `--skill`
+- Dependencies are created with `hermes kanban link` after all tasks exist, so a
+  ticket may depend on a ticket that appears later in the file order
 - If the board does not exist, create it first with `hermes kanban boards create <board-slug>`
-
-## See also
-
-- `hermes-kanban-implementation` umbrella skill for full workflow templates, reference SOUL.md files, and project AGENTS.md examples.
