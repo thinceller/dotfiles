@@ -41,7 +41,8 @@ After running:
 
 - Assignee is always `worker`
 - Workspace is always `dir:<repo-path>`
-- The `kanban-worker-impl` skill is force-loaded into every task via `--skill`
+- The worker's procedure lives in its profile SOUL.md, which is always in the
+  worker's prompt — nothing needs to be force-loaded per task
 - Dependencies are created with `hermes kanban link` after all tasks exist, so a
   ticket may depend on a ticket that appears later in the file order
 - Boards are declared in dotfiles (`hosts/oberon/hermes-agent.nix`, the

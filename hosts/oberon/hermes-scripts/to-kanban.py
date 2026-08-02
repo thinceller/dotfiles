@@ -41,8 +41,6 @@ _BLOCKER_RE = re.compile(r"#(\d+)")
 # "None — can start immediately" のような「依存なし」表現。
 _NO_BLOCKER_RE = re.compile(r"none|can start immediately", re.IGNORECASE)
 
-WORKER_SKILL = "kanban-worker-impl"
-
 
 class TicketError(Exception):
     """チケットの内容や hermes 呼び出しが不正なときに送出する。"""
@@ -110,7 +108,6 @@ def parse_ticket(path: Path) -> dict:
         "title": title,
         "body": "\n".join(lines[body_start:]).strip(),
         "blocked_by": blocked_by,
-        "path": path,
     }
 
 
@@ -161,7 +158,6 @@ def create_task(board: str, ticket: dict, repo_path: str, parent_ids: list[str])
         "--body", ticket["body"],
         "--assignee", "worker",
         "--workspace", f"dir:{repo_path}",
-        "--skill", WORKER_SKILL,
         "--json",
     ]
     for parent_id in parent_ids:
