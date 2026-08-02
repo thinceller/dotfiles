@@ -22,6 +22,8 @@ Example:
     **Status:** ready-for-agent
 
     - [ ] Acceptance criterion 1
+
+依存は必ず `#<番号>` の形で書くこと。タイトルだけの記述は解釈できない。
 """
 
 import json
@@ -34,8 +36,16 @@ from pathlib import Path
 _HEADING_RE = re.compile(r"^#\s*(\d+)\s*[—–\-:：]\s*(.+)$")
 # ファイル名からのフォールバック: "01-add-foo.md"
 _FILENAME_NUM_RE = re.compile(r"^(\d+)")
+# 依存先は '#' 必須。'#' を省くと本文中の数字を拾って依存を捏造してしまう。
+_BLOCKER_RE = re.compile(r"#(\d+)")
+# "None — can start immediately" のような「依存なし」表現。
+_NO_BLOCKER_RE = re.compile(r"none|can start immediately", re.IGNORECASE)
 
 WORKER_SKILL = "kanban-worker-impl"
+
+
+class TicketError(Exception):
+    """チケットの内容や hermes 呼び出しが不正なときに送出する。"""
 
 
 def normalize_num(raw: str) -> str:
@@ -43,27 +53,42 @@ def normalize_num(raw: str) -> str:
     return f"{int(raw):02d}"
 
 
-def parse_ticket(path: Path) -> dict:
-    text = path.read_text(encoding="utf-8")
-    lines = text.splitlines()
+def parse_blocked_by(rest: str, path: Path, line: str) -> list[str]:
+    nums = _BLOCKER_RE.findall(rest)
+    if nums:
+        return [normalize_num(n) for n in nums]
+    if not rest or _NO_BLOCKER_RE.search(rest):
+        return []
+    raise TicketError(
+        f"Blocked by の依存先を解釈できません: {path}\n"
+        f"  行: {line}\n"
+        f"  依存先は '#01, #02' のようにチケット番号を # 付きで書いてください。"
+    )
 
-    title = None
+
+def parse_ticket(path: Path) -> dict:
+    lines = path.read_text(encoding="utf-8").splitlines()
+
     num = None
+    title = None
+    body_start = 0
 
     if lines:
         m = _HEADING_RE.match(lines[0].strip())
         if m:
             num = normalize_num(m.group(1))
             title = m.group(2).strip()
+            body_start = 1
 
     # 見出しが壊れていてもファイル名から番号を拾う。
+    # この場合 1 行目は本文なので body から落とさない。
     if num is None:
         m = _FILENAME_NUM_RE.match(path.stem)
         if m:
             num = normalize_num(m.group(1))
 
     if num is None:
-        raise ValueError(
+        raise TicketError(
             f"チケット番号を特定できません: {path}\n"
             f"  見出しを '# 01 — タイトル' 形式にするか、"
             f"ファイル名を '01-<slug>.md' 形式にしてください。"
@@ -72,27 +97,64 @@ def parse_ticket(path: Path) -> dict:
     if title is None:
         title = path.stem
 
-    body = "\n".join(lines[1:]).strip()
-
     blocked_by = []
     for line in lines:
-        if line.strip().startswith("**Blocked by:**"):
-            rest = line.split("**Blocked by:**", 1)[1].strip()
-            if "None" in rest or "can start immediately" in rest.lower():
-                break
-            blocked_by = [normalize_num(n) for n in re.findall(r"#?(\d+)", rest)]
+        stripped = line.strip()
+        if stripped.startswith("**Blocked by:**"):
+            rest = stripped.split("**Blocked by:**", 1)[1].strip()
+            blocked_by = parse_blocked_by(rest, path, stripped)
             break
 
     return {
         "num": num,
         "title": title,
-        "body": body,
+        "body": "\n".join(lines[body_start:]).strip(),
         "blocked_by": blocked_by,
         "path": path,
     }
 
 
-def create_task(board: str, ticket: dict, repo_path: str) -> str:
+def validate(tickets: list[dict]) -> None:
+    """タスクを1つも作る前に、チケット集合の整合性を確かめる。"""
+    nums = [t["num"] for t in tickets]
+    duplicates = sorted({n for n in nums if nums.count(n) > 1})
+    if duplicates:
+        raise TicketError(f"チケット番号が重複しています: {duplicates}")
+
+    known = set(nums)
+    unknown = [
+        (t["num"], b) for t in tickets for b in t["blocked_by"] if b not in known
+    ]
+    if unknown:
+        raise TicketError(
+            "対応するチケットのない依存があります:\n"
+            + "\n".join(f"  #{child} の Blocked by: #{parent}" for child, parent in unknown)
+        )
+
+
+def topo_sort(tickets: list[dict]) -> list[dict]:
+    """依存元が必ず先に来る順へ並べ替える。循環があれば TicketError。"""
+    by_num = {t["num"]: t for t in tickets}
+    pending = {t["num"]: set(t["blocked_by"]) for t in tickets}
+    ordered = []
+
+    while pending:
+        ready = sorted(num for num, deps in pending.items() if not deps)
+        if not ready:
+            cycle = ", ".join(
+                f"#{num} -> {sorted(deps)}" for num, deps in sorted(pending.items())
+            )
+            raise TicketError(f"チケットの依存関係が循環しています: {cycle}")
+        for num in ready:
+            ordered.append(by_num[num])
+            del pending[num]
+        for deps in pending.values():
+            deps.difference_update(ready)
+
+    return ordered
+
+
+def create_task(board: str, ticket: dict, repo_path: str, parent_ids: list[str]) -> str:
     """kanban タスクを作成して task id を返す。"""
     cmd = [
         "hermes", "kanban", "--board", board, "create", ticket["title"],
@@ -102,16 +164,16 @@ def create_task(board: str, ticket: dict, repo_path: str) -> str:
         "--skill", WORKER_SKILL,
         "--json",
     ]
-    result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+    for parent_id in parent_ids:
+        cmd.extend(["--parent", parent_id])
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    if result.returncode != 0:
+        raise TicketError(
+            f"hermes kanban create に失敗しました (exit {result.returncode}): {ticket['title']}\n"
+            f"{result.stderr.strip() or result.stdout.strip()}"
+        )
     return json.loads(result.stdout)["id"]
-
-
-def link_tasks(board: str, parent_id: str, child_id: str) -> None:
-    """親→子の依存辺を張る。子は親が done になるまで ready にならない。"""
-    subprocess.run(
-        ["hermes", "kanban", "--board", board, "link", parent_id, child_id],
-        capture_output=True, text=True, check=True,
-    )
 
 
 def main():
@@ -131,45 +193,33 @@ def main():
         print(f"{issues_dir} に .md ファイルがありません", file=sys.stderr)
         sys.exit(1)
 
-    tickets = [parse_ticket(f) for f in files]
-
-    nums = [t["num"] for t in tickets]
-    duplicates = sorted({n for n in nums if nums.count(n) > 1})
-    if duplicates:
-        print(f"チケット番号が重複しています: {duplicates}", file=sys.stderr)
+    try:
+        tickets = [parse_ticket(f) for f in files]
+        validate(tickets)
+        ordered = topo_sort(tickets)
+    except TicketError as e:
+        print(e, file=sys.stderr)
+        print("タスクは1つも作成していません。", file=sys.stderr)
         sys.exit(1)
 
-    # パス1: 依存を張らずに全タスクを作る。
-    # 後続チケットへの依存 (前方参照) があっても取りこぼさないため。
+    # 依存元が先に来る順に並んでいるので、作成時に --parent を渡すだけで依存が張れる。
+    # 依存なしで作ってから link で張ると、その隙にタスクが ready のまま dispatcher に
+    # 拾われてしまう (link は status='ready' のときしか todo へ降格させない)。
     num_to_id = {}
-    for t in tickets:
-        task_id = create_task(board_slug, t, repo_path)
-        num_to_id[t["num"]] = task_id
-        print(f"作成 {t['num']} -> {task_id}: {t['title']}")
-
-    # パス2: 依存辺を張る。
-    unresolved = []
-    for t in tickets:
-        child_id = num_to_id[t["num"]]
-        for parent_num in t["blocked_by"]:
-            parent_id = num_to_id.get(parent_num)
-            if parent_id is None:
-                unresolved.append((t["num"], parent_num))
-                continue
-            link_tasks(board_slug, parent_id, child_id)
-            print(f"依存 {t['num']} <- {parent_num}")
-
-    if unresolved:
-        print("", file=sys.stderr)
-        print("以下の依存を解決できませんでした (対応するチケットがありません):", file=sys.stderr)
-        for child_num, parent_num in unresolved:
-            print(f"  #{child_num} の Blocked by: #{parent_num}", file=sys.stderr)
-        print(
-            "作成済みのタスクは board に残っています。"
-            "チケットファイルを直してから、不要なタスクを削除して再実行してください。",
-            file=sys.stderr,
-        )
-        sys.exit(1)
+    for ticket in ordered:
+        parent_ids = [num_to_id[n] for n in ticket["blocked_by"]]
+        try:
+            task_id = create_task(board_slug, ticket, repo_path, parent_ids)
+        except TicketError as e:
+            print(e, file=sys.stderr)
+            print(
+                f"{len(num_to_id)} 件のタスクは作成済みです。board を確認してください。",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+        num_to_id[ticket["num"]] = task_id
+        deps = ", ".join(f"#{n}" for n in ticket["blocked_by"]) or "なし"
+        print(f"作成 {ticket['num']} -> {task_id}: {ticket['title']} (依存: {deps})")
 
     print("完了。")
 
