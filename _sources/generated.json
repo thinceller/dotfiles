@@ -62,6 +62,27 @@
         },
         "version": "f130b55ee3eaf099eccf588e2a62e5447068d120"
     },
+    "matt-pocock-skills": {
+        "cargoLock": null,
+        "date": "2026-07-28",
+        "extract": null,
+        "name": "matt-pocock-skills",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "mattpocock",
+            "repo": "skills",
+            "rev": "2ab958093e83e0ec752e6c1c5932da465bf23e0c",
+            "sha256": "sha256-dQtG6usJWlg/FqTajrjcs8GSdymH92WsgLiUaCfvKPA=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "2ab958093e83e0ec752e6c1c5932da465bf23e0c"
+    },
     "tcmux": {
         "cargoLock": null,
         "date": null,

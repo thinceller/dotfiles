@@ -14,6 +14,25 @@ let
     builtins.toJSON config.services.hermes-agent.settings
   );
 
+  sources = pkgs.callPackage ../../_sources/generated.nix { };
+
+  # Planner の設計ワークフロー (grill-with-docs → to-spec → to-tickets) が依存する
+  # mattpocock/skills。リポジトリ全体を external_dirs に載せると in-progress や
+  # personal 配下まで system prompt に載るため、使う skill だけを取り出す。
+  # grilling は grill-with-docs / grill-me から参照される共有 skill。
+  plannerSkills = pkgs.runCommand "matt-pocock-planner-skills" { } ''
+    mkdir -p $out
+    for s in \
+      engineering/grill-with-docs \
+      engineering/to-spec \
+      engineering/to-tickets \
+      engineering/domain-modeling \
+      productivity/grill-me \
+      productivity/grilling; do
+      cp -r ${sources.matt-pocock-skills.src}/skills/"$s" $out/
+    done
+  '';
+
   # default プロファイル (planner) と worker プロファイルで共有する設定。
   # profile の config.yaml は root の config.yaml とマージされず完全に置き換わるため、
   # 共通部分をここで一元化して両方に流し込む。
@@ -28,10 +47,12 @@ let
     terminal.cwd = config.services.hermes-agent.workingDirectory;
     # standalone kind のプラグインは既定 opt-in のため、明示的に有効化する。
     plugins.enabled = [ "session-vault-export" ];
-    # Mnemos の vault 系スキル (経路C 版: terminal + git、MCP なし)。
-    # external_dirs は読み取り専用の共有スキルディレクトリ。
+    # Mnemos の vault 系スキル (経路C 版: terminal + git、MCP なし) と、
+    # Planner が使う mattpocock/skills。external_dirs は読み取り専用の
+    # 共有スキルディレクトリ。
     skills.external_dirs = [
       "${./hermes-skills}"
+      "${plannerSkills}"
     ];
     # 秘書的な運用のため、セッションをまたいだ記憶を upstream default に従って明示化。
     memory.memory_enabled = true;
