@@ -30,7 +30,7 @@ set -l mode (printf '%s\n' open worktree pr-review | fzf --prompt='mode> ')
 test -n "$mode"; or exit 0
 
 set -l created # workspace 作成系コマンドの JSON レスポンス
-set -l default_branch
+set -l base_branch # pr-review でのみ使う。PR の base ブランチ
 
 switch $mode
     case open
@@ -64,27 +64,29 @@ switch $mode
         cd $repo_path # gh はカレントディレクトリのリポジトリを対象にする
         # 自分宛てにレビュー依頼された PR を優先表示し、0 件なら全 open PR に
         # フォールバックする (どちらのモードかは fzf のプロンプトで分かる)。
-        set -l pr_jq '.[] | "\(.number)\t\(.title)\t\(.author.login)"'
+        # レビュー範囲は「PR の base 〜 PR ブランチの HEAD」なので、デフォルトブランチ
+        # ではなく PR ごとの baseRefName を取得して diff の基準に使う
+        # (stacked PR では base がデフォルトブランチと一致しない)。
+        set -l pr_jq '.[] | "\(.number)\t\(.title)\t\(.author.login)\t\(.baseRefName)"'
         set -l pr_prompt 'pr (review-requested)> '
         set -l pr_lines (gh pr list --limit 50 --search 'review-requested:@me' \
-            --json number,title,author --jq $pr_jq)
+            --json number,title,author,baseRefName --jq $pr_jq)
         if test -z "$pr_lines"
             set pr_prompt 'pr (all)> '
-            set pr_lines (gh pr list --limit 50 --json number,title,author --jq $pr_jq)
+            set pr_lines (gh pr list --limit 50 --json number,title,author,baseRefName --jq $pr_jq)
         end
-        set -l pr_number (printf '%s\n' $pr_lines | fzf --prompt=$pr_prompt | cut -f1)
-        test -n "$pr_number"; or exit 0
-
-        # デフォルトブランチを検出 (/code-review の引数と hunk diff の基準に使う)。
-        set default_branch (wt config state default-branch)
-        or fail_pause
+        set -l pr_line (printf '%s\n' $pr_lines | fzf --prompt=$pr_prompt)
+        test -n "$pr_line"; or exit 0
+        set -l pr_fields (string split \t -- $pr_line)
+        set -l pr_number $pr_fields[1]
+        set base_branch $pr_fields[4]
 
         # PR ブランチの worktree を worktrunk で作成する。fork PR は refs/pull/N/head
         # を fetch し pushRemote を fork に向けてくれる。再実行時は既存 worktree を
         # 使い回すが、PR ブランチは fetch されないので最新化は手動で行う。
         set -l wt_path (wt -C $repo_path switch pr:$pr_number --no-cd -x echo -- '{{ worktree_path }}')
         or fail_pause
-        git -C $wt_path fetch origin $default_branch
+        git -C $wt_path fetch origin $base_branch
         set created (herdr worktree open --cwd $repo_path --path $wt_path --label pr-$pr_number --focus --json)
         or fail_pause
 end
@@ -101,12 +103,12 @@ herdr tab rename $agent_tab agent
 set -l editor (herdr tab create --workspace $ws --cwd $work_path --label editor --no-focus)
 herdr pane run (echo $editor | jq -r '.result.root_pane.pane_id') nvim
 
-# --- pr-review: デフォルトブランチとの diff を hunk で開く review タブ ---
+# --- pr-review: PR の base との diff を hunk で開く review タブ ---
 if test $mode = pr-review
     set -l review (herdr tab create --workspace $ws --cwd $work_path --label review --no-focus)
-    # hunk diff <ref> は working tree と <ref> の直接比較。デフォルトブランチ側の
+    # hunk diff <ref> は working tree と <ref> の直接比較。base ブランチ側の
     # 先行コミットを差分に混ぜないよう merge-base を基準にする。
-    set -l diff_base (git -C $work_path merge-base origin/$default_branch HEAD)
+    set -l diff_base (git -C $work_path merge-base origin/$base_branch HEAD)
     herdr pane run (echo $review | jq -r '.result.root_pane.pane_id') "hunk diff $diff_base"
 end
 
@@ -125,7 +127,7 @@ test -n "$agent_name"; or set agent_name claude
 # すべて `--` より前に置く (後ろに回ると claude が unknown option で即死する)。
 set -l agent_prompt # `--` を含む。pr-review 以外は空配列のまま展開されない
 if test $mode = pr-review
-    set agent_prompt -- "/code-review xhigh $default_branch"
+    set agent_prompt -- "/code-review xhigh origin/$base_branch"
 end
 # shell の初期化が済むまで herdr 0.7.5 の agent start は agent_pane_busy で即時失敗する
 # (内部リトライなし)。大きなリポジトリでは worktree 作成や wt hook の負荷で shell の
