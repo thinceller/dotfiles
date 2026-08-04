@@ -127,7 +127,13 @@ test -n "$agent_name"; or set agent_name claude
 # すべて `--` より前に置く (後ろに回ると claude が unknown option で即死する)。
 set -l agent_prompt # `--` を含む。pr-review 以外は空配列のまま展開されない
 if test $mode = pr-review
-    set agent_prompt -- "/code-review xhigh origin/$base_branch"
+    # /code-review の引数は「base ブランチ名 1 トークンだけ」にする。空白を含む引数
+    # (以前の `xhigh <branch>`) は base ref ではなく findings 向けのメモとして解釈され、
+    # base は暗黙にリポジトリのデフォルトブランチへフォールバックしてしまう。
+    # origin/ も付けない: claude 側が origin/<name> → <name> の順に解決するので、
+    # 素の名前を渡せば fetch 済みの remote-tracking ref が優先される。
+    # effort は /code-review の引数では指定できないので claude の CLI フラグで渡す。
+    set agent_prompt -- --effort xhigh "/code-review $base_branch"
 end
 # shell の初期化が済むまで herdr 0.7.5 の agent start は agent_pane_busy で即時失敗する
 # (内部リトライなし)。大きなリポジトリでは worktree 作成や wt hook の負荷で shell の
