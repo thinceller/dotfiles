@@ -127,13 +127,17 @@ test -n "$agent_name"; or set agent_name claude
 # すべて `--` より前に置く (後ろに回ると claude が unknown option で即死する)。
 set -l agent_prompt # `--` を含む。pr-review 以外は空配列のまま展開されない
 if test $mode = pr-review
-    # /code-review の引数は「base ブランチ名 1 トークンだけ」にする。空白を含む引数
-    # (以前の `xhigh <branch>`) は base ref ではなく findings 向けのメモとして解釈され、
-    # base は暗黙にリポジトリのデフォルトブランチへフォールバックしてしまう。
-    # origin/ も付けない: claude 側が origin/<name> → <name> の順に解決するので、
-    # 素の名前を渡せば fetch 済みの remote-tracking ref が優先される。
+    # /code-review の引数は「空白を含まない 1 トークン」にする。空白を含む引数
+    # (以前の `xhigh <branch>`) は ref ではなく findings 向けのメモとして解釈され、
+    # 比較対象が暗黙にリポジトリのデフォルトブランチへ落ちてしまう。
+    # base 名だけを渡す形も駄目で (デフォルトブランチとの diff になった)、
+    # `<base>..<head>` と両端を明示する。base は fetch 済みの remote-tracking ref を
+    # 確実に指すよう origin/ 付き、head は worktree の現在ブランチ名を使う
+    # (fork PR では wt が付けるブランチ名が PR の headRefName と一致しないため)。
     # effort は /code-review の引数では指定できないので claude の CLI フラグで渡す。
-    set agent_prompt -- --effort xhigh "/code-review $base_branch"
+    # detached の場合は "HEAD" が返り、それがそのまま ref として使える。
+    set -l head_ref (git -C $work_path rev-parse --abbrev-ref HEAD)
+    set agent_prompt -- --effort xhigh "/code-review origin/$base_branch..$head_ref"
 end
 # shell の初期化が済むまで herdr 0.7.5 の agent start は agent_pane_busy で即時失敗する
 # (内部リトライなし)。大きなリポジトリでは worktree 作成や wt hook の負荷で shell の
