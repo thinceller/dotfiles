@@ -79,6 +79,7 @@ switch $mode
         test -n "$pr_line"; or exit 0
         set -l pr_fields (string split \t -- $pr_line)
         set -l pr_number $pr_fields[1]
+        set -l pr_title $pr_fields[2]
         set base_branch $pr_fields[4]
 
         # PR ブランチの worktree を worktrunk で作成する。fork PR は refs/pull/N/head
@@ -87,7 +88,11 @@ switch $mode
         set -l wt_path (wt -C $repo_path switch pr:$pr_number --no-cd -x echo -- '{{ worktree_path }}')
         or fail_pause
         git -C $wt_path fetch origin $base_branch
-        set created (herdr worktree open --cwd $repo_path --path $wt_path --label pr-$pr_number --focus --json)
+        # label は `review #<番号>: <PR タイトル>`。prefix でレビュー用 workspace だと
+        # 一目で分かるようにする。長さは herdr 側の sidebar が unicode 幅ベースで
+        # 切り詰めるので、こちらで truncate はしない。
+        set created (herdr worktree open --cwd $repo_path --path $wt_path \
+            --label "review #$pr_number: $pr_title" --focus --json)
         or fail_pause
 end
 
