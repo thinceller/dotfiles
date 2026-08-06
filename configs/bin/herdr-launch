@@ -88,11 +88,19 @@ switch $mode
         set -l wt_path (wt -C $repo_path switch pr:$pr_number --no-cd -x echo -- '{{ worktree_path }}')
         or fail_pause
         git -C $wt_path fetch origin $base_branch
-        # label は `review #<番号>: <PR タイトル>`。prefix でレビュー用 workspace だと
-        # 一目で分かるようにする。長さは herdr 側の sidebar が unicode 幅ベースで
-        # 切り詰めるので、こちらで truncate はしない。
+        # label は `👀<PR タイトル>`。👀 がレビュー用 workspace の目印。
+        # sidebar (spaces) の workspace 行は実効 47 カラムしかなく、全角は 1 文字
+        # 2 カラム消費するため、PR 番号やチケット番号に幅を割くとタイトル本体が
+        # 見切れて識別できない (`pr-<番号>` で識別できなかったのが元の問題)。
+        # 幅を食うだけで識別に効かない要素を落としてからタイトルを渡す:
+        #   - 末尾の [SGN-FY26-1203] 形式のチケット番号は除去
+        #   - 先頭の 【HR】【動作確認用】 のような角括弧タグ群は最初の 1 つだけを
+        #     半角化して残す (プロダクト区分は識別に効くが全角の括弧は高い)
+        # 溢れた分は herdr の sidebar が unicode 幅ベースで切り詰める。
+        set -l label_title (string replace -ra '\s*\[[A-Z]+-[A-Z0-9]+-\d+\]' '' -- $pr_title \
+            | string replace -r '^【([^】]*)】(?:【[^】]*】)*\s*' '$1 ')
         set created (herdr worktree open --cwd $repo_path --path $wt_path \
-            --label "review #$pr_number: $pr_title" --focus --json)
+            --label "👀$label_title" --focus --json)
         or fail_pause
 end
 
