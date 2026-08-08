@@ -70,9 +70,13 @@ let
   # worker は kanban dispatcher から stdin=DEVNULL で spawn されるため、
   # approvals.mode が manual/smart のままだと承認プロンプトが EOFError になり
   # 必ず deny に落ちる。Draft PR までを無人で完走させるため off にする。
-  # 破壊的操作の抑止は worker の SOUL.md / AGENTS.md の規約が担う。
+  # 破壊的操作の抑止は worker の SOUL.md の規約が担う。
+  #
+  # skills は planner 用のものしか無く、worker が使う場面が無い。
+  # approvals off の worker に to-kanban (タスク作成) を持たせない意味もあるので空にする。
   workerSettings = lib.recursiveUpdate sharedSettings {
     approvals.mode = "off";
+    skills.external_dirs = [ ];
   };
 
   workerConfigFile = (pkgs.formats.yaml { }).generate "hermes-worker-config.yaml" workerSettings;
@@ -137,8 +141,12 @@ in
     environmentFiles = [ config.sops.secrets."hermes-env".path ];
 
     # knowledge-base vault 連携 (Mnemos 経路C)。
-    # AGENTS.md は workingDirectory に配置され、system prompt に自動注入される
-    # (agent/prompt_builder.py の context files 機構、cwd 直下のみ読む)。
+    # AGENTS.md は workingDirectory に配置され、cwd がそこになる planner の
+    # system prompt に自動注入される (agent/prompt_builder.py の context files 機構は
+    # cwd 直下を1ファイルだけ読む)。
+    # dispatcher は worker の cwd を workspace のリポジトリに移すため、この AGENTS.md は
+    # worker には届かない。worker 側の規約は hermes-profiles/worker/SOUL.md と
+    # 各リポジトリの CLAUDE.md / AGENTS.md が担う。
     # SOUL.md は HERMES_HOME からしか読まれないため documents では扱えない
     # (hermes-worker-profile activation script で配置する)。
     documents."AGENTS.md" = ./hermes-documents/AGENTS.md;
@@ -207,6 +215,7 @@ in
         # サブディレクトリの一覧は hermes_cli/profiles.py の _PROFILE_DIRS
         # (profile 作成時に bootstrap されるもの) に合わせている。
         install -o ${user} -g ${group} -m 2770 -d \
+          ${stateDir}/.hermes/profiles \
           ${workerProfileDir} \
           ${workerProfileDir}/memories \
           ${workerProfileDir}/sessions \
@@ -223,6 +232,10 @@ in
           ${./hermes-profiles/worker/SOUL.md} ${workerProfileDir}/SOUL.md
         install -o ${user} -g ${group} -m 0660 \
           ${workerConfigFile} ${workerProfileDir}/config.yaml
+
+        # worker profile には .env を置かない。dispatcher は gateway の os.environ を
+        # そのまま子プロセスへ渡すので、API キー等は継承される。
+        # 人間が `hermes -p worker chat` を直接叩くときだけ認証が無い点に注意。
 
         # plugins は HERMES_HOME/plugins/ から解決されるため、worker プロファイルにも
         # default プロファイルと同じ nix-managed symlink を張る。
