@@ -13,6 +13,73 @@ let
   hermesConfigHash = pkgs.writeText "hermes-config-hash.json" (
     builtins.toJSON config.services.hermes-agent.settings
   );
+
+  sources = pkgs.callPackage ../../_sources/generated.nix { };
+
+  # Planner の設計ワークフロー (grill-with-docs → to-spec → to-tickets) が依存する
+  # mattpocock/skills。リポジトリ全体を external_dirs に載せると in-progress や
+  # personal 配下まで system prompt に載るため、使う skill だけを取り出す。
+  # grilling は grill-with-docs / grill-me から参照される共有 skill。
+  plannerSkills = pkgs.runCommand "matt-pocock-planner-skills" { } ''
+    mkdir -p $out
+    for s in \
+      engineering/grill-with-docs \
+      engineering/to-spec \
+      engineering/to-tickets \
+      engineering/domain-modeling \
+      productivity/grill-me \
+      productivity/grilling; do
+      cp -r ${sources.matt-pocock-skills.src}/skills/"$s" $out/
+    done
+  '';
+
+  # default プロファイル (planner) と worker プロファイルで共有する設定。
+  # profile の config.yaml は root の config.yaml とマージされず完全に置き換わるため、
+  # 共通部分をここで一元化して両方に流し込む。
+  sharedSettings = {
+    # OpenCode Go ($10/月サブスク、オープンモデル)。
+    # 認証は OPENCODE_GO_API_KEY 環境変数のみ (OAuth 不要)。
+    model.provider = "opencode-go";
+    model.default = "kimi-k2.7-code";
+    # MESSAGING_CWD 環境変数の代替。nixosModule は systemd Environment= に
+    # MESSAGING_CWD をセットするが、hermes v0.16.0 でこの変数は deprecated。
+    # settings 経由で config.yaml に書き出すことで警告を解消する。
+    terminal.cwd = config.services.hermes-agent.workingDirectory;
+    # standalone kind のプラグインは既定 opt-in のため、明示的に有効化する。
+    plugins.enabled = [ "session-vault-export" ];
+    # Mnemos の vault 系スキル (経路C 版: terminal + git、MCP なし) と、
+    # Planner が使う mattpocock/skills。external_dirs は読み取り専用の
+    # 共有スキルディレクトリ。
+    skills.external_dirs = [
+      "${./hermes-skills}"
+      "${plannerSkills}"
+    ];
+    # 秘書的な運用のため、セッションをまたいだ記憶を upstream default に従って明示化。
+    memory.memory_enabled = true;
+    memory.user_profile_enabled = true;
+    # ユーザー ID や電話番号などの個人識別情報をモデルに渡す前にハッシュ化。
+    privacy.redact_pii = true;
+    # 2026-07-01 マージの Block Kit リッチレンダリングを有効化。
+    # フォールバック平文は従来の mrkdwn のままなので、標準 Markdown を書くプラクティスは維持される。
+    platforms.slack.extra.rich_blocks = true;
+  };
+
+  # worker プロファイルの HERMES_HOME。
+  workerProfileDir = "${config.services.hermes-agent.stateDir}/.hermes/profiles/worker";
+
+  # worker は kanban dispatcher から stdin=DEVNULL で spawn されるため、
+  # approvals.mode が manual/smart のままだと承認プロンプトが EOFError になり
+  # 必ず deny に落ちる。Draft PR までを無人で完走させるため off にする。
+  # 破壊的操作の抑止は worker の SOUL.md の規約が担う。
+  #
+  # skills は planner 用のものしか無く、worker が使う場面が無い。
+  # approvals off の worker に to-kanban (タスク作成) を持たせない意味もあるので空にする。
+  workerSettings = lib.recursiveUpdate sharedSettings {
+    approvals.mode = "off";
+    skills.external_dirs = [ ];
+  };
+
+  workerConfigFile = (pkgs.formats.yaml { }).generate "hermes-worker-config.yaml" workerSettings;
 in
 {
   sops.secrets."hermes-env" = {
@@ -52,30 +119,14 @@ in
     # v0.16.0 で [all] から除外されたため、サーバーデプロイでは明示が必要。
     extraDependencyGroups = [ "messaging" ];
 
-    settings = {
-      # OpenCode Go ($10/月サブスク、オープンモデル)。
-      # 認証は OPENCODE_GO_API_KEY 環境変数のみ (OAuth 不要)。
-      model.provider = "opencode-go";
-      model.default = "kimi-k2.7-code";
-      # MESSAGING_CWD 環境変数の代替。nixosModule は systemd Environment= に
-      # MESSAGING_CWD をセットするが、hermes v0.16.0 でこの変数は deprecated。
-      # settings 経由で config.yaml に書き出すことで警告を解消する。
-      terminal.cwd = config.services.hermes-agent.workingDirectory;
-      # standalone kind のプラグインは既定 opt-in のため、明示的に有効化する。
-      plugins.enabled = [ "session-vault-export" ];
-      # Mnemos の vault 系スキル (経路C 版: terminal + git、MCP なし)。
-      # external_dirs は読み取り専用の共有スキルディレクトリ。
-      skills.external_dirs = [ "${./hermes-skills}" ];
-      # 秘書的な運用のため、セッションをまたいだ記憶を upstream default に従って明示化。
-      memory.memory_enabled = true;
-      memory.user_profile_enabled = true;
+    settings = lib.recursiveUpdate sharedSettings {
       # 低リスクなコマンドは自動承認し、高リスクな操作は確認を取る。
+      # Planner は Slack 越しに対話できるので smart が使える (worker は off)。
       approvals.mode = "smart";
-      # ユーザー ID や電話番号などの個人識別情報をモデルに渡す前にハッシュ化。
-      privacy.redact_pii = true;
-      # 2026-07-01 マージの Block Kit リッチレンダリングを有効化。
-      # フォールバック平文は従来の mrkdwn のままなので、標準 Markdown を書くプラクティスは維持される。
-      platforms.slack.extra.rich_blocks = true;
+      # 全タスクが単一の worker プロファイルに assign され、workspace は
+      # リポジトリの共有チェックアウト (dir:) なので、同時に2つ以上走ると
+      # 同じ作業ツリーで別ブランチを取り合って壊れる。1本に直列化する。
+      kanban.max_in_progress_per_profile = 1;
     };
 
     # セッション終了時に knowledge-base vault へ Markdown を書き出して push する
@@ -90,8 +141,14 @@ in
     environmentFiles = [ config.sops.secrets."hermes-env".path ];
 
     # knowledge-base vault 連携 (Mnemos 経路C)。
-    # AGENTS.md は workingDirectory に配置され、system prompt に自動注入される
-    # (agent/prompt_builder.py の context files 機構、cwd 直下のみ読む)。
+    # AGENTS.md は workingDirectory に配置され、cwd がそこになる planner の
+    # system prompt に自動注入される (agent/prompt_builder.py の context files 機構は
+    # cwd 直下を1ファイルだけ読む)。
+    # dispatcher は worker の cwd を workspace のリポジトリに移すため、この AGENTS.md は
+    # worker には届かない。worker 側の規約は hermes-profiles/worker/SOUL.md と
+    # 各リポジトリの CLAUDE.md / AGENTS.md が担う。
+    # SOUL.md は HERMES_HOME からしか読まれないため documents では扱えない
+    # (hermes-worker-profile activation script で配置する)。
     documents."AGENTS.md" = ./hermes-documents/AGENTS.md;
 
     # service path には git はあるが ssh がないため openssh を追加。
@@ -102,6 +159,11 @@ in
       (pkgs.writeShellScriptBin "gh" ''
         GH_TOKEN="$(cat ${config.sops.secrets."hermes-github-pat".path})" \
           exec ${pkgs.gh}/bin/gh "$@"
+      '')
+      # to-kanban skill から呼ぶ変換スクリプト。store path を SKILL.md に
+      # 埋め込まずに済むよう、PATH に載るコマンドとして提供する。
+      (pkgs.writeShellScriptBin "to-kanban" ''
+        exec ${pkgs.python3}/bin/python3 ${./hermes-scripts/to-kanban.py} "$@"
       '')
     ];
 
@@ -133,6 +195,62 @@ in
     serviceConfig.TimeoutStopSec = lib.mkForce 210;
     environment.MESSAGING_CWD = lib.mkForce null;
     restartTriggers = [ hermesConfigHash ];
+  };
+
+  # Planner の SOUL.md と worker プロファイルを HERMES_HOME 配下へ配置する。
+  # hermes は SOUL.md を HERMES_HOME からしか読まず、named profile は
+  # HERMES_HOME/profiles/<name>/ をそのまま新しい HERMES_HOME として扱う。
+  # NixOS モジュールにはこれらを配置するオプションがないため自前で行う。
+  system.activationScripts.hermes-worker-profile = {
+    deps = [ "hermes-agent-setup" ];
+    text =
+      let
+        inherit (config.services.hermes-agent) stateDir user group;
+      in
+      ''
+        install -o ${user} -g ${group} -m 0660 -D \
+          ${./hermes-documents/SOUL.md} ${stateDir}/.hermes/SOUL.md
+
+        # profile の起動には profiles/<name>/ が実在する必要がある。
+        # サブディレクトリの一覧は hermes_cli/profiles.py の _PROFILE_DIRS
+        # (profile 作成時に bootstrap されるもの) に合わせている。
+        install -o ${user} -g ${group} -m 2770 -d \
+          ${stateDir}/.hermes/profiles \
+          ${workerProfileDir} \
+          ${workerProfileDir}/memories \
+          ${workerProfileDir}/sessions \
+          ${workerProfileDir}/skills \
+          ${workerProfileDir}/skins \
+          ${workerProfileDir}/logs \
+          ${workerProfileDir}/plans \
+          ${workerProfileDir}/workspace \
+          ${workerProfileDir}/cron \
+          ${workerProfileDir}/home \
+          ${workerProfileDir}/plugins
+
+        install -o ${user} -g ${group} -m 0660 \
+          ${./hermes-profiles/worker/SOUL.md} ${workerProfileDir}/SOUL.md
+        install -o ${user} -g ${group} -m 0660 \
+          ${workerConfigFile} ${workerProfileDir}/config.yaml
+
+        # worker profile には .env を置かない。dispatcher は gateway の os.environ を
+        # そのまま子プロセスへ渡すので、API キー等は継承される。
+        # 人間が `hermes -p worker chat` を直接叩くときだけ認証が無い点に注意。
+
+        # plugins は HERMES_HOME/plugins/ から解決されるため、worker プロファイルにも
+        # default プロファイルと同じ nix-managed symlink を張る。
+        # hermes-agent の nix/nixosModules.nix にある default プロファイル向けの
+        # 同じ処理を写したもの。input を更新したときは向こうの変更を確認すること。
+        find ${workerProfileDir}/plugins -maxdepth 1 -type l -name 'nix-managed-*' -delete 2>/dev/null || true
+        ${lib.concatMapStringsSep "\n" (plugin: ''
+          if [ ! -f "${plugin}/plugin.yaml" ]; then
+            echo "ERROR: extraPlugins entry '${plugin}' has no plugin.yaml" >&2
+            exit 1
+          fi
+          ln -sfn ${plugin} ${workerProfileDir}/plugins/nix-managed-${lib.getName plugin}
+          chown -h ${user}:${group} ${workerProfileDir}/plugins/nix-managed-${lib.getName plugin}
+        '') config.services.hermes-agent.extraPlugins}
+      '';
   };
 
   # hermes gateway は native systemd mode でダッシュボードを自動起動しない。
@@ -205,4 +323,47 @@ in
       OnUnitActiveSec = "1min";
     };
   };
+
+  # kanban board はランタイム状態 (kanban.db) なので NixOS モジュールの管理外だが、
+  # 別マシンへ復元したときに手動作成が要らないよう、宣言した board を冪等に用意する。
+  # `boards create` は `mkdir -p` 相当で冪等なので、毎回実行して構わない。
+  systemd.services.hermes-kanban-boards =
+    let
+      workspace = config.services.hermes-agent.workingDirectory;
+      boards = [
+        {
+          slug = "thinceller-net";
+          name = "thinceller.net";
+          workdir = "${workspace}/thinceller.net";
+        }
+        {
+          slug = "dotfiles";
+          name = "dotfiles";
+          workdir = "${workspace}/dotfiles";
+        }
+      ];
+    in
+    {
+      description = "Ensure Hermes kanban boards exist";
+      wantedBy = [ "multi-user.target" ];
+      before = [ "hermes-agent.service" ];
+
+      environment = {
+        HOME = config.services.hermes-agent.stateDir;
+        HERMES_HOME = "${config.services.hermes-agent.stateDir}/.hermes";
+        HERMES_MANAGED = "true";
+      };
+
+      serviceConfig = {
+        Type = "oneshot";
+        User = config.services.hermes-agent.user;
+        Group = config.services.hermes-agent.group;
+      };
+
+      script = lib.concatMapStringsSep "\n" (b: ''
+        ${config.services.hermes-agent.package}/bin/hermes kanban boards create ${b.slug} \
+          --name ${lib.escapeShellArg b.name} \
+          --default-workdir ${lib.escapeShellArg b.workdir}
+      '') boards;
+    };
 }

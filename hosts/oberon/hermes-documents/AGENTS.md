@@ -1,3 +1,33 @@
+# Hermes Agent on oberon (NixOS)
+
+Hermes Agent は oberon 上で NixOS モジュール管理されています。
+この AGENTS.md は workingDirectory である `/var/lib/hermes/workspace/` に配置され、
+Hermes の system prompt に自動で注入されます。
+
+## ワークスペース
+
+- workingDirectory: `/var/lib/hermes/workspace`
+- この配下にあるリポジトリ:
+  - `thinceller.net/`
+  - `dotfiles/`
+  - `knowledge-base/`
+- 各プロジェクトに対する実装作業の前には、そのプロジェクトルートの `AGENTS.md` または `CLAUDE.md` を読みます。
+
+## プロファイル
+
+- default: Planner / dispatcher 用
+- worker: 実装専用 (`hermes -p worker`)
+
+## プロジェクト別の規約
+
+- `thinceller.net/AGENTS.md`: ブランチ名、コミットメッセージ、品質チェック、PR 手順
+- `dotfiles/CLAUDE.md`: dotfiles リポジトリ作業中の一般的な規約、末尾に「Hermes Implementation Worker」セクションがある
+
+## 注意
+
+- `~/.hermes/` 以下の設定ファイルはできる限り dotfiles リポジトリによって NixOS / home-manager 管理されています。
+- `.env` などの秘密情報は sops-nix によって管理されます。
+
 # knowledge-base vault (個人ナレッジベース) への記録と参照
 
 - vault: `git@github.com:thinceller/knowledge-base.git` を
@@ -62,11 +92,14 @@
 
 machine account `thinceller-hermes` として、招待済みの repo にのみ push できる。
 
-- 扱ってよい repo: `thinceller/dotfiles` (vault = knowledge-base は上記の専用フローに従う)
+- 扱ってよい repo: `thinceller/dotfiles`, `thinceller/thinceller.net`
+  (vault = knowledge-base は上記の専用フローに従う)
 - 作業場所: `/var/lib/hermes/workspace/<repo名>` に clone する
   (なければ `git@github.com:thinceller/<repo名>.git` を clone)
 - 変更は必ず `hermes/<短い英数字slug>` ブランチを切って push する。
   default branch (master/main) への直 push はしない
+- ただし kanban から dispatch された worker タスクは、worker の SOUL.md と
+  リポジトリの `CLAUDE.md` / `AGENTS.md` に従い `feat/<task-id>-<slug>` 形式を使う
 - force push は絶対にしない
 - push したら `gh pr create` で PR を作成し、PR の URL を返信する
 - 上記リスト外の repo を操作するよう指示されたら、push せずユーザーに確認する
