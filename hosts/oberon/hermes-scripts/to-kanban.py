@@ -33,13 +33,20 @@ import sys
 from pathlib import Path
 
 # 見出し: "# 01 — タイトル"。区切りは em dash / en dash / hyphen / コロン。
-_HEADING_RE = re.compile(r"^#\s*(\d+)\s*[—–\-:：]\s*(.+)$")
+# 見出しレベルは # 1〜3個まで許す (upstream の to-tickets が ## や ### で書くことがある)。
+_HEADING_RE = re.compile(r"^#{1,3}\s*(\d+)\s*[—–\-:：]\s*(.+)$")
 # ファイル名からのフォールバック: "01-add-foo.md"
 _FILENAME_NUM_RE = re.compile(r"^(\d+)")
 # 依存先は '#' 必須。'#' を省くと本文中の数字を拾って依存を捏造してしまう。
 _BLOCKER_RE = re.compile(r"#(\d+)")
 # "None — can start immediately" のような「依存なし」表現。
 _NO_BLOCKER_RE = re.compile(r"none|can start immediately", re.IGNORECASE)
+# "**Blocked by:** ..." 行。upstream の to-tickets は箇条書き記号付きや
+# コロンが太字の外に出た形も出力するため、緩めに受ける。
+_BLOCKED_BY_LINE_RE = re.compile(
+    r"^[-*+]?\s*\*\*\s*blocked\s+by\s*:?\s*\*\*\s*:?\s*(.*)$",
+    re.IGNORECASE,
+)
 
 
 class TicketError(Exception):
@@ -95,13 +102,19 @@ def parse_ticket(path: Path) -> dict:
     if title is None:
         title = path.stem
 
-    blocked_by = []
+    blocked_by = None
     for line in lines:
-        stripped = line.strip()
-        if stripped.startswith("**Blocked by:**"):
-            rest = stripped.split("**Blocked by:**", 1)[1].strip()
-            blocked_by = parse_blocked_by(rest, path, stripped)
+        m = _BLOCKED_BY_LINE_RE.match(line.strip())
+        if m:
+            blocked_by = parse_blocked_by(m.group(1).strip(), path, line.strip())
             break
+
+    if blocked_by is None:
+        raise TicketError(
+            f"'**Blocked by:**' の行がありません: {path}\n"
+            f"  依存が無いチケットにも "
+            f"'**Blocked by:** None — can start immediately' を書いてください。"
+        )
 
     return {
         "num": num,
