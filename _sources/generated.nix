@@ -42,6 +42,17 @@
     };
     date = "2026-02-24";
   };
+  tcmux = {
+    pname = "tcmux";
+    version = "v0.4.0";
+    src = fetchFromGitHub {
+      owner = "k1LoW";
+      repo = "tcmux";
+      rev = "v0.4.0";
+      fetchSubmodules = false;
+      sha256 = "sha256-joQSbM0nGjKD0Yxp5JYXIluHyjcRU8HnAFJZ8JOmSTE=";
+    };
+  };
   tmux-agent-sidebar = {
     pname = "tmux-agent-sidebar";
     version = "v0.12.0";

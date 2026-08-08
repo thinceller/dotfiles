@@ -16,3 +16,7 @@ fetch.github = "hiroppy/tmux-agent-sidebar"
 src.git = "https://github.com/NotAShelf/direnv.nvim"
 src.branch = "main"
 fetch.github = "NotAShelf/direnv.nvim"
+
+[tcmux]
+src.github = "k1LoW/tcmux"
+fetch.github = "k1LoW/tcmux"

@@ -5,6 +5,7 @@
 }:
 let
   tmux-agent-sidebar = import ./plugins/tmux-agent-sidebar { inherit pkgs sources; };
+  tcmux = import ./tcmux.nix { inherit pkgs sources; };
 
   tmux-switch-session = pkgs.writeShellScript "tmux-switch-session" ''
     session=$(
@@ -121,5 +122,8 @@ in
     ];
   };
 
-  home.packages = [ tmux-agent-sidebar.package ];
+  home.packages = [
+    tmux-agent-sidebar.package
+    tcmux
+  ];
 }

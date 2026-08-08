@@ -62,6 +62,27 @@
         },
         "version": "f130b55ee3eaf099eccf588e2a62e5447068d120"
     },
+    "tcmux": {
+        "cargoLock": null,
+        "date": null,
+        "extract": null,
+        "name": "tcmux",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "k1LoW",
+            "repo": "tcmux",
+            "rev": "v0.4.0",
+            "sha256": "sha256-joQSbM0nGjKD0Yxp5JYXIluHyjcRU8HnAFJZ8JOmSTE=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "v0.4.0"
+    },
     "tmux-agent-sidebar": {
         "cargoLock": null,
         "date": null,
