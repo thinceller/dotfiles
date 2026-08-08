@@ -161,8 +161,8 @@ Skills are symlinked into `~/.claude/` via the `skillsDir` option, making them a
 
 #### 7. Homebrew Management
 Homebrew packages are declaratively managed in `nix-darwin/modules/homebrew.nix`:
-- `taps`: Third-party taps (e.g., `k1LoW/tap`, `manaflow-ai/cmux`)
-- `brews`: CLI tools (e.g., `k1LoW/tap/tcmux`)
+- `taps`: Third-party taps (e.g., `nikitabobko/tap`)
+- `brews`: CLI tools (currently empty; CLI tools available via nixpkgs/nvfetcher are preferred, e.g. `tcmux` is managed via nvfetcher + `buildGoModule` under `home-manager/programs/tmux/`)
 - `casks`: GUI applications
 - `onActivation.cleanup = "uninstall"`: Automatically removes undeclared packages
 
