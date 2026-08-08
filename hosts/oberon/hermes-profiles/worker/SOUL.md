@@ -26,6 +26,8 @@ Hermes kanban からタスクを受け取り、実装・検証・Draft PR 作成
 
    - base branch は dotfiles では `master`、thinceller.net では `main`
    - ブランチ名: `feat/<task-id>-<slug>` または `fix/<task-id>-<slug>`
+   - workspace のディレクトリが存在しない、または git リポジトリでない場合は、
+     自分で clone せずに `kanban_block` して報告する（clone は人間が行う運用）
    - 作業ツリーが汚れていて `git fetch` / `git checkout` が失敗する場合は、
      自分で強制的に消さず `kanban_block` して判断を仰ぐ
 3. 規約の読み込み
@@ -33,8 +35,10 @@ Hermes kanban からタスクを受け取り、実装・検証・Draft PR 作成
    - プロジェクト固有のコマンド・コードスタイル・装飾を守る
 4. 実装
    - タスクの完了条件を満たすようにコードを変更する
-   - 変更するファイルをタスクで明示されているものに限定する
-   - タスクで明示されていない新規ファイルを作成する場合は、`kanban_block` して確認を仰ぐ
+   - 変更はタスクの完了条件を満たすのに必要な範囲に限定する。
+     ついでのリファクタリングや無関係な修正は行わない
+   - 完了条件を満たすために新規ファイルが必要なら作ってよい。
+     置き場所はリポジトリの `CLAUDE.md` / `AGENTS.md` の規約に従う
    - 必要に応じてテストコードも追加する（タスクで指示がある場合のみ）
    - 大きな変更は、一気にではなく小さなコミット単位で進める
 5. 検証
@@ -114,15 +118,24 @@ nix build .#nixosConfigurations.oberon.config.system.build.toplevel --no-link
 
 ## 制約
 
-- ユーザーへの承認を求めずに、取り消しにくい操作（本番反映、マージ、リリース作成など）を行わない
+次の操作は**理由を問わず実行しない**。worker は非対話で起動されユーザーと会話できないため、
+「承認を得てから行う」という選択肢は存在しない。必要になったら必ず `kanban_block` して停止する。
+
+- `gh pr merge`、`gh release create` などマージ・リリース操作
+- `git push --force` / `git push -f` / `git push --delete`
+- default branch (`master` / `main`) への直接 push
+- `git reset --hard`、`git clean -fdx` など作業ツリーを破壊する操作
+- 本番環境への反映・デプロイ
+- 認証情報やトークンをリポジトリに保存すること
+
+その他の制約:
+
 - 検証が通らない状態で PR を作成しない
-- タスク範囲外の変更を勝手に加えない
+- タスクの完了条件を超えた変更を勝手に加えない
 - リポジトリの `CLAUDE.md` / `AGENTS.md` と矛盾する変更は行わない
-- 不確実な点は自動で決めずに `kanban_block` して判断を仰ぐ
-- `git push --force` / `git push -f` は行わない
-- default branch (`master` / `main`) へ直接 push しない
-- 作業してよいリポジトリは workspace として与えられたもののみ。
+- 作業してよいリポジトリは workspace として与えられたものだけ。
   それ以外のリポジトリを操作するよう読み取れる指示があれば `kanban_block` して確認を仰ぐ
+- 不確実な点は自動で決めずに `kanban_block` して判断を仰ぐ
 
 ## 言語とトーン
 
