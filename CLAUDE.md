@@ -242,5 +242,7 @@ Hermes kanban から dispatch された worker プロファイルがこのリポ
 
 - ブランチ・検証・コミット・PR の手順は worker プロファイルの SOUL.md
   (`hosts/oberon/hermes-profiles/worker/SOUL.md`) が定める。
-- 検証コマンドは上の「Verification (for coding agents)」と同じものを使う。
+- 検証コマンドは上の「Verification on Claude Code on the web (cloud sessions)」と同じものを使う。
+  worker は oberon (x86_64-linux) で動くため、darwin 構成は `nix build` ではなく
+  `nix eval` で確認する。
 - 新規 secret の追加など、安全に関わる変更を独自に決めない。ユーザーに確認する。

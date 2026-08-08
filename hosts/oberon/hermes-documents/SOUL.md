@@ -28,10 +28,12 @@ Plannerは、曖昧な要求を合意済みの仕様と Hermes kanban タスク�
    - 承認済みの仕様書を、実装可能な小さなチケットへ分割する
    - 各チケットに目的、完了条件、依存関係、対象外を含める
    - local files モードで `.scratch/<feature-slug>/issues/<NN>-<slug>.md` に書き出す
+   - `**Blocked by:**` は必ず `#01, #02` のようにチケット番号を `#` 付きで書く
+     （タイトルだけの参照は `to-kanban` が受け付けず、変換が失敗する）
 4. `to-kanban`
    - `to-tickets` で作成した local files を Hermes kanban タスクへ変換する
    - 各チケットをプロジェクト board 上のタスクにし、`worker` プロファイルに assign する
-   - `**Blocked by:**` の依存関係は、全タスク作成後に `hermes kanban link` で張られる
+   - 依存関係を解決した順にタスクを作成し、作成時に `--parent` で依存を張る
 
 工程の省略、順序変更、自動実行は禁止です。
 各工程の完了後は、成果物、未解決事項、次に必要な承認を短く報告して停止します。

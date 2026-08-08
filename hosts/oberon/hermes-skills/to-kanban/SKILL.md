@@ -27,9 +27,10 @@ Run the helper command (provided on PATH by the NixOS module):
 to-kanban <board-slug> <repo-path> <feature-slug>
 ```
 
-The command creates every ticket as a kanban task first, then wires up the
-`Blocked by` edges with `hermes kanban link`. It exits non-zero and reports on
-stderr if any dependency could not be resolved.
+The command validates every ticket first (numbering, unknown or circular
+dependencies), then creates the tasks in dependency order, wiring each one's
+blockers with `--parent` at creation time. It exits non-zero without creating
+anything if validation fails.
 
 ## Verification
 
@@ -43,10 +44,11 @@ After running:
 - Workspace is always `dir:<repo-path>`
 - The worker's procedure lives in its profile SOUL.md, which is always in the
   worker's prompt — nothing needs to be force-loaded per task
-- Dependencies are created with `hermes kanban link` after all tasks exist, so a
-  ticket may depend on a ticket that appears later in the file order
+- Tasks are created in topological order with `--parent`, so a ticket may declare a
+  blocker that appears later in the file order
+- `**Blocked by:**` must reference tickets as `#01, #02` — a title-only reference is
+  rejected with a non-zero exit rather than silently dropped, and a ticket with no
+  `**Blocked by:**` line at all is rejected too
 - Boards are declared in dotfiles (`hosts/oberon/hermes-agent.nix`, the
   `hermes-kanban-boards` unit) and created on activation — you should not need to
   create one by hand
-- `**Blocked by:**` must reference tickets as `#01, #02` — a title-only reference is
-  rejected with a non-zero exit rather than silently dropped
