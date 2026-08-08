@@ -155,7 +155,7 @@ pkgs = import nixpkgs {
 #### 6. Claude Code Global Skills and User Memory
 Global (user-level, not project-level) custom skills for Claude Code are managed under `home-manager/programs/claude-code/`:
 - `skills/`: Custom skills (e.g., `playwright-cli`, `vault-capture`)
-- `user-memory.md`: Global user memory for Claude Code (symlinked to `~/.claude/CLAUDE.md` via `memory.source`)
+- `user-memory.md`: Global user memory for Claude Code (deployed to `~/.claude/CLAUDE.md` as a regular file copy via `deploy.nix`'s activation script, not a symlink — a nix store symlink's 1970 mtime gets treated as expired by Claude Code's retention cleanup and deleted)
 
 Skills are symlinked into `~/.claude/` via the `skillsDir` option, making them available globally across all projects. The `playwright-cli` skill provides structured Playwright CLI (`@playwright/cli`) command documentation for browser automation via `npx`.
 
