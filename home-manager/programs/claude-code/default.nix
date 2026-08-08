@@ -16,7 +16,6 @@ let
     lib.filterAttrs (_name: type: type == "directory") (builtins.readDir ./skills)
   );
 
-  openPlanScript = pkgs.writeShellScript "claude-open-plan" (builtins.readFile ./hooks/open-plan.sh);
   vaultSessionLogScript = pkgs.writeShellScript "claude-vault-session-log" (
     builtins.readFile ./hooks/vault-session-log.sh
   );
@@ -225,17 +224,8 @@ in
               ];
             }
           ];
-          # herdr の汎用 PreToolUse エントリと、既存の ExitPlanMode 用エントリを共存させる。
+          # herdr の汎用 PreToolUse エントリ。
           PreToolUse = herdrClaudeHooks.PreToolUse ++ [
-            {
-              matcher = "ExitPlanMode";
-              hooks = [
-                {
-                  type = "command";
-                  command = openPlanScript;
-                }
-              ];
-            }
             {
               matcher = "*";
               hooks = [
