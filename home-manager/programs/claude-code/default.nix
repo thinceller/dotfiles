@@ -8,6 +8,9 @@
 let
   inherit (userConfig) isPersonal;
 
+  common = import ./common.nix { inherit pkgs; };
+  herdrClaudeHooks = common.herdrIntegration.hooks;
+
   # ローカル ./skills 配下の各 skill ディレクトリを attrset として展開し、
   # hunk パッケージ同梱の agent skill (hunk-review) をマージする。
   # 上流の home-manager モジュールは `skills` を attrs か path の
@@ -25,33 +28,20 @@ let
   vaultSessionLogWorker = pkgs.writeShellScriptBin "vault-session-log-worker" (
     builtins.readFile ./scripts/vault-session-log-worker.sh
   );
-  statuslineScript = pkgs.writeShellScript "claude-statusline" (
-    builtins.readFile ./statusline-command.sh
-  );
   checkUserMemoryScript = pkgs.writeShellScript "claude-check-user-memory" (
     builtins.readFile ./hooks/check-user-memory.sh
   );
-
-  claudeCodePackage = import ./package.nix { inherit pkgs; };
-  herdrIntegration = import ./herdr-hooks.nix { inherit pkgs; };
-  herdrClaudeHooks = herdrIntegration.hooks;
 in
 {
+  imports = [ ./deploy.nix ];
+
   home.packages = lib.optionals isPersonal [ vaultSessionLogWorker ];
 
   programs.claude-code = {
     enable = true;
-    package = claudeCodePackage;
+    package = common.package;
 
-    settings = {
-      theme = "dark";
-      autoCompactEnabled = false;
-      alwaysThinkingEnabled = true;
-      language = "japanese";
-      autoMemoryEnabled = true;
-      cleanupPeriodDays = 9999;
-
-      model = "opus";
+    settings = common.settings // {
       # 明示的なフォールバックチェーンを無効化 (空配列 = 指定なしと等価)。
       # 設定キーは単数形 `fallbackModel` だが型は string 配列
       # (CLI の --fallback-model はカンマ区切り)。
@@ -59,10 +49,6 @@ in
       # advisorModel = "fable";
       # effortLevel = "xhigh";
       voiceEnabled = true;
-      skipAutoPermissionPrompt = true;
-      useAutoModeDuringPlan = true;
-      # fullscreen (alt-screen) レンダラー。旧 env CLAUDE_CODE_NO_FLICKER=1 と等価。
-      tui = "fullscreen";
 
       # Claude Code 組み込み sandbox (macOS: Seatbelt)。
       # cage と二重に Seatbelt をネストすると失敗するため、これを使うときは
@@ -152,42 +138,11 @@ in
         };
       };
 
-      permissions = {
-        allow = [
-          "WebFetch"
-          "WebSearch"
-          "Bash(ls:*)"
-          "Bash(grep:*)"
-          "Bash(playwright-cli:*)"
-        ];
-        ask = [
-          "Bash(rm:*)"
-          "Bash(git merge:*)"
-          "Bash(git rebase:*)"
-          "Bash(git push:*)"
-        ];
-        deny = [
-          "Read(~/.ssh/**)"
-          "Read(.env*)"
-          "Bash(sudo:*)"
-          "Bash(git commit --no-gpg-sign:*)"
-          "Edit(~/.ssh/**)"
-          "Edit(.env*)"
-        ];
-        defaultMode = "auto";
+      permissions = common.settings.permissions // {
+        allow = common.settings.permissions.allow ++ [ "Bash(playwright-cli:*)" ];
       };
 
-      env = {
-        BASH_DEFAULT_TIMEOUT_MS = "60000";
-        BASH_MAX_TIMEOUT_MS = "180000";
-        CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR = "1";
-
-        # wrapper の --set DISABLE_AUTOUPDATER は wrapper 経由の起動しか守れない。
-        # native binary (chrome-native-host 等) も settings.json の env は読むため、
-        # ここで無効化しないと updater が ~/.local/bin/claude を再生成し
-        # Nix wrapper を PATH shadow する (2026-06-28, 2026-07-05 に再発)。
-        DISABLE_AUTOUPDATER = "1";
-
+      env = common.settings.env // {
         # API がリクエストにフラグを立てた (refusal) ときの自動モデル切り替えを禁止。
         # バイナリ 2.1.220 では refusal fallback の可否が
         # `!CLAUDE_CODE_DISABLE_REFUSAL_FALLBACK && !CLAUDE_CODE_NO_MODEL_FALLBACK`
@@ -196,9 +151,6 @@ in
         # なお CLAUDE_CODE_NO_MODEL_FALLBACK=1 はこれを含む上位互換で、
         # モデル不可用時の availability fallback まで潰す (= 黙って降格せずエラーになる)。
         CLAUDE_CODE_DISABLE_REFUSAL_FALLBACK = "1";
-
-        CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1";
-        CLAUDE_CODE_NEW_INIT = "1";
 
         # codex-plugin-cc が thread/start に sandbox: "read-only" 等を強制送信し、
         # cage の中で codex 内部の Seatbelt をネストしようとして失敗するため、
@@ -211,7 +163,7 @@ in
       };
 
       hooks =
-        herdrClaudeHooks
+        common.settings.hooks
         // {
           # user memory (~/.claude/CLAUDE.md) の消失検知。詳細は hooks/check-user-memory.sh 冒頭。
           SessionStart = herdrClaudeHooks.SessionStart ++ [
@@ -220,19 +172,6 @@ in
                 {
                   type = "command";
                   command = checkUserMemoryScript;
-                }
-              ];
-            }
-          ];
-          # herdr の汎用 PreToolUse エントリ。
-          PreToolUse = herdrClaudeHooks.PreToolUse ++ [
-            {
-              matcher = "*";
-              hooks = [
-                {
-                  type = "command";
-                  command = herdrIntegration.toolMetadataScript;
-                  timeout = 10;
                 }
               ];
             }
@@ -265,58 +204,47 @@ in
           ];
         };
 
-      statusLine = {
-        type = "command";
-        command = statuslineScript;
-      };
-
-      extraKnownMarketplaces = {
-        "thinceller-claude-plugins" = {
-          source = {
-            source = "github";
-            repo = "thinceller/claude-plugins";
+      extraKnownMarketplaces =
+        common.settings.extraKnownMarketplaces
+        // {
+          "hiroppy" = {
+            source = {
+              source = "github";
+              repo = "hiroppy/tmux-agent-sidebar";
+            };
+          };
+        }
+        // lib.optionalAttrs isPersonal {
+          "openai-codex" = {
+            source = {
+              source = "github";
+              # PR #241 (CODEX_COMPANION_SANDBOX_MODE 対応) を取り込んだ fork。
+              # upstream にマージされたら "openai/codex-plugin-cc" に戻す。
+              repo = "thinceller/codex-plugin-cc";
+            };
           };
         };
-        "hiroppy" = {
-          source = {
-            source = "github";
-            repo = "hiroppy/tmux-agent-sidebar";
-          };
+
+      enabledPlugins =
+        common.settings.enabledPlugins
+        // {
+          # claude-plugins-official
+          "claude-code-setup@claude-plugins-official" = true;
+          "claude-md-management@claude-plugins-official" = true;
+          "plugin-dev@claude-plugins-official" = true;
+          "skill-creator@claude-plugins-official" = true;
+          "frontend-design@claude-plugins-official" = true;
+          "ralph-loop@claude-plugins-official" = true;
+          # "code-review@claude-plugins-official" = true;
+          # "pr-review-toolkit@claude-plugins-official" = true;
+          "discord@claude-plugins-official" = true;
+
+          # hiroppy
+          "tmux-agent-sidebar@hiroppy" = true;
+        }
+        // lib.optionalAttrs isPersonal {
+          "codex@openai-codex" = true;
         };
-      }
-      // lib.optionalAttrs isPersonal {
-        "openai-codex" = {
-          source = {
-            source = "github";
-            # PR #241 (CODEX_COMPANION_SANDBOX_MODE 対応) を取り込んだ fork。
-            # upstream にマージされたら "openai/codex-plugin-cc" に戻す。
-            repo = "thinceller/codex-plugin-cc";
-          };
-        };
-      };
-
-      enabledPlugins = {
-        # claude-plugins-official
-        "claude-code-setup@claude-plugins-official" = true;
-        "claude-md-management@claude-plugins-official" = true;
-        "plugin-dev@claude-plugins-official" = true;
-        "skill-creator@claude-plugins-official" = true;
-        "frontend-design@claude-plugins-official" = true;
-        "ralph-loop@claude-plugins-official" = true;
-        # "code-review@claude-plugins-official" = true;
-        # "pr-review-toolkit@claude-plugins-official" = true;
-        "discord@claude-plugins-official" = true;
-
-        # thinceller-claude-plugins
-        "git-toolkit@thinceller-claude-plugins" = true;
-        "engineering@thinceller-claude-plugins" = true;
-
-        # hiroppy
-        "tmux-agent-sidebar@hiroppy" = true;
-      }
-      // lib.optionalAttrs isPersonal {
-        "codex@openai-codex" = true;
-      };
     };
 
     context = ./user-memory.md;
