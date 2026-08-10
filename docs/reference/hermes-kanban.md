@@ -74,4 +74,8 @@ workspace が無い状態でタスクを dispatch すると、worker は `kanban
 1. `/var/lib/hermes/workspace/<repo>` に clone する
 2. `hosts/oberon/hermes-agent.nix` の `hermes-kanban-boards` の `boards` に board を追加する
 3. `hosts/oberon/hermes-documents/SOUL.md` の board slug 表に行を追加する
-4. `hosts/oberon/hermes-profiles/worker/SOUL.md` の「プロジェクト別検証コマンド」に節を追加する
+4. 対象リポジトリの `CLAUDE.md` / `AGENTS.md` に検証コマンドが書かれていることを確認する
+
+worker の SOUL.md にはプロジェクト固有の手順を書かない。検証コマンドもブランチ規約も
+各リポジトリの `CLAUDE.md` / `AGENTS.md` が正で、worker はそれを読んで従う。
+検証コマンドが書かれていないリポジトリのタスクは、worker が `kanban_block` して止まる。

@@ -24,7 +24,8 @@ Hermes kanban からタスクを受け取り、実装・検証・Draft PR 作成
      git checkout -B <branch-name> origin/<base-branch>
      ```
 
-   - base branch は dotfiles では `master`、thinceller.net では `main`
+   - base branch はリポジトリごとに違うので、決め打ちせず
+     `git symbolic-ref --short refs/remotes/origin/HEAD` から取得する
    - ブランチ名: `feat/<task-id>-<slug>` または `fix/<task-id>-<slug>`
    - workspace のディレクトリが存在しない、または git リポジトリでない場合は、
      自分で clone せずに `kanban_block` して報告する（clone は人間が行う運用）
@@ -33,6 +34,8 @@ Hermes kanban からタスクを受け取り、実装・検証・Draft PR 作成
 3. 規約の読み込み
    - リポジトリルートの `CLAUDE.md` および `AGENTS.md` を読み込む
    - プロジェクト固有のコマンド・コードスタイル・装飾を守る
+   - 検証コマンドもブランチ・コミット規約も、各リポジトリの `CLAUDE.md` / `AGENTS.md` が正。
+     この SOUL.md の記述と食い違う場合は必ずリポジトリ側に従う
 4. 実装
    - タスクの完了条件を満たすようにコードを変更する
    - 変更はタスクの完了条件を満たすのに必要な範囲に限定する。
@@ -42,7 +45,10 @@ Hermes kanban からタスクを受け取り、実装・検証・Draft PR 作成
    - 必要に応じてテストコードも追加する（タスクで指示がある場合のみ）
    - 大きな変更は、一気にではなく小さなコミット単位で進める
 5. 検証
-   - プロジェクトごとの検証コマンドを完全に実行する
+   - リポジトリの `CLAUDE.md` / `AGENTS.md` に書かれている検証コマンドを、省略せず完全に実行する
+   - 検証コマンドが書かれていない場合は自分で推測せず、`kanban_block` して確認を仰ぐ
+   - oberon には言語ランタイムがグローバルに入っていない。リポジトリが flake の devShell を
+     持つ場合は `nix develop -c <command>` 経由で実行する
    - エラーが出たら修正する。修正できない場合は `kanban_block` して判断を仰ぐ
 6. コミットと push
    - `git add` してコミット
@@ -62,33 +68,10 @@ Hermes kanban からタスクを受け取り、実装・検証・Draft PR 作成
      git checkout <base-branch>
      ```
 
-## プロジェクト別検証コマンド
-
-### thinceller.net
-
-```bash
-nix develop -c pnpm lint && nix develop -c pnpm format && nix develop -c pnpm typecheck
-```
-
-E2E テストが必要な場合（UI 変更など）は、ビルド後に以下も実行する。
-
-```bash
-nix develop -c pnpm build
-nix develop -c pnpm test:e2e
-```
-
-### dotfiles
-
-```bash
-nix fmt
-nix eval --raw .#darwinConfigurations.kohei-m4-mac-mini.system.drvPath
-nix eval --raw .#darwinConfigurations.SC-N-843.system.drvPath
-nix build .#nixosConfigurations.oberon.config.system.build.toplevel --no-link
-```
-
-`nix build` を実行する前には、新規作成したファイルを `git add` しておく。
-
 ## ブランチ・コミット・PR の規約
+
+以下はリポジトリ側に規約が無い場合の既定値です。
+リポジトリの `CLAUDE.md` / `AGENTS.md` に規約があれば、常にそちらを優先します。
 
 ### ブランチ名
 
