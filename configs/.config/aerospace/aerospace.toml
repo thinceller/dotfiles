@@ -22,6 +22,7 @@ on-window-detected = [
   { if = 'test %{app-bundle-id} = company.thebrowser.Browser', run = 'move-node-to-workspace A' },
   { if = 'test %{app-bundle-id} = company.thebrowser.dia', run = 'move-node-to-workspace A' },
   { if = 'test %{app-bundle-id} = org.mozilla.firefox', run = 'move-node-to-workspace A' },
+  { if = 'test %{app-bundle-id} = app.zen-browser.zen', run = 'move-node-to-workspace A' },
   { if = 'test %{app-bundle-id} = com.google.Chrome', run = 'move-node-to-workspace A' },
   { if = 'test %{app-bundle-id} = com.apple.Safari', run = 'move-node-to-workspace A' },
   { if = 'test %{app-bundle-id} = com.gather.Gather', run = 'move-node-to-workspace A' },
