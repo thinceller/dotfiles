@@ -235,3 +235,14 @@ When adding a CLI tool that writes outside the project directory (caches, daemon
 2. Add secret value in the editor
 3. Define in module: `sops.secrets.my-secret = { };`
 4. Use: `config.sops.secrets.my-secret.path`
+
+## Hermes Implementation Worker
+
+Hermes kanban から dispatch された worker プロファイルがこのリポジトリで実装するときの補足。
+
+- ブランチ・検証・コミット・PR の手順は worker プロファイルの SOUL.md
+  (`hosts/oberon/hermes-profiles/worker/SOUL.md`) が定める。
+- 検証コマンドは上の「Verification on Claude Code on the web (cloud sessions)」と同じものを使う。
+  worker は oberon (x86_64-linux) で動くため、darwin 構成は `nix build` ではなく
+  `nix eval` で確認する。
+- 新規 secret の追加など、安全に関わる変更を独自に決めない。ユーザーに確認する。

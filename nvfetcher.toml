@@ -20,3 +20,8 @@ fetch.github = "NotAShelf/direnv.nvim"
 [tcmux]
 src.github = "k1LoW/tcmux"
 fetch.github = "k1LoW/tcmux"
+
+[matt-pocock-skills]
+src.git = "https://github.com/mattpocock/skills"
+src.branch = "main"
+fetch.github = "mattpocock/skills"
