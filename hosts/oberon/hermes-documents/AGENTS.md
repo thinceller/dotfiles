@@ -20,8 +20,30 @@ Hermes の system prompt に自動で注入されます。
 
 ## プロジェクト別の規約
 
-- `thinceller.net/AGENTS.md`: ブランチ名、コミットメッセージ、品質チェック、PR 手順
+- `thinceller.net/CLAUDE.md`: ブランチ名、コミットメッセージ、品質チェック、PR 手順
 - `dotfiles/CLAUDE.md`: dotfiles リポジトリ作業中の一般的な規約、末尾に「Hermes Implementation Worker」セクションがある
+
+## 開発依頼の設計 (design-pipeline skill の設定)
+
+分解が必要な開発依頼は `design-pipeline` skill の工程で進めます。
+その工程で使う `to-spec` / `to-tickets` は issue tracker とラベル語彙の設定を要求しますが、
+この環境では下記で確定しているため `/setup-matt-pocock-skills` は実行しません
+(対象リポジトリに設定ファイルを書き込む skill のため)。
+
+- issue tracker: **local files**。チケットは `.scratch/<feature-slug>/issues/<NN>-<slug>.md` に
+  `01` から依存順 (ブロッカーが先) で、1チケット1ファイルで書き出す
+- `**Blocked by:**` は必ず `#01, #02` のようにチケット番号を `#` 付きで書く
+  (タイトルだけの参照は `to-kanban` が受け付けず、変換が失敗する)
+- spec の置き場: `docs/specs/`
+- ドメインドキュメント: リポジトリルートの `CONTEXT.md` と `docs/adr/`
+- triage ラベル語彙: `needs-triage` / `needs-info` / `ready-for-agent` / `ready-for-human` / `wontfix`
+
+kanban board:
+
+| 対象プロジェクト | リポジトリパス | board slug |
+|---|---|---|
+| thinceller.net | `/var/lib/hermes/workspace/thinceller.net` | `thinceller-net` |
+| dotfiles | `/var/lib/hermes/workspace/dotfiles` | `dotfiles` |
 
 ## 注意
 
