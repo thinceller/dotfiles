@@ -16,7 +16,7 @@ let
 
   sources = pkgs.callPackage ../../_sources/generated.nix { };
 
-  # Planner の設計ワークフロー (grill-with-docs → to-spec → to-tickets) が依存する
+  # design-pipeline skill の設計工程 (grill-with-docs → to-spec → to-tickets) が依存する
   # mattpocock/skills。リポジトリ全体を external_dirs に載せると in-progress や
   # personal 配下まで system prompt に載るため、使う skill だけを取り出す。
   # grilling は grill-with-docs / grill-me から参照される共有 skill。
@@ -48,7 +48,7 @@ let
     # standalone kind のプラグインは既定 opt-in のため、明示的に有効化する。
     plugins.enabled = [ "session-vault-export" ];
     # Mnemos の vault 系スキル (経路C 版: terminal + git、MCP なし) と、
-    # Planner が使う mattpocock/skills。external_dirs は読み取り専用の
+    # design-pipeline が使う mattpocock/skills。external_dirs は読み取り専用の
     # 共有スキルディレクトリ。
     skills.external_dirs = [
       "${./hermes-skills}"
@@ -121,7 +121,7 @@ in
 
     settings = lib.recursiveUpdate sharedSettings {
       # 低リスクなコマンドは自動承認し、高リスクな操作は確認を取る。
-      # Planner は Slack 越しに対話できるので smart が使える (worker は off)。
+      # default profile は Slack 越しに対話できるので smart が使える (worker は off)。
       approvals.mode = "smart";
       # 全タスクが単一の worker プロファイルに assign され、workspace は
       # リポジトリの共有チェックアウト (dir:) なので、同時に2つ以上走ると
@@ -197,7 +197,7 @@ in
     restartTriggers = [ hermesConfigHash ];
   };
 
-  # Planner の SOUL.md と worker プロファイルを HERMES_HOME 配下へ配置する。
+  # default profile の SOUL.md と worker プロファイルを HERMES_HOME 配下へ配置する。
   # hermes は SOUL.md を HERMES_HOME からしか読まず、named profile は
   # HERMES_HOME/profiles/<name>/ をそのまま新しい HERMES_HOME として扱う。
   # NixOS モジュールにはこれらを配置するオプションがないため自前で行う。

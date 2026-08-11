@@ -15,7 +15,7 @@ Hermes の system prompt に自動で注入されます。
 
 ## プロファイル
 
-- default: Planner / dispatcher 用
+- default: 汎用アシスタント / kanban dispatcher 用。設計工程は `design-pipeline` skill で行う
 - worker: 実装専用 (`hermes -p worker`)
 
 ## プロジェクト別の規約
