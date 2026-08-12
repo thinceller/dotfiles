@@ -7,6 +7,7 @@
     extensions = with pkgs; [
       gh-dash
       gh-poi
+      gh-stack
     ];
     settings = {
       git_protocol = "ssh";
