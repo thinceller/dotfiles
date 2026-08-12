@@ -35,6 +35,7 @@
       "hhkb-studio"
       "jordanbaird-ice"
       "karabiner-elements"
+      "keycastr"
       "linear"
       "logi-options+"
       "microsoft-edge"
