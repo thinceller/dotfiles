@@ -150,7 +150,7 @@ if test $mode = pr-review
     # effort は /code-review の引数では指定できないので claude の CLI フラグで渡す。
     # detached の場合は "HEAD" が返り、それがそのまま ref として使える。
     set -l head_ref (git -C $work_path rev-parse --abbrev-ref HEAD)
-    set agent_prompt -- --effort xhigh "/code-review origin/$base_branch..$head_ref"
+    set agent_prompt -- --effort low "/code-review origin/$base_branch..$head_ref"
 end
 # shell の初期化が済むまで herdr 0.7.5 の agent start は agent_pane_busy で即時失敗する
 # (内部リトライなし)。大きなリポジトリでは worktree 作成や wt hook の負荷で shell の
