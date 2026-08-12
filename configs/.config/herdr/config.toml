@@ -101,10 +101,13 @@ pane_gaps = false
 
 agent_panel_sort = "spaces"
 
-# 展開時サイドバーの最大幅。デフォルト 36 だとタスク要約 (terminal_title) や
-# メタデータ行が切れがちなので 1.5 倍に広げる。
+# 展開時サイドバーの初期幅。デフォルト 26 だとタスク要約 (terminal_title) や
+# メタデータ行が切れがちなので広げる。
 sidebar_width = 54
-sidebar_max_width = 54
+
+# 手動リサイズ時の上限。ターミナルが狭い時はレイアウト側で自動的に縮むので、
+# 初期幅より広く取っておいて必要な時だけ手で伸ばす。
+sidebar_max_width = 80
 
 # 0.7.4 で packed layout がデフォルトになったので、旧来の間隔 (エントリ間 1 行) に戻す。
 [ui.sidebar.agents]
