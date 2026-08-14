@@ -116,14 +116,28 @@ herdr tab rename $agent_tab agent
 set -l editor (herdr tab create --workspace $ws --cwd $work_path --label editor --no-focus)
 herdr pane run (echo $editor | jq -r '.result.root_pane.pane_id') nvim
 
-# --- pr-review: PR の base との diff を hunk で開く review タブ ---
-if test $mode = pr-review
-    set -l review (herdr tab create --workspace $ws --cwd $work_path --label review --no-focus)
-    # hunk diff <ref> は working tree と <ref> の直接比較。base ブランチ側の
-    # 先行コミットを差分に混ぜないよう merge-base を基準にする。
-    set -l diff_base (git -C $work_path merge-base origin/$base_branch HEAD)
-    herdr pane run (echo $review | jq -r '.result.root_pane.pane_id') "hunk diff $diff_base"
+# --- review タブ: hunk で差分を常設表示 ---
+# 全モードで開く。Claude の作業内容をここでレビューし、`c` で inline note を
+# 書くと claude 側は hunk-notes skill 経由で読み取れる。
+# 差分の基準はモードごとに変える。hunk diff <ref> は working tree と <ref> の
+# 直接比較なので、分岐点 (merge-base) を渡せば Claude が途中でコミットしても
+# 差分が消えず、base ブランチ側の先行コミットも混ざらない。
+# --watch で作業に追従して自動リロードする。
+set -l base_ref
+switch $mode
+    case open
+        # 分岐元という概念がないので working tree 差分をそのまま見る。
+    case worktree
+        # 分岐元はデフォルトブランチとみなす。origin/HEAD 未設定のリポジトリでは
+        # 空のままになり、working tree 差分にフォールバックする。
+        set base_ref (git -C $work_path symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null)
+    case pr-review
+        set base_ref origin/$base_branch
 end
+set -l diff_base
+test -n "$base_ref"; and set diff_base (git -C $work_path merge-base $base_ref HEAD 2>/dev/null)
+set -l review (herdr tab create --workspace $ws --cwd $work_path --label review --no-focus)
+herdr pane run (echo $review | jq -r '.result.root_pane.pane_id') "hunk diff --watch $diff_base"
 
 herdr tab focus $agent_tab
 
