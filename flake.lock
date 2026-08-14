@@ -8,7 +8,10 @@
           "hunk",
           "nixpkgs"
         ],
-        "systems": "systems",
+        "systems": [
+          "hunk",
+          "systems"
+        ],
         "treefmt-nix": "treefmt-nix_3"
       },
       "locked": {
@@ -97,11 +100,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786484869,
-        "narHash": "sha256-hvDlP1mzXv3B010OcICjq6aKNg0AKcd1bcVumMjTMxU=",
+        "lastModified": 1786683038,
+        "narHash": "sha256-lHAPU/kTpwFg+QJTH+A+GqdUMnK0gKt5gSfiiZvIiv8=",
         "owner": "natsukium",
         "repo": "edgepkgs",
-        "rev": "9026b6f25bd96578616054359d079b2a5842dbbc",
+        "rev": "0d24786d030cac64dd9d4ff04098394cff5144e6",
         "type": "github"
       },
       "original": {
@@ -413,11 +416,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1784682028,
-        "narHash": "sha256-kVUyNs/C2bkUoVyr4ow+nyoXbFoc1/LvtYa/3ILRz9o=",
+        "lastModified": 1786673910,
+        "narHash": "sha256-BfjlefBAT4tzfQKGtknpaSpiRi/cJaNUlmv5cmJaulk=",
         "owner": "ogulcancelik",
         "repo": "herdr",
-        "rev": "ef85fa0c7ebb48bb59fe7593af5a67f3e02ff3d4",
+        "rev": "d76657f2c7fc18dcce3b9af43842c8afaba1646b",
         "type": "github"
       },
       "original": {
@@ -495,14 +498,15 @@
         "bun2nix": "bun2nix",
         "nixpkgs": [
           "nixpkgs"
-        ]
+        ],
+        "systems": "systems"
       },
       "locked": {
-        "lastModified": 1784194726,
-        "narHash": "sha256-7tDG9RVoEgbiljm3UTmGXsQRqvJyIuXqlOxga+otLKU=",
+        "lastModified": 1786676624,
+        "narHash": "sha256-bSQoXF2i+t1lutZZvogsQhooLR4svPngkvXlZejwVWU=",
         "owner": "modem-dev",
         "repo": "hunk",
-        "rev": "2458366fbf028759ac7ca7da729f4f6089e22b02",
+        "rev": "9bdb0bb94c28ce6b5ca5b052d3717ab6763ca2fb",
         "type": "github"
       },
       "original": {
@@ -873,16 +877,16 @@
     },
     "systems": {
       "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "lastModified": 1776166891,
+        "narHash": "sha256-bI8yrEGjrohR5hkQox7UrxDH7XqrYMwI8SL/LrJ1+S8=",
         "owner": "nix-systems",
-        "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "repo": "triplet",
+        "rev": "6de7bc09397911ce03636afbcf6118745ab2cda0",
         "type": "github"
       },
       "original": {
         "owner": "nix-systems",
-        "repo": "default",
+        "repo": "triplet",
         "type": "github"
       }
     },
