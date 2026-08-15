@@ -36,7 +36,11 @@ in
         "Bash(grep:*)"
       ];
       ask = [
-        "Bash(rm:*)"
+        # 再帰削除だけ必ず確認する。単発ファイルの rm は auto mode の
+        # classifier に任せる (ask ルールは classifier より優先されるため、
+        # `Bash(rm:*)` にすると scratchpad の後片付けでも毎回プロンプトが出る)。
+        "Bash(rm -r:*)"
+        "Bash(rm -rf:*)"
         "Bash(git merge:*)"
         "Bash(git rebase:*)"
         "Bash(git push:*)"
