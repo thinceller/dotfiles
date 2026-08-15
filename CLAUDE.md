@@ -74,26 +74,6 @@ Nix is installed automatically by the SessionStart hook (`scripts/claude-cloud-s
 
 ## Architecture
 
-### Directory Structure
-- `flake.nix`: Main entry point defining inputs, outputs, and host configurations
-- `hosts/`: Machine-specific configurations that combine nix-darwin and home-manager
-  - Each host defines a `userConfig` with username, homeDir, hostname, and dotfilesDir
-  - Work machines (like SC-N-843) have host-specific settings in `nix-darwin/modules/hosts/`
-- `nix-darwin/modules/`: System-level macOS configurations
-  - `hosts/`: Host-specific settings (e.g., `kohei-m4-mac-mini.nix`, `SC-N-843.nix`)
-  - `programs/`: System-level program configs (e.g., `1password.nix`)
-  - `services/`: System-level services (e.g., `aerospace.nix`, `karabiner-elements.nix`)
-  - `homebrew.nix`, `fonts.nix`, `networking.nix`, `nix.nix`, `shells.nix`, `system.nix`, `users.nix`
-- `home-manager/`: User-level configurations
-  - `programs/`: Individual CLI tool configurations (each tool has its own directory)
-  - `pkgs/`: Single file (`default.nix`) containing all packages to install
-  - `services/`: User-level services
-  - `files.nix`: Symlink configuration for files in `configs/`
-- `configs/`: Raw configuration files (e.g., Neovim, Karabiner, cage, pnpm)
-- `secrets/`: SOPS-encrypted secrets (default.yaml)
-- `_sources/`: Auto-generated external package sources (managed by nvfetcher)
-- `.github/workflows/`: CI configuration (Cachix + nix build)
-
 ### Key Design Patterns
 
 #### 1. Host Configuration with userConfig
@@ -168,38 +148,9 @@ Homebrew packages are declaratively managed in `nix-darwin/modules/homebrew.nix`
 
 ### Adding New Configurations
 
-#### New Program
-1. Create directory: `home-manager/programs/new-program/`
-2. Add `default.nix` that returns a module (attrset with `programs.new-program = { ... }`)
-3. Import in `home-manager/programs/default.nix`:
-   ```nix
-   let
-     new-program = import ./new-program { inherit pkgs; };
-   in
-   [
-     # ... existing programs
-     new-program
-   ]
-   ```
-
-#### New Package
-Add directly to the packages list in `home-manager/pkgs/default.nix`:
-```nix
-home.packages = with pkgs; [
-  # ... existing packages
-  new-package
-];
-```
-
-#### New Config File for Symlinking
-1. Place file in `configs/.config/new-app/`
-2. Add to `home-manager/files.nix`:
-   ```nix
-   xdg.configFile."new-app" = {
-     source = symlink /${rootDir}/.config/new-app;
-     recursive = true;
-   };
-   ```
+新規パッケージ / プログラム / out-of-store symlink / host / secret の追加手順は
+`nix-helper` skill (`.claude/skills/nix-helper/SKILL.md`) が持っている。
+ここには skill がカバーしていないものだけを置く。
 
 #### New Homebrew Package
 Add to `nix-darwin/modules/homebrew.nix`:
@@ -222,19 +173,6 @@ When adding a CLI tool that writes outside the project directory (caches, daemon
 1. Identify its data/cache paths (check docs or run with `fs_usage`)
 2. Add the paths to `configs/.config/cage/presets.yaml` under the `claude-code` preset's `allow` list
 3. A cage session restart is required for the change to take effect
-
-#### New Host
-1. Create `hosts/new-hostname/default.nix`
-2. Define `userConfig` with username, homeDir, hostname, dotfilesDir
-3. Add host-specific nix-darwin settings in `nix-darwin/modules/hosts/new-hostname.nix`
-4. Import home-manager with correct user configuration
-5. Add to `flake.nix` darwinConfigurations
-
-#### New Secret
-1. Edit secrets: `sops secrets/default.yaml`
-2. Add secret value in the editor
-3. Define in module: `sops.secrets.my-secret = { };`
-4. Use: `config.sops.secrets.my-secret.path`
 
 ## Hermes Implementation Worker
 
