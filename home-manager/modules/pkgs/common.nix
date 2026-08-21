@@ -5,6 +5,7 @@
 {
   home.packages = with pkgs; [
     age
+    awscli2
     bun
     cachix
     cage
@@ -26,6 +27,7 @@
     php83
     php83Packages.composer
     python3
+    ssm-session-manager-plugin
     sops
     sox
     tig
