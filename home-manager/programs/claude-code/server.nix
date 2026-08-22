@@ -16,7 +16,12 @@ in
     enable = true;
     package = common.package;
 
-    settings = common.settings;
+    settings = common.settings // {
+      # スマホからの操作が前提のサーバーなので、全セッションで Remote Control
+      # bridge を自動起動する。security-sensitive setting のため user settings
+      # (~/.claude/settings.json) でしか有効化できない。
+      remoteControlAtStartup = true;
+    };
 
     memory.source = ./user-memory.md;
 

@@ -50,6 +50,12 @@ in
       # effortLevel = "xhigh";
       voiceEnabled = true;
 
+      # 全セッションで Remote Control bridge を自動起動する (/remote-control 相当)。
+      # 私用機のみ有効。仕事機 (SC-N-843) は明示的に無効のままにする。
+      # security-sensitive setting のため user settings (~/.claude/settings.json)
+      # か policy でしか有効化できない (project/local settings は false のみ有効)。
+      remoteControlAtStartup = isPersonal;
+
       # Claude Code 組み込み sandbox (macOS: Seatbelt)。
       # cage と二重に Seatbelt をネストすると失敗するため、これを使うときは
       # `cage claude` ではなく素の `claude` で起動すること。cage 設定
