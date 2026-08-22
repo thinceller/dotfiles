@@ -25,3 +25,7 @@ fetch.github = "k1LoW/tcmux"
 src.git = "https://github.com/mattpocock/skills"
 src.branch = "main"
 fetch.github = "mattpocock/skills"
+
+[gh-pr-graph]
+src.github = "orangain/gh-pr-graph"
+fetch.github = "orangain/gh-pr-graph"
