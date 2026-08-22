@@ -58,14 +58,16 @@ description = "open bottom (resource monitor) in popup"
 width = "90%"
 height = "90%"
 
-# gh dash — PR / issue の一覧を差し込みで開く。
+# gh pr-graph — 自分が author / assignee / reviewer の PR を、base/head ブランチを
+# たどった依存グラフとしてブラウザで開く。ローカル (127.0.0.1) にサーバを立てて
+# ブラウザを起動し、Ctrl-C まで前面に居座るタイプなので popup ではなく pane で開く。
+# popup は session-modal でブラウザを見ている間ずっと herdr 側がブロックされるが、
+# pane なら他のペインを触りながらサーバを生かしておける (コマンド終了で pane も閉じる)。
 [[keys.command]]
 key = "prefix+ctrl+p"
-type = "popup"
-command = "gh dash"
-description = "open gh dash in popup"
-width = "90%"
-height = "90%"
+type = "pane"
+command = "gh pr-graph"
+description = "open gh pr-graph (PR dependency graph) in a temporary pane"
 
 # scratch fish shell — 今のペインを汚さず 1 発コマンドを叩く用。
 # exit で popup が閉じる。

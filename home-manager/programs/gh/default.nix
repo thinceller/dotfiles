@@ -1,13 +1,17 @@
-{ pkgs, ... }:
+{ pkgs, sources, ... }:
+let
+  gh-pr-graph = import ./gh-pr-graph.nix { inherit pkgs sources; };
+in
 {
   programs.gh-prism.enable = true;
 
   programs.gh = {
     enable = true;
-    extensions = with pkgs; [
-      gh-dash
-      gh-poi
-      gh-stack
+    extensions = [
+      pkgs.gh-dash
+      pkgs.gh-poi
+      pkgs.gh-stack
+      gh-pr-graph
     ];
     settings = {
       git_protocol = "ssh";
