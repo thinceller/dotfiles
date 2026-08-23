@@ -47,11 +47,16 @@ in
       ];
       deny = [
         "Read(~/.ssh/**)"
-        "Read(.env*)"
+        # `.env*` だと direnv の `.envrc` まで巻き込む (deny は allow より優先
+        # されるため個別 allow では戻せない)。秘密が入るのは `.env` /
+        # `.env.<環境名>` の系統なのでそちらだけを deny する。
+        "Read(.env)"
+        "Read(.env.*)"
         "Bash(sudo:*)"
         "Bash(git commit --no-gpg-sign:*)"
         "Edit(~/.ssh/**)"
-        "Edit(.env*)"
+        "Edit(.env)"
+        "Edit(.env.*)"
       ];
       defaultMode = "auto";
     };
