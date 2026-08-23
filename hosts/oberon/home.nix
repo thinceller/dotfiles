@@ -21,7 +21,7 @@ in
     ../../home-manager/programs/direnv
     ../../home-manager/programs/fish/server.nix
     ../../home-manager/programs/fzf
-    ../../home-manager/programs/gh
+    ../../home-manager/programs/gh/server.nix
     ../../home-manager/programs/git/server.nix
     ../../home-manager/programs/htop
     ../../home-manager/programs/hunk
