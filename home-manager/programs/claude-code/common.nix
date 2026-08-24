@@ -16,6 +16,7 @@ in
 
   settings = {
     theme = "dark";
+    outputStyle = "Concise";
     autoCompactEnabled = false;
     alwaysThinkingEnabled = true;
     language = "japanese";
