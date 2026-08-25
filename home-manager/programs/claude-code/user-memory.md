@@ -48,6 +48,29 @@ Always keep the following priorities in mind when refactoring or designing code:
 - **Abstractions**: Do not create helpers, utilities, or abstractions for one-time operations
 - **Future-proofing**: Do not design for hypothetical future requirements; three similar lines is better than a premature abstraction
 
+## Code Comments
+
+**IMPORTANT**: Default to no comment. Write one only when the code cannot carry the information itself.
+
+A comment earns its place when it tells a teammate who has **not** seen this conversation something they cannot get from the code, the name, or the type:
+
+- **Why**, not what: a non-obvious decision, a constraint, a trade-off that was rejected
+- **Invariants and gotchas**: ordering requirements, units, off-by-one traps, "looks wrong but is right"
+- **Workarounds**: the bug or limitation being dodged, with a link (issue, ticket, upstream PR)
+- **Public API contracts** where the language convention expects docstrings — describe the contract, never restate the signature
+- **TODO/FIXME** with a ticket or owner
+
+Never write:
+
+- Comments that restate the code (`// increment counter`, `// return the result`, `# loop over items`)
+- Change narration or session context (`// changed from X to Y`, `// as requested`, `// previously this did ...`, `// removed the old check`) — that belongs in the commit message
+- Section banners (`// ===== Helpers =====`), `NOTE:`/`IMPORTANT:` prefixes, or step-by-step numbering inside a function
+- Docstrings on private/trivial functions whose name already says everything
+- Multi-sentence justification of an obvious choice, or hedging (`// this should work`, `// probably fine`)
+- Comments addressed to the reviewer instead of the future maintainer
+
+Before leaving a comment, test it: *Would it be wrong after a rename? Does it describe a moment in time rather than the code? Would deleting it lose nothing?* — if any is yes, delete it. One line by default; a paragraph only for a rationale that genuinely cannot be shorter. Match the comment density and language of the surrounding file (the session language setting governs replies, not code); if the file has no comments, yours must be exceptional.
+
 ## Refactoring Checklist
 
 When improving code, always verify the following:
