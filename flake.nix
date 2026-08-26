@@ -22,7 +22,7 @@
       # d5bd9cd (2026-07-07) 以降は本 flake の nixpkgs より新しい nixos-render-docs を要求し
       # `--sidebar-depth` 未対応で darwin-manual-html のビルドが失敗するため、trusted オプションが
       # 入った最初の commit 群のうち、その手前で pin する。
-      url = "github:LnL7/nix-darwin/d8a6661f78281431f182f222c7df96e2c9480fc5";
+      url = "github:LnL7/nix-darwin/4cff07de74b50e64bdd68cd4e722ab5b6b35ee48";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
