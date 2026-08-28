@@ -20,6 +20,7 @@
     google-cloud-sdk
     graphviz
     herdr
+    just
     nix-search-cli
     nixfmt
     nodejs_24
