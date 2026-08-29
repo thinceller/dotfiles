@@ -18,6 +18,16 @@
 
     # settings は freeform で OpenSSH のディレクティブ名を直接キーに使う (旧 matchBlocks)。
     settings = {
+      # GitHub は Secure Enclave に格納した SSH キーで認証・署名する。
+      # キーハンドルファイルは各 Mac で作成する必要がある。
+      "github.com" = {
+        HostName = "github.com";
+        User = "git";
+        IdentityFile = "~/.ssh/id_github_se";
+        IdentitiesOnly = "yes";
+        IdentityAgent = "none";
+      };
+
       # admin 主経路: Tailscale (MagicDNS で tailnet IP に解決)。
       # Tailscale SSH なので鍵認証は tailscaled が処理 (IdentityFile 不要)。
       "oberon" = {
@@ -25,7 +35,7 @@
         User = "thinceller";
         ServerAliveInterval = 60;
       };
-      # fallback: cloudflared 経由 (Tailscale 故障時 / 経路系 deploy 時)。
+      # fallback: cloudflared 経路 (Tailscale 故障時 / 経路系 deploy 時)。
       "oberon-cf" = {
         HostName = "oberon.thinceller.dev";
         User = "thinceller";

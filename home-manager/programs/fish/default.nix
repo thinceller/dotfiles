@@ -7,6 +7,9 @@
 {
   imports = [ ./common.nix ];
 
+  # Secure Enclave に格納した SSH キーを認証・署名に使うためのプロバイダー。
+  home.sessionVariables.SSH_SK_PROVIDER = "/usr/lib/ssh-keychain.dylib";
+
   programs.fish = {
     functions = {
       scc = {

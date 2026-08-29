@@ -5,6 +5,18 @@
 
   programs.gpg.enable = true;
 
+  # Secure Enclave に格納した SSH キーを git commit 署名に使う。
+  # キーハンドルファイルは各 Mac で `sc_auth create-ctk-identity`
+  # を使って生成する必要がある。
+  home.file.".local/bin/ssh-sign" = {
+    executable = true;
+    text = ''
+      #!/bin/sh
+      export SSH_SK_PROVIDER=/usr/lib/ssh-keychain.dylib
+      exec /usr/bin/ssh-keygen "$@"
+    '';
+  };
+
   # Cloudflare Access (Forgejo CLI) の Service Token を含む git の include ファイルを
   # sops で暗号化して管理する。home-manager の activation で復号され、
   # ~/.config/git/cloudflare-access.gitconfig に symlink される。
@@ -17,7 +29,9 @@
   programs.git = {
     signing = {
       format = "ssh";
-      key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILQwsbXl/1tHIdW/f+fZE7TJArqzvmbbaUsdKRFPoyZB";
+      # Secure Enclave 内の SSH キーハンドルを指す。
+      # 対応する公開鍵は ~/.ssh/id_github_se.pub に置く。
+      key = "~/.ssh/id_github_se";
       signByDefault = true;
     };
     settings = {
@@ -36,7 +50,7 @@
       };
       gpg = {
         ssh = {
-          program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
+          program = "${config.home.homeDirectory}/.local/bin/ssh-sign";
         };
       };
       # forgejo.thinceller.dev (Forgejo) は Cloudflare Access で保護されているので、
