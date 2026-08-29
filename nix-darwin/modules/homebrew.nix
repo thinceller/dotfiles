@@ -25,7 +25,6 @@
       "1password"
       "aerospace"
       "alacritty"
-      "appcleaner"
       "arc"
       "azookey"
       "chatgpt"
