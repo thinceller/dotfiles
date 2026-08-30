@@ -42,6 +42,8 @@ sops -r secrets/default.yaml
 
 See `docs/reference/SOPS.md` for comprehensive secrets management documentation.
 
+See `docs/reference/SECURE_ENCLAVE_SSH.md` for the Secure Enclave SSH key used for github.com on personal Macs (manual setup, not managed by Nix).
+
 ### Verification (for coding agents)
 ```bash
 # Build configuration without applying (use for verification)

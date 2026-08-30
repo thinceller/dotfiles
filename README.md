@@ -9,6 +9,7 @@ management dotfiles
 ### Reference (ストック)
 
 - [SOPS Manual](docs/reference/SOPS.md) - Comprehensive guide for secrets management with SOPS
+- [Secure Enclave SSH](docs/reference/SECURE_ENCLAVE_SSH.md) - Manual setup of a Secure Enclave SSH key for github.com on personal Macs (not managed by Nix)
 - [Oberon deploy methods](docs/reference/oberon-deploy.md) - comin による pull 型 GitOps (デフォルト) と手動 fallback (Tailscale / on-server tmux / VNC / boot)
 - [Sakura VPS + NixOS + Forgejo lessons](docs/reference/sakura-vps-nixos-lessons.md) - oberon 構築・運用で得た知見集 (deploy 戦略、復旧、cloudflared 挙動、VNC fallback など)
 - [Linux builder](docs/reference/LINUX_BUILDER.md) / [bootstrap](docs/reference/linux-builder-bootstrap.md) - nix-darwin の Linux builder VM

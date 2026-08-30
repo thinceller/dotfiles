@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  userConfig,
   ...
 }:
 {
@@ -42,6 +43,21 @@
         IdentityFile = "~/.ssh/id_ed25519";
         ProxyCommand = "cloudflared access ssh --hostname forgejo-ssh.thinceller.dev";
         ServerAliveInterval = 60;
+      };
+    }
+    // lib.optionalAttrs (pkgs.stdenv.hostPlatform.isDarwin && userConfig.isPersonal) {
+      # 個人 Mac 限定: Claude Code Remote Control でモバイル操作中は 1Password の
+      # 鍵利用承認が押せず止まるため、github.com だけ Secure Enclave 鍵 (Touch ID 不要)
+      # を使う。鍵ファイルは Nix 管理外で手動作成 (docs/reference/SECURE_ENCLAVE_SSH.md 参照)。
+      # `IdentityAgent none` は下の `Host *` の 1Password agent を無効化するため。
+      # home-manager は `Host *` を必ず最後に出力するので順序は問題ない。
+      "github.com" = {
+        HostName = "github.com";
+        User = "git";
+        IdentityFile = "~/.ssh/id_github_se";
+        IdentitiesOnly = "yes";
+        IdentityAgent = "none";
+        SecurityKeyProvider = "/usr/lib/ssh-keychain.dylib";
       };
     }
     // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
