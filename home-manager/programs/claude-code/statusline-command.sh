@@ -176,14 +176,17 @@ maybe_refresh_usage_cache() {
 # resets_at を過ぎたエントリはリセット済みの古い値なので捨てる (認証が壊れて
 # fetch が長時間失敗した時に古い値を出し続けないため)。resets_at は UTC の
 # ISO8601 なので、秒より下を切り捨てて jq 側で比較する。
+# その週まだ一度も使っていないモデルは resets_at が null で返る。これは古い値
+# ではなく「窓が未開始」なので通す (0% として表示する)。
 scoped_weekly_usage() {
   [[ -f "$CACHE_FILE" ]] || return
 
   jq -r '
     def not_expired:
       (.resets_at // "") as $r
-      | ($r | length) >= 19
-        and (($r[0:19] + "Z" | try fromdateiso8601 catch 0) > now);
+      | ($r | length) == 0
+        or (($r | length) >= 19
+            and (($r[0:19] + "Z" | try fromdateiso8601 catch 0) > now));
     .limits[]?
     | select(.kind == "weekly_scoped")
     | select((.scope.model.display_name // "") != "")
