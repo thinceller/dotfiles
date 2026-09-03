@@ -41,9 +41,9 @@ let
     # 認証は OPENCODE_GO_API_KEY 環境変数のみ (OAuth 不要)。
     model.provider = "opencode-go";
     model.default = "kimi-k2.7-code";
-    # MESSAGING_CWD 環境変数の代替。nixosModule は systemd Environment= に
-    # MESSAGING_CWD をセットするが、hermes v0.16.0 でこの変数は deprecated。
-    # settings 経由で config.yaml に書き出すことで警告を解消する。
+    # deprecated な MESSAGING_CWD 環境変数の代替 (v0.16.0 以降)。v0.21.0 の
+    # nixosModule も MESSAGING_CWD を設定せず terminal.cwd を使う。
+    # profile の config.yaml は root とマージされないため worker にも流し込む。
     terminal.cwd = config.services.hermes-agent.workingDirectory;
     # standalone kind のプラグインは既定 opt-in のため、明示的に有効化する。
     plugins.enabled = [ "session-vault-export" ];
@@ -115,6 +115,11 @@ in
     enable = true;
     addToSystemPackages = true;
 
+    # v0.21.0 の module は documents を使う場合に workingDirectory の明示を
+    # 要求する (module ごとにデフォルトが異なるため)。値は従来のデフォルトと同じ。
+    # kanban board の default-workdir もこの下を指す。
+    workingDirectory = "${config.services.hermes-agent.stateDir}/workspace";
+
     # Slack/Discord ライブラリ (slack-bolt 等) を sealed venv に事前ベイク。
     # v0.16.0 で [all] から除外されたため、サーバーデプロイでは明示が必要。
     extraDependencyGroups = [ "messaging" ];
@@ -183,17 +188,12 @@ in
     };
   };
 
-  # nixosModule が systemd Environment= に MESSAGING_CWD をセットするため、
-  # プロセス環境から削除して deprecated 警告を解消する。
-  # environment 全体を lib.mkForce で置換すると、nixosModule が `path`
-  # オプション経由で注入する PATH キー (environment.PATH へ展開される) ごと
-  # 消えてしまい、cat/rm 等の基本コマンドが見つからなくなる。そのため
-  # MESSAGING_CWD キーだけを null 上書きして除外する (null のキーは
-  # systemd unit 生成時に出力されない)。
-  # TimeoutStopSec も drain_timeout (180s) + 30s バッファに合わせて延長する。
+  # TimeoutStopSec を drain_timeout (180s) + 30s バッファに合わせて延長する。
+  # (かつては nixosModule が systemd Environment= に載せる deprecated な
+  # MESSAGING_CWD をここで null 上書きしていたが、v0.21.0 の module は
+  # terminal.cwd のみを使い MESSAGING_CWD を設定しなくなったので不要になった。)
   systemd.services.hermes-agent = {
     serviceConfig.TimeoutStopSec = lib.mkForce 210;
-    environment.MESSAGING_CWD = lib.mkForce null;
     restartTriggers = [ hermesConfigHash ];
   };
 
