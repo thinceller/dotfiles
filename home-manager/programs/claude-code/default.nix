@@ -240,10 +240,6 @@ in
           "plugin-dev@claude-plugins-official" = true;
           "skill-creator@claude-plugins-official" = true;
           "frontend-design@claude-plugins-official" = true;
-          "ralph-loop@claude-plugins-official" = true;
-          # "code-review@claude-plugins-official" = true;
-          # "pr-review-toolkit@claude-plugins-official" = true;
-          "discord@claude-plugins-official" = true;
 
           # hiroppy
           "tmux-agent-sidebar@hiroppy" = true;
