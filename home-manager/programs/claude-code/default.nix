@@ -212,14 +212,6 @@ in
 
       extraKnownMarketplaces =
         common.settings.extraKnownMarketplaces
-        // {
-          "hiroppy" = {
-            source = {
-              source = "github";
-              repo = "hiroppy/tmux-agent-sidebar";
-            };
-          };
-        }
         // lib.optionalAttrs isPersonal {
           "openai-codex" = {
             source = {
@@ -240,9 +232,6 @@ in
           "plugin-dev@claude-plugins-official" = true;
           "skill-creator@claude-plugins-official" = true;
           "frontend-design@claude-plugins-official" = true;
-
-          # hiroppy
-          "tmux-agent-sidebar@hiroppy" = true;
         }
         // lib.optionalAttrs isPersonal {
           "codex@openai-codex" = true;

@@ -1,5 +1,5 @@
 # oberon (サーバー) 用の OpenCode 設定。darwin 版 (default.nix) から
-# vault (references / Mnemos) / tmux-agent-sidebar を除いたもの。
+# vault (references / Mnemos) を除いたもの。
 {
   pkgs,
   ...

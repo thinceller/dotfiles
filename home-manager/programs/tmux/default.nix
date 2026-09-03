@@ -4,7 +4,6 @@
   ...
 }:
 let
-  tmux-agent-sidebar = import ./plugins/tmux-agent-sidebar { inherit pkgs sources; };
   tcmux = import ./tcmux.nix { inherit pkgs sources; };
 
   tmux-switch-session = pkgs.writeShellScript "tmux-switch-session" ''
@@ -118,12 +117,10 @@ in
           set -g @tokyo-night-tmux_window_id_style "fsquare"
         '';
       }
-      tmux-agent-sidebar.plugin
     ];
   };
 
   home.packages = [
-    tmux-agent-sidebar.package
     tcmux
   ];
 }

@@ -2,7 +2,6 @@
   pkgs,
   lib,
   config,
-  sources,
   userConfig,
   ...
 }:
@@ -104,10 +103,6 @@ lib.mkIf userConfig.isPersonal {
     skills = {
       hunk-review = "${config.programs.hunk.package}/skills/hunk-review";
     };
-  };
-
-  xdg.configFile."opencode/plugins/tmux-agent-sidebar.js" = {
-    source = "${sources.tmux-agent-sidebar.src}/.opencode/plugins/tmux-agent-sidebar.js";
   };
 
   # herdr integration (opencode 側): `herdr integration install opencode` が

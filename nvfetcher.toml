@@ -8,10 +8,6 @@ src.git = "https://github.com/jorgebucaran/hydro"
 src.branch = "main"
 fetch.github = "jorgebucaran/hydro"
 
-[tmux-agent-sidebar]
-src.github = "hiroppy/tmux-agent-sidebar"
-fetch.github = "hiroppy/tmux-agent-sidebar"
-
 [direnv-nvim]
 src.git = "https://github.com/NotAShelf/direnv.nvim"
 src.branch = "main"

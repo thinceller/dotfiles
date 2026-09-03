@@ -85,10 +85,8 @@ auto: true
 - 履歴に含まれる秘密情報 (トークン・鍵・パスワード) はログに書かない"
 
   cd "$VAULT" || exit 0
-  # TMUX / TMUX_PANE を外す: headless claude にも tmux-agent-sidebar の
-  # plugin hook が発火し、親セッションと同じ pane の表示状態
-  # (@pane_status / @pane_prompt 等) を一瞬上書きしてしまうため。
-  # sidebar の hook バイナリは TMUX_PANE 不在なら即終了する (main.rs:47-49)。
+  # TMUX / TMUX_PANE を外す: headless claude にも tmux 連携 hook (herdr) が
+  # 発火し、親セッションと同じ pane の表示状態を一瞬上書きしてしまうため。
   env -u TMUX -u TMUX_PANE VAULT_SESSION_LOG_CHILD=1 "$CLAUDE" -p "$prompt" \
     --model claude-haiku-4-5-20251001 \
     --allowedTools "Read,Write,Edit" \

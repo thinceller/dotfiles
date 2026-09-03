@@ -76,15 +76,4 @@
       sha256 = "sha256-joQSbM0nGjKD0Yxp5JYXIluHyjcRU8HnAFJZ8JOmSTE=";
     };
   };
-  tmux-agent-sidebar = {
-    pname = "tmux-agent-sidebar";
-    version = "v0.12.0";
-    src = fetchFromGitHub {
-      owner = "hiroppy";
-      repo = "tmux-agent-sidebar";
-      rev = "v0.12.0";
-      fetchSubmodules = false;
-      sha256 = "sha256-ib/5WLL+6+4iXbttYBVUpuN1JkIPH4E+6YmD3CfjA5M=";
-    };
-  };
 }
