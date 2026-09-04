@@ -11,6 +11,7 @@ let
     gh-prism
     cage
     nixpkgs-codex
+    nixpkgs-gh
     hunk
     herdr
     opencode
@@ -33,6 +34,10 @@ let
     inherit system;
   };
 
+  pkgs-gh = import nixpkgs-gh {
+    inherit system;
+  };
+
   pkgs = import nixpkgs {
     inherit system;
     config.allowUnfree = true;
@@ -46,6 +51,8 @@ let
         # gpt-5.5 サポート (codex 0.123+) のため、locked nixpkgs が
         # 追いつくまで nixpkgs-codex から codex を上書き取得する。
         codex = pkgs-codex.codex;
+        # locked nixpkgs の gh が古いため、追いつくまで nixpkgs-gh から上書き取得する。
+        gh = pkgs-gh.gh;
       })
     ];
   };

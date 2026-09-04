@@ -96,6 +96,10 @@
     # cache.nixos.org にビルド済みの最新を選んでいる。
     # 通常の nixpkgs が追いついたら削除する。
     nixpkgs-codex.url = "github:NixOS/nixpkgs/0de8465d2b54";
+    # gh 2.99.0 を含む nixpkgs リビジョン。
+    # cache.nixos.org にビルド済みの最新を選んでいる。
+    # 通常の nixpkgs が追いついたら削除する。
+    nixpkgs-gh.url = "github:NixOS/nixpkgs/9387b3fcc0c2";
     # hermes-agent は nixos-unstable + uv2nix で独自ビルドするため nixpkgs follows は付けない。
     # v2026.8.31 に pin 中。2026-09-02 の main は hermes_state_holders.py を
     # pyproject.toml の py-modules へ追加し忘れており、wheel から欠落する。
