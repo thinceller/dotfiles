@@ -61,6 +61,9 @@ let
     privacy.redact_pii = true;
     # 2026-07-01 マージの Block Kit リッチレンダリングを有効化。
     # フォールバック平文は従来の mrkdwn のままなので、標準 Markdown を書くプラクティスは維持される。
+    # NOTE: v0.21.0 (2026.8.31) では `rich_blocks` がキー。v0.21.0 以降の upstream
+    # (PR #47051) では `rich_output` にリネーム・デフォルト有効化される見込み。
+    # バージョンアップ時にはここを `rich_output` に移行し、オプトアウト値を確認すること。
     platforms.slack.extra.rich_blocks = true;
   };
 
