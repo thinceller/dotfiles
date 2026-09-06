@@ -24,6 +24,23 @@ nix fmt
 nix develop -c pre-commit run --all-files
 ```
 
+### Dependency update PRs
+
+`.github/workflows/update.yml` が対象 (flake input / nvfetcher source) ごとに固定ブランチ
+`update/<target>` で PR を作り、毎日 / master push / 手動起動で更新し続ける。CI 通過後は人が
+merge し、comin が deploy する。特定対象だけ更新したいときは
+`gh workflow run update.yml -f target=<name>`。
+
+更新を恒久的に拒否したい input は `flake.nix` で commit / tag 固定し、`update.yml` の
+`pinned` リストにも追加する (差分ゼロで job を無駄に消費しないため)。pin を外したらリストからも消す。
+
+bot の PR ブランチへ手で commit しても次回実行で上書きされる。手直しが必要なら PR を close して
+自分のブランチで行う。
+
+必要な設定: repository variable `DEPS_UPDATE_APP_ID`、secret `DEPS_UPDATE_APP_PRIVATE_KEY`
+(GitHub App、Contents / Pull requests の write)。設計は
+`docs/plans/2026-09-06-flake-update-pr-automation-design.md` を参照。
+
 ### Working with Secrets
 ```bash
 # Edit encrypted secrets file (automatically decrypts/encrypts)
