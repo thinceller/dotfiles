@@ -1,0 +1,192 @@
+# 更新対象 (flake input / nvfetcher source) ごとに固定ブランチ update/<target> で
+# 1 PR を維持する workflow。既存 PR は更新し、差分が消えれば peter-evans/create-pull-request
+# が自動で close する。GITHUB_TOKEN で作った PR は build.yml を起動できないため、
+# GitHub App のトークンを使う。commit / tag 固定の input は除外する。
+# 設計: docs/plans/2026-09-06-flake-update-pr-automation-design.md
+name: Update dependencies
+
+on:
+  schedule:
+    - cron: "0 22 * * *" # 07:00 JST
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 更新対象 (flake input 名または nvfetcher source 名)。空なら全対象
+        required: false
+        type: string
+  push:
+    branches: [master]
+    paths: [flake.lock, "_sources/**"]
+
+concurrency:
+  group: update-deps
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  enumerate:
+    runs-on: ubuntu-latest
+    outputs:
+      targets: ${{ steps.enumerate.outputs.targets }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Enumerate targets
+        id: enumerate
+        env:
+          TARGET: ${{ inputs.target }}
+        run: |
+          set -euo pipefail
+
+          # nix-darwin / nixpkgs-codex / nixpkgs-gh / hermes-agent は flake.nix で
+          # commit / tag 固定しており nix flake update しても差分が出ないため除外する
+          pinned='["nix-darwin","nixpkgs-codex","nixpkgs-gh","hermes-agent"]'
+
+          flake_targets=$(jq -c --argjson pinned "$pinned" \
+            '.nodes.root.inputs | keys | map(select(. as $n | ($pinned | index($n)) | not)) | map({kind: "flake", name: .})' \
+            flake.lock)
+
+          # nvfetcher.toml のトップレベル [name] セクションのみを対象にする ([name.sub] は除外)
+          nvfetcher_targets=$(grep -oE '^\[[^].]+\]$' nvfetcher.toml \
+            | sed -E 's/^\[(.*)\]$/\1/' \
+            | jq -Rn '[inputs | select(length > 0) | {kind: "nvfetcher", name: .}]')
+
+          targets=$(jq -c -n --argjson a "$flake_targets" --argjson b "$nvfetcher_targets" '$a + $b')
+
+          if [ -n "$TARGET" ]; then
+            targets=$(jq -c --arg t "$TARGET" '[.[] | select(.name == $t)]' <<< "$targets")
+            if [ "$(jq 'length' <<< "$targets")" -eq 0 ]; then
+              echo "::error::unknown target: $TARGET"
+              exit 1
+            fi
+          fi
+
+          echo "targets=$targets" >> "$GITHUB_OUTPUT"
+
+  update:
+    needs: enumerate
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        target: ${{ fromJSON(needs.enumerate.outputs.targets) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.DEPS_UPDATE_APP_ID }}
+          private-key: ${{ secrets.DEPS_UPDATE_APP_PRIVATE_KEY }}
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v17
+        with:
+          name: thinceller-dotfiles
+          extraPullNames: nix-community
+          skipPush: true
+
+      - name: Update target
+        id: update
+        env:
+          NAME: ${{ matrix.target.name }}
+          KIND: ${{ matrix.target.kind }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          if [ "$KIND" = "flake" ]; then
+            allowed=(flake.lock)
+            nix flake update "$NAME" 2>&1 | tee update.log
+          else
+            allowed=(_sources/generated.nix _sources/generated.json)
+            keyfile="$(mktemp)"
+            umask 077
+            printf '[keys]\ngithub = "%s"\n' "$GH_TOKEN" > "$keyfile"
+            nix run nixpkgs#nvfetcher -- -f "^${NAME}$" -k "$keyfile" 2>&1 | tee update.log
+            rm -f "$keyfile"
+          fi
+
+          mapfile -t changed < <(git status --porcelain | awk '{print $2}')
+          if [ "${#changed[@]}" -gt 0 ]; then
+            for f in "${changed[@]}"; do
+              ok=false
+              for a in "${allowed[@]}"; do
+                [ "$f" = "$a" ] && ok=true
+              done
+              if ! $ok; then
+                echo "::error::unexpected file changed: $f"
+                exit 1
+              fi
+            done
+          fi
+
+      # nvfetcher が tcmux をバンプすると Go module の vendorHash が古くなり
+      # ビルドが hash mismatch で落ちるため、ここで新しい hash を書き戻す
+      - name: Refresh tcmux vendorHash
+        if: matrix.target.kind == 'nvfetcher' && matrix.target.name == 'tcmux'
+        run: |
+          set -euo pipefail
+
+          if nix build .#tcmux --no-link 2> build-error.log; then
+            exit 0
+          fi
+          cat build-error.log >&2
+
+          new_hash=$(grep -oE 'got:[[:space:]]+sha256-[A-Za-z0-9+/=]+' build-error.log \
+            | sed -E 's/^got:[[:space:]]+//' | tail -1)
+
+          if [ -z "$new_hash" ]; then
+            echo "::warning::nix build .#tcmux failed for a reason other than a vendorHash mismatch"
+            exit 0
+          fi
+
+          sed -i -E "s|vendorHash = \"sha256-[A-Za-z0-9+/=]+\";|vendorHash = \"${new_hash}\";|" \
+            home-manager/programs/tmux/tcmux.nix
+          nix build .#tcmux --no-link
+
+      - name: Build PR body
+        env:
+          NAME: ${{ matrix.target.name }}
+          KIND: ${{ matrix.target.kind }}
+        run: |
+          set -euo pipefail
+
+          {
+            echo "対象: \`${NAME}\` (${KIND})"
+            echo
+            echo '```'
+            cat update.log
+            echo '```'
+            echo
+            echo "この PR は \`update.yml\` によって自動生成されています。この更新を今後拒否したい場合は"
+            echo "\`flake.nix\` で対象を pin してください。このブランチへの手動編集は次回実行で上書きされるため、"
+            echo "PR を close して自分のブランチで作業してください。"
+          } > pr-body.md
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          branch: update/${{ matrix.target.name }}
+          base: master
+          delete-branch: true
+          title: "chore(deps): update ${{ matrix.target.name }}"
+          commit-message: "chore(deps): update ${{ matrix.target.name }}"
+          body-path: pr-body.md
+          labels: dependencies
+          add-paths: |
+            flake.lock
+            _sources/**
+            home-manager/programs/tmux/tcmux.nix
+          author: "${{ steps.app-token.outputs.app-slug }}[bot] <${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>"
+          committer: "${{ steps.app-token.outputs.app-slug }}[bot] <${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>"
