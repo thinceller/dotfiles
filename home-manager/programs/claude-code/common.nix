@@ -98,7 +98,7 @@ in
       command = statuslineScript;
     };
 
-    extraKnownMarketplaces = {
+    additionalMarketplaces = {
       "thinceller-claude-plugins" = {
         source = {
           source = "github";
@@ -111,6 +111,7 @@ in
       # thinceller-claude-plugins
       "git-toolkit@thinceller-claude-plugins" = true;
       "engineering@thinceller-claude-plugins" = true;
+      "writing@thinceller-claude-plugins" = true;
     };
   };
 }
