@@ -210,8 +210,8 @@ in
           ];
         };
 
-      extraKnownMarketplaces =
-        common.settings.extraKnownMarketplaces
+      additionalMarketplaces =
+        common.settings.additionalMarketplaces
         // lib.optionalAttrs isPersonal {
           "openai-codex" = {
             source = {
@@ -251,7 +251,7 @@ in
     # 過去に --plugin-dir wrapper が Agent View TUI を破壊した経緯がある
     # (commit 726976b, Claude Code v2.1.139)。v2.1.195 で再試行し、
     # 再発したら enableMcpIntegration=false + home.activation jq マージに切り替える。
-    # 既存の codex plugin 有効化 (extraKnownMarketplaces) と同じゲート体制。
+    # 既存の codex plugin 有効化 (additionalMarketplaces) と同じゲート体制。
     enableMcpIntegration = true;
   };
 }
