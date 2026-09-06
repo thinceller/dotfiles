@@ -43,6 +43,7 @@ jobs:
 
           # nix-darwin / nixpkgs-codex / nixpkgs-gh / hermes-agent は flake.nix で
           # commit / tag 固定しており nix flake update しても差分が出ないため除外する
+          # flake.nix 側で pin を外したら、ここからも削除しないと PR が二度と作られない
           pinned='["nix-darwin","nixpkgs-codex","nixpkgs-gh","hermes-agent"]'
 
           flake_targets=$(jq -c --argjson pinned "$pinned" \
@@ -85,6 +86,18 @@ jobs:
           app-id: ${{ vars.DEPS_UPDATE_APP_ID }}
           private-key: ${{ secrets.DEPS_UPDATE_APP_PRIVATE_KEY }}
 
+      # commit を App の bot ユーザーに紐付けるには `<id>+<slug>[bot]@users.noreply.github.com` 形式のメールが必要
+      - name: Look up bot user id
+        id: bot-user
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
+        run: |
+          set -euo pipefail
+
+          id=$(gh api "/users/${APP_SLUG}[bot]" --jq .id)
+          echo "id=$id" >> "$GITHUB_OUTPUT"
+
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
 
@@ -106,13 +119,13 @@ jobs:
 
           if [ "$KIND" = "flake" ]; then
             allowed=(flake.lock)
-            nix flake update "$NAME" 2>&1 | tee update.log
+            nix flake update "$NAME" 2>&1 | tee "$RUNNER_TEMP/update.log"
           else
             allowed=(_sources/generated.nix _sources/generated.json)
             keyfile="$(mktemp)"
             umask 077
             printf '[keys]\ngithub = "%s"\n' "$GH_TOKEN" > "$keyfile"
-            nix run nixpkgs#nvfetcher -- -f "^${NAME}$" -k "$keyfile" 2>&1 | tee update.log
+            nix run --inputs-from . nixpkgs#nvfetcher -- -f "^${NAME}$" -k "$keyfile" 2>&1 | tee "$RUNNER_TEMP/update.log"
             rm -f "$keyfile"
           fi
 
@@ -137,12 +150,12 @@ jobs:
         run: |
           set -euo pipefail
 
-          if nix build .#tcmux --no-link 2> build-error.log; then
+          if nix build .#tcmux --no-link 2> "$RUNNER_TEMP/build-error.log"; then
             exit 0
           fi
-          cat build-error.log >&2
+          cat "$RUNNER_TEMP/build-error.log" >&2
 
-          new_hash=$(grep -oE 'got:[[:space:]]+sha256-[A-Za-z0-9+/=]+' build-error.log \
+          new_hash=$(grep -oE 'got:[[:space:]]+sha256-[A-Za-z0-9+/=]+' "$RUNNER_TEMP/build-error.log" \
             | sed -E 's/^got:[[:space:]]+//' | tail -1)
 
           if [ -z "$new_hash" ]; then
@@ -165,13 +178,13 @@ jobs:
             echo "対象: \`${NAME}\` (${KIND})"
             echo
             echo '```'
-            cat update.log
+            cat "$RUNNER_TEMP/update.log"
             echo '```'
             echo
             echo "この PR は \`update.yml\` によって自動生成されています。この更新を今後拒否したい場合は"
             echo "\`flake.nix\` で対象を pin してください。このブランチへの手動編集は次回実行で上書きされるため、"
             echo "PR を close して自分のブランチで作業してください。"
-          } > pr-body.md
+          } > "$RUNNER_TEMP/pr-body.md"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
@@ -182,11 +195,12 @@ jobs:
           delete-branch: true
           title: "chore(deps): update ${{ matrix.target.name }}"
           commit-message: "chore(deps): update ${{ matrix.target.name }}"
-          body-path: pr-body.md
+          body-path: ${{ runner.temp }}/pr-body.md
           labels: dependencies
           add-paths: |
             flake.lock
             _sources/**
             home-manager/programs/tmux/tcmux.nix
-          author: "${{ steps.app-token.outputs.app-slug }}[bot] <${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>"
-          committer: "${{ steps.app-token.outputs.app-slug }}[bot] <${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>"
+          # commit を App の bot ユーザーに紐付けるには `<id>+<slug>[bot]@users.noreply.github.com` 形式のメールが必要
+          author: "${{ steps.app-token.outputs.app-slug }}[bot] <${{ steps.bot-user.outputs.id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>"
+          committer: "${{ steps.app-token.outputs.app-slug }}[bot] <${{ steps.bot-user.outputs.id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>"
