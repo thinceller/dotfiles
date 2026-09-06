@@ -21,6 +21,7 @@
     graphviz
     herdr
     just
+    mosh
     nix-search-cli
     nixfmt
     nodejs_24
