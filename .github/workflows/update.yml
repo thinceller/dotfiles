@@ -14,6 +14,8 @@ on:
         description: 更新対象 (flake input 名または nvfetcher source 名)。空なら全対象
         required: false
         type: string
+  # master の flake.lock / _sources/** 更新後、開いている update/<name> PR を新しい
+  # master ベースで再生成し flake.lock の衝突を解消するため、全対象を再実行する
   push:
     branches: [master]
     paths: [flake.lock, "_sources/**"]
@@ -51,7 +53,7 @@ jobs:
             flake.lock)
 
           # nvfetcher.toml のトップレベル [name] セクションのみを対象にする ([name.sub] は除外)
-          nvfetcher_targets=$(grep -oE '^\[[^].]+\]$' nvfetcher.toml \
+          nvfetcher_targets=$( (grep -oE '^\[[^].]+\]$' nvfetcher.toml || true) \
             | sed -E 's/^\[(.*)\]$/\1/' \
             | jq -Rn '[inputs | select(length > 0) | {kind: "nvfetcher", name: .}]')
 
@@ -123,7 +125,6 @@ jobs:
           else
             allowed=(_sources/generated.nix _sources/generated.json)
             keyfile="$(mktemp)"
-            umask 077
             printf '[keys]\ngithub = "%s"\n' "$GH_TOKEN" > "$keyfile"
             nix run --inputs-from . nixpkgs#nvfetcher -- -f "^${NAME}$" -k "$keyfile" 2>&1 | tee "$RUNNER_TEMP/update.log"
             rm -f "$keyfile"
@@ -156,7 +157,7 @@ jobs:
           cat "$RUNNER_TEMP/build-error.log" >&2
 
           new_hash=$(grep -oE 'got:[[:space:]]+sha256-[A-Za-z0-9+/=]+' "$RUNNER_TEMP/build-error.log" \
-            | sed -E 's/^got:[[:space:]]+//' | tail -1)
+            | sed -E 's/^got:[[:space:]]+//' | tail -1 || true)
 
           if [ -z "$new_hash" ]; then
             echo "::warning::nix build .#tcmux failed for a reason other than a vendorHash mismatch"
