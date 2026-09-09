@@ -75,6 +75,12 @@ in
 
       CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1";
       CLAUDE_CODE_NEW_INIT = "1";
+
+      # auto mode で「Read ではなく cat/sed/grep を使え」と指示する
+      # システムプロンプトを止める。Bash 経由の読み取りは path 付き permission
+      # rule を素通りし、Read で発火する hook やサブディレクトリの CLAUDE.md も
+      # 読まれない。https://kawasin73.hatenablog.com/entry/2026/09/05/092056
+      CLAUDE_CODE_THRIFTY_SONIC = "0";
     };
 
     hooks = herdrClaudeHooks // {
