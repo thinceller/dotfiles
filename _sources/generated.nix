@@ -32,13 +32,13 @@
   };
   gh-pr-graph = {
     pname = "gh-pr-graph";
-    version = "v0.14.5";
+    version = "v0.15.1";
     src = fetchFromGitHub {
       owner = "orangain";
       repo = "gh-pr-graph";
-      rev = "v0.14.5";
+      rev = "v0.15.1";
       fetchSubmodules = false;
-      sha256 = "sha256-kSbtyDA52fYvcT0hd6SZ/1E6lA6j+wbsXEGzLhUy5gg=";
+      sha256 = "sha256-APYijprR9xWw2Y6BMZRiA5xeTS3zeIbXD45ymYgZqSM=";
     };
   };
   hydro = {

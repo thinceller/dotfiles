@@ -150,6 +150,17 @@
             };
           };
 
+          # 更新ワークフロー (.github/workflows/update.yml) が Linux 上でビルドして
+          # vendorHash を検証・更新できるように、nvfetcher 管理の Go パッケージを flake outputs として露出する。
+          packages =
+            let
+              sources = pkgs.callPackage ./_sources/generated.nix { };
+            in
+            {
+              tcmux = import ./home-manager/programs/tmux/tcmux.nix { inherit pkgs sources; };
+              gh-pr-graph = import ./home-manager/programs/gh/gh-pr-graph.nix { inherit pkgs sources; };
+            };
+
           pre-commit = {
             check.enable = true;
             settings = {
