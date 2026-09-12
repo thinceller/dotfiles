@@ -36,16 +36,10 @@ in
         "Bash(ls:*)"
         "Bash(grep:*)"
       ];
-      ask = [
-        # 再帰削除だけ必ず確認する。単発ファイルの rm は auto mode の
-        # classifier に任せる (ask ルールは classifier より優先されるため、
-        # `Bash(rm:*)` にすると scratchpad の後片付けでも毎回プロンプトが出る)。
-        "Bash(rm -r:*)"
-        "Bash(rm -rf:*)"
-        "Bash(git merge:*)"
-        "Bash(git rebase:*)"
-        "Bash(git push:*)"
-      ];
+      # ask ルールは置かない。auto mode では ask が classifier より優先されて
+      # 必ずプロンプトになる。旧 ask 対象 (rm -r / git push / merge / rebase)
+      # は classifier に任せる (force push・別リポジトリへの push・critical
+      # path や既存ファイルの不可逆な削除は既定でブロックされる)。
       deny = [
         "Read(~/.ssh/**)"
         # `.env*` だと direnv の `.envrc` まで巻き込む (deny は allow より優先
