@@ -15,5 +15,6 @@
     ../../nix-darwin/modules/services/karabiner-elements.nix
     ../../nix-darwin/modules/programs/1password.nix
     ../../nix-darwin/modules/hosts/kohei-m4-mac-mini.nix
+    ./comin.nix
   ];
 }

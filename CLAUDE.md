@@ -24,6 +24,9 @@ nix fmt
 nix develop -c pre-commit run --all-files
 ```
 
+kohei-m4-mac-mini と oberon は master push 時に comin が自動 deploy するので手動 switch は fallback
+(`docs/reference/mac-mini-deploy.md` / `docs/reference/oberon-deploy.md`)。
+
 ### Working with Secrets
 ```bash
 # Edit encrypted secrets file (automatically decrypts/encrypts)
