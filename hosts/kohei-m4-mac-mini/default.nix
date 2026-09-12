@@ -15,6 +15,7 @@ let
     hunk
     herdr
     opencode
+    comin
     ;
   system = "aarch64-darwin";
   userConfig =
@@ -67,6 +68,7 @@ nix-darwin.lib.darwinSystem {
   };
   modules = [
     ./darwin.nix
+    comin.darwinModules.comin
     home-manager.darwinModules.home-manager
     {
       home-manager.useGlobalPkgs = true;

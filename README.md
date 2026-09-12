@@ -11,6 +11,7 @@ management dotfiles
 - [SOPS Manual](docs/reference/SOPS.md) - Comprehensive guide for secrets management with SOPS
 - [Secure Enclave SSH](docs/reference/SECURE_ENCLAVE_SSH.md) - Manual setup of a Secure Enclave SSH key for github.com on personal Macs (not managed by Nix)
 - [Oberon deploy methods](docs/reference/oberon-deploy.md) - comin による pull 型 GitOps (デフォルト) と手動 fallback (Tailscale / on-server tmux / VNC / boot)
+- [mac-mini deploy methods](docs/reference/mac-mini-deploy.md) - kohei-m4-mac-mini の comin による pull 型 GitOps deploy
 - [Sakura VPS + NixOS + Forgejo lessons](docs/reference/sakura-vps-nixos-lessons.md) - oberon 構築・運用で得た知見集 (deploy 戦略、復旧、cloudflared 挙動、VNC fallback など)
 - [Linux builder](docs/reference/LINUX_BUILDER.md) / [bootstrap](docs/reference/linux-builder-bootstrap.md) - nix-darwin の Linux builder VM
 
@@ -30,11 +31,24 @@ $ nix run .#update
 
 ### Apply macOS configuration (nix-darwin)
 
+デフォルトは kohei-m4-mac-mini も oberon と同じく master へ push するだけ。
+kohei-m4-mac-mini 上の comin が 60 秒間隔 polling で検知し、on-server build →
+自動 switch する:
+
+```bash
+$ git push origin master
+```
+
+手動で当てたい場合や復旧時の fallback、SC-N-843 (会社支給機、comin 未導入) は
+これまで通り `darwin-rebuild switch` を使う:
+
 ```bash
 $ sudo darwin-rebuild switch --flake .#kohei-m4-mac-mini
 # or for the work machine
 $ sudo darwin-rebuild switch --flake .#SC-N-843
 ```
+
+詳細は [docs/reference/mac-mini-deploy.md](docs/reference/mac-mini-deploy.md) を参照。
 
 ### Apply NixOS server configuration (oberon)
 
