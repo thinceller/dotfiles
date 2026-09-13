@@ -6,6 +6,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a Nix-based dotfiles repository using Nix Flakes, Nix Darwin, and Home Manager to manage macOS system and user configurations across multiple machines.
 
+### Repository Facts (also read by the auto mode classifier)
+
+- The repository (github.com/thinceller/dotfiles) is **public**: only this repo's own work belongs in commits and pushes here.
+- Merging to `master` auto-deploys the NixOS server `oberon` via comin (pull-based GitOps, ~60s polling). Treat a merge to `master` as a production deploy.
+- `secrets/*.yaml` are SOPS ciphertext — safe to read and commit. The age private key (`~/.config/sops/age/keys.txt`) must never be read or printed.
+- CI (GitHub Actions) pushes build results to the Cachix cache `thinceller-dotfiles.cachix.org` using `CACHIX_AUTH_TOKEN`.
+- `darwin-rebuild switch` / `nixos-rebuild switch` alter live machine state and are not routine; `nix build` / `nix eval` / `nix fmt` are.
+
 ## Common Development Commands
 
 ### Building and Applying Configuration
