@@ -4,7 +4,8 @@ kohei-m4-mac-mini も oberon ([`oberon-deploy.md`](oberon-deploy.md)) と同じ�
 **comin による pull 型 GitOps** で deploy する。master へ push するだけで、
 手元での操作は一切不要。
 
-設定は [`hosts/kohei-m4-mac-mini/comin.nix`](../../hosts/kohei-m4-mac-mini/comin.nix)。
+設定は [`nix-darwin/modules/services/comin.nix`](../../nix-darwin/modules/services/comin.nix)
+(kohei-m4-mac-mini の `darwin.nix` からのみ import。SC-N-843 には入れない)。
 
 ## 仕組み
 
