@@ -101,12 +101,11 @@
     # 通常の nixpkgs が追いついたら削除する。
     nixpkgs-gh.url = "github:NixOS/nixpkgs/9387b3fcc0c2";
     # hermes-agent は nixos-unstable + uv2nix で独自ビルドするため nixpkgs follows は付けない。
-    # v2026.8.31 に pin 中。2026-09-02 の main は hermes_state_holders.py を
-    # pyproject.toml の py-modules へ追加し忘れており、wheel から欠落する。
-    # hermes_state.py が無条件 import するため gateway が起動時に
-    # ModuleNotFoundError でクラッシュループする。upstream の修正 PR
-    # (NousResearch/hermes-agent#102142) がマージされたら pin を外す。
-    hermes-agent.url = "github:NousResearch/hermes-agent/v2026.8.31";
+    # oberon の本番稼働に直結するので main ではなくリリースタグに pin する
+    # (2026-09-02 の main は py-modules 漏れで gateway がクラッシュループした)。
+    # v2026.9.7 未満は OpenCode Go が 2026-09-08 から必須化した x-opencode-session
+    # ヘッダを送らず、全リクエストが 400 MissingSessionID になる。
+    hermes-agent.url = "github:NousResearch/hermes-agent/v2026.9.11";
   };
 
   outputs =
