@@ -20,9 +20,13 @@
       # デフォルトの cache.nixos.org を潰さないよう `extra-` プレフィックス必須。
       extra-substituters = [
         "https://devenv.cachix.org"
+        # CI が darwin closure を push しているので、comin と手動 switch のビルドを
+        # substitute で済ませる。
+        "https://thinceller-dotfiles.cachix.org"
       ];
       extra-trusted-public-keys = [
         "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
+        "thinceller-dotfiles.cachix.org-1:ygv46mR2J9KTVXN+c13mtokug8dwhYmuYdoXaAGKIBY="
       ];
     };
     optimise.automatic = true;

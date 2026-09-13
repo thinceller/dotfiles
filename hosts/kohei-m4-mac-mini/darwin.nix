@@ -13,6 +13,7 @@
     ../../nix-darwin/modules/homebrew.nix
     ../../nix-darwin/modules/services/aerospace.nix
     ../../nix-darwin/modules/services/karabiner-elements.nix
+    ../../nix-darwin/modules/services/comin.nix
     ../../nix-darwin/modules/programs/1password.nix
     ../../nix-darwin/modules/hosts/kohei-m4-mac-mini.nix
   ];
