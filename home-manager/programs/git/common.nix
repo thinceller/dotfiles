@@ -10,7 +10,7 @@
         pushf = "push --force-with-lease --force-if-includes";
       };
       user = {
-        email = "thinceller@gmail.com";
+        email = "26884355+thinceller@users.noreply.github.com";
         name = "thinceller";
       };
       core = {
