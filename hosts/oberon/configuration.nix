@@ -1,4 +1,9 @@
-{ userConfig, ... }:
+{
+  self,
+  pkgs,
+  userConfig,
+  ...
+}:
 {
   imports = [
     ./hardware-configuration.nix
@@ -13,6 +18,14 @@
   ];
 
   networking.hostName = userConfig.hostname;
+
+  # sops-nix (2026-09-17 以降) の go.mod は go >= 1.26 を要求するが、nixpkgs-stable
+  # (25.11) の buildGoModule は go 1.25 なので sops-install-secrets のビルドが落ちる。
+  # stable にも go_1_26 は入っているのでそれでビルドする。26.05 へ上げたら外す。
+  sops.package = (pkgs.callPackage self.inputs.sops-nix { }).sops-install-secrets.override {
+    buildGoModule = pkgs.buildGo126Module;
+    go = pkgs.go_1_26;
+  };
 
   # 2GB RAM の VPS では swap 無しだと nixos-rebuild の評価・ビルドが OOM で死ぬ。
   # root ext4 上に 4GiB の swapfile を確保してビルド時のメモリ逼迫を吸収する。
