@@ -20,6 +20,10 @@
         name = "nikitabobko/tap";
         trusted = true;
       }
+      {
+        name = "abue-ammar/tinycast";
+        trusted = true;
+      }
     ];
     casks = [
       "1password"
@@ -44,6 +48,7 @@
       "raycast"
       "shottr"
       "thebrowsercompany-dia"
+      "tinycast"
       "visual-studio-code"
       "wezterm"
       "zen"
