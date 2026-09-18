@@ -52,6 +52,8 @@ in
     # herdr-launch の editor タブが nvim を起動する。Mac の neovim module
     # (nvfetcher plugin 群) は重いので、まずは素の neovim を置く。
     neovim
+    # herdr-launch が agent 起動待ちを別セッションへ切り離すのに使う。
+    python3
   ];
 
   # herdr 設定 + プロジェクトランチャー (Mac と同じファイルを共有)。

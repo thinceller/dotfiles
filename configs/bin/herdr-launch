@@ -18,6 +18,33 @@ function fail_pause
     exit 1
 end
 
+# --- agent 起動待ち (バックグラウンド専用モード) ---
+# herdr 0.8.2 以降 `agent start` は agent が検出されるだけでなく idle になって
+# 入力可能になるまでブロックする。Claude Code は MCP のバックグラウンド接続中
+# ずっと working 扱いなので、前景で待つと popup が最大 --timeout (2 分) 閉じない。
+# そこで本体の末尾から自分自身を切り離して呼び直し、待ちをここに隔離する。
+# 呼び出し側の popup は先に閉じるので fail_pause は使わずログに残して終わる。
+if test "$argv[1]" = --start-agent
+    set -l agent_name $argv[2]
+    set -l agent_pane $argv[3]
+    set -l agent_args $argv[4..]
+    for _retry in (seq 60)
+        set -l err (herdr agent start $agent_name --kind claude --pane $agent_pane \
+            --timeout 120000 $agent_args 2>&1)
+        if test $status -eq 0
+            exit 0
+        end
+        # busy 以外のエラー (名前衝突など) はリトライしても解決しない
+        if not string match -qr 'busy|available shell' -- "$err"
+            echo (date -Iseconds)" $agent_name: $err" >&2
+            exit 1
+        end
+        sleep 0.5
+    end
+    echo (date -Iseconds)" $agent_name: retry exhausted (pane busy)" >&2
+    exit 1
+end
+
 # --- リポジトリ選択 ---
 # ghq root は複数 (~/src, ~/.dotfiles) あるため、primary root との結合ではなく
 # --full-path でフルパスを直接受け取る。
@@ -118,10 +145,8 @@ herdr pane run (echo $editor | jq -r '.result.root_pane.pane_id') nvim
 
 herdr tab focus $agent_tab
 
-# --- claude を名前付きエージェントとして起動 (0.7.5 の agent start) ---
-# pane run と違い agent 検出・入力可能になるまでブロックするので、
-# レイアウト構築を済ませた最後に実行する。名前を付けておくと以後
-# `herdr agent prompt/wait/read <name>` で操作できる。
+# --- claude を名前付きエージェントとして起動 ---
+# 名前を付けておくと以後 `herdr agent prompt/wait/read <name>` で操作できる。
 # 名前は live agent 間で一意である必要があるため workspace id を添える。
 # バリデーション: 英小文字始まり、[a-z0-9_-] のみ、1-32 文字。
 # workspace id は大文字を含む (wF 等) ので小文字化が必須。
@@ -143,29 +168,20 @@ if test $mode = pr-review
     set -l head_ref (git -C $work_path rev-parse --abbrev-ref HEAD)
     set agent_prompt -- --effort medium "/code-review origin/$base_branch..$head_ref"
 end
-# shell の初期化が済むまで herdr 0.7.5 の agent start は agent_pane_busy で即時失敗する
-# (内部リトライなし)。大きなリポジトリでは worktree 作成や wt hook の負荷で shell の
-# 準備に数秒かかることがあるため、busy の間は最大 30 秒リトライで待つ。
-# claude 側の起動検出も重いリポジトリでは 30 秒 (デフォルト) を超え得るので延長する。
-set -l started false
-for _retry in (seq 60)
-    set -l err (herdr agent start $agent_name --kind claude --pane $agent_pane \
-        --timeout 120000 $agent_prompt 2>&1)
-    if test $status -eq 0
-        set started true
-        break
-    end
-    # busy 以外のエラー (名前衝突など) はリトライしても解決しない
-    if not string match -qr 'busy|available shell' -- "$err"
-        echo $err >&2
-        fail_pause
-    end
-    sleep 0.5
-end
-if test $started != true
-    echo 'herdr agent start: retry exhausted (pane busy)' >&2
-    fail_pause
-end
+# agent start は idle になるまでブロックするので (先頭の --start-agent 参照)、
+# 待ちは自分自身の別プロセスに投げて popup を即座に解放する。
+# herdr は pane を閉じるとき同じセッションのプロセスを SIGHUP → SIGTERM → SIGKILL で
+# 一掃するため (pane.rs の shutdown_pane_processes)、nohup では足りず setsid で
+# セッションごと切り離す必要がある。macOS に setsid(1) が無いので python3 で代用する。
+# fork した親が即 exit するので、呼び出し側の `&` と disown は不要。
+set -l detach 'import os, sys
+if os.fork():
+    os._exit(0)
+os.setsid()
+os.execvp(sys.argv[1], sys.argv[1:])'
+set -l agent_log $HOME/.local/state/herdr-launch.log
+python3 -c $detach (status filename) --start-agent $agent_name $agent_pane $agent_prompt \
+    >>$agent_log 2>&1
 
 # --- プロジェクト固有セットアップ (規約ファイル) ---
 if test -x $work_path/.herdr-setup.fish
