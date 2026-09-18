@@ -109,6 +109,13 @@ cat result   # -> Linux ... x86_64 GNU/Linux
   [`linux-builder-bootstrap.md`](./linux-builder-bootstrap.md) の PHASE 2 の注記参照。
 - **VM 状態が壊れた** (`User not known to the underlying authentication module` 等):
   `ephemeral = true` で再適用、または `sudo rm -f /var/lib/linux-builder/*.qcow2`。
+- **VM が crash loop している** (`launchctl print system/org.nixos.linux-builder` の `runs` が
+  異常に多く `last exit code = 134`、`/Library/Logs/DiagnosticReports/qemu-system-aarch64-*.ips`
+  が増え続ける): host 側 QEMU 自体が起動時に abort している。2026-06 の nixpkgs では
+  qemu 11.0.0 が古い apple-sdk でビルドされ HVF 初期化で assert していた
+  (nixpkgs #532038、#536526 で修正)。nixpkgs を上げて直すが、その guest は cache に無く
+  builder 自身でしかビルドできないので
+  [`linux-builder-bootstrap.md`](./linux-builder-bootstrap.md) の 2 段階手順で復旧する。
 
 ## 参考
 

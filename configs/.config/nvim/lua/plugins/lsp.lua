@@ -35,6 +35,10 @@ return {
               },
             },
           })
+        elseif ls == "tsgo" then
+          -- nixpkgs の typescript 7 は tsgo ではなく tsc としてバイナリを提供する。
+          -- nvim-lspconfig が lsp/tsc.lua を同梱したら "tsc" に切り替えてこの分岐を消す
+          vim.lsp.config(ls, { cmd = { "tsc", "--lsp", "--stdio" } })
         end
 
         -- config.capabilities = capabilities
