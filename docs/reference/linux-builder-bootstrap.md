@@ -48,15 +48,25 @@ launchd service が新しい guest で再起動し、x86_64-linux が実行可�
 sudo darwin-rebuild switch --flake .#kohei-m4-mac-mini
 ```
 
-> **diskSize の反映には qcow2 の作り直しが必要**: PHASE 1 で既にデフォルト 20GB の qcow2 が
-> 作られているため、`diskSize` の変更はそのままでは反映されない (既存イメージが再利用される /
-> nix-darwin #1200)。反映したい場合は switch 後に一度だけ削除して再生成する
-> (memorySize / cores は再起動だけで反映される):
+> **PHASE 2 の switch 後は qcow2 を必ず作り直す**:
 >
 > ```bash
 > sudo rm -f /var/lib/linux-builder/nixos.qcow2
 > sudo launchctl kickstart -k system/org.nixos.linux-builder
 > ```
+>
+> 理由は 2 つ。
+>
+> 1. `diskSize` は qcow2 作成時にしか効かない (nix-darwin #1200)。PHASE 1 で作られた
+>    デフォルト 20GB のイメージがそのまま再利用される (memorySize / cores は再起動だけで反映される)。
+> 2. guest の `/nix/store` は erofs の store image + qcow2 上の書き込み層 (overlay) で、
+>    qcow2 は stock guest と新 guest で共有される。PHASE 2 中に stock guest が書き込んだ
+>    store path (新 guest の `nix.conf` や `binfmt_nixos.conf` を含む) は、switch 時の
+>    `kickstart -k` による強制終了で **ゼロ長ファイル** として残り、overlay の上位層として
+>    store image 内の正しい内容を隠してしまう。結果、新 guest では `/etc/nix/nix.conf` や
+>    `/etc/binfmt.d/nixos.conf` が空になり、`systemd-binfmt` は active でも
+>    `/proc/sys/fs/binfmt_misc/` に `x86_64-linux` が登録されず x86_64 ビルドだけが失敗する
+>    (`path ... is not valid`、ビルドログは空)。
 
 ### 3. CI 用に Cachix へ seed
 

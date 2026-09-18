@@ -43,10 +43,10 @@ jobs:
         run: |
           set -euo pipefail
 
-          # nix-darwin / nixpkgs-codex / nixpkgs-gh / hermes-agent は flake.nix で
+          # nixpkgs-codex / nixpkgs-gh / hermes-agent は flake.nix で
           # commit / tag 固定しており nix flake update しても差分が出ないため除外する
           # flake.nix 側で pin を外したら、ここからも削除しないと PR が二度と作られない
-          pinned='["nix-darwin","nixpkgs-codex","nixpkgs-gh","hermes-agent"]'
+          pinned='["nixpkgs-codex","nixpkgs-gh","hermes-agent"]'
 
           flake_targets=$(jq -c --argjson pinned "$pinned" \
             '.nodes.root.inputs | keys | map(select(. as $n | ($pinned | index($n)) | not)) | map({kind: "flake", name: .})' \
