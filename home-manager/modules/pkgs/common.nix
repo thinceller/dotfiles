@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   ...
 }:
 {
@@ -12,7 +13,8 @@
     cloudflared
     container
     curl
-    deno
+    # deno 2.9 が bin/dx を持ち dotenvx の dx と衝突する。dx は dotenvx を優先する
+    (lib.lowPrio deno)
     docker
     docker-credential-helpers
     dotenvx
