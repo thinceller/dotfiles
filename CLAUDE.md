@@ -38,7 +38,7 @@ kohei-m4-mac-mini と oberon は master push 時に comin が自動 deploy す�
 ### Dependency update PRs
 
 `.github/workflows/update.yml` が対象 (flake input / nvfetcher source) ごとに固定ブランチ
-`update/<target>` で PR を作り、毎日 / master push / 手動起動で更新し続ける。CI 通過後は人が
+`update/<target>` で PR を作り、毎日 / 手動起動で更新し続ける。CI 通過後は人が
 merge し、comin が deploy する。特定対象だけ更新したいときは
 `gh workflow run update.yml -f target=<name>`。
 
