@@ -2,6 +2,8 @@
 # 1 PR を維持する workflow。既存 PR は更新し、差分が消えれば peter-evans/create-pull-request
 # が自動で close する。GITHUB_TOKEN で作った PR は build.yml を起動できないため、
 # GitHub App のトークンを使う。commit / tag 固定の input は除外する。
+# master が動くたびに全 PR を作り直すと build.yml が全部走るので、既存 PR ブランチを
+# master に merge した結果と生成結果が一致する対象は push しない。
 # 設計: docs/plans/2026-09-06-flake-update-pr-automation-design.md
 name: Update dependencies
 
@@ -14,11 +16,6 @@ on:
         description: 更新対象 (flake input 名または nvfetcher source 名)。空なら全対象
         required: false
         type: string
-  # master の flake.lock / _sources/** 更新後、開いている update/<name> PR を新しい
-  # master ベースで再生成し flake.lock の衝突を解消するため、全対象を再実行する
-  push:
-    branches: [master]
-    paths: [flake.lock, "_sources/**"]
 
 concurrency:
   group: update-deps
@@ -80,6 +77,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Generate GitHub App token
         id: app-token
@@ -168,6 +167,31 @@ jobs:
             home-manager/programs/tmux/tcmux.nix
           nix build .#tcmux --no-link
 
+      # master が動くと create-pull-request は既存ブランチを作り直して force push し、中身が
+      # 同じ PR でも build.yml が走る。既存 PR ブランチを今の master に merge した tree が
+      # 今回の生成結果と一致するなら (新版なし・conflict なし) push を省く。
+      # 差分ゼロのときは create-pull-request に任せて PR を close させる
+      - name: Decide whether to push
+        id: decide
+        env:
+          BRANCH: update/${{ matrix.target.name }}
+        run: |
+          set -euo pipefail
+
+          git add flake.lock _sources home-manager/programs/tmux/tcmux.nix
+          new_tree=$(git write-tree)
+          git reset -q
+
+          push=true
+          if [ "$new_tree" != "$(git rev-parse 'HEAD^{tree}')" ] \
+            && git fetch -q origin "$BRANCH" \
+            && merged_tree=$(git merge-tree --write-tree HEAD FETCH_HEAD) \
+            && [ "$merged_tree" = "$new_tree" ]; then
+            push=false
+            echo "$BRANCH merged onto master already yields this tree; skipping push"
+          fi
+          echo "push=$push" >> "$GITHUB_OUTPUT"
+
       - name: Build PR body
         env:
           NAME: ${{ matrix.target.name }}
@@ -189,6 +213,7 @@ jobs:
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
+        if: steps.decide.outputs.push == 'true'
         with:
           token: ${{ steps.app-token.outputs.token }}
           branch: update/${{ matrix.target.name }}

@@ -19,7 +19,7 @@
 | Renovate | nix manager と lockFileMaintenance を無効化し、`github-actions` manager のみ残す。PR #34 / #37 は close |
 | 手動編集の保護 | v1 では無し (後述)。手直しは bot PR を close して自分のブランチで行う |
 | merge | 人が行う。自動 merge はしない |
-| cadence | 毎日 (JST 朝) + master push トリガ + 手動起動。現状の手動更新 (1〜2 日おき) と同等の鮮度を保つ |
+| cadence | 毎日 (JST 朝) + 手動起動。現状の手動更新 (1〜2 日おき) と同等の鮮度を保つ |
 | PR 作成トークン | GitHub App (Contents: write, Pull requests: write のみ)。owner の PAT は ruleset の bypass 権限を持ち、漏洩すると master 直 push → comin が 60 秒で deploy する。App の installation token は 1 時間で失効し bypass できない。PR author が bot になるので owner が自分で approve できる |
 | Renovate app | 存続。`enabledManagers: ["github-actions"]` に限定し、actions の version bump だけを任せる |
 
@@ -55,7 +55,7 @@ nix-darwin の digest 更新でノイズ)。ソース `lib/modules/manager/nix/e
 ## 全体像
 
 ```
-schedule (毎日) / workflow_dispatch (target 指定可) / push: master (paths: flake.lock, _sources/**)
+schedule (毎日) / workflow_dispatch (target 指定可)
   │  concurrency: group=update, cancel-in-progress=false (直列化)
   ├─ job enumerate (ubuntu)
   │     flake.lock の root inputs から pin 済みを除外 + nvfetcher.toml の source 名 → matrix
@@ -65,8 +65,10 @@ schedule (毎日) / workflow_dispatch (target 指定可) / push: master (paths: 
         2. `nix flake update <input>` または `nvfetcher -f '^<name>$'`
         3. 変更ファイルが期待通り (flake.lock のみ / _sources/** + 対象 .nix のみ) か assert
         4. (tcmux のみ) `nix build .#tcmux` → hash mismatch なら stderr の `got:` を vendorHash に書き戻す
-        5. `nix flake update` の "Updated input" 行を PR 本文に載せる
-        6. create-pull-request: branch=update/<target>, delete-branch=true, App token,
+        5. 既存 PR ブランチを master に `git merge-tree` した tree が生成結果と一致すれば
+           以降を skip (新版なし・conflict なし)。差分ゼロなら skip せず 7 で PR を close させる
+        6. `nix flake update` の "Updated input" 行を PR 本文に載せる
+        7. create-pull-request: branch=update/<target>, delete-branch=true, App token,
            commit "chore(deps): update <target>"
              ↓
 build.yml が PR で起動 (darwin × 2 build + oberon build + nix-diff コメント)
@@ -84,6 +86,9 @@ README "Action behaviour" より:
 - base が追いついて差分が消えたら PR を自動 close。`delete-branch: true` でブランチも削除
 
 毎回 master から作り直して force push するため、PR は常に「master + その対象の最新化」1 commit になる。
+ただし base が動いただけでも tree が変わり force push される (create-or-update-branch.ts の
+`hasDiff` 判定) ので、master に 1 本 merge するたびに残りの全 PR で build.yml が走る。
+これを避けるため上の手順 5 で push を省く。
 
 ### 対象の列挙
 
@@ -112,14 +117,21 @@ merge commit が owner author になり永久 skip する罠が残る。
 
 ### conflict 戦略
 
-全 PR が flake.lock を触るため、1 本 merge すると残りは conflict で Merge ボタンが無効になる。
-schedule だけだと最大 3〜4 日 merge 不能になるので、`push: master` (paths: flake.lock, `_sources/**`)
-でも起動して master から作り直す。create-pull-request は差分が変わったブランチだけ push するので、
-再ビルドは open PR 分のみ。macOS runner は public repo で無料だが同時実行 5 枠のため、
-open PR 5 本で 10 job ≈ 30〜40 分 queue する。許容範囲。
+当初は「全 PR が flake.lock を触るので 1 本 merge すると残りが conflict する」と見て
+`push: master` (paths: flake.lock, `_sources/**`) でも起動して全対象を作り直していたが、
+flake.lock / `_sources/generated.*` は input ごとにブロックが分かれていて別 input 同士の
+更新は 3-way merge で衝突しない (運用開始後 open だった 12 本すべてが MERGEABLE だった)。
+一方で master が動くたびに全 PR が force push され、1 本 merge するごとに
+open PR × (darwin 2 + oberon 1) の build.yml が走るコストの方が実害だった。
 
-nvfetcher PR と flake PR は conflict しないため「両方 green でも合成 tree は未ビルド」が起きるが、
-実害は小さいので strict status check (最新 base 必須) は要求しない。
+そのため `push: master` トリガは廃止し、update job で既存 PR ブランチを master に
+`git merge-tree --write-tree` した tree が生成結果と一致すれば push しない。tree が違えば
+新版が出ている、merge-tree が conflict すれば本当に衝突している、のどちらかなので従来通り
+作り直す。ruleset は strict status check (最新 base 必須) を要求していないため、
+base が古いままの PR も merge できる。
+
+PR の CI 結果が古い master 基準になる点は許容する。組み合わせで壊れれば master の
+build.yml が検知し、comin は build に失敗すると switch しない。
 
 ## GitHub 側のガードレール
 
