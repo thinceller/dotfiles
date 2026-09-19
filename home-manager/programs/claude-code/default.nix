@@ -227,14 +227,6 @@ in
 
         enabledPlugins =
           common.settings.enabledPlugins
-          // {
-            # claude-plugins-official
-            "claude-code-setup@claude-plugins-official" = true;
-            "claude-md-management@claude-plugins-official" = true;
-            "plugin-dev@claude-plugins-official" = true;
-            "skill-creator@claude-plugins-official" = true;
-            "frontend-design@claude-plugins-official" = true;
-          }
           // lib.optionalAttrs isPersonal {
             "codex@openai-codex" = true;
           };

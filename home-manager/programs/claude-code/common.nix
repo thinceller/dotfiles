@@ -113,5 +113,26 @@ in
       "engineering@thinceller-claude-plugins" = true;
       "writing@thinceller-claude-plugins" = true;
     };
+
+    # claude.ai から ~/.claude/skills/synced に同期される skill は Nix で外せないので、
+    # 使わないものを一覧から隠す (description が毎セッション context を食うため)。
+    skillOverrides = {
+      "canvas-design" = "off";
+      "discord-webhook" = "off";
+      "doc-coauthoring" = "off";
+      "docx" = "off";
+      "import-memory" = "off";
+      "learn" = "off";
+      "morning" = "off";
+      "pdf" = "off";
+      "pptx" = "off";
+      "pybaseball-mlb" = "off";
+      "skill-creator" = "off";
+      "web-artifacts-builder" = "off";
+      "xlsx" = "off";
+      # 一度も dispatch されていない自前 skill
+      "vault-clip" = "off";
+      "vault-memory" = "off";
+    };
   };
 }
