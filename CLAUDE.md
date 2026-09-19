@@ -106,70 +106,14 @@ Nix is installed automatically by the SessionStart hook (`scripts/claude-cloud-s
 
 ### Key Design Patterns
 
-#### 1. Host Configuration with userConfig
-Each host directory contains a `default.nix` that defines a `userConfig` object:
-```nix
-userConfig = {
-  username = "thinceller";  # or "kawakami.kohei" for work
-  homeDir = "/Users/${username}";
-  hostname = "kohei-m4-mac-mini";
-  dotfilesDir = homeDir + "/.dotfiles";
-  uid = 501;  # Optional, only for work machines
-};
-```
-This config is passed to both nix-darwin and home-manager modules via `specialArgs`.
-
-#### 2. Module Import Pattern
-Modules are organized into separate concerns and imported as lists:
-```nix
-# home-manager/default.nix
-let
-  programs = import ./programs { ... };  # Returns a list
-  files = import ./files.nix { ... };    # Returns a list
-  packages = import ./pkgs { ... };      # Returns a list
-  services = import ./services;          # Returns a list
-in
-{
-  imports = programs ++ files ++ packages ++ services;
-}
-```
-
-Each module list is constructed by importing individual modules and collecting them. For example, `programs/default.nix` imports each program configuration and returns them as a list.
-
-#### 3. Out-of-Store Symlinks for Mutable Configs
-Files that need to be edited outside Nix (like Karabiner, Neovim configs) use out-of-store symlinks:
-```nix
-xdg.configFile."nvim" = {
-  source = config.lib.file.mkOutOfStoreSymlink /${rootDir}/.config/nvim;
-  recursive = true;
-};
-```
-This allows editing configs directly without rebuilding the Nix store.
-
-#### 4. External Package Management with nvfetcher
-Packages not in nixpkgs are fetched via nvfetcher:
-1. Define sources in `nvfetcher.toml`
-2. Run `nvfetcher` to generate `_sources/generated.nix`
-3. Import sources: `sources = pkgs.callPackage ../_sources/generated.nix { };`
-4. Use in programs: `package = sources.package-name;`
-
-#### 5. Claude Code with edgepkgs
-The `edgepkgs` overlay provides the claude-code-bin package built from Anthropic's official binary:
-```nix
-pkgs = import nixpkgs {
-  overlays = [ edgepkgs.overlays.default ];
-};
-# Then use: pkgs.edge.claude-code-bin
-```
-
-#### 6. Claude Code Global Skills and User Memory
+#### Claude Code Global Skills and User Memory
 Global (user-level, not project-level) custom skills for Claude Code are managed under `home-manager/programs/claude-code/`:
 - `skills/`: Custom skills (e.g., `playwright-cli`, `vault-capture`)
 - `user-memory.md`: Global user memory for Claude Code (deployed to `~/.claude/CLAUDE.md` as a regular file copy via `deploy.nix`'s activation script, not a symlink — a nix store symlink's 1970 mtime gets treated as expired by Claude Code's retention cleanup and deleted)
 
 Skills are symlinked into `~/.claude/` via the `skillsDir` option, making them available globally across all projects. The `playwright-cli` skill provides structured Playwright CLI (`@playwright/cli`) command documentation for browser automation via `npx`.
 
-#### 7. Homebrew Management
+#### Homebrew Management
 Homebrew packages are declaratively managed in `nix-darwin/modules/homebrew.nix`:
 - `taps`: Third-party taps (e.g., `nikitabobko/tap`)
 - `brews`: CLI tools (currently empty; CLI tools available via nixpkgs/nvfetcher are preferred, e.g. `tcmux` is managed via nvfetcher + `buildGoModule` under `home-manager/programs/tmux/`)
@@ -181,17 +125,6 @@ Homebrew packages are declaratively managed in `nix-darwin/modules/homebrew.nix`
 新規パッケージ / プログラム / out-of-store symlink / host / secret の追加手順は
 `nix-helper` skill (`.claude/skills/nix-helper/SKILL.md`) が持っている。
 ここには skill がカバーしていないものだけを置く。
-
-#### New Homebrew Package
-Add to `nix-darwin/modules/homebrew.nix`:
-```nix
-# For CLI tools
-brews = [ "new-tool" ];
-# For GUI apps
-casks = [ "new-app" ];
-# For third-party taps
-taps = [ "owner/tap" ];
-```
 
 #### New Claude Code Skill
 1. Create directory: `home-manager/programs/claude-code/skills/new-skill/`
