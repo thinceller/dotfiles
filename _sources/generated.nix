@@ -8,15 +8,15 @@
 {
   direnv-nvim = {
     pname = "direnv-nvim";
-    version = "e623d3645152839cbe7e73e7b2aa6e31256020ea";
+    version = "9258f9f10c4c729d8296fce0e3ecb12543daad06";
     src = fetchFromGitHub {
       owner = "NotAShelf";
       repo = "direnv.nvim";
-      rev = "e623d3645152839cbe7e73e7b2aa6e31256020ea";
+      rev = "9258f9f10c4c729d8296fce0e3ecb12543daad06";
       fetchSubmodules = false;
-      sha256 = "sha256-Bwdkf1ZHPsR3BUxdsGBNNNbzJ/CPOIlqb5EcQUUPuAk=";
+      sha256 = "sha256-b5PpmkYWaDGLNcu+36tRR5ycATHYBjs9WrV8/jfmooQ=";
     };
-    date = "2026-06-07";
+    date = "2026-06-29";
   };
   fish-ghq = {
     pname = "fish-ghq";
