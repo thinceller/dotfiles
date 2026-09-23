@@ -38,11 +38,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1772335827,
-        "narHash": "sha256-5sbb4zXpGpNRi/7fv+Ggsgu3WRXp65O6zOnio8/0LSg=",
+        "lastModified": 1790038908,
+        "narHash": "sha256-AGu9HT2V+SNR3SYBMdm5um+JpC9LJtafnq/lF/FdHfg=",
         "owner": "Warashi",
         "repo": "cage",
-        "rev": "9105203dabbb1f5d6c21f6bbe58780e755760b9c",
+        "rev": "541b9a913ccffa3554a305991226735b45461475",
         "type": "github"
       },
       "original": {
