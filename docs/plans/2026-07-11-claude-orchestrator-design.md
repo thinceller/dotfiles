@@ -96,7 +96,7 @@ Claude Code のメインセッション(Opus / Fable 起動時)をリードエ�
 - **注記**: 組み込み Explore は one-shot で SendMessage resume 不可のため、
   適応ループを回すにはカスタム定義が必須(仕様確認済み)
 
-### worker.md(model: sonnet)
+### worker.md(model: opus — v4 で sonnet から変更)
 
 - **役割**: メインが決定した実装仕様に従う実装・修正・テスト作成、
   および実装後のビルド・テスト実行と合否報告
@@ -116,12 +116,17 @@ Claude Code のメインセッション(Opus / Fable 起動時)をリードエ�
 
 - description はトリガー条件を具体的に書く(能力の説明だけにしない)
 - メインは spawn 時に Agent tool の `model` パラメータを渡さない
-  (per-invocation 指定は frontmatter の model を上書きしてしまう。仕様確認済み)
+  (per-invocation 指定は frontmatter の model を上書きしてしまう。仕様確認済み)。
+  v4 からの唯一の例外: 純粋に機械的な worker ブリーフに `sonnet` を渡す
+  (`implement` skill の cheap tier 相当)。`fable` は渡さない
 - **副作用への対処(必須機構)**: カスタムサブエージェントも user memory
   (CLAUDE.md)を読み込む仕様のため、Lead Agent Policy はサブのコンテキスト
-  にも載る。ポリシー冒頭の「Opus/Fable のときのみ適用」のモデルゲートは、
-  sonnet/haiku サブが再帰的にオーケストレーションを始めるのを防ぐ
-  **正しさに必須の機構**である(あれば良い、ではない)
+  にも載る。ポリシー冒頭のゲートは、サブが再帰的にオーケストレーションを
+  始めるのを防ぐ**正しさに必須の機構**である(あれば良い、ではない)。
+  v4 で worker が opus になりモデル名ではリードを識別できなくなったため、
+  ゲートは「Agent tool が使える(= メインセッション)かつ Opus/Fable」に
+  変更した。explorer は `tools` 制限、worker は `disallowedTools: Agent` で
+  いずれも Agent tool を持たない
 
 ### verifier の扱い(繰り延べ)
 
@@ -252,3 +257,19 @@ effort scaling の詳細テーブル・アンチパターン列挙は CLAUDE.md 
   - team-task スキル削除を決定(TeamCreate/TeamDelete が v2.1.178 で削除済み)、
     agent teams は自然言語での都度利用に位置づけ直し
   - 観測と改善ループ(観測専用 hook・過剰/過小委譲シグナル)を追加
+- 2026-09-23 v4: 現行モデル(Fable 5.1 / Opus 5.5)前提に担当モデルを見直し:
+  - 初版は Opus 4.7 世代 + 「Fable のトークン節約」を前提に worker を sonnet に
+    していた。現在は Opus 5.5 が $4/$20 per MTok(Fable 5.1 は $10/$50、
+    Sonnet 5 は $2/$10)で、Sonnet との差が 2 倍まで縮まった一方、仕様の忠実な
+    実行と検証の質は Opus が明確に上。worker を `opus` に変更
+    (alias は最新 Opus に解決。メインが Fable でも Opus でも worker は Opus 5.5)
+  - Fable 5.1 の公式ガイドは「サブエージェントへの委譲は信頼できる、抑制せず
+    非同期に使え」「過度に手順的なプロンプトは品質を下げる」としており、
+    大方針(メインは頭、サブは手)は維持。ポリシーに background 実行と
+    SendMessage での軌道修正を明記し、記述は goal + constraint 形式のまま短く保つ
+  - explorer は haiku のまま(使い捨て探索の用途は変わらず、誤報告は逐語引用
+    義務で担保)。組み込み Explore は現在 Opus 上限で動くため「高価なセッション
+    モデルで動く」という理由付けは撤回し、resume 不可・read-only guard 無しを
+    理由に置き換えた
+  - キャッシュ読み取り単価は Fable 5.1 $0.25 / Opus 5.5 $0.20 とほぼ同じなので、
+    「設計材料はメインが読んでキャッシュに乗せる」閾値設計は Fable でも成立する

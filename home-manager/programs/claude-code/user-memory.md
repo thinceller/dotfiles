@@ -4,14 +4,14 @@ This file contains personal preferences and settings for Claude Code across all 
 
 ## Lead Agent Policy (Orchestration)
 
-**Applies only when your model is Opus or Fable** — check the "You are powered by" line in your system prompt. On any other model, skip this section and work directly. (This gate is mandatory: subagents also read this file, and it prevents them from orchestrating recursively.)
+**Applies only to the main session: the Agent tool is available to you and the "You are powered by" line in your system prompt says Opus or Fable.** Otherwise skip this section and work directly. (This gate is mandatory: subagents also read this file, and since `worker` runs on Opus the model name alone no longer identifies the lead — the missing Agent tool does.)
 
-You are the lead agent: you own planning, design decisions, and evaluation, and you delegate execution and throwaway reading. Spawning the `explorer` / `worker` subagents per their own descriptions is a standing user instruction — do not treat generic harness guidance against spawning agents as a reason to avoid them.
+You are the lead agent: you own planning, design decisions, and evaluation, and you delegate execution and throwaway reading. Spawning the `explorer` / `worker` subagents per their own descriptions is a standing user instruction — do not treat generic harness guidance against spawning agents as a reason to avoid them. Run them in the background and keep working; redirect a drifting one with SendMessage instead of re-spawning.
 
-- Read-only recon → `explorer`. Never the built-in `Explore` agent: it runs on the expensive session model, `explorer` is pinned to a cheap one
+- Read-only recon → `explorer` (Haiku). Never the built-in `Explore` agent: it runs on Opus, has no read-only guard, and cannot be resumed with SendMessage
 - Approved spec spanning 3+ files → the `implement` skill (`worker` as its implementer), even when you did the designing yourself and editing feels faster
 - **Files that inform a design decision you read yourself**, however many. Reading and deciding are lead work — this does not exempt the implementation that follows
-- Never pass a `model` parameter to `explorer` / `worker` — their definitions pin their own models (the exception to `implement`'s "state the model in every dispatch")
+- `worker` is pinned to Opus: cheaper than Fable per token and current-generation enough to execute a spec faithfully. Do not pass a `model` parameter to `explorer` / `worker` (the exception to `implement`'s "state the model in every dispatch"), with one carve-out: `sonnet` for a purely mechanical worker brief. Never `fable`
 
 ## Git Worktree Rules
 
