@@ -68,25 +68,26 @@ sudo darwin-rebuild switch --flake .#kohei-m4-mac-mini
 >    `/proc/sys/fs/binfmt_misc/` に `x86_64-linux` が登録されず x86_64 ビルドだけが失敗する
 >    (`path ... is not valid`、ビルドログは空)。
 
-### 3. CI 用に Cachix へ seed
+### 3. CI での guest closure (手動 seed は不要)
 
-CI (`macos-latest`) は Linux builder を持たず binfmt 入り guest をビルドできない。そのため
-ビルド済みの guest closure を `thinceller-dotfiles` Cachix に push しておき、CI はそこから
-substitute する。darwin-system の out path closure には guest VM の最終 output
-(`linux-builder-start` → `create-builder` → guest `nixos-system`) が runtime 依存として
-含まれるので、これを push すれば中間 derivation のビルドは不要になる。
+CI (`macos-latest`) は Linux builder を持たず binfmt 入り guest をビルドできないため、guest の
+NixOS toplevel (aarch64-linux) は Cachix から substitute するしかない。これは
+`build.yml` の `linux-builder-guest` job が `ubuntu-24.04-arm` でビルドして push しており、
+darwin の `build` job は `needs` でこれを待つ。**`config` 変更でも flake.lock 更新でも、
+人間が seed し直す必要はない。**
+
+この job が無かった頃は、Cachix が古いパスを evict するたびに CI が PR の内容と無関係に
+`platform mismatch (Required system: 'aarch64-linux')` で落ち、Mac から手動 push するまで
+復旧しなかった。
+
+手元の Mac から明示的に push したいときは以下 (新規マシンへ guest を配る場合など):
 
 ```bash
 nix build .#darwinConfigurations.kohei-m4-mac-mini.system --no-link --print-out-paths \
   | cachix push thinceller-dotfiles
 ```
 
-**`config` 配下の変更だけでなく、flake.lock の更新 (`nix run .#update`) でも guest closure の
-hash は変わる。guest 由来の derivation が変わるコミットを push する前に、この seed をやり直すこと。**
-さもないと CI の build job が `qemu-x86_64-binfmt-P.drv` の platform mismatch
-(aarch64-linux を macos-latest でビルドできない) で失敗する。両ホストとも同じ guest を
-参照しているので、seed は片方の host の closure を push すれば足りるが、darwin 側の差分も
-cache に載るよう両方 push しておくとよい。
+両ホストとも同じ guest を参照しているので、push は片方の host の closure で足りる。
 
 ## ホスト鍵について
 

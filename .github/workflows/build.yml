@@ -11,7 +11,35 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # darwin の system closure には linux-builder guest の NixOS toplevel
+  # (aarch64-linux) が含まれる。macos runner ではこれをビルドできず cachix からの
+  # substitute に頼るしかないため、cachix が evict すると CI が PR の内容と無関係に
+  # platform mismatch で落ち、人間が Mac から push するまで復旧しない。
+  # aarch64-linux runner でこれを毎回ビルドし直して cachix に載せることで、
+  # evict されても CI が自力で復旧できるようにする。guest は両ホスト共通。
+  linux-builder-guest:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v17
+        with:
+          name: thinceller-dotfiles
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          extraPullNames: nix-community
+
+      - name: Build linux-builder guest
+        run: |
+          nix build .#darwinConfigurations.kohei-m4-mac-mini.config.nix.linux-builder.package.nixosConfig.system.build.toplevel --show-trace
+
   build:
+    needs: linux-builder-guest
     runs-on: macos-latest
     timeout-minutes: 60
     strategy:
