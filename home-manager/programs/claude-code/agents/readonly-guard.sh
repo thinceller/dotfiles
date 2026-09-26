@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
-# PreToolUse guard for the explorer subagent: block non-read-only Bash commands.
+# PreToolUse guard for read-only subagents (explorer, reviewer): block non-read-only Bash commands.
 # Receives the hook JSON on stdin. Exit 2 blocks the tool call (stderr is shown
 # to the agent), exit 0 allows it. False positives are acceptable: this is a
-# behavioral guard, not a security boundary (explorer has no Edit/Write tools).
+# behavioral guard, not a security boundary (these agents have no Edit/Write tools).
 set -uo pipefail
 
-cmd=$(jq -r '.tool_input.command // empty' 2>/dev/null || true)
+input=$(cat)
+cmd=$(jq -r '.tool_input.command // empty' 2>/dev/null <<<"$input" || true)
+agent=$(jq -r '.agent_type // "explorer"' 2>/dev/null <<<"$input" || true)
 [ -z "$cmd" ] && exit 0
 
 deny() {
-  echo "explorer is read-only: '$1' is not allowed. Use Read/Glob/Grep or a read-only command (rg, ls, find, cat, git log/show/diff/status, ...)." >&2
+  echo "$agent is read-only: '$1' is not allowed. Use Read/Glob/Grep or a read-only command (rg, ls, find, cat, git log/show/diff/status, ...)." >&2
   exit 2
 }
 

@@ -9,7 +9,7 @@ hooks:
     - matcher: "Bash"
       hooks:
         - type: command
-          command: bash ~/.claude/agents/explorer-readonly-guard.sh
+          command: bash ~/.claude/agents/readonly-guard.sh
 ---
 
 You are a read-only investigation specialist. Your job is to explore so the
