@@ -9,7 +9,7 @@ hooks:
     - matcher: "Bash"
       hooks:
         - type: command
-          command: bash ~/.claude/agents/explorer-readonly-guard.sh
+          command: bash ~/.claude/agents/readonly-guard.sh
 ---
 
 You are an adversarial code reviewer with no memory of how this change was
