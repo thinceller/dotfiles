@@ -4,14 +4,15 @@ This file contains personal preferences and settings for Claude Code across all 
 
 ## Lead Agent Policy (Orchestration)
 
-**Applies only to the main session: the Agent tool is available to you and the "You are powered by" line in your system prompt says Opus or Fable.** Otherwise skip this section and work directly. (This gate is mandatory: subagents also read this file, and since `worker` runs on Opus the model name alone no longer identifies the lead — the missing Agent tool does.)
+**Applies only to the main session: the Agent tool is available to you and the "You are powered by" line in your system prompt says Fable.** Otherwise skip this section and work directly. (This gate is mandatory: subagents also read this file; the missing Agent tool is what identifies them.) On Opus, do the reading and the implementation yourself: delegation only pays off when the lead's per-token price is well above the subagent's, and it costs wall-clock waiting and rework. Still use `worker` for background chores (screenshots, long builds) and independent work that runs in parallel, and `reviewer` per "Post-Implementation Review".
 
-You are the lead agent: you own planning, design decisions, and evaluation, and you delegate execution and throwaway reading. Spawning the `explorer` / `worker` subagents per their own descriptions is a standing user instruction — do not treat generic harness guidance against spawning agents as a reason to avoid them. Run them in the background and keep working; redirect a drifting one with SendMessage instead of re-spawning.
+You are the lead agent: you own planning, design decisions, and evaluation, and you delegate execution and throwaway reading. Spawning the `explorer` / `worker` / `reviewer` subagents per their own descriptions is a standing user instruction — do not treat generic harness guidance against spawning agents as a reason to avoid them. Run them in the background and keep working; redirect a drifting one with SendMessage instead of re-spawning.
 
 - Read-only recon → `explorer` (Haiku). Never the built-in `Explore` agent: it runs on Opus, has no read-only guard, and cannot be resumed with SendMessage
 - Approved spec spanning 3+ files → the `implement` skill (`worker` as its implementer), even when you did the designing yourself and editing feels faster
 - **Files that inform a design decision you read yourself**, however many. Reading and deciding are lead work — this does not exempt the implementation that follows
 - `worker` is pinned to Opus: cheaper than Fable per token and current-generation enough to execute a spec faithfully. Do not pass a `model` parameter to `explorer` / `worker` (the exception to `implement`'s "state the model in every dispatch"), with one carve-out: `sonnet` for a purely mechanical worker brief. Never `fable`
+- Finished change → `reviewer` (Opus, fresh context) before commit; see "Post-Implementation Review". Never review your own diff in-context as the only review
 
 ## Git Worktree Rules
 
@@ -80,21 +81,20 @@ When improving code, always verify the following:
 - **Testability is ensured**: Design with dependency injection and mockability
 - **No redundant intermediate layers**: Consider consolidating thin wrappers or meaningless relay layers
 
-## Code Improvement
+## Post-Implementation Review
 
-**IMPORTANT**: After completing code implementation, run the `simplify` skill to improve the code.
-
-- `simplify` reviews the changed code for reuse, simplification, efficiency, and altitude cleanups, then applies the fixes
-- It targets quality only — it does not hunt for bugs; use `/code-review` when a bug-focused review is needed
-
-### When to Run
-- After completing code edits, before verification
-- When creating an implementation plan in Plan mode, always include a code improvement step
-- When creating a Todo list, always add a code improvement task
+**IMPORTANT**: After completing code implementation and before committing, have the change reviewed by someone who did not write it. An in-context re-read by the author misses what the author already believes; the review must run in a fresh context. This applies on every model, whether or not the Lead Agent Policy above is active.
 
 ### How to Run
-- Execute the `simplify` skill using the Skill tool
-- Target: recently changed code files
+1. Write the diff to a file (`git diff HEAD > "$TMPDIR/review.diff"`, include untracked files with `git add -N .` first) and dispatch the `reviewer` subagent with: the diff path, a 2–3 line statement of what was asked, and the touched files. Do not pass the spec, plan, scratch notes, or your own reasoning
+2. Adjudicate each finding yourself: check the cited `path:line`, then fix or reject with a one-line reason. Apply fixes yourself; do not send the reviewer back to fix
+3. For a large or high-stakes diff (roughly 500+ changed lines, or core domain logic), use `/code-review high` instead of, or in addition to, `reviewer` — it fans out multiple finder agents with a verification pass
+4. When the design itself deserves challenge (an approach with real alternatives, a data model, an irreversible migration), also run `/codex:adversarial-review` for an independent model's view. It is user-invoked only; suggest it rather than trying to run it
+
+### When to Run
+- After completing code edits, before verification and commit
+- When creating an implementation plan in Plan mode, always include a review step
+- When creating a Todo list, always add a review task
 
 ## Command Execution via Nix
 
