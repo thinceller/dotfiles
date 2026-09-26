@@ -190,7 +190,7 @@ in
             # Stop はデバウンス付き (30 分に 1 回まで)、SessionEnd で最終更新。
             # 実処理は detach した worker が headless claude (haiku) で行うため
             # セッションをブロックしない。詳細は hooks/vault-session-log.sh 冒頭。
-            Stop = herdrClaudeHooks.Stop ++ [
+            Stop = common.settings.hooks.Stop ++ [
               {
                 hooks = [
                   {
