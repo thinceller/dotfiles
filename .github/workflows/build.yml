@@ -18,7 +18,7 @@ jobs:
   # aarch64-linux runner でこれを毎回ビルドし直して cachix に載せることで、
   # evict されても CI が自力で復旧できるようにする。guest は両ホスト共通。
   linux-builder-guest:
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 60
     steps:
       - name: Checkout
