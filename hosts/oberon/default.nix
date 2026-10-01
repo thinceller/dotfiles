@@ -36,8 +36,17 @@ let
       edgepkgs.overlays.default
       (_final: _prev: {
         herdr = herdr.packages.${system}.default;
-        # opencode は上流 (anomalyco/opencode) HEAD をビルドして使う。
-        opencode = opencode.packages.${system}.opencode;
+        # opencode は上流 (anomalyco/opencode) v2 ブランチをビルドして使う。
+        # 上流 nix は v2 に無い `opencode completion` で補完を生成して失敗するため差し替える。
+        # パイプに出すと 64KiB で切れる (bun が flush 前に終了する) のでファイル経由で渡す。
+        opencode = opencode.packages.${system}.opencode.overrideAttrs {
+          postInstall = ''
+            for sh in bash zsh fish; do
+              $out/bin/opencode --completions $sh > opencode.$sh
+            done
+            installShellCompletion opencode.{bash,zsh,fish}
+          '';
+        };
       })
     ];
   };

@@ -83,10 +83,10 @@
       url = "github:ogulcancelik/herdr";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # opencode は上流 (anomalyco/opencode) の HEAD を追従してビルドする。
-    # nixpkgs の opencode ではなく上流最新を使う。`nix run .#update` で最新化される。
+    # opencode は上流 (anomalyco/opencode) の v2 ブランチ HEAD を追従してビルドする。
+    # デフォルトブランチ (dev) は v1 系のまま。`nix run .#update` で最新化される。
     opencode = {
-      url = "github:anomalyco/opencode";
+      url = "github:anomalyco/opencode/v2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # codex 0.125.0 (gpt-5.5 サポート: 0.123 以降) を含む nixpkgs リビジョン。

@@ -8,7 +8,15 @@
 lib.mkIf userConfig.isPersonal {
   programs.opencode = {
     enable = true;
-    package = pkgs.opencode;
+    package = import ./with-cli-config.nix { inherit pkgs lib; } {
+      theme.name = "tokyonight";
+      mouse = true;
+      attention = {
+        notifications = false;
+        sound = false;
+      };
+      plugins = [ "${config.xdg.configHome}/opencode/herdr-opencode" ];
+    };
 
     # NOTE: enquire-mcp (obsidian-vault) は Claude Code 側でのみ MCP 統合。
     # OpenCode 側で有効にすると、enquire-mcp の z.tuple スキーマ
@@ -46,7 +54,6 @@ lib.mkIf userConfig.isPersonal {
 
       compaction = {
         auto = false;
-        prune = false;
       };
 
       permission = {
@@ -89,14 +96,6 @@ lib.mkIf userConfig.isPersonal {
       };
     };
 
-    tui = {
-      theme = "tokyonight";
-      mouse = true;
-      attention = {
-        enabled = false;
-      };
-    };
-
     context = ./AGENTS.md;
 
     # hunk 同梱の agent skill を opencode にも展開する。
@@ -105,12 +104,11 @@ lib.mkIf userConfig.isPersonal {
     };
   };
 
-  # herdr integration (opencode 側): `herdr integration install opencode` が
-  # 書き出す ~/.config/opencode/plugins/herdr-agent-state.js と等価。
-  # HERDR_INTEGRATION_VERSION=8, 上流で version が bump されたらファイルを更新する。
-  xdg.configFile."opencode/plugins/herdr-agent-state.js" = {
-    source = ./plugins/herdr-agent-state.js;
-  };
+  # herdr integration (opencode 側): `herdr integration install opencode` が書き出すファイル相当
+  # (v1 用の tui.json 登録は除く)。HERDR_INTEGRATION_VERSION=13, 上流で bump されたら更新する。
+  # TUI plugin は cli 設定の plugins から読まれる。
+  xdg.configFile."opencode/plugins/herdr-agent-state.js".source = ./plugins/herdr-agent-state.js;
+  xdg.configFile."opencode/herdr-opencode".source = ./plugins/herdr-opencode;
 
   # Mnemos: セッションログ自動記録 (共用 worker vault-session-log-worker を呼ぶ)
   xdg.configFile."opencode/plugins/vault-session-log.ts" = {

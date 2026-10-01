@@ -2,17 +2,21 @@
 # vault (references / Mnemos) を除いたもの。
 {
   pkgs,
+  lib,
+  config,
   ...
 }:
 {
   programs.opencode = {
     enable = true;
-    package = pkgs.opencode;
+    package = import ./with-cli-config.nix { inherit pkgs lib; } {
+      theme.name = "tokyonight";
+      plugins = [ "${config.xdg.configHome}/opencode/herdr-opencode" ];
+    };
 
     settings = {
       model = "opencode-go/gpt-5.6-luna";
       small_model = "opencode-go/deepseek-v4-flash";
-      theme = "tokyonight";
       autoupdate = false;
       share = "manual";
       snapshot = true;
@@ -23,7 +27,6 @@
 
       compaction = {
         auto = false;
-        prune = false;
       };
 
       permission = {
@@ -71,9 +74,10 @@
     # release-25.11 の opencode module に skills オプションが無いため見送り。
   };
 
-  # herdr integration (opencode 側): `herdr integration install opencode` が
-  # 書き出す ~/.config/opencode/plugins/herdr-agent-state.js と等価。
-  xdg.configFile."opencode/plugins/herdr-agent-state.js" = {
-    source = ./plugins/herdr-agent-state.js;
-  };
+  # release-25.11 の opencode module は config.json に書くが、v2 は opencode.json(c) しか読まない。
+  xdg.configFile."opencode/config.json".target = "opencode/opencode.json";
+
+  # herdr integration (opencode 側): default.nix と同じ。
+  xdg.configFile."opencode/plugins/herdr-agent-state.js".source = ./plugins/herdr-agent-state.js;
+  xdg.configFile."opencode/herdr-opencode".source = ./plugins/herdr-opencode;
 }
