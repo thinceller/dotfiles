@@ -48,7 +48,7 @@ in
         # 設定キーは単数形 `fallbackModel` だが型は string 配列
         # (CLI の --fallback-model はカンマ区切り)。
         fallbackModel = [ ];
-        # advisorModel = "fable";
+        advisorModel = "fable";
         # effortLevel = "xhigh";
         voiceEnabled = true;
 
