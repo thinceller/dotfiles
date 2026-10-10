@@ -112,6 +112,7 @@ in
       "git-toolkit@thinceller-claude-plugins" = true;
       "engineering@thinceller-claude-plugins" = true;
       "writing@thinceller-claude-plugins" = true;
+      "turn-timeline@thinceller-claude-plugins" = true;
     };
 
     # claude.ai から ~/.claude/skills/synced に同期される skill は Nix で外せないので、
