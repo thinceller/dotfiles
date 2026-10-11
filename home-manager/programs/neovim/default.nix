@@ -57,8 +57,6 @@ in
         # lua plugins
         plenary-nvim
         nui-nvim
-        # denops
-        denops-vim
         # completion and lsp
         blink-cmp
         nvim-lspconfig
