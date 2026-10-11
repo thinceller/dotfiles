@@ -32,8 +32,7 @@ configs/.config/nvim/
 │       ├── file-explorer.lua # File browser (oil.nvim)
 │       ├── git.lua           # Git integration
 │       ├── ai.lua            # AI tools
-│       ├── misc.lua          # Miscellaneous plugins
-│       └── basis.lua         # Core dependencies (denops)
+│       └── misc.lua          # Miscellaneous plugins
 ```
 
 ## Common Tasks
