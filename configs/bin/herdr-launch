@@ -166,7 +166,9 @@ if test $mode = pr-review
     # effort は /code-review の引数では指定できないので claude の CLI フラグで渡す。
     # detached の場合は "HEAD" が返り、それがそのまま ref として使える。
     set -l head_ref (git -C $work_path rev-parse --abbrev-ref HEAD)
-    set agent_prompt -- --effort medium "/code-review origin/$base_branch..$head_ref"
+    set -l review_role 'このセッションは他人の PR をレビューするためのものである。この場でコードを修正したり実装を進めたりしてはならない。役割はコードレビューによるバグや修正漏れの検出と、手元での動作確認に限られる。指摘は修正案として提示するに留め、ファイルの編集・commit・push は行わないこと。'
+    set agent_prompt -- --effort medium --append-system-prompt $review_role \
+        "/code-review origin/$base_branch..$head_ref"
 end
 # agent start は idle になるまでブロックするので (先頭の --start-agent 参照)、
 # 待ちは自分自身の別プロセスに投げて popup を即座に解放する。
