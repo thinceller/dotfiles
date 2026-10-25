@@ -262,7 +262,6 @@ in
 
     context = ./user-memory.md;
 
-    agentsDir = ./agents;
     skills = localSkills // {
       hunk-review = "${config.programs.hunk.package}/skills/hunk-review";
     };
