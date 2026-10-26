@@ -110,7 +110,7 @@ in
     enabledPlugins = {
       # thinceller-claude-plugins
       "git-toolkit@thinceller-claude-plugins" = true;
-      "engineering@thinceller-claude-plugins" = true;
+      "dev-practice@thinceller-claude-plugins" = true;
       "writing@thinceller-claude-plugins" = true;
       "turn-timeline@thinceller-claude-plugins" = true;
     };

@@ -6,6 +6,6 @@
 # SessionStart で可読性を検証し、壊れていたらユーザーに警告を出す。
 f="$HOME/.claude/CLAUDE.md"
 if [ ! -r "$f" ]; then
-  echo '{"systemMessage":"⚠ ~/.claude/CLAUDE.md (user memory) が読めません。このセッションには Lead Agent Policy 等が載っていません。darwin-rebuild switch で再配備してください。"}'
+  echo '{"systemMessage":"⚠ ~/.claude/CLAUDE.md (user memory) が読めません。このセッションには Git Worktree Rules 等が載っていません。darwin-rebuild switch で再配備してください。"}'
 fi
 exit 0
