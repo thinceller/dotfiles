@@ -1,4 +1,9 @@
-{ config, ... }:
+{
+  config,
+  pkgs,
+  self,
+  ...
+}:
 {
   # Tailscale: admin SSH 経路を WireGuard 経由に分離する。
   # cloudflared (公開 HTTP) とは独立した経路。tailnet:22 は tailscaled が
@@ -10,6 +15,8 @@
 
   services.tailscale = {
     enable = true;
+    # EOL の nixos-25.11 版にはセキュリティ修正が入らないため unstable から取る。stable 移行時に外す。
+    package = self.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system}.tailscale;
     # 初回 up 時のみ使用。tag 付き auth key なのでノードは以後非失効。
     authKeyFile = config.sops.secrets."tailscale-authkey".path;
     # WireGuard 直結用 UDP 41641 を開放 (NAT 越え性能向上。閉じても DERP で動く)。
