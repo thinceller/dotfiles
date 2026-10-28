@@ -97,6 +97,10 @@
     # cache.nixos.org にビルド済みの最新を選んでいる。
     # 通常の nixpkgs が追いついたら削除する。
     nixpkgs-gh.url = "github:NixOS/nixpkgs/9387b3fcc0c2";
+    # cloudflared 2026.10.3 (Go 1.27.3 ビルド: eMudhra 中間証明書の失効対応) を含む
+    # nixos-unstable-small のリビジョン。oberon の services.cloudflared.package 用。
+    # 通常の nixpkgs が 2026.10.2 以上に追いついたら削除する (pin なので update PR は来ない)。
+    nixpkgs-cloudflared.url = "github:NixOS/nixpkgs/efdabaf43b36";
     # hermes-agent は nixos-unstable + uv2nix で独自ビルドするため nixpkgs follows は付けない。
     # oberon の本番稼働に直結するので main ではなくリリースタグに pin する
     # (2026-09-02 の main は py-modules 漏れで gateway がクラッシュループした)。

@@ -1,4 +1,9 @@
-{ config, ... }:
+{
+  config,
+  pkgs,
+  self,
+  ...
+}:
 {
   # Cloudflare Tunnel credentials JSON は secrets/cloudflared.json (sops 暗号化済み)。
   # format = "binary" でファイル全体を unwrap して /run/secrets/cloudflared に書き出す。
@@ -13,6 +18,11 @@
 
   services.cloudflared = {
     enable = true;
+    # EOL の nixos-25.11 版 (2025.11.1) は eMudhra 中間証明書の失効修正 (2026.10.2+) が入らないため
+    # pinned input から取る。locked nixpkgs (unstable) が 2026.10.2 以上になったら
+    # tailscale.nix と同じく self.inputs.nixpkgs に切り替え、nixpkgs-cloudflared を削除する。
+    package =
+      self.inputs.nixpkgs-cloudflared.legacyPackages.${pkgs.stdenv.hostPlatform.system}.cloudflared;
     tunnels = {
       "998f8ee3-075b-44db-a2f1-88351b8c17cd" = {
         credentialsFile = config.sops.secrets."cloudflared".path;

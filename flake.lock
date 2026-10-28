@@ -587,6 +587,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-cloudflared": {
+      "locked": {
+        "lastModified": 1793053737,
+        "narHash": "sha256-B3Kni95tBfqiBNSac6uR9oJyt46PdpHvN8ZS/W2Ye2Q=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "efdabaf43b366580e8d0320b57c4cbaa6939acd6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "efdabaf43b36",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-codex": {
       "locked": {
         "lastModified": 1777061873,
@@ -806,6 +822,7 @@
         "nix-darwin": "nix-darwin",
         "nix-index-database": "nix-index-database",
         "nixpkgs": "nixpkgs_3",
+        "nixpkgs-cloudflared": "nixpkgs-cloudflared",
         "nixpkgs-codex": "nixpkgs-codex",
         "nixpkgs-gh": "nixpkgs-gh",
         "nixpkgs-stable": "nixpkgs-stable",
