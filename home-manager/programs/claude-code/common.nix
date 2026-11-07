@@ -9,6 +9,11 @@ let
   statuslineScript = pkgs.writeShellScript "claude-statusline" (
     builtins.readFile ./statusline-command.sh
   );
+  checkReplyLanguageScript = pkgs.writeShellApplication {
+    name = "claude-check-reply-language";
+    runtimeInputs = [ pkgs.jq ];
+    text = builtins.readFile ./hooks/check-reply-language.sh;
+  };
 in
 {
   package = claudeCodePackage;
@@ -87,6 +92,17 @@ in
               type = "command";
               command = herdrIntegration.toolMetadataScript;
               timeout = 10;
+            }
+          ];
+        }
+      ];
+      # language = "japanese" の強制。詳細は hooks/check-reply-language.sh 冒頭。
+      Stop = herdrClaudeHooks.Stop ++ [
+        {
+          hooks = [
+            {
+              type = "command";
+              command = pkgs.lib.getExe checkReplyLanguageScript;
             }
           ];
         }
