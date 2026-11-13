@@ -55,15 +55,15 @@
   };
   matt-pocock-skills = {
     pname = "matt-pocock-skills";
-    version = "2ab958093e83e0ec752e6c1c5932da465bf23e0c";
+    version = "5863806dd4e15c63174bee4e7515a4256792ecfa";
     src = fetchFromGitHub {
       owner = "mattpocock";
       repo = "skills";
-      rev = "2ab958093e83e0ec752e6c1c5932da465bf23e0c";
+      rev = "5863806dd4e15c63174bee4e7515a4256792ecfa";
       fetchSubmodules = false;
-      sha256 = "sha256-dQtG6usJWlg/FqTajrjcs8GSdymH92WsgLiUaCfvKPA=";
+      sha256 = "sha256-AYSRCvBL8TDDdW3rgKu2T7gl4YYDoDId0jYbabEFyfs=";
     };
-    date = "2026-07-28";
+    date = "2026-11-12";
   };
   tcmux = {
     pname = "tcmux";
