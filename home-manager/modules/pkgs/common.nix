@@ -27,6 +27,7 @@
     nvfetcher
     php83
     php83Packages.composer
+    pnpm
     python3
     ssm-session-manager-plugin
     sops
