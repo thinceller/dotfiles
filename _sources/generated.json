@@ -55,12 +55,12 @@
             "name": null,
             "owner": "orangain",
             "repo": "gh-pr-graph",
-            "rev": "v0.15.1",
-            "sha256": "sha256-APYijprR9xWw2Y6BMZRiA5xeTS3zeIbXD45ymYgZqSM=",
+            "rev": "v0.15.2",
+            "sha256": "sha256-z8AiHzsnkrLK4WpvYeITPBF5RxAwNR4u3deTIojj9II=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "v0.15.1"
+        "version": "v0.15.2"
     },
     "hydro": {
         "cargoLock": null,
