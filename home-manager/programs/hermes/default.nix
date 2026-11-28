@@ -5,14 +5,16 @@
   ...
 }:
 let
-  rootDir = userConfig.dotfilesDir + "/configs/.hermes";
-  symlink = config.lib.file.mkOutOfStoreSymlink;
   hermesHome = "${config.home.homeDirectory}/.hermes";
+  rootDir = "${hermesHome}/workspace/dot-hermes";
+  symlink = config.lib.file.mkOutOfStoreSymlink;
 in
 lib.mkIf (userConfig.hostname == "kohei-m4-mac-mini") {
   # 本体は公式インストーラで導入する (upstream の Nix パッケージは pnpm 依存の
   # 固定ハッシュが aarch64-darwin で一致せずビルドできない)。
-  # ここでは設定の symlink と secret の配置だけを持つ。
+  # 設定の実体は private リポジトリ thinceller/dot-hermes の clone (rootDir) にある。
+  # Hermes 自身が日常的に書き換えるので、public で自動 deploy される dotfiles に置くと
+  # 意図しない diff と公開が問題になる。ここでは clone への symlink と secret の配置だけを持つ。
   # 手順は docs/reference/hermes-mac-mini.md を参照。
   home.file = {
     ".hermes/config.yaml".source = symlink "${rootDir}/config.yaml";

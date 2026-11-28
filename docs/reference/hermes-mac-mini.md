@@ -1,7 +1,7 @@
 # mac-mini の Hermes Agent
 
 `kohei-m4-mac-mini` で動かす Hermes Agent のセットアップ手順。
-Nix で管理しない部分 (本体の導入、secret の実値、vault の clone、launchd、Tailscale Serve) と、
+Nix で管理しない部分 (設定リポジトリ、本体の導入、secret の実値、vault の clone、launchd、Tailscale Serve) と、
 動作確認の項目をまとめる。
 
 ## 概要
@@ -11,7 +11,7 @@ Nix で管理しない部分 (本体の導入、secret の実値、vault の clo
 | 本体の導入 | upstream の公式インストーラ (`install.sh`)。Nix パッケージは使わない |
 | 追従 | `hermes update` (stable チャンネル) |
 | 常駐 | `hermes gateway install` が作る launchd agent。Nix では定義しない |
-| 設定 | `config.yaml` を dotfiles に置き、out-of-store symlink で `~/.hermes/` に向ける |
+| 設定 | `config.yaml` などは private リポジトリ `thinceller/dot-hermes` に置き、`~/.hermes/workspace/dot-hermes` の clone へ out-of-store symlink で向ける |
 | secret | sops-nix (home-manager) で `~/.hermes/.env` に配置 |
 | メインモデル | Anthropic API の Sonnet 5.5 |
 | サブエージェント、auxiliary、fallback | OpenCode Go の `kimi-k2.7-code` |
@@ -24,36 +24,46 @@ Nix パッケージを使わない理由: upstream v0.23.5 は JS 依存の固�
 (`sha256-W5V/4xsKZKolR2MQL5GN9GBa7844IPNmKVTTcLaZnvI=`) になり、ビルドできない。
 外から差し替える引数も無い。
 
+設定を dotfiles に置かない理由: 設定や skill は Hermes 自身が日常的に書き換える。
+public で master が自動 deploy される dotfiles に置くと、意図しない diff と公開が問題になる。
+
 Nix が持つのは設定の symlink と secret の配置だけで、定義は `home-manager/programs/hermes/default.nix` にある。
 配置されるファイルは次の 6 つ。
 
 | 配置先 | 元 | 種類 |
 |---|---|---|
-| `~/.hermes/config.yaml` | `configs/.hermes/config.yaml` | out-of-store symlink |
-| `~/.hermes/SOUL.md` | `configs/.hermes/SOUL.md` | out-of-store symlink |
-| `~/.hermes/workspace/AGENTS.md` | `configs/.hermes/workspace/AGENTS.md` | out-of-store symlink |
-| `~/.hermes/plugins/session-vault-export` | `configs/.hermes/plugins/session-vault-export` (ディレクトリ) | out-of-store symlink |
+| `~/.hermes/config.yaml` | `~/.hermes/workspace/dot-hermes/config.yaml` | out-of-store symlink |
+| `~/.hermes/SOUL.md` | `~/.hermes/workspace/dot-hermes/SOUL.md` | out-of-store symlink |
+| `~/.hermes/workspace/AGENTS.md` | `~/.hermes/workspace/dot-hermes/workspace/AGENTS.md` | out-of-store symlink |
+| `~/.hermes/plugins/session-vault-export` | `~/.hermes/workspace/dot-hermes/plugins/session-vault-export` (ディレクトリ) | out-of-store symlink |
 | `~/.hermes/.env` | `secrets/hermes-mac.env` | sops-nix が復号した dotenv への symlink |
 | `~/.hermes/github-ssh-key` | `secrets/oberon.yaml` の `hermes-github-ssh-key` | sops-nix が復号した SSH 秘密鍵への symlink (mode 0400) |
 
-skill (`configs/.hermes/external-skills`) は symlink せず、`config.yaml` の `skills.external_dirs` が直接指す。
+skill (`~/.hermes/workspace/dot-hermes/skills`) は symlink せず、`config.yaml` の `skills.create_dir` が直接指す。
+Hermes が新しく作る skill もここに入る。
 
-symlink の先は `/Users/thinceller/.dotfiles` の作業ツリーである。
-そのため設定の変更は comin の deploy ではなく、この作業ツリーの更新で反映される。
+symlink の先は dot-hermes の clone である。
+そのため設定の変更は dotfiles の deploy とは無関係に、その場で効く。
 
 ## 事前に用意するもの
 
 この手順は、この設定を追加した変更が master にマージされ、comin が mac-mini に deploy 済みであることを前提にする。
 
 mac-mini には、以前試したときの `~/.hermes/` が残っている場合がある (通常ファイルの `config.yaml`、`SOUL.md`、`auth.json` など)。
-古い `auth.json` の認証情報が使われるのを避けるため、マージの前に退避する。
+古い `auth.json` の認証情報が使われるのを避けるため、古い `~/.hermes/` は退避する。
+退避は dot-hermes の clone を作る前に行う。
+順序は「退避、clone の作成 (「設定リポジトリ」の節)、deploy」である。
+この mac-mini では退避も clone の作成も済んでいるので、やり直さない。
 
 ```bash
 mv ~/.hermes ~/.hermes.old
 ```
 
-すでに deploy された後に退避した場合は、symlink と secret も一緒に移動してしまう。
-その場合は手動で switch して配置し直す (`docs/reference/mac-mini-deploy.md` の手動 fallback と同じ)。
+退避先に同名のディレクトリが既にあると、その中へ入れ子で移動してしまう。
+退避先は存在しない名前にする。
+
+clone が `~/.hermes/workspace/dot-hermes` にある状態で `mv ~/.hermes ...` を実行すると、clone ごと移動する。
+その場合は clone を `~/.hermes/workspace/dot-hermes` に戻してから、手動で switch して symlink と secret を配置し直す (`docs/reference/mac-mini-deploy.md` の手動 fallback と同じ)。
 
 ```bash
 sudo darwin-rebuild switch --flake ~/.dotfiles#kohei-m4-mac-mini
@@ -71,14 +81,44 @@ ls -l ~/.hermes/config.yaml ~/.hermes/.env
 - ntfy の topic 名。ntfy.sh の topic は名前を知っていれば誰でも読めるので、推測されにくい名前にする。
 - Tailscale の管理画面で HTTPS 証明書を有効にしておく。
 
-## 本体の導入
+## 設定リポジトリ
 
-先に `~/.dotfiles` の作業ツリーを最新の master にする。
-symlink と `skills.external_dirs` は comin の clone ではなく、この作業ツリーを指すため。
+この mac-mini では、`~/.hermes/workspace/dot-hermes` にローカルのリポジトリを作成済みである。
+git config (名義、署名なし、`core.sshCommand`) と remote も設定済みである。
+
+初回の push には、次の 2 つが前提になる。
+
+- GitHub に private リポジトリ `thinceller/dot-hermes` があり、machine user (thinceller-hermes) が write 権限の招待を承諾している。
+- deploy で `~/.hermes/github-ssh-key` が配置されている。`core.sshCommand` がその鍵を読むため。
+
+前提がそろったら、次のコマンドで push する。
 
 ```bash
-git -C ~/.dotfiles pull
+git -C ~/.hermes/workspace/dot-hermes push -u origin main
 ```
+
+別のマシンで復元する場合や、clone を作り直す場合は、次のように clone して git config を設定する。
+
+```bash
+git clone -c core.sshCommand="ssh -i /Users/thinceller/.hermes/github-ssh-key -o IdentitiesOnly=yes -o IdentityAgent=none" \
+  git@github.com:thinceller/dot-hermes.git ~/.hermes/workspace/dot-hermes
+cd ~/.hermes/workspace/dot-hermes
+git config core.sshCommand "ssh -i /Users/thinceller/.hermes/github-ssh-key -o IdentitiesOnly=yes -o IdentityAgent=none"
+git config user.name "Hermes Agent"
+git config user.email "hermes@thinceller.dev"
+git config commit.gpgsign false
+```
+
+clone が無い間は、`~/.hermes/config.yaml` などの symlink が宙に浮く。
+
+Hermes は設定や skill を変えるたびに、このリポジトリへ commit と push を行う。
+手順は `workspace/AGENTS.md` にある。
+ただし、スラッシュコマンド (`/model --global` など) や設定画面からの変更は `config.yaml` を直接書き換えるので、自動では commit されない。
+差分が残っていたら、Hermes に依頼するか自分で commit する。
+この変更は dotfiles の CI を通らない。
+壊れた `config.yaml` が commit されても、気付くのは Hermes の起動時になる。
+
+## 本体の導入
 
 公式インストーラを実行する。
 
@@ -87,12 +127,12 @@ curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --skip-
 ```
 
 `--skip-setup` を付けないと、インストーラがセットアップウィザードと `hermes gateway install` を続けて実行する。
-ウィザードは symlink 越しに dotfiles の `config.yaml` を書き換え、secret を入れる前に gateway が常駐を始めてしまう。
+ウィザードは symlink 越しに dot-hermes の `config.yaml` を書き換え、secret を入れる前に gateway が常駐を始めてしまう。
 
 本体は `~/.hermes/hermes-agent/`、ラッパーは `~/.local/bin/hermes` に入る。
 
 導入後に `ls -l ~/.hermes/config.yaml` を実行し、symlink のままであることを確認する。
-あわせて `git -C ~/.dotfiles diff configs/.hermes/config.yaml` を実行し、意図しない差分が出ていないことを確認する。
+あわせて `git -C ~/.hermes/workspace/dot-hermes diff config.yaml` を実行し、意図しない差分が出ていないことを確認する。
 通常ファイルに置き換わっていたら、削除して switch し直す。
 
 ```bash
@@ -102,13 +142,17 @@ sudo darwin-rebuild switch --flake ~/.dotfiles#kohei-m4-mac-mini
 ## secret の実値を入れる
 
 Webapp のサインインに使うユーザー名とパスワードを設定する。
+このコマンドは gateway を常駐させる前に実行する。
+パスワードのハッシュと署名鍵を dot-hermes の `config.yaml` に書くため、gateway が動いていると、Hermes がその差分を commit して push するおそれがある。
 
 ```bash
 hermes dashboard password --username thinceller
 ```
 
+パスワードを後で変えるときは、先に `hermes gateway stop` で gateway を止めてから実行する。
+
 このコマンドは `dashboard.basic_auth` の `username`、`password_hash`、`secret` を `config.yaml` に書く。
-`config.yaml` は public リポジトリのファイルなので、この 3 つの値を次の手順で sops 側へ移す。
+秘密の値はリポジトリに置かず sops で管理する方針なので、この 3 つの値を次の手順で sops 側へ移す。
 
 ```bash
 cd ~/.dotfiles
@@ -136,11 +180,11 @@ ntfy の 3 つのキーには同じ topic 名を入れる。
 次のコマンドで、パスワードのハッシュと署名鍵が残っていないことを確かめる。
 
 ```bash
-git -C ~/.dotfiles diff configs/.hermes/config.yaml
+git -C ~/.hermes/workspace/dot-hermes diff config.yaml
 ```
 
-Hermes が足した他の差分 (`_config_version` など) は残してよい。
-secret の変更は commit して master に入れ、comin の deploy を待つ。
+ブロックを削除した後に dot-hermes 側へ残った差分 (Hermes が足した `_config_version` など) は、内容を確かめてから dot-hermes に commit して push する。
+dotfiles の secret (`secrets/hermes-mac.env`) の変更は、dotfiles で commit して master に入れ、comin の deploy を待つ。
 
 `~/.hermes/.env` は復号済みファイルへの symlink である。
 Hermes や手作業で書き換えた内容は、次の activation で元に戻る。
@@ -213,15 +257,15 @@ hermes gateway stop && hermes gateway start
 | 通知 | `hermes send --to ntfy "test"` | iPhone の ntfy アプリに届く |
 | vault への記録 | 「これ Inbox に: テスト」と送る | vault に commit が push され、名義が Hermes Agent |
 | セッションの書き出し | Webapp で `/new` を実行 | vault の `Agents/Hermes-Agent/sessions/` に Markdown が増える |
-| 設定の即時変更 | `/model --global` で別のモデルに切り替え、`ls -l ~/.hermes/config.yaml` と `git -C ~/.dotfiles diff` を見る | symlink のままで、dotfiles に diff が出る |
+| 設定の即時変更 | `/model --global` で別のモデルに切り替え、`ls -l ~/.hermes/config.yaml` と `git -C ~/.hermes/workspace/dot-hermes status --short` を見る | symlink のままで、dot-hermes の作業ツリーに差分が出る。`/model` はスラッシュコマンドで `config.yaml` を直接書き換えるため、自動では commit されない。Hermes に commit を依頼するか、自分で commit する |
 | 追従 | `hermes update --check` | 更新の有無が表示される |
 
 モデル ID `claude-sonnet-5-5` が Hermes 側で通らなかった場合は、`hermes model` で選び直す。
-その後、`config.yaml` の diff を commit する。
+その後、dot-hermes で `config.yaml` の diff を commit して push する。
 
 ## 既知の注意点
 
-- Hermes が `config.yaml` を書き直すと、キーの並びや `_config_version` の差分が出る。内容を確かめて commit する。
+- Hermes が `config.yaml` を書き直すと、キーの並びや `_config_version` の差分が出る。commit は Hermes が行うので、差分は dot-hermes の履歴で確認できる。
 - `hermes update` での更新は、dotfiles の履歴にも CI にも残らない。
 - upstream が `nix/pnpm-deps-hash` をプラットフォーム別に持つようになれば、Nix パッケージに戻せる。
 - oberon の Hermes (`hosts/oberon/hermes-agent.nix`) は別途撤去する。

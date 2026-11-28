@@ -690,3 +690,10 @@ nix fmt
 - 「activation をやり直す」を、手動の `sudo darwin-rebuild switch --flake ~/.dotfiles#kohei-m4-mac-mini` に具体化した。
 - skill 2 つに残っていた「Slack で返信する」を「返信する」に直した。
 - `hermes-github-ssh-key` は oberon と共有しているので、oberon の Hermes を撤去するときに消さない旨を注記した。
+- 設定一式 (`configs/.hermes/`) は dotfiles に置かず、private リポジトリ `thinceller/dot-hermes`
+  (`~/.hermes/workspace/dot-hermes` に clone) へ分けた。Hermes 自身に設定や skill を日常的に書き換えさせるので、
+  public で master が自動 deploy される dotfiles に置くと、意図しない diff と公開が問題になるため。
+  skill は `skills.create_dir` で同リポジトリの `skills/` に置き、Hermes が新しく作る skill もここに入る。
+  Hermes は変更のたびにこのリポジトリへ commit と push を行う。
+  計画の Task 2 と、Task 3 の `rootDir` はこの変更で置き換わった。
+  Task 4 の手順書のうち、`~/.dotfiles` の作業ツリーを前提にした部分も置き換わった。
