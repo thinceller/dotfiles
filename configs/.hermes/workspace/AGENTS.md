@@ -1,0 +1,77 @@
+# Hermes Agent on mac-mini
+
+Hermes Agent は mac-mini 上で、公式インストーラで導入した本体を launchd で常駐させています。
+この AGENTS.md は作業ディレクトリである `/Users/thinceller/.hermes/workspace/` に配置され、
+Hermes の system prompt に自動で注入されます。
+
+## ワークスペース
+
+- 作業ディレクトリ: `/Users/thinceller/.hermes/workspace`
+- この配下にあるリポジトリ:
+  - `knowledge-base/`
+
+## 注意
+
+- `~/.hermes/config.yaml`、`SOUL.md`、この `AGENTS.md`、vault 系 skill、plugin は
+  dotfiles リポジトリ (`/Users/thinceller/.dotfiles/configs/.hermes/`) への symlink です。
+- `.env` などの秘密情報は sops-nix によって管理されます。
+
+# knowledge-base vault (個人ナレッジベース) への記録と参照
+
+- vault: `git@github.com:thinceller/knowledge-base.git` を
+  `/Users/thinceller/.hermes/workspace/knowledge-base` に clone して使う(なければ clone する)。
+  認証と commit の名義は clone 済みリポジトリの git config に設定済み。そのまま
+  git clone / pull / push すれば動く
+
+## Inbox capture (思考の記録)
+
+ユーザーが「これ Inbox に」「メモしておいて」「思いついた: ...」など、考えを残したい
+意図を示したら:
+
+1. `cd /Users/thinceller/.hermes/workspace/knowledge-base && git pull --rebase`
+2. `Inbox/YYYY-MM-DD-<短い英数字slug>.md` を作成する。同名ファイルが既に存在する
+   場合は上書きせず `-2`, `-3` とサフィックスを付ける。内容:
+
+   ```
+   ---
+   type: inbox
+   created: '<ISO8601 JST 例: 2026-07-06T12:34:56+09:00>'
+   source: hermes
+   status: raw
+   ---
+   # <一行タイトル>
+
+   <ユーザーのメッセージ内容をそのまま。要約・意訳しない>
+   ```
+
+3. `git add Inbox/ && git commit -m "inbox: <slug>" && git push`
+4. push に失敗したら `git pull --rebase` して再試行。force push は絶対にしない
+5. 保存したファイルパスを返信する
+
+## Query (vault への質問)
+
+ユーザーが vault の内容について質問したら:
+
+1. `git pull --rebase` で最新化
+2. `grep -ri` で `Notes/` `Clippings/` `Shared/` を検索し、該当ノートを読む
+3. 出典パス付きで答える。見つからなければ「見つからなかった」と言う(推測しない)
+
+「今週のダイジェスト」「digest 見せて」と言われたら: `Shared/digests/` の最新ファイルを
+読んで要約し、詳細を聞かれたら該当セクションを引用する。
+
+## クリップと知見の記録 (スキル参照)
+
+- 「この記事クリップして」+ URL → **vault-clip スキル**の手順に従う (`Clippings/` に原文保存)
+- 「これ覚えておいて」「この決定を記録して」(結論になった知見) → **vault-capture スキル**の
+  手順に従う (`Shared/decisions|research|patterns/` に記録)
+- まだ結論でない思いつき → 上記の Inbox capture (`Inbox/`)
+
+## 制約
+
+- vault 系スキル (vault-clip / vault-capture) は**読むだけ**でよい。`skill_manage` での
+  保存・編集はしない (dotfiles で管理しているため、ここから書き換えない)
+- 日付・時刻は必ず `date` コマンドで確認する (推測すると間違える)
+
+- vault 内で作成してよいのは `Inbox/`、`Clippings/`(vault-clip 経由の新規のみ)、
+  `Shared/` 配下(vault-capture 経由の新規のみ)。**既存ファイルの変更・削除は禁止**
+- `Notes/` には書かない(アトミックノート網への昇格は weekly synthesis の提案と人間の判断)

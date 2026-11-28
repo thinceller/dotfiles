@@ -14,6 +14,7 @@
     ./fzf
     ./gh
     ./git
+    ./hermes
     ./htop
     ./hunk
     ./jq

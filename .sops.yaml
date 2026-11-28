@@ -14,6 +14,13 @@ creation_rules:
           - *admin
           - *sc
           - *mac
+  # mac-mini の Hermes Agent 用 secret。oberon では使わないので recipient に含めない。
+  - path_regex: secrets/hermes-mac\.env$
+    key_groups:
+      - age:
+          - *admin
+          - *sc
+          - *mac
   # ホスト固有 secret 集約ファイル (oberon)。network 設定 + user password hash 等を含む。
   # 将来別 VPS を追加する場合は同じパターンで <hostname>.yaml 用の rule を足す。
   - path_regex: secrets/oberon\.yaml$
