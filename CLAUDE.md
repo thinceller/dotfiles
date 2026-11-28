@@ -35,6 +35,10 @@ nix develop -c pre-commit run --all-files
 kohei-m4-mac-mini と oberon は master push 時に comin が自動 deploy するので手動 switch は fallback
 (`docs/reference/mac-mini-deploy.md` / `docs/reference/oberon-deploy.md`)。
 
+mac-mini の Hermes Agent は公式インストーラで導入しており、設定の実体は private リポジトリ
+`thinceller/dot-hermes` (clone は `~/.hermes/workspace/dot-hermes`) にある。Nix が持つのはその clone への
+symlink と secret だけ (`home-manager/programs/hermes/`)。実機の手順は `docs/reference/hermes-mac-mini.md` を参照。
+
 ### Dependency update PRs
 
 `.github/workflows/update.yml` が対象 (flake input / nvfetcher source) ごとに固定ブランチ
